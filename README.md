@@ -30,6 +30,12 @@ npm test        # tsx test/run-all.ts (golden test suites)
 | `forgefx-midi/gen3/fm3` | FM3 codec (params, meters, FC, modifiers) |
 | `forgefx-midi/gen3/fm9` | FM9 codec |
 | `forgefx-midi/gen3/vp4` | VP4 codec |
+| `forgefx-midi/core` | descriptor-layer core (descriptor/dispatch types, param-kind + concept-key registries, loudness corpus, buffer-dirty, safe-edit, connection registry, audibility) |
+| `forgefx-midi/core/midi` | MIDI transports (node-midi + serial USB-CDC, both lazy-loaded; SysEx assembler/framer) |
+| `forgefx-midi/devices/gen1` | Axe-Fx Standard/Ultra descriptor (`AXEFXGEN1_DESCRIPTOR`) |
+| `forgefx-midi/devices/gen2` | Axe-Fx II descriptor (`AXEFX2_DESCRIPTOR`) |
+| `forgefx-midi/devices/gen3` | Axe-Fx III / FM3 / FM9 / VP4 descriptors (`AXEFX3_DESCRIPTOR`, `FM3_DESCRIPTOR`, `FM9_DESCRIPTOR`, `VP4_DESCRIPTOR`) |
+| `forgefx-midi/devices/am4` | AM4 descriptor (`AM4_DESCRIPTOR`) |
 | `forgefx-midi/catalog/*.json` | device catalogs (7 devices + index) |
 
 ## Catalogs

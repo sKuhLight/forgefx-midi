@@ -43,6 +43,30 @@
       "types": "./dist/gen3/vp4/index.d.ts",
       "default": "./dist/gen3/vp4/index.js"
     },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./core/midi": {
+      "types": "./dist/core/midi/index.d.ts",
+      "default": "./dist/core/midi/index.js"
+    },
+    "./devices/gen1": {
+      "types": "./dist/devices/gen1/index.d.ts",
+      "default": "./dist/devices/gen1/index.js"
+    },
+    "./devices/gen2": {
+      "types": "./dist/devices/gen2/index.d.ts",
+      "default": "./dist/devices/gen2/index.js"
+    },
+    "./devices/gen3": {
+      "types": "./dist/devices/gen3/index.d.ts",
+      "default": "./dist/devices/gen3/index.js"
+    },
+    "./devices/am4": {
+      "types": "./dist/devices/am4/index.d.ts",
+      "default": "./dist/devices/am4/index.js"
+    },
     "./catalog/*.json": "./catalog/*.json"
   },
   "files": [

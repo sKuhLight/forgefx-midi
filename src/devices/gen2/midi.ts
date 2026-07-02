@@ -1,0 +1,771 @@
+/**
+ * Axe-Fx II MIDI connection helper.
+ *
+ * Mirrors the pattern in `src/asm/hydrasynth-explorer/midi.ts` —
+ * device-scoped port discovery + lazy-opened bidirectional handle.
+ * Looks for "axe-fx" / "axefx" in port names (case-insensitive).
+ *
+ * Why a separate helper from the AM4 one: both devices are made by
+ * Fractal Audio, so the AM4 helper's `fractal` needle would also match
+ * Axe-Fx II ports — leaving the user's two-Fractal-device-plugged-in
+ * setup ambiguous. Splitting the needles keeps the device routing
+ * unambiguous when both are present.
+ *
+ * Status: 🟢 hardware-verified on Axe-Fx II XL+ Quantum 8.02
+ * (2026-05-10). Bidirectional MIDI handle proven by HW-080 (preset
+ * name read, function 0x0F) + HW-076 (grid layout read, function
+ * 0x20) + HW-077 (param read, function 0x02 GET) + HW-075 (param
+ * write + bypass, function 0x02 SET). Port discovery via the
+ * `axe-fx` / `axefx` needles routes correctly on the founder's
+ * two-Fractal-device setup.
+ */
+import { createRequire } from 'node:module';
+
+import { createSysExAssembler } from '../../core/midi/transport.js';
+import { markClean, markDirty } from '../../core/server-shared/bufferDirty.js';
+
+/**
+ * Minimal structural view of the node-midi module. Deliberately NOT an
+ * `import type { Input, Output } from 'midi'` — the only sanctioned 'midi'
+ * module references live in the lazy loaders under `src/core/midi/`; this
+ * file keeps its own lazy `createRequire` loader (runtime-identical to the
+ * upstream copy) but types it structurally so no 'midi' import specifier
+ * appears outside core.
+ */
+interface MidiInputLike {
+  getPortCount(): number;
+  getPortName(index: number): string;
+  openPort(index: number): void;
+  closePort(): void;
+  isPortOpen(): boolean;
+  on(event: 'message', handler: (deltaTime: number, message: number[]) => void): unknown;
+  ignoreTypes(sysex: boolean, timing: boolean, activeSensing: boolean): void;
+}
+interface MidiOutputLike {
+  getPortCount(): number;
+  getPortName(index: number): string;
+  openPort(index: number): void;
+  closePort(): void;
+  isPortOpen(): boolean;
+  sendMessage(message: number[]): void;
+}
+interface MidiModuleLike {
+  Input: new () => MidiInputLike;
+  Output: new () => MidiOutputLike;
+}
+
+/**
+ * node-midi is loaded LAZILY (and synchronously via createRequire — the
+ * connect/list contracts are sync), mirroring the pattern in
+ * `src/core/midi/transport.ts`: merely importing this module
+ * never touches the native binding. That keeps serial-only sessions
+ * (FM3 over USB-CDC) and `npm install --ignore-scripts` clones with no
+ * node-gyp toolchain booting the server; the binding is only required
+ * when an Axe-Fx II port is actually listed or opened.
+ */
+let midiModule: MidiModuleLike | undefined;
+function loadMidi(): MidiModuleLike {
+  if (midiModule === undefined) {
+    try {
+      midiModule = createRequire(import.meta.url)('midi') as MidiModuleLike;
+    } catch (err) {
+      const cause = err instanceof Error ? err.message : String(err);
+      throw new Error(
+        `The MIDI transport module ("midi" / node-midi) failed to load: ${cause}\n` +
+        'This is an installation problem (missing or broken native binding), not a device ' +
+        'problem. If you installed with --ignore-scripts, run "npm rebuild midi" to build the ' +
+        'binding. Serial-only devices (FM3 over USB-CDC) do not need node-midi.',
+      );
+    }
+  }
+  return midiModule;
+}
+
+const AXE_FX_II_PORT_NEEDLES = ['axe-fx', 'axefx'];
+const AXEFX_DIRTY_LABEL = 'axe-fx-ii';
+
+// Fractal Axe-Fx II model byte (Q8.02 XL+). All envelopes targeted at /
+// emitted by the device carry this in byte[4]; foreign envelopes don't
+// affect our buffer-dirty state.
+const AXE_FX_II_XL_PLUS_MODEL_ID = 0x07;
+
+// ── Dirty-state classification — DEVICE-SOURCED (not heuristic) ───────
+//
+// Decoded from passive captures across 6 distinct device states
+// (Session 68 analysis of session-58 + session-61 captures):
+//
+//   - direct-sync (read-only)   → 0 state broadcasts
+//   - preset-change (switch)    → 0 state broadcasts
+//   - save-attempt (store)      → 0 state broadcasts
+//   - knob-turn (edit)          → 1 state broadcast triple
+//   - block-add (edit)          → 1 state broadcast triple
+//   - grid-move (edit)          → 1 state broadcast triple
+//
+// The device emits a 0x74/0x75/0x76 state-broadcast triple EXACTLY when
+// the working buffer is edited — whether by AxeEdit, by our MCP server,
+// or by the user touching a knob on the device front panel. It does
+// NOT emit on reads, preset switches, or saves. Receiving a 0x74 frame
+// is therefore an AUTHORITATIVE dirty signal from the device itself,
+// not a heuristic on our part.
+//
+// The clean signal stays code-sourced because the device doesn't
+// announce "I'm clean now" — but the OPERATIONS that produce a clean
+// state are unambiguous: switch_preset (0x3C) loads a stored slot;
+// store_preset (0x1D) commits the working buffer to a slot. We mark
+// clean when WE issue those envelopes. A SAVE pressed on the device's
+// own front panel won't be reflected (false-dirty on next check), but
+// that's a fail-safe degradation — the agent will warn the user, who
+// can confirm and discard.
+
+const CLEAN_FUNCTIONS = new Set<number>([
+  0x3c, // SWITCH_PRESET / LOAD_PRESET
+  0x1d, // STORE_PRESET
+]);
+
+// Belt-and-suspenders: while the inbound 0x74 state-broadcast is the
+// authoritative dirty signal documented above, hardware testing (2026-
+// 05-14) showed it doesn't reliably reach the listener after SysEx-
+// driven function 0x02 SET writes from our unified set_param tool. Until
+// that's fully characterized, we also fire markDirty on outbound edit-
+// class functions so the safe-edit gate cannot silently miss an edit
+// the agent issued. This is fail-safe (extra confirmation needed if
+// the device's own broadcast missed) rather than fail-dangerous
+// (silently discarding the user's tweak on the next switch_preset).
+//
+// 0x02 is dual-purpose (GET=0x00 / SET=0x01 in the action byte at
+// offset 11); only SET is an edit.
+const EDIT_FUNCTIONS = new Set<number>([
+  0x05, // SET_GRID_CELL (block placement)
+  0x06, // SET_CELL_ROUTING (cable add/remove)
+  0x09, // SET_PRESET_NAME (rename)
+  0x11, // SET_BLOCK_CHANNEL (X/Y change)
+]);
+
+function isCleanOutbound(bytes: readonly number[]): boolean {
+  if (bytes.length < 8) return false;
+  if (bytes[0] !== 0xf0) return false;
+  if (bytes[1] !== 0x00 || bytes[2] !== 0x01 || bytes[3] !== 0x74) return false;
+  if (bytes[4] !== AXE_FX_II_XL_PLUS_MODEL_ID) return false;
+  return CLEAN_FUNCTIONS.has(bytes[5]);
+}
+
+function isEditOutbound(bytes: readonly number[]): boolean {
+  if (bytes.length < 8) return false;
+  if (bytes[0] !== 0xf0) return false;
+  if (bytes[1] !== 0x00 || bytes[2] !== 0x01 || bytes[3] !== 0x74) return false;
+  if (bytes[4] !== AXE_FX_II_XL_PLUS_MODEL_ID) return false;
+  if (EDIT_FUNCTIONS.has(bytes[5])) return true;
+  // 0x02 SET_PARAM dual-purpose: action byte at offset 13 distinguishes
+  // SET (0x01) from GET (0x00). The byte after the func is effectId(2)
+  // + paramId(2) + value(3) = 7 bytes; then the action byte. Only mark
+  // dirty on SET.
+  if (bytes[5] === 0x02 && bytes.length >= 15 && bytes[13] === 0x01) return true;
+  return false;
+}
+
+function isStateBroadcastInbound(bytes: readonly number[]): boolean {
+  if (bytes.length < 6) return false;
+  if (bytes[0] !== 0xf0) return false;
+  if (bytes[1] !== 0x00 || bytes[2] !== 0x01 || bytes[3] !== 0x74) return false;
+  if (bytes[4] !== AXE_FX_II_XL_PLUS_MODEL_ID) return false;
+  // The header byte 0x74 is sufficient — chunks (0x75) and footers
+  // (0x76) always follow a header, so we don't need to count all three.
+  return bytes[5] === 0x74;
+}
+
+export interface AxeFxIIConnection {
+  send: (bytes: number[]) => void;
+  /**
+   * Subscribe to inbound MIDI from the Axe-Fx II. Returns an
+   * unsubscribe function. When `hasInput` is false (no input port
+   * found), the handler is registered but will never fire.
+   *
+   * Active-sensing (0xFE) and MIDI timing clock (0xF8) are filtered
+   * by `ignoreTypes(false, true, true)` so the handler only sees
+   * meaningful messages (SysEx, CC, PC, notes).
+   */
+  onMessage: (handler: (bytes: number[]) => void) => () => void;
+  /**
+   * Wait for the first inbound SysEx that satisfies `predicate`. Non-
+   * matching messages are silently dropped until `timeoutMs` elapses.
+   * Throws on timeout. Caller MUST register before sending the request
+   * so the device's response can't race ahead of the listener.
+   *
+   * Throws synchronously if `hasInput` is false — GET tools that need
+   * a response are unusable without an input port.
+   */
+  receiveSysExMatching: (
+    predicate: (bytes: number[]) => boolean,
+    timeoutMs?: number,
+  ) => Promise<number[]>;
+  /** True when an input port was successfully opened. */
+  hasInput: boolean;
+  close: () => void;
+  /**
+   * NOT IMPLEMENTED on Axe-Fx II. The Axe-Fx II connection exposes
+   * `receiveSysExMatching` (predicate-filtered) but not the generic
+   * `receiveSysEx` that accepts any SysEx frame. Calling this throws so
+   * the gap is visible at the call site rather than failing silently.
+   * If a future dispatcher path needs plain `receiveSysEx` on Axe-Fx II,
+   * implement it here using the same `handlers` Set pattern as
+   * `receiveSysExMatching`.
+   */
+  receiveSysEx: (timeoutMs?: number) => Promise<number[]>;
+  /** Not tracked on Axe-Fx II (send errors surface via thrown exceptions). */
+  lastSendError?: Error;
+}
+
+export interface AxeFxIIPortInfo {
+  index: number;
+  name: string;
+  looksLikeAxeFxII: boolean;
+}
+
+function findAxeFxIIOutputIndex(out: MidiOutputLike): number {
+  for (let i = 0; i < out.getPortCount(); i++) {
+    const name = out.getPortName(i).toLowerCase();
+    if (AXE_FX_II_PORT_NEEDLES.some((n) => name.includes(n))) return i;
+  }
+  return -1;
+}
+
+function findAxeFxIIInputIndex(input: MidiInputLike): number {
+  for (let i = 0; i < input.getPortCount(); i++) {
+    const name = input.getPortName(i).toLowerCase();
+    if (AXE_FX_II_PORT_NEEDLES.some((n) => name.includes(n))) return i;
+  }
+  return -1;
+}
+
+/**
+ * Enumerate output ports without opening any. Used by the startup
+ * banner so the server can log a verdict ("Axe-Fx II detected" /
+ * "Axe-Fx II not visible") at boot, before any tool call.
+ */
+export function listAxeFxIIOutputs(): AxeFxIIPortInfo[] {
+  const midi = loadMidi();
+  const out = new midi.Output();
+  try {
+    const result: AxeFxIIPortInfo[] = [];
+    for (let i = 0; i < out.getPortCount(); i++) {
+      const name = out.getPortName(i);
+      const lower = name.toLowerCase();
+      result.push({
+        index: i,
+        name,
+        looksLikeAxeFxII: AXE_FX_II_PORT_NEEDLES.some((n) => lower.includes(n)),
+      });
+    }
+    return result;
+  } finally {
+    try { out.closePort(); } catch { /* not opened */ }
+  }
+}
+
+/**
+ * Open the Axe-Fx II output, plus the input if the OS exposes one.
+ * Throws on no output port; falls back to output-only on no input
+ * port (writes still work, GET responses lose visibility).
+ *
+ * Caller surfaces the throw to the user as an MCP error response.
+ */
+export function connectAxeFxII(): AxeFxIIConnection {
+  if (process.env.MCP_MOCK_TRANSPORT === '1') {
+    return mockAxeFxIIConnection();
+  }
+  const midi = loadMidi();
+  const out = new midi.Output();
+  const outIdx = findAxeFxIIOutputIndex(out);
+  if (outIdx < 0) {
+    const visible: string[] = [];
+    for (let i = 0; i < out.getPortCount(); i++) {
+      visible.push(`[${i}] ${out.getPortName(i)}`);
+    }
+    try { out.closePort(); } catch { /* not opened */ }
+    throw new Error(
+      `Axe-Fx II not found. Looked for any output port whose name contains: ` +
+      `${AXE_FX_II_PORT_NEEDLES.join(' / ')}. Visible outputs: ${visible.length === 0 ? '(none)' : visible.join(', ')}. ` +
+      `Likely causes: device not powered on, USB cable not seated, or the Fractal USB driver isn't installed.`,
+    );
+  }
+  out.openPort(outIdx);
+  // openPort() does NOT throw on failure (RtMidi prints to stderr and
+  // leaves the port closed; sends then vanish while tools report
+  // fire-and-forget success — 2026-06-10 incident). Assert the native
+  // isPortOpen() truth and fail loudly with the exclusive-hold diagnosis.
+  if (!out.isPortOpen()) {
+    try { out.closePort(); } catch { /* best-effort */ }
+    throw new Error(
+      'Axe-Fx II output port found but could NOT be opened (the OS refused the open). ' +
+      'Windows MIDI ports are exclusive: another process is almost certainly holding it ' +
+      '(a second MCP server instance from another Claude session, a stale node.exe from an ' +
+      'earlier session, or AxeEdit/Fractal-Bot). Close the holder, then retry or call reconnect_midi. ' +
+      'If this error repeats right after a reconnect_midi on a quiet bus, the holder may be THIS ' +
+      "server's own previous handle (the driver does not always release a handle that died " +
+      'mid-send): fully quit and relaunch the host app to restart the server.',
+    );
+  }
+
+  const input = new midi.Input();
+  const inIdx = findAxeFxIIInputIndex(input);
+  let inputOpen = false;
+  const handlers = new Set<(bytes: number[]) => void>();
+
+  if (inIdx >= 0) {
+    // Don't ignore SysEx (false), do ignore timing clock + active-sensing (true, true).
+    // Wire the listener BEFORE openPort so we don't race the device.
+    input.ignoreTypes(false, true, true);
+    // node-midi's WinMM backend hands each filled driver buffer up as its
+    // own `message` event, so any SysEx longer than RT_SYSEX_BUFFER_SIZE
+    // (2048 bytes, set in midi/binding.gyp) arrives split across multiple
+    // callbacks: first fragment F0...no-F7, continuations with no status
+    // byte. Without reassembly, every >2048-byte response (fn 0x28 enum
+    // dumps, where the 266-entry amp table is ~3.5 KB, and preset
+    // binaries) reached handlers truncated at the first fragment. Route
+    // fragments through the shared assembler so handlers and
+    // receiveSysExMatching always see complete F0..F7 frames.
+    const dispatch = (bytes: number[]): void => {
+      // Device-sourced dirty signal: every state-broadcast triple from
+      // the device means the working buffer was edited. No heuristic /
+      // no timing window — the captures prove the device only emits
+      // these on edits (not on reads/switches/saves).
+      if (isStateBroadcastInbound(bytes)) {
+        markDirty(AXEFX_DIRTY_LABEL);
+      }
+      for (const h of handlers) {
+        try { h(bytes); } catch { /* swallow handler errors so one bad subscriber can't break others */ }
+      }
+    };
+    const assemble = createSysExAssembler(dispatch);
+    input.on('message', (_dt: number, bytes: number[]) => {
+      assemble(bytes);
+    });
+    input.openPort(inIdx);
+    if (!input.isPortOpen()) {
+      // Same silent-failure mode as the output side. A connection with a
+      // dead INPUT is the worst state: writes fire, every read times out,
+      // and the dirty-tracking listener is deaf. Fail loudly instead.
+      try { input.closePort(); } catch { /* best-effort */ }
+      try { out.closePort(); } catch { /* best-effort */ }
+      throw new Error(
+        'Axe-Fx II input port found but could NOT be opened (the OS refused the open). ' +
+        'Windows MIDI inputs are exclusive: another process is almost certainly holding it ' +
+        '(a second MCP server instance from another Claude session, a stale node.exe from an ' +
+        'earlier session, or AxeEdit/Fractal-Bot). Close the holder, then retry or call reconnect_midi. ' +
+      'If this error repeats right after a reconnect_midi on a quiet bus, the holder may be THIS ' +
+      "server's own previous handle (the driver does not always release a handle that died " +
+      'mid-send): fully quit and relaunch the host app to restart the server.',
+      );
+    }
+    inputOpen = true;
+  } else {
+    try { input.closePort(); } catch { /* never opened */ }
+  }
+
+  return {
+    send: (bytes) => {
+      // The DIRTY signal comes from the device (inbound state-broadcast
+      // triples); we don't infer it from our outbound writes. We DO mark
+      // clean when we issue switch_preset / store_preset because those
+      // operations transition the buffer to a known-clean state (device
+      // doesn't announce that transition, so we record it here).
+      if (isCleanOutbound(bytes)) markClean(AXEFX_DIRTY_LABEL);
+      else if (isEditOutbound(bytes)) markDirty(AXEFX_DIRTY_LABEL);
+      out.sendMessage(bytes);
+    },
+    onMessage: (handler) => {
+      handlers.add(handler);
+      return () => { handlers.delete(handler); };
+    },
+    receiveSysExMatching: (predicate, timeoutMs = 1000) => {
+      if (!inputOpen) {
+        return Promise.reject(new Error(
+          'No Axe-Fx II input port available. GET tools (get_param, get_params, ' +
+          'get_preset) require a bidirectional MIDI connection. Confirm the OS ' +
+          'exposes both Axe-Fx II input and output ' +
+          'ports via list_midi_ports — some USB-MIDI driver configurations expose ' +
+          'output only.',
+        ));
+      }
+      return new Promise<number[]>((resolve, reject) => {
+        const timer = setTimeout(() => {
+          handlers.delete(handler);
+          reject(new Error(`Timeout waiting for matching SysEx after ${timeoutMs}ms`));
+        }, timeoutMs);
+        const handler = (bytes: number[]) => {
+          if (bytes[0] !== 0xf0) return;
+          if (!predicate(bytes)) return;
+          clearTimeout(timer);
+          handlers.delete(handler);
+          resolve(bytes);
+        };
+        handlers.add(handler);
+      });
+    },
+    hasInput: inputOpen,
+    close: () => {
+      handlers.clear();
+      try { out.closePort(); } catch { /* already closed */ }
+      if (inputOpen) {
+        try { input.closePort(); } catch { /* already closed */ }
+      }
+    },
+    receiveSysEx: (_timeoutMs?: number) => {
+      return Promise.reject(new Error(
+        'receiveSysEx is not implemented on Axe-Fx II — use receiveSysExMatching ' +
+        'with an explicit predicate. If a dispatcher path calls this, add the ' +
+        'predicate-less handler here using the same handlers Set pattern.',
+      ));
+    },
+    lastSendError: undefined,
+  };
+}
+
+/**
+ * Axe-Fx II mock connection. Returned by `connectAxeFxII()` when
+ * `MCP_MOCK_TRANSPORT=1` is set — lets agent-regression cases run
+ * without the XL+ plugged in.
+ *
+ * Writes are accepted (no-op send). Reads via `receiveSysExMatching`
+ * time out — the Axe-Fx II GET response shapes (state-broadcast
+ * triples 0x74/0x75/0x76 etc.) aren't synthesized yet. Cases that
+ * exercise WRITE-only paths (apply_preset, set_param, switch_preset,
+ * v0.4 routing) will pass; read-driven cases will need a responder
+ * extension following the AM4 pattern in am4/midi.ts:am4MockResponder.
+ *
+ * The `hasInput:true` flag is set so the writers' "no input port" guard
+ * doesn't trip — the mock pretends a bidirectional connection exists
+ * even though reads will time out at the predicate level.
+ */
+// BK-113 follow-up: II mock fixture profiles for adversary testing.
+// Default 'clean-scratch' returns the empty grid (existing behavior).
+// 'populated-unrouted' places Amp 1 at (row 2, col 3) with routing_mask=0
+// so the BK-076 routing-mask pre-flight has a real failure to detect.
+// Picked at process spawn time via the `MOCK_FIXTURE` env var (the
+// agent-regression runner injects it per case-spec).
+type AxeFxIIMockFixture = 'clean-scratch' | 'populated-unrouted';
+const MOCK_FIXTURE: AxeFxIIMockFixture = ((): AxeFxIIMockFixture => {
+  const raw = process.env.MOCK_FIXTURE;
+  if (raw === 'populated-unrouted') return raw;
+  return 'clean-scratch';
+})();
+
+function mockAxeFxIIConnection(): AxeFxIIConnection {
+  const handlers = new Set<(bytes: number[]) => void>();
+  // Minimal mock responder: synthesizes the GET_BLOCK_CHANNEL response
+  // (function 0x11) so bucket-7 channel-write safety logic can run under
+  // MCP_MOCK_TRANSPORT=1. All other GETs still fall through to the
+  // not-implemented rejection — extending this responder is the path to
+  // mock more read-side wire shapes (see am4MockResponder for the
+  // full-coverage pattern).
+  //
+  // The mock pretends every block is currently on channel X. That lets
+  // the agent-retry-paths test cover both branches:
+  //   - set_param(channel: 'X') succeeds (active channel matches);
+  //   - set_param(channel: 'Y') refuses with channel-mismatch warning.
+  const FUNC_BLOCK_CHANNEL = 0x11;
+  const FUNC_BLOCK_PARAM = 0x02;
+  const FUNC_GET_GRID_LAYOUT = 0x20;
+  const FUNC_GET_PRESET_NAME = 0x0f;
+  const FUNC_SCENE_NUMBER = 0x29;
+  const SCENE_QUERY = 0x7f;
+  const SYSEX_START_BYTE = 0xf0;
+  const SYSEX_END_BYTE = 0xf7;
+  // fn 0x02 action byte (offset 13): 0x00 = GET/query, 0x01 = SET.
+  const ACTION_QUERY = 0x00;
+
+  // BK-070 mock: synthesize a 48-cell grid response for fn 0x20.
+  //
+  // Default ('clean-scratch'): empty grid (every cell zero). Lets the
+  // unified `get_preset` end-to-end test verify routing without also
+  // stubbing per-block fn 0x1F responses.
+  //
+  // BK-113 follow-up ('populated-unrouted'): grid carries Amp 1 (id 106)
+  // at (row 2, col 3) with routingFlags=0 — block placed but no
+  // previous-column cell feeds its input. Exercises the BK-076
+  // routing-mask=0 pre-flight end-to-end: `set_param` on `amp` reads
+  // the grid via `getBlockLayoutSnapshot`, computes `unroutedBlocks`,
+  // and surfaces the `validation_info[]` warning. All other cells stay
+  // empty.
+  //
+  // Per `parseGetGridLayoutResponse`: cells are column-major, top-to-
+  // bottom within each column. Per cell, 4 bytes: blockId lo (bits
+  // 6-0), blockId hi (bits 13-7), routing flags, unused.
+  const buildGridResponse = (outgoing: number[]): number[] | undefined => {
+    if (outgoing.length < 8) return undefined;
+    if (outgoing[0] !== SYSEX_START_BYTE) return undefined;
+    if (outgoing[1] !== 0x00 || outgoing[2] !== 0x01 || outgoing[3] !== 0x74) return undefined;
+    if (outgoing[5] !== FUNC_GET_GRID_LAYOUT) return undefined;
+    const modelId = outgoing[4];
+    const cells = new Array(48 * 4).fill(0x00);
+    if (MOCK_FIXTURE === 'populated-unrouted') {
+      // Amp 1 = id 106. Place at row 2 col 3 with routingFlags=0.
+      // Cell index = (col - 1) * 4 + (row - 1) = 2 * 4 + 1 = 9.
+      const cellIndex = 9;
+      const byteOffset = cellIndex * 4;
+      const ampId = 106;
+      cells[byteOffset] = ampId & 0x7f;
+      cells[byteOffset + 1] = (ampId >> 7) & 0x7f;
+      cells[byteOffset + 2] = 0x00; // routingFlags = 0 → no input cable
+      cells[byteOffset + 3] = 0x00;
+    }
+    const head = [
+      SYSEX_START_BYTE, 0x00, 0x01, 0x74,
+      modelId, FUNC_GET_GRID_LAYOUT,
+      ...cells,
+    ];
+    const cs = head.slice(1).reduce((a, b) => a ^ b, 0) & 0x7f;
+    return [...head, cs, SYSEX_END_BYTE];
+  };
+
+  // Back-compat alias so existing references resolve.
+  const buildEmptyGridResponse = buildGridResponse;
+
+  // BK-070 mock: GET_PRESET_NAME response so `get_preset` can fill
+  // `name`. Returns "Mock Preset" + null terminator. Body is null-
+  // terminated ASCII per parseGetPresetNameResponse.
+  const buildPresetNameResponse = (outgoing: number[]): number[] | undefined => {
+    if (outgoing.length < 7) return undefined;
+    if (outgoing[0] !== SYSEX_START_BYTE) return undefined;
+    if (outgoing[1] !== 0x00 || outgoing[2] !== 0x01 || outgoing[3] !== 0x74) return undefined;
+    if (outgoing[5] !== FUNC_GET_PRESET_NAME) return undefined;
+    const modelId = outgoing[4];
+    const nameBytes = Array.from('Mock Preset', (c) => c.charCodeAt(0));
+    const head = [
+      SYSEX_START_BYTE, 0x00, 0x01, 0x74,
+      modelId, FUNC_GET_PRESET_NAME,
+      ...nameBytes, 0x00,
+    ];
+    const cs = head.slice(1).reduce((a, b) => a ^ b, 0) & 0x7f;
+    return [...head, cs, SYSEX_END_BYTE];
+  };
+
+  // Track the last-SET channel per effectId so GET returns the right
+  // value after a SET+GET verify sequence (channel-Y write fix).
+  const channelState = new Map<number, number>();
+  // Tracks the device scene pointer (wire 0..7) for the SCENE_NUMBER (fn
+  // 0x29) responder below. Default 0 = display scene 1.
+  let sceneState = 0;
+
+  const buildGetBlockChannelMockResponse = (outgoing: number[]): number[] | undefined => {
+    if (outgoing.length < 10) return undefined;
+    if (outgoing[0] !== SYSEX_START_BYTE) return undefined;
+    if (outgoing[1] !== 0x00 || outgoing[2] !== 0x01 || outgoing[3] !== 0x74) {
+      return undefined;
+    }
+    const modelId = outgoing[4];
+    const fn = outgoing[5];
+    if (fn !== FUNC_BLOCK_CHANNEL) return undefined;
+    const effLo = outgoing[6] ?? 0;
+    const effHi = outgoing[7] ?? 0;
+    const effectId = effLo | (effHi << 7);
+    const action = outgoing[9];
+    if (action === 0x01) {
+      // SET: record the channel, no response (matches live protocol).
+      channelState.set(effectId, outgoing[8] ?? 0);
+      return undefined;
+    }
+    if (action !== 0x00) return undefined;
+    // GET: return the last-set channel (default X=0 if never set).
+    const chan = channelState.get(effectId) ?? 0;
+    const head = [
+      SYSEX_START_BYTE, 0x00, 0x01, 0x74,
+      modelId, FUNC_BLOCK_CHANNEL,
+      effLo & 0x7f, effHi & 0x7f, chan & 0x7f,
+    ];
+    const cs = head.slice(1).reduce((a, b) => a ^ b, 0) & 0x7f;
+    return [...head, cs, SYSEX_END_BYTE];
+  };
+
+  // GET_BLOCK_PARAMETER_VALUE (fn 0x02, action 0x00) responder. Synthesizes
+  // the device's GET reply so the reader's getParam (and the unified
+  // get_param / get_params tools) are runtime-drivable under the mock —
+  // closing the response-shape-parity ReadResult coverage gap for the II.
+  //
+  // Reply shape (per parseGetBlockParameterResponse / isGetBlockParameterResponse):
+  //   F0 00 01 74 [model] 02 [eff_lo eff_hi] [param_lo param_hi]
+  //   [val0 val1 val2]            ← packValue16(wire)  (bytes 10..12)
+  //   [0 0 0 0 0]                 ← 5 unknown bytes      (bytes 13..17)
+  //   [label ascii...] 00         ← null-terminated label
+  //   [cs] F7
+  //
+  // Only the GET (action 0x00) is answered. SET (action 0x01) gets no reply,
+  // matching the live device and preserving the existing no-response-on-SET
+  // behavior the write-path tests rely on. The mock reports a fixed mid-scale
+  // wire value with a representative label; shape parity asserts the envelope
+  // keys, not the value, and the value is plausible for any continuous knob.
+  const MOCK_PARAM_WIRE_VALUE = 32767; // ~mid-scale on the 0..65534 range
+  const buildGetBlockParameterMockResponse = (outgoing: number[]): number[] | undefined => {
+    if (outgoing.length < 14) return undefined;
+    if (outgoing[0] !== SYSEX_START_BYTE) return undefined;
+    if (outgoing[1] !== 0x00 || outgoing[2] !== 0x01 || outgoing[3] !== 0x74) return undefined;
+    if (outgoing[5] !== FUNC_BLOCK_PARAM) return undefined;
+    if (outgoing[13] !== ACTION_QUERY) return undefined; // SET (0x01) → no reply
+    const modelId = outgoing[4];
+    const effLo = outgoing[6] ?? 0;
+    const effHi = outgoing[7] ?? 0;
+    const paramLo = outgoing[8] ?? 0;
+    const paramHi = outgoing[9] ?? 0;
+    const v = MOCK_PARAM_WIRE_VALUE;
+    const valSeptets = [v & 0x7f, (v >> 7) & 0x7f, (v >> 14) & 0x03];
+    const labelBytes = Array.from('5.00', (c) => c.charCodeAt(0));
+    const head = [
+      SYSEX_START_BYTE, 0x00, 0x01, 0x74,
+      modelId, FUNC_BLOCK_PARAM,
+      effLo & 0x7f, effHi & 0x7f, paramLo & 0x7f, paramHi & 0x7f,
+      ...valSeptets,
+      0x00, 0x00, 0x00, 0x00, 0x00, // 5 unknown bytes
+      ...labelBytes, 0x00,
+    ];
+    const cs = head.slice(1).reduce((a, b) => a ^ b, 0) & 0x7f;
+    return [...head, cs, SYSEX_END_BYTE];
+  };
+  // SCENE_NUMBER (fn 0x29) responder. Models the device scene pointer so
+  // get_preset's active_scene read is runtime-drivable under the mock (the
+  // reader does buildGetSceneNumber → parseSceneNumberResponse). SET (body
+  // byte = scene 0..7) records the pointer with no reply, matching the live
+  // device; GET (body byte = SCENE_QUERY 0x7F) returns the tracked scene.
+  // Without this, active_scene was always undefined under the mock, which
+  // made cross-axefx2-apply-response-no-drops impossible to pass.
+  const buildSceneNumberMockResponse = (outgoing: number[]): number[] | undefined => {
+    if (outgoing.length < 9) return undefined;
+    if (outgoing[0] !== SYSEX_START_BYTE) return undefined;
+    if (outgoing[1] !== 0x00 || outgoing[2] !== 0x01 || outgoing[3] !== 0x74) return undefined;
+    if (outgoing[5] !== FUNC_SCENE_NUMBER) return undefined;
+    const modelId = outgoing[4];
+    const arg = outgoing[6] ?? 0;
+    if (arg !== SCENE_QUERY) {
+      // SET: record the scene pointer, no reply (matches live protocol).
+      sceneState = arg & 0x07;
+      return undefined;
+    }
+    // GET (query sentinel): reply with the tracked scene.
+    const head = [
+      SYSEX_START_BYTE, 0x00, 0x01, 0x74,
+      modelId, FUNC_SCENE_NUMBER, sceneState & 0x7f,
+    ];
+    const cs = head.slice(1).reduce((a, b) => a ^ b, 0) & 0x7f;
+    return [...head, cs, SYSEX_END_BYTE];
+  };
+
+  // GET_PRESET_NUMBER (fn 0x14) responder: fixed wire preset 0
+  // (display slot 1). export_preset reads this for its source string.
+  const FUNC_GET_PRESET_NUMBER_MOCK = 0x14;
+  const buildPresetNumberMockResponse = (outgoing: number[]): number[] | undefined => {
+    if (outgoing.length < 7) return undefined;
+    if (outgoing[0] !== SYSEX_START_BYTE) return undefined;
+    if (outgoing[1] !== 0x00 || outgoing[2] !== 0x01 || outgoing[3] !== 0x74) return undefined;
+    if (outgoing[5] !== FUNC_GET_PRESET_NUMBER_MOCK) return undefined;
+    // A response is exactly 10 bytes; the request is shorter. Don't
+    // answer our own synthesized responses.
+    if (outgoing.length >= 10) return undefined;
+    const modelId = outgoing[4];
+    const head = [SYSEX_START_BYTE, 0x00, 0x01, 0x74, modelId, FUNC_GET_PRESET_NUMBER_MOCK, 0x00, 0x00];
+    const cs = head.slice(1).reduce((a, b) => a ^ b, 0) & 0x7f;
+    return [...head, cs, SYSEX_END_BYTE];
+  };
+
+  // PATCH_DUMP request (fn 0x03, either addressing form) responder:
+  // synthesizes the 66-frame 0x77/0x78/0x79 chain so export_preset is
+  // runtime-drivable under the mock (HW-132: the live device answers
+  // the 7F 7F sentinel with the edit buffer; the slot-addressed form
+  // returns stored flash). Payload bytes are zeros — the export path
+  // treats the blob as opaque and only counts frames.
+  const FUNC_PATCH_DUMP_MOCK = 0x03;
+  const buildPatchDumpMockResponses = (outgoing: number[]): number[][] | undefined => {
+    if (outgoing.length < 9) return undefined;
+    if (outgoing[0] !== SYSEX_START_BYTE) return undefined;
+    if (outgoing[1] !== 0x00 || outgoing[2] !== 0x01 || outgoing[3] !== 0x74) return undefined;
+    if (outgoing[5] !== FUNC_PATCH_DUMP_MOCK) return undefined;
+    const modelId = outgoing[4];
+    const frame = (fn: number, payload: number[]): number[] => {
+      const head = [SYSEX_START_BYTE, 0x00, 0x01, 0x74, modelId, fn, ...payload];
+      const cs = head.slice(1).reduce((a, b) => a ^ b, 0) & 0x7f;
+      return [...head, cs, SYSEX_END_BYTE];
+    };
+    const frames: number[][] = [frame(0x77, [0x7f, 0x00, 0x00, 0x20])];
+    for (let i = 0; i < 64; i++) frames.push(frame(0x78, new Array(194).fill(0x00)));
+    frames.push(frame(0x79, [0x00, 0x00, 0x00]));
+    return frames;
+  };
+
+  return {
+    send: (bytes) => {
+      // Multi-frame responders first (a dump request answers with a
+      // whole frame chain, not a single message).
+      const multi = buildPatchDumpMockResponses(bytes);
+      if (multi !== undefined) {
+        setImmediate(() => {
+          for (const f of multi) {
+            for (const h of handlers) h([...f]);
+          }
+        });
+        return;
+      }
+      // Synthesize an inbound response when the outgoing frame matches a
+      // known shape the mock can answer. Each responder returns undefined
+      // when the outgoing frame isn't its shape, so we just walk the
+      // ordered list and use the first hit. Currently covers:
+      //   - GET_BLOCK_CHANNEL (fn 0x11) — bucket-7 channel-write safety
+      //   - GET_GRID_LAYOUT  (fn 0x20) — BK-070 get_preset, empty grid
+      //   - GET_PRESET_NAME  (fn 0x0f) — BK-070 get_preset, name field
+      //   - GET_PRESET_NUMBER (fn 0x14) + PATCH_DUMP (fn 0x03) — export
+      const response =
+        buildGetBlockChannelMockResponse(bytes)
+        ?? buildGetBlockParameterMockResponse(bytes)
+        ?? buildSceneNumberMockResponse(bytes)
+        ?? buildEmptyGridResponse(bytes)
+        ?? buildPresetNameResponse(bytes)
+        ?? buildPresetNumberMockResponse(bytes);
+      if (response !== undefined) {
+        // Dispatch on next tick so the sender's await/receive setup has
+        // time to register its predicate handler before the response
+        // arrives. setImmediate avoids the 0ms-timer race on Windows.
+        setImmediate(() => {
+          for (const h of handlers) {
+            try { h(response); } catch { /* swallow handler errors */ }
+          }
+        });
+      }
+    },
+    onMessage: (handler) => {
+      handlers.add(handler);
+      return () => { handlers.delete(handler); };
+    },
+    receiveSysExMatching: (predicate, timeoutMs = 1000) => {
+      return new Promise<number[]>((resolve, reject) => {
+        const timer = setTimeout(() => {
+          handlers.delete(handler);
+          reject(new Error(
+            `mock Axe-Fx II transport: no synthesized response for this predicate within ${timeoutMs}ms. ` +
+            `Extend mockAxeFxIIConnection with the wire shape this caller needs.`,
+          ));
+        }, timeoutMs);
+        const handler = (bytes: number[]) => {
+          if (bytes[0] !== SYSEX_START_BYTE) return;
+          if (!predicate(bytes)) return;
+          clearTimeout(timer);
+          handlers.delete(handler);
+          resolve(bytes);
+        };
+        handlers.add(handler);
+      });
+    },
+    hasInput: true,
+    close: () => { handlers.clear(); },
+    receiveSysEx: (_timeoutMs?: number) => Promise.reject(new Error(
+      'receiveSysEx is not implemented on Axe-Fx II — use receiveSysExMatching ' +
+      'with an explicit predicate.',
+    )),
+    lastSendError: undefined,
+  };
+}
+
+// Register the Axe-Fx II connector with the shared connection registry
+// as a side effect of loading this module. `AxeFxIIConnection` now
+// implements all fields of `MidiConnection` (receiveSysEx throws "not
+// implemented" and lastSendError is always undefined) so the cast is
+// a plain structural assignment rather than an escape hatch.
+import type { MidiConnection } from '../../core/midi/transport.js';
+import { registerConnector, AXEFX2_LABEL } from '../../core/server-shared/connections.js';
+registerConnector(AXEFX2_LABEL, () => connectAxeFxII() as MidiConnection);

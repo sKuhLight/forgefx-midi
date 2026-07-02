@@ -17,6 +17,9 @@ interface AssetCopy {
 
 const COPIES: AssetCopy[] = [
   { src: 'src/shared/lineage', dst: 'dist/shared/lineage' },
+  // core/fractal-shared/loudness.ts reads lineage/loudness.json at runtime
+  // relative to its own compiled location.
+  { src: 'src/core/fractal-shared/lineage', dst: 'dist/core/fractal-shared/lineage' },
 ];
 
 function safeExists(p: string): boolean {

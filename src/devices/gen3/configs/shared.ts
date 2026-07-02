@@ -1,0 +1,287 @@
+/**
+ * Shared LLM-facing surface for the modern Fractal family.
+ *
+ * The agent_guidance and per-block first-page knob summary are anchored
+ * on the Axe-Fx III (the byte-verified member) and reused by FM3/FM9 as
+ * a beta stopgap, because all three share the III's block catalog today.
+ * The grid-shaped example_spec differs per device (FM3 is a 4×12 grid),
+ * so example specs live in each device's config; the wide-grid example
+ * (III / FM9, 6×14) lives here.
+ */
+import type { PresetSpec } from '../../../core/protocol-generic/types.js';
+
+// ── Curated top-N first-page knob list per block ──────────────────
+//
+// Source: AxeEdit III page-1 controls per block, in the III's canonical
+// spelling (`type` not `effect_type`, `master` not `master_volume`,
+// `hicut`/`lowcut` one word, `harm1`/`harm2` for pitch voices).
+export const MODERN_BLOCK_PARAMS_SUMMARY: Readonly<Record<string, readonly string[]>> = Object.freeze({
+  amp: ['type', 'gain', 'bass', 'mid', 'treble', 'master', 'presence', 'level'],
+  reverb: ['type', 'mix', 'time', 'predelay', 'size', 'hicut', 'level'],
+  delay: ['type', 'time', 'feed', 'mix', 'locut', 'hicut', 'level'],
+  chorus: ['type', 'rate', 'depth', 'mix', 'level'],
+  flanger: ['type', 'rate', 'depth', 'feedback', 'mix', 'level'],
+  phaser: ['type', 'rate', 'depth', 'feedback', 'mix', 'level'],
+  wah: ['type', 'fstart', 'fstop', 'q', 'control', 'level'],
+  compressor: ['type', 'thresh', 'ratio', 'attack', 'release', 'level', 'mix'],
+  pitch: ['type', 'pitchmode', 'harm1', 'harm2', 'key', 'scale', 'mix', 'level'],
+  cab: ['level', 'pan'],
+  pan_tremolo: ['type', 'rate', 'depth', 'duty', 'mix', 'level'],
+  filter: ['type', 'freq', 'q', 'gain', 'level'],
+  enhancer: ['type', 'width', 'depth', 'level'],
+  gate_expander: ['type', 'thresh', 'attack', 'hold', 'release', 'ratio', 'level'],
+  rotary: ['rate', 'lfdepth', 'hfdepth', 'drive', 'mix', 'level'],
+  volume_pan: ['gain', 'panl', 'panr', 'level'],
+  drive: ['type', 'drive', 'tone', 'level', 'mix'],
+  formant: ['mix', 'level'],
+  synth: ['mix', 'level'],
+  ring_modulator: ['mix', 'level'],
+  multitap_delay: ['basetype', 'time1', 'feedback1', 'level1', 'time2', 'feedback2', 'level2'],
+});
+
+// ── Agent guidance ─────────────────────────────────────────────────
+//
+// Anchored on the III; FM3/FM9 reuse it (same catalog, same gen-3 codec,
+// same 8-scene / A-D-channel model). Each device adds a `device_note`
+// topic naming itself + its grid so the agent knows which unit it's on.
+
+export const MODERN_AGENT_GUIDANCE: Readonly<Record<string, string>> = Object.freeze({
+  diagnostic_isolation: [
+    'When the user reports an unwanted artifact in a tone, isolate via',
+    'set_bypass: toggle one block at a time and ask the user to play',
+    'between toggles, before changing any param values. The human-in-',
+    'the-loop is the test signal. Bulk edits during diagnosis hide which',
+    'change mattered; isolation surfaces the source one round-trip at a',
+    'time. Batching is correct for confident builds; isolation is the',
+    'right tool for chasing artifacts.',
+  ].join('\n'),
+
+  get_preset: [
+    'get_preset has two modes on gen-3 devices:',
+    '  - No location arg: reads the ACTIVE working buffer via the fn=0x1F block',
+    '    poll. This is a BLOCK INVENTORY, not a positioned grid: slot indices are',
+    '    sequential placeholders, params are the channel-A copy, and uncalibrated',
+    '    continuous params read back as raw wire values. Use it to see which',
+    '    blocks are placed + their live values; do NOT feed it back into',
+    '    apply_preset by position.',
+    '  - location=N (integer): reads a STORED preset slot and returns the FULL',
+    '    decoded patch in the `whole_preset` field — the routing grid, every',
+    '    placed block with per-channel (A/B/C/D) effect TYPES, all 8 scene names',
+    '    plus per-scene bypass/channel state, the amp model + per-channel amp',
+    '    knobs (FM3/FM9), modifier routing, and scene controllers. This decode is',
+    '    byte-validated offline against the factory banks; the stored dump',
+    '    (fn=0x03) is FM9 wire-confirmed, community beta on III/FM3.',
+    'Use location=N to inspect or summarize any stored preset without switching to',
+    'it. Named knob VALUES beyond the amp are not yet decoded (types, scenes,',
+    'routing, and the amp are). whole_preset is read-only structure: to recreate a',
+    'tone elsewhere, pair it with translate_preset + apply_preset, not a by-slot',
+    'round-trip.',
+  ].join('\n'),
+
+  export_preset: [
+    'export_preset supports two modes on gen-3 devices:',
+    '  - No location arg: dumps the ACTIVE working-buffer preset (fn=0x43,',
+    '    FM9-confirmed). Produces a .syx backup file.',
+    '  - location=N (integer): dumps stored preset slot N directly from device',
+    '    flash (fn=0x03, FM9 fw 11.00 wire-confirmed, community beta on III/FM3).',
+    '    N is the 0-based preset number (e.g. 0 = first preset in the bank).',
+    'The resulting .syx file is Fractal-compatible and reloads into the',
+    'manufacturer\'s editor (FM-Edit / Axe-Edit). Server-side write-back is NOT',
+    'available on the modern Fractal family: import_preset returns',
+    'capability_not_supported (no host->device restore wire path is confirmed).',
+    'Treat the .syx as a read-only backup; reload it via the editor, not',
+    'import_preset.',
+  ].join('\n'),
+
+  beta_status: [
+    'COMMUNITY BETA — writes are NOT gated. Every supported write',
+    '(set_param / set_params / set_block / set_bypass / switch_scene /',
+    'apply_preset / save_preset) fires the wire send normally when called.',
+    '"Beta" / "untested" / "pending an owner round-trip" are CONFIDENCE',
+    'LABELS on the evidence, never refusals: verification upgrades the',
+    "label, it does not unlock the tool. Drive the tools normally; verify",
+    "by the user's ear and front panel, not by withholding the write.",
+    '',
+    'The modern Fractal protocol layer is partly community-derived. Some',
+    'operations are documented in the Fractal third-party MIDI spec;',
+    'others are ported from the Axe-Fx II family with this device\'s model',
+    'byte. When an op is rejected, the device returns an error frame',
+    'with a named result code; report it verbatim to the user so they',
+    'can confirm by ear / by panel.',
+    '',
+    'Writes the protocol supports attempt a wire send and surface device',
+    'rejections inline, so an owner can exercise the surface and report',
+    'results. save_preset DOES send the gen-3 editor store envelope (fn=0x01',
+    'sub=0x26), captured byte-exact from III-Edit / FM9-Edit — it is UNTESTED',
+    'for flash persistence (confirm by switching away and back), not refused.',
+    'Only auto-save during navigation stays gated (no silent unverified flash',
+    'write), and on a write-gated device (VP4) every device-state write refuses',
+    '(see that device\'s device_note).',
+    '',
+    'When a write is acked, tell the user what you wrote AND ask them',
+    'to confirm the audible / visible response on the device. Their',
+    'confirmation is the verification path. Example: "I set pitch.harm1',
+    'to wire 27. Can you confirm the harmony interval changed on the',
+    'front panel?"',
+    '',
+    'If the device rejects an op, surface the named error code verbatim',
+    '(e.g. "message not recognized", "invalid parameter ID", "DSP',
+    'overload"). Do not paper over rejections.',
+  ].join('\n'),
+  channels: [
+    'Modern Fractal channel names: A, B, C, D (4 channels per block, same',
+    "as AM4, different from Axe-Fx II's X/Y). Per-spec function 0x0B",
+    '`id id dd` targets the ACTIVE scene only; there is no per-scene',
+    'channel write in the spec.',
+  ].join('\n'),
+  scenes: [
+    'Modern Fractal: 8 scenes per preset. Scenes are 1-indexed in user-',
+    'facing tools, 0-indexed on the wire (the descriptor handles conversion).',
+  ].join('\n'),
+  effect_ids: [
+    'Block-level operations (bypass, channel) need an EFFECT ID, which is',
+    'an integer 0..16383 from the III v1.4 Appendix 1 (the FM3/FM9 reuse',
+    'the III effect-ID enum). Examples:',
+    "  - Compressor 1..4    →  46..49",
+    "  - Amp 1..4           →  58..61",
+    "  - Cab 1..4           →  62..65",
+    "  - Reverb 1..4        →  66..69",
+    "  - Delay 1..4         →  70..73",
+    "  - Chorus 1..4        →  78..81",
+    "  - Pitch 1..4         →  110..113",
+    "  - Drive (OD/Fuzz) 1..4 →  118..121",
+    'Full table: docs/devices/axe-fx-iii/SYSEX-MAP.md.',
+    '',
+    'Dynamic Distortion, NAM, Global Block, Shunt: effect IDs NOT in v1.4;',
+    'bypass/channel control for these will refuse until decoded.',
+  ].join('\n'),
+  param_addressing: [
+    'set_param / get_param address by (block, name) where:',
+    '  - block is a single-instance slug (e.g. "reverb", "pitch", "drive")',
+    '    that defaults to instance 1. Multi-instance routing is a future',
+    '    hook; for now, all writes hit instance 1.',
+    '  - name is the lowercase-stripped catalog symbol (REVERB_TYPE → type,',
+    '    PITCH_HARM1 → harm1). The original symbol is also accepted as an',
+    '    alias (so "reverb_type" works too).',
+    '',
+    'DISPLAY-FIRST vs RAW WIRE -- check list_params:',
+    'Many params ARE display-calibrated and take a DISPLAY value, NOT a raw',
+    'wire integer. list_params reports display_min / display_max + unit per',
+    'param: when those are present, pass the DISPLAY value (e.g. 5, not 32767).',
+    '  - Amp tone stack -- drive, bass, mid, treble, master, presence, depth',
+    '    -- is a 0..10 knob: pass 0..10 (5 = middle). amp.level is in dB.',
+    '  - reverb.mix is 0..100 percent.',
+    '  - Many *.level / *.mix / time knobs across blocks are calibrated too;',
+    '    trust list_params over any number you remember.',
+    'A param with NO display_min/display_max is uncalibrated: pass the raw',
+    '16-bit wire integer 0..65534 (midpoint 32767). list_params marks these.',
+    '',
+    'AMP MODEL (amp.type) is settable by NAME. A discrete SET carries',
+    'float32(read-ordinal); the codec resolves a model name (e.g. "Texas Star',
+    'Clean") against the device\'s amp roster and writes that ordinal. Word order',
+    'and case are tolerant. The roster is device-specific: where it is mined',
+    'device-true (the FM9 ships the full amp/drive/reverb model lists) every model',
+    'is name-settable; elsewhere a few ordinals may be unnamed. A name not in the',
+    'device\'s roster is rejected (call list_params to see what it knows) so the amp',
+    'keeps its current model rather than being mis-swapped, and numeric ordinals',
+    'always pass through. Other enum *types* are likewise settable by NAME or',
+    'numeric ordinal across the device roster: e.g. reverb "Medium Spring" /',
+    '"Music Hall", drive "Blues OD". UNTESTED end to end: the SET wire is byte-',
+    'confirmed against device captures, but a server-issued write drawing a device',
+    'echo is not yet hardware-confirmed -- always READ BACK with get_param.',
+    '',
+    'When you write, READ BACK with get_param and confirm with the user.',
+  ].join('\n'),
+
+  tempo_time_discipline: [
+    'TEMPO-FIRST for time-based params. On Fractal hardware, delay and',
+    'modulation timing should be SYNCED to the song tempo (musical note',
+    'divisions like 1/4, 1/8, dotted) rather than set to raw ms/Hz, that is',
+    'the professional default for rhythmic music. Reach for tempo sync first',
+    'unless the user asks for a specific number, a free-time / slapback feel,',
+    'or is playing without a tempo reference.',
+    '',
+    'CAVEAT: the core tone knobs ARE display-calibrated (see param_addressing),',
+    'but the delay / modulation TIME params and the tempo-division enums are NOT',
+    'yet display-addressable -- there is no named "1/4" division you can pass.',
+    'Do NOT fabricate a division string; the codec cannot resolve it to a wire',
+    'value yet. State the tempo-first preference to the user and flag that named-',
+    'division writes are pending, rather than guessing a wire index. Pass raw',
+    'wire for time params until they are calibrated.',
+  ].join('\n'),
+
+  loudness: [
+    'LOUDNESS MODEL. The core amp tone knobs ARE display-calibrated: drive,',
+    'bass, mid, treble, master, presence, depth take a 0..10 value (5 = middle,',
+    '10 = max); amp.level and many *.level params are dB; reverb.mix and other',
+    'mix knobs are percent. For these, "make it 50%" is 5 on a 0..10 knob -- NOT',
+    '32767. Pass the DISPLAY value; the codec converts it to wire. Check',
+    'list_params (display_min/display_max) when unsure which scale a knob uses.',
+    '',
+    'UNCALIBRATED params (no display_min/display_max in list_params) still take a',
+    'raw 16-bit wire integer 0..65534. For THOSE ONLY this approximation applies:',
+    '  wire 0 ≈ min/muted, 16384 ≈ 25%, 32767 ≈ midpoint, 49152 ≈ 75%,',
+    '  65534 ≈ max. After every write, READ BACK with get_param and confirm.',
+    '',
+    'CROSS-PARAM INTERACTIONS (audio-engineer rules of thumb, in display units):',
+    '  - Raising amp.gain (input drive) lifts perceived loudness as well as',
+    '    distortion. For "more crunch, same volume", raise gain ~1.5 (0..10)',
+    '    and drop master ~0.5.',
+    '  - Engaging a drive block in front of an amp adds 3-6 dB perceived',
+    '    loudness even at unity. Drop amp.master / output a touch to keep',
+    '    stage level constant.',
+    '  - reverb.mix above ~50% masks 1-3 kHz mid-range and can swallow a',
+    '    lead. Aim 25-40% for normal rooms / plates.',
+    '',
+    'SCENE LEVELING. When you build a multi-scene preset, pick ONE scene as the',
+    'loud reference (usually the highest-gain rhythm scene) and balance the',
+    'others within ~1 dB of it via the Output block or amp.level (NOT amp.master,',
+    'which interacts with the amp model and can change tone).',
+    '',
+    'Community beta. Make the loudness write, then tell the user what you set and',
+    'ask them to confirm the audible result. Their confirmation IS our',
+    'verification pipeline.',
+  ].join('\n'),
+});
+
+/**
+ * Wide-grid (6×14) example_spec for the III and FM9. FM3 uses a 4×12
+ * variant in its own config. Values are DISPLAY units for calibrated knobs
+ * (amp tone stack 0..10, mix in percent); `type` is a raw model ordinal.
+ * See the param_addressing guidance for display-vs-raw-wire.
+ */
+export const WIDE_GRID_EXAMPLE_SPEC: PresetSpec = {
+  name: 'Demo',
+  slots: [
+    {
+      // The user-facing Drive / OD pedal (ID_FUZZ family): drive/tone/level.
+      slot: { row: 2, col: 1 },
+      block_type: 'drive',
+      params_by_channel: {
+        A: { type: 3, drive: 5, tone: 5, level: 5 },
+      },
+    },
+    {
+      // The Amp block (ID_DISTORT family) carries the tone stack.
+      slot: { row: 2, col: 2 },
+      block_type: 'amp',
+      params_by_channel: {
+        A: { type: 3, bass: 5, mid: 5, treble: 5, master: 5 },
+      },
+    },
+    { slot: { row: 2, col: 3 }, block_type: 'amp', instance: 2 },
+    { slot: { row: 2, col: 4 }, block_type: 'cab' },
+    {
+      slot: { row: 2, col: 5 },
+      block_type: 'reverb',
+      params_by_channel: {
+        A: { type: 3, time: 5, mix: 25 },
+      },
+    },
+  ],
+  scenes: [
+    { scene: 1, name: 'Clean', channels: { amp: 'A', amp_2: 'A', reverb: 'A' }, bypassed: { drive: true } },
+    { scene: 2, name: 'Lead', channels: { amp: 'B', amp_2: 'A', reverb: 'A' }, bypassed: { drive: false } },
+  ],
+  landingScene: 1,
+};

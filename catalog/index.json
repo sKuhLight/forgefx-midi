@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "description": "Generated parameter/block/enum catalog for Fractal Audio devices. One file per device; keys under \"data\" mirror the same-named TypeScript exports in fractal-midi. See docs/CATALOG-SCHEMA.md. GENERATED — do not edit.",
+  "license": "Apache-2.0 (see LICENSE and NOTICE at the package root)",
+  "devices": [
+    {
+      "device": "am4",
+      "file": "am4.json",
+      "model_byte": "0x15",
+      "support_status": "hardware-verified"
+    },
+    {
+      "device": "axe-fx-ii",
+      "file": "axe-fx-ii.json",
+      "model_byte": "0x07",
+      "support_status": "hardware-verified (XL+, firmware Quantum 8.02)"
+    },
+    {
+      "device": "axe-fx-iii",
+      "file": "axe-fx-iii.json",
+      "model_byte": "0x10",
+      "support_status": "community-beta (decoded; hardware confirmations from community captures)"
+    },
+    {
+      "device": "fm3",
+      "file": "fm3.json",
+      "model_byte": "0x11",
+      "support_status": "community-beta (device-true catalog; discrete set-by-name and striped read hardware-confirmed on FM3 by a community collaborator)"
+    },
+    {
+      "device": "fm9",
+      "file": "fm9.json",
+      "model_byte": "0x12",
+      "support_status": "community-beta (decoded from FM9-Edit cache + community captures)"
+    },
+    {
+      "device": "vp4",
+      "file": "vp4.json",
+      "model_byte": "0x14",
+      "support_status": "community-beta (reads + continuous-knob writes decoded from community captures; display calibration pending — wire values pass through as raw 0..65534)"
+    },
+    {
+      "device": "axe-fx-gen1",
+      "file": "axe-fx-gen1.json",
+      "model_byte": "0x01",
+      "support_status": "community-beta (decoded byte-exactly from the published gen-1 SysEx spec; not hardware-verified; params with scaling \"pending\" require raw wire values)"
+    }
+  ]
+}

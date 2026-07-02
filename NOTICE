@@ -1,0 +1,50 @@
+fractal-midi
+Copyright 2026 Stephen Staker
+
+This product is licensed under the Apache License, Version 2.0.
+See the LICENSE file for the full license text.
+
+---
+
+TRADEMARKS
+
+This project is an unaffiliated community library. "Fractal Audio",
+"AM4", "Axe-Fx", "Axe-Fx II", "Axe-Fx III", "FM3", "FM9", "VP4", and
+related product names are trademarks of Fractal Audio Systems, Inc.
+
+This project neither claims endorsement from, nor affiliation with,
+Fractal Audio Systems. It is a software library that builds and
+parses MIDI / SysEx wire bytes for Fractal Audio hardware the
+consuming application's user already owns. Decode work is based on
+publicly-documented protocol information, including Fractal Audio's
+own "MIDI for Third-Party Devices" specifications, plus community
+reverse-engineering of editor binaries (JUCE BinaryData extraction,
+Ghidra symbol mining).
+
+The package name `fractal-midi` uses the "Fractal" trademark
+descriptively (nominative fair use) to identify the hardware family
+this library targets. The library does not embed Fractal Audio
+firmware, factory presets, branding assets, or any other Fractal-
+copyrighted material.
+
+---
+
+THIRD-PARTY SOFTWARE
+
+This library includes gen-3 (Axe-Fx III / FM3 / FM9) protocol data
+derived from:
+
+  - fractal-syx-codec  (Apache License, Version 2.0)
+    Copyright 2026 Andrew Mercurio ("BoodieTraps")
+    https://github.com/drewmerc302/fractal-syx-codec
+    The gen-3 preset-file format spec (FORMAT.md) and the read-ordinal
+    effect-type roster tables (shipped as the gen-3 read rosters /
+    body-decode tables). The Huffman/CRC codec is a clean-room
+    reimplementation from that spec; the roster name tables are derived
+    from its data, independently cross-validated against our own
+    hardware captures.
+
+---
+
+Portions of this package are derived from the mcp-midi-control project
+(Apache License, Version 2.0).

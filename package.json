@@ -1,0 +1,68 @@
+{
+  "name": "forgefx-midi",
+  "version": "0.1.0",
+  "description": "Fractal Audio device codec + catalogs for ForgeFX (gen1, Axe-Fx II, gen3 FM3/FM9/Axe-Fx III/VP4, AM4)",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./shared": {
+      "types": "./dist/shared/index.d.ts",
+      "default": "./dist/shared/index.js"
+    },
+    "./am4": {
+      "types": "./dist/am4/index.d.ts",
+      "default": "./dist/am4/index.js"
+    },
+    "./gen1": {
+      "types": "./dist/gen1/index.d.ts",
+      "default": "./dist/gen1/index.js"
+    },
+    "./gen2/axe-fx-ii": {
+      "types": "./dist/gen2/axe-fx-ii/index.d.ts",
+      "default": "./dist/gen2/axe-fx-ii/index.js"
+    },
+    "./gen3/axe-fx-iii": {
+      "types": "./dist/gen3/axe-fx-iii/index.d.ts",
+      "default": "./dist/gen3/axe-fx-iii/index.js"
+    },
+    "./gen3/fm3": {
+      "types": "./dist/gen3/fm3/index.d.ts",
+      "default": "./dist/gen3/fm3/index.js"
+    },
+    "./gen3/fm9": {
+      "types": "./dist/gen3/fm9/index.d.ts",
+      "default": "./dist/gen3/fm9/index.js"
+    },
+    "./gen3/vp4": {
+      "types": "./dist/gen3/vp4/index.d.ts",
+      "default": "./dist/gen3/vp4/index.js"
+    },
+    "./catalog/*.json": "./catalog/*.json"
+  },
+  "files": [
+    "dist",
+    "catalog",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tsx scripts/copy-build-assets.ts",
+    "test": "tsx test/run-all.ts",
+    "prepack": "npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

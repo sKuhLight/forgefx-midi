@@ -22,8 +22,8 @@
 import {
     toHex,
     type MidiConnection,
-} from '../../../core/midi/transport.js';
-import { describeAm4InboundMessage } from '../midi.js';
+} from '../../../core/midi/pure.js';
+import { describeAm4InboundMessage } from '../describe.js';
 
 import {
     AM4_LABEL,

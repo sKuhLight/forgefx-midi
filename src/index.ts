@@ -8,15 +8,9 @@
 //   import { ... } from 'fractal-midi/gen2/axe-fx-ii';
 //
 // The root `VERSION` constant is convenience-only — useful for log
-// lines and version pinning sanity checks. It's read from package.json
-// at module load so it never drifts from the published version.
+// lines and version pinning sanity checks. It lives in src/version.ts,
+// regenerated from package.json by `npm run build` (scripts/gen-version.ts),
+// so the root entry stays importable from browser bundles (no fs read
+// at module load — Axis Browser Direct bundles these codecs).
 
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
-
-const HERE = dirname(fileURLToPath(import.meta.url));
-const PKG_PATH = join(HERE, '..', 'package.json');
-const pkg = JSON.parse(readFileSync(PKG_PATH, 'utf8')) as { version: string };
-
-export const VERSION: string = pkg.version;
+export { VERSION } from './version.js';

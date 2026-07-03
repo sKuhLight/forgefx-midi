@@ -12,7 +12,20 @@
  * shared module the rest of the tools depend on.
  */
 
-import { connect, type MidiConnection } from '../midi/transport.js';
+import type { ConnectOptions, MidiConnection } from '../midi/pure.js';
+
+/**
+ * Generic substring-connect fallback for labels with no registered
+ * factory. Installed by `../midi/transport.js` at module load (it owns
+ * the node-midi binding); kept injectable so this registry stays
+ * browser-safe — browser runtimes register explicit factories and never
+ * need the generic fallback.
+ */
+let fallbackConnect: ((opts: ConnectOptions) => MidiConnection) | null = null;
+
+export function setFallbackConnect(fn: (opts: ConnectOptions) => MidiConnection): void {
+    fallbackConnect = fn;
+}
 
 /**
  * Max time we wait for the device to echo a WRITE after we send it. The
@@ -155,7 +168,14 @@ export function ensureConnection(
     if (cachedErr) throw cachedErr;
     try {
         const factory = connectorFactories.get(label);
-        const conn = factory ? factory() : connect({ needles: [label] });
+        if (!factory && !fallbackConnect) {
+            throw new Error(
+                `No connector registered for label "${label}" and the generic MIDI ` +
+                'transport is not loaded (import forgefx-midi/core/midi first, or ' +
+                'register a factory via registerConnector).',
+            );
+        }
+        const conn = factory ? factory() : fallbackConnect!({ needles: [label] });
         connections.set(label, { conn, consecutiveTimeouts: 0, cold: true });
         return conn;
     } catch (err) {

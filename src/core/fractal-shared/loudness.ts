@@ -18,9 +18,9 @@
  * UI / wire string variations don't miss the corpus entry.
  */
 
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+// Static JSON import (no fs at runtime) so this module — re-exported from
+// the `forgefx-midi/core` barrel — stays importable from browser bundles.
+import corpusJson from './lineage/loudness.json' with { type: 'json' };
 
 export interface AmpLoudnessEntry {
   master_sweet_spot_display: number;
@@ -49,22 +49,7 @@ interface LoudnessCorpus {
   _precision?: string;
 }
 
-function loadCorpus(): LoudnessCorpus {
-  const here = path.dirname(fileURLToPath(import.meta.url));
-  const file = path.join(here, 'lineage', 'loudness.json');
-  try {
-    const raw = readFileSync(file, 'utf8');
-    return JSON.parse(raw) as LoudnessCorpus;
-  } catch {
-    // eslint-disable-next-line no-console
-    console.warn(
-      `[loudness] could not load ${file}; loudness lookup disabled`,
-    );
-    return {};
-  }
-}
-
-const CORPUS: LoudnessCorpus = loadCorpus();
+const CORPUS: LoudnessCorpus = corpusJson as unknown as LoudnessCorpus;
 
 const AMP_INDEX = buildIndex(CORPUS.amps);
 const DRIVE_INDEX = buildIndex(CORPUS.drives);

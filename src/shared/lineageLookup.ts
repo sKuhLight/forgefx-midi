@@ -10,13 +10,21 @@
  *
  * Tests cover this layer directly via `scripts/verify-msg.ts`, which is
  * why the surface is exported instead of inlined in the server.
+ *
+ * The lineage JSON is imported statically (no `fs` at runtime) so this
+ * module — re-exported from the `forgefx-midi/shared` barrel — stays
+ * importable from browser bundles. Bundlers tree-shake the JSON away
+ * when `loadLineage`/`runLineageLookup` are unused (`sideEffects: false`).
  */
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const KNOWLEDGE_DIR = path.join(__dirname, 'lineage');
+import ampLineage from './lineage/amp-lineage.json' with { type: 'json' };
+import driveLineage from './lineage/drive-lineage.json' with { type: 'json' };
+import reverbLineage from './lineage/reverb-lineage.json' with { type: 'json' };
+import delayLineage from './lineage/delay-lineage.json' with { type: 'json' };
+import compressorLineage from './lineage/compressor-lineage.json' with { type: 'json' };
+import phaserLineage from './lineage/phaser-lineage.json' with { type: 'json' };
+import chorusLineage from './lineage/chorus-lineage.json' with { type: 'json' };
+import flangerLineage from './lineage/flanger-lineage.json' with { type: 'json' };
+import wahLineage from './lineage/wah-lineage.json' with { type: 'json' };
 
 export const LINEAGE_BLOCKS = [
   'amp', 'drive', 'reverb', 'delay', 'compressor',
@@ -51,21 +59,24 @@ export interface LineageRecord {
   familyType?: string;
 }
 
-const lineageCache: Partial<Record<LineageBlock, LineageRecord[]>> = {};
+interface LineageFile {
+  records?: LineageRecord[];
+}
+
+const LINEAGE_DATA: Record<LineageBlock, LineageFile> = {
+  amp: ampLineage as unknown as LineageFile,
+  drive: driveLineage as unknown as LineageFile,
+  reverb: reverbLineage as unknown as LineageFile,
+  delay: delayLineage as unknown as LineageFile,
+  compressor: compressorLineage as unknown as LineageFile,
+  phaser: phaserLineage as unknown as LineageFile,
+  chorus: chorusLineage as unknown as LineageFile,
+  flanger: flangerLineage as unknown as LineageFile,
+  wah: wahLineage as unknown as LineageFile,
+};
 
 export function loadLineage(block: LineageBlock): LineageRecord[] {
-  const cached = lineageCache[block];
-  if (cached) return cached;
-  const file = path.join(KNOWLEDGE_DIR, `${block}-lineage.json`);
-  if (!fs.existsSync(file)) {
-    throw new Error(
-      `Lineage data missing at ${file}. Run \`npm run extract-lineage\` to regenerate from the wiki scrape + Blocks Guide PDF.`,
-    );
-  }
-  const parsed = JSON.parse(fs.readFileSync(file, 'utf8')) as { records?: LineageRecord[] };
-  const records = parsed.records ?? [];
-  lineageCache[block] = records;
-  return records;
+  return LINEAGE_DATA[block].records ?? [];
 }
 
 export function scoreRecord(rec: LineageRecord, query: string): number {

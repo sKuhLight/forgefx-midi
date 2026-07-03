@@ -49,8 +49,7 @@
  * core transport barrel) never loads the native binding — environments
  * without it stay healthy until a serial connect is actually attempted.
  */
-import fs from 'node:fs';
-import type { MidiConnection } from './transport.js';
+import type { MidiConnection } from './pure.js';
 import { createSerialMidiFramer } from './serialFraming.js';
 
 /** Fractal Audio Systems USB vendor id (usb.ids registry: 2466). */
@@ -238,7 +237,11 @@ export function connectSerial(opts: SerialConnectOptions = {}): MidiConnection {
         // FM3 over USB-CDC, 2026-06-12).
         if (path.startsWith('/dev/tty.')) {
           const cuTwin = `/dev/cu.${path.slice('/dev/tty.'.length)}`;
-          if (candidates.some((c) => c.path === cuTwin) || fs.existsSync(cuTwin)) {
+          // Lazy builtin access (Node ≥20.16) — a static `import fs from
+          // 'node:fs'` would make this module unbundleable for the browser.
+          // This code path only runs mid-connect on Node, so fs is present.
+          const fs = globalThis.process?.getBuiltinModule?.('node:fs');
+          if (candidates.some((c) => c.path === cuTwin) || fs?.existsSync(cuTwin)) {
             path = cuTwin;
             matchNote += '; preferred cu.* callout twin over tty.*';
           }

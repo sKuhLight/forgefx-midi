@@ -74,7 +74,11 @@ export function decodeAm4PresetName(
     const char1 = ((b1 >> 1) & 0x3f) | ((b2 & 0x03) << 6);
     chars.push(char0, char1);
   }
-  return Buffer.from(chars).toString('ascii').replace(/\0+$/, '').trimEnd();
+  // Mask to 7-bit exactly like Buffer's 'ascii' decoding did — byte-identical
+  // output, but browser-safe (no Buffer).
+  return String.fromCharCode(...chars.map((c) => c & 0x7f))
+    .replace(/\0+$/, '')
+    .trimEnd();
 }
 
 /**
@@ -90,11 +94,12 @@ export function encodeAm4PresetName(
   charCount: number = AM4_PRESET_NAME_CHAR_COUNT,
 ): Uint8Array {
   const padded = (name + ' '.repeat(charCount)).slice(0, charCount - 1) + '\0';
-  const buf = Buffer.from(padded, 'ascii');
+  // charCodeAt & 0xff matches Buffer.from(str, 'ascii') byte-for-byte —
+  // browser-safe (no Buffer).
   const out = new Uint8Array((charCount / 2) * 3);
   for (let g = 0; g < charCount / 2; g++) {
-    const char0 = buf[g * 2]!;
-    const char1 = buf[g * 2 + 1]!;
+    const char0 = padded.charCodeAt(g * 2) & 0xff;
+    const char1 = padded.charCodeAt(g * 2 + 1) & 0xff;
     out[g * 3] = char0 & 0x7f;
     out[g * 3 + 1] = ((char0 >> 7) & 0x01) | ((char1 & 0x3f) << 1);
     out[g * 3 + 2] = (char1 >> 6) & 0x03;

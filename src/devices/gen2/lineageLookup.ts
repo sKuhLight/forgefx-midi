@@ -19,18 +19,16 @@
  * shape (one helper per device family).
  */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { createRequire } from 'node:module';
-
 import { formatLoudnessAppendix } from '../../core/fractal-shared/loudness.js';
 
-const require = createRequire(import.meta.url);
 // Axe-Fx II lineage JSON lives alongside AM4 lineage data inside the
-// fractal-midi package's shared/ subpath. Resolve via the package's
-// exports so the path works whether we run from source (tsx) or built dist.
-const coreLineageLookup = require.resolve('../../shared/index.js');
-const LINEAGE_DIR = path.join(path.dirname(coreLineageLookup), 'lineage');
+// package's shared/ subpath. Imported statically (no fs/createRequire at
+// runtime) so this module stays importable from browser bundles; bundlers
+// tree-shake the JSON when the lookup helpers are unused.
+import axefx2AmpLineage from '../../shared/lineage/axefx2-amp-lineage.json' with { type: 'json' };
+import axefx2DriveLineage from '../../shared/lineage/axefx2-drive-lineage.json' with { type: 'json' };
+import axefx2ReverbLineage from '../../shared/lineage/axefx2-reverb-lineage.json' with { type: 'json' };
+import axefx2DelayLineage from '../../shared/lineage/axefx2-delay-lineage.json' with { type: 'json' };
 
 export const AXE_FX_II_LINEAGE_BLOCKS = ['amp', 'drive', 'reverb', 'delay'] as const;
 export type AxeFxIILineageBlock = typeof AXE_FX_II_LINEAGE_BLOCKS[number];
@@ -71,23 +69,19 @@ export interface AxeFxIILineageRecord {
     flags: string[];
 }
 
-const lineageCache: Partial<Record<AxeFxIILineageBlock, AxeFxIILineageRecord[]>> = {};
+interface AxeFxIILineageFile {
+    records?: AxeFxIILineageRecord[];
+}
+
+const LINEAGE_DATA: Record<AxeFxIILineageBlock, AxeFxIILineageFile> = {
+    amp: axefx2AmpLineage as unknown as AxeFxIILineageFile,
+    drive: axefx2DriveLineage as unknown as AxeFxIILineageFile,
+    reverb: axefx2ReverbLineage as unknown as AxeFxIILineageFile,
+    delay: axefx2DelayLineage as unknown as AxeFxIILineageFile,
+};
 
 export function loadAxeFxIILineage(block: AxeFxIILineageBlock): AxeFxIILineageRecord[] {
-    const cached = lineageCache[block];
-    if (cached) return cached;
-    const file = path.join(LINEAGE_DIR, `axefx2-${block}-lineage.json`);
-    if (!fs.existsSync(file)) {
-        throw new Error(
-            `Axe-Fx II lineage data missing at ${file}. Regenerate via ` +
-            `\`npm run extract-axe-fx-ii-lineage\` (the extractor re-keys the ` +
-            `AM4 wiki lineage against the Axe-Fx II enum tables).`,
-        );
-    }
-    const parsed = JSON.parse(fs.readFileSync(file, 'utf8')) as { records?: AxeFxIILineageRecord[] };
-    const records = parsed.records ?? [];
-    lineageCache[block] = records;
-    return records;
+    return LINEAGE_DATA[block].records ?? [];
 }
 
 export function scoreAxeFxIIRecord(rec: AxeFxIILineageRecord, query: string): number {

@@ -1,0 +1,1043 @@
+{
+  "note": "Frozen from the pre-migration ForgeFX server roster helpers (fm3PresetGrid.ts).",
+  "roster": [
+    {
+      "slug": "amp",
+      "name": "Amp",
+      "page": 58
+    },
+    {
+      "slug": "cab",
+      "name": "Cab",
+      "page": 62
+    },
+    {
+      "slug": "chorus",
+      "name": "Chorus",
+      "page": 78
+    },
+    {
+      "slug": "comp",
+      "name": "Compressor",
+      "page": 46
+    },
+    {
+      "slug": "delay",
+      "name": "Delay",
+      "page": 70
+    },
+    {
+      "slug": "drive",
+      "name": "Drive",
+      "page": 118
+    },
+    {
+      "slug": "enhancer",
+      "name": "Enhancer",
+      "page": 122
+    },
+    {
+      "slug": "filter",
+      "name": "Filter",
+      "page": 114
+    },
+    {
+      "slug": "flanger",
+      "name": "Flanger",
+      "page": 82
+    },
+    {
+      "slug": "formant",
+      "name": "Formant",
+      "page": 98
+    },
+    {
+      "slug": "gate",
+      "name": "Gate",
+      "page": 146
+    },
+    {
+      "slug": "geq",
+      "name": "Graphic EQ",
+      "page": 50
+    },
+    {
+      "slug": "input",
+      "name": "Input",
+      "page": 37
+    },
+    {
+      "slug": "looper",
+      "name": "Looper",
+      "page": 166
+    },
+    {
+      "slug": "megatap",
+      "name": "Megatap Delay",
+      "page": 138
+    },
+    {
+      "slug": "mixer",
+      "name": "Mixer",
+      "page": 126
+    },
+    {
+      "slug": "multicomp",
+      "name": "Multiband Comp",
+      "page": 154
+    },
+    {
+      "slug": "multiplexer",
+      "name": "Multiplexer",
+      "page": 191
+    },
+    {
+      "slug": "multitap",
+      "name": "Multitap Delay",
+      "page": 74
+    },
+    {
+      "slug": "output",
+      "name": "Output",
+      "page": 42
+    },
+    {
+      "slug": "peq",
+      "name": "Parametric EQ",
+      "page": 54
+    },
+    {
+      "slug": "phaser",
+      "name": "Phaser",
+      "page": 90
+    },
+    {
+      "slug": "pitch",
+      "name": "Pitch",
+      "page": 110
+    },
+    {
+      "slug": "plex",
+      "name": "Plex Delay",
+      "page": 178
+    },
+    {
+      "slug": "resonator",
+      "name": "Resonator",
+      "page": 162
+    },
+    {
+      "slug": "return",
+      "name": "Return",
+      "page": 186
+    },
+    {
+      "slug": "reverb",
+      "name": "Reverb",
+      "page": 66
+    },
+    {
+      "slug": "ringmod",
+      "name": "Ring Modulator",
+      "page": 150
+    },
+    {
+      "slug": "rotary",
+      "name": "Rotary",
+      "page": 86
+    },
+    {
+      "slug": "send",
+      "name": "Send",
+      "page": 182
+    },
+    {
+      "slug": "synth",
+      "name": "Synth",
+      "page": 130
+    },
+    {
+      "slug": "tentap",
+      "name": "Ten-Tap Delay",
+      "page": 158
+    },
+    {
+      "slug": "tremolo",
+      "name": "Tremolo",
+      "page": 106
+    },
+    {
+      "slug": "volume",
+      "name": "Volume/Pan",
+      "page": 102
+    },
+    {
+      "slug": "wah",
+      "name": "Wah",
+      "page": 94
+    }
+  ],
+  "refByEid": {
+    "0": null,
+    "1": null,
+    "2": null,
+    "3": null,
+    "4": null,
+    "5": null,
+    "6": null,
+    "7": null,
+    "8": null,
+    "9": null,
+    "10": null,
+    "11": null,
+    "12": null,
+    "13": null,
+    "14": null,
+    "15": null,
+    "16": null,
+    "17": null,
+    "18": null,
+    "19": null,
+    "20": null,
+    "21": null,
+    "22": null,
+    "23": null,
+    "24": null,
+    "25": null,
+    "26": null,
+    "27": null,
+    "28": null,
+    "29": null,
+    "30": null,
+    "31": null,
+    "32": null,
+    "33": null,
+    "34": null,
+    "35": null,
+    "36": null,
+    "37": {
+      "slug": "input",
+      "instance": 1
+    },
+    "38": {
+      "slug": "input",
+      "instance": 2
+    },
+    "39": {
+      "slug": "input",
+      "instance": 3
+    },
+    "40": {
+      "slug": "input",
+      "instance": 4
+    },
+    "41": null,
+    "42": {
+      "slug": "output",
+      "instance": 1
+    },
+    "43": {
+      "slug": "output",
+      "instance": 2
+    },
+    "44": {
+      "slug": "output",
+      "instance": 3
+    },
+    "45": {
+      "slug": "output",
+      "instance": 4
+    },
+    "46": {
+      "slug": "comp",
+      "instance": 1
+    },
+    "47": {
+      "slug": "comp",
+      "instance": 2
+    },
+    "48": {
+      "slug": "comp",
+      "instance": 3
+    },
+    "49": {
+      "slug": "comp",
+      "instance": 4
+    },
+    "50": {
+      "slug": "geq",
+      "instance": 1
+    },
+    "51": {
+      "slug": "geq",
+      "instance": 2
+    },
+    "52": {
+      "slug": "geq",
+      "instance": 3
+    },
+    "53": {
+      "slug": "geq",
+      "instance": 4
+    },
+    "54": {
+      "slug": "peq",
+      "instance": 1
+    },
+    "55": {
+      "slug": "peq",
+      "instance": 2
+    },
+    "56": {
+      "slug": "peq",
+      "instance": 3
+    },
+    "57": {
+      "slug": "peq",
+      "instance": 4
+    },
+    "58": {
+      "slug": "amp",
+      "instance": 1
+    },
+    "59": {
+      "slug": "amp",
+      "instance": 2
+    },
+    "60": {
+      "slug": "amp",
+      "instance": 3
+    },
+    "61": {
+      "slug": "amp",
+      "instance": 4
+    },
+    "62": {
+      "slug": "cab",
+      "instance": 1
+    },
+    "63": {
+      "slug": "cab",
+      "instance": 2
+    },
+    "64": {
+      "slug": "cab",
+      "instance": 3
+    },
+    "65": {
+      "slug": "cab",
+      "instance": 4
+    },
+    "66": {
+      "slug": "reverb",
+      "instance": 1
+    },
+    "67": {
+      "slug": "reverb",
+      "instance": 2
+    },
+    "68": {
+      "slug": "reverb",
+      "instance": 3
+    },
+    "69": {
+      "slug": "reverb",
+      "instance": 4
+    },
+    "70": {
+      "slug": "delay",
+      "instance": 1
+    },
+    "71": {
+      "slug": "delay",
+      "instance": 2
+    },
+    "72": {
+      "slug": "delay",
+      "instance": 3
+    },
+    "73": {
+      "slug": "delay",
+      "instance": 4
+    },
+    "74": {
+      "slug": "multitap",
+      "instance": 1
+    },
+    "75": {
+      "slug": "multitap",
+      "instance": 2
+    },
+    "76": {
+      "slug": "multitap",
+      "instance": 3
+    },
+    "77": {
+      "slug": "multitap",
+      "instance": 4
+    },
+    "78": {
+      "slug": "chorus",
+      "instance": 1
+    },
+    "79": {
+      "slug": "chorus",
+      "instance": 2
+    },
+    "80": {
+      "slug": "chorus",
+      "instance": 3
+    },
+    "81": {
+      "slug": "chorus",
+      "instance": 4
+    },
+    "82": {
+      "slug": "flanger",
+      "instance": 1
+    },
+    "83": {
+      "slug": "flanger",
+      "instance": 2
+    },
+    "84": {
+      "slug": "flanger",
+      "instance": 3
+    },
+    "85": {
+      "slug": "flanger",
+      "instance": 4
+    },
+    "86": {
+      "slug": "rotary",
+      "instance": 1
+    },
+    "87": {
+      "slug": "rotary",
+      "instance": 2
+    },
+    "88": {
+      "slug": "rotary",
+      "instance": 3
+    },
+    "89": {
+      "slug": "rotary",
+      "instance": 4
+    },
+    "90": {
+      "slug": "phaser",
+      "instance": 1
+    },
+    "91": {
+      "slug": "phaser",
+      "instance": 2
+    },
+    "92": {
+      "slug": "phaser",
+      "instance": 3
+    },
+    "93": {
+      "slug": "phaser",
+      "instance": 4
+    },
+    "94": {
+      "slug": "wah",
+      "instance": 1
+    },
+    "95": {
+      "slug": "wah",
+      "instance": 2
+    },
+    "96": {
+      "slug": "wah",
+      "instance": 3
+    },
+    "97": {
+      "slug": "wah",
+      "instance": 4
+    },
+    "98": {
+      "slug": "formant",
+      "instance": 1
+    },
+    "99": {
+      "slug": "formant",
+      "instance": 2
+    },
+    "100": {
+      "slug": "formant",
+      "instance": 3
+    },
+    "101": {
+      "slug": "formant",
+      "instance": 4
+    },
+    "102": {
+      "slug": "volume",
+      "instance": 1
+    },
+    "103": {
+      "slug": "volume",
+      "instance": 2
+    },
+    "104": {
+      "slug": "volume",
+      "instance": 3
+    },
+    "105": {
+      "slug": "volume",
+      "instance": 4
+    },
+    "106": {
+      "slug": "tremolo",
+      "instance": 1
+    },
+    "107": {
+      "slug": "tremolo",
+      "instance": 2
+    },
+    "108": {
+      "slug": "tremolo",
+      "instance": 3
+    },
+    "109": {
+      "slug": "tremolo",
+      "instance": 4
+    },
+    "110": {
+      "slug": "pitch",
+      "instance": 1
+    },
+    "111": {
+      "slug": "pitch",
+      "instance": 2
+    },
+    "112": {
+      "slug": "pitch",
+      "instance": 3
+    },
+    "113": {
+      "slug": "pitch",
+      "instance": 4
+    },
+    "114": {
+      "slug": "filter",
+      "instance": 1
+    },
+    "115": {
+      "slug": "filter",
+      "instance": 2
+    },
+    "116": {
+      "slug": "filter",
+      "instance": 3
+    },
+    "117": {
+      "slug": "filter",
+      "instance": 4
+    },
+    "118": {
+      "slug": "drive",
+      "instance": 1
+    },
+    "119": {
+      "slug": "drive",
+      "instance": 2
+    },
+    "120": {
+      "slug": "drive",
+      "instance": 3
+    },
+    "121": {
+      "slug": "drive",
+      "instance": 4
+    },
+    "122": {
+      "slug": "enhancer",
+      "instance": 1
+    },
+    "123": {
+      "slug": "enhancer",
+      "instance": 2
+    },
+    "124": {
+      "slug": "enhancer",
+      "instance": 3
+    },
+    "125": {
+      "slug": "enhancer",
+      "instance": 4
+    },
+    "126": {
+      "slug": "mixer",
+      "instance": 1
+    },
+    "127": {
+      "slug": "mixer",
+      "instance": 2
+    },
+    "128": {
+      "slug": "mixer",
+      "instance": 3
+    },
+    "129": {
+      "slug": "mixer",
+      "instance": 4
+    },
+    "130": {
+      "slug": "synth",
+      "instance": 1
+    },
+    "131": {
+      "slug": "synth",
+      "instance": 2
+    },
+    "132": {
+      "slug": "synth",
+      "instance": 3
+    },
+    "133": {
+      "slug": "synth",
+      "instance": 4
+    },
+    "134": null,
+    "135": null,
+    "136": null,
+    "137": null,
+    "138": {
+      "slug": "megatap",
+      "instance": 1
+    },
+    "139": {
+      "slug": "megatap",
+      "instance": 2
+    },
+    "140": {
+      "slug": "megatap",
+      "instance": 3
+    },
+    "141": {
+      "slug": "megatap",
+      "instance": 4
+    },
+    "142": null,
+    "143": null,
+    "144": null,
+    "145": null,
+    "146": {
+      "slug": "gate",
+      "instance": 1
+    },
+    "147": {
+      "slug": "gate",
+      "instance": 2
+    },
+    "148": {
+      "slug": "gate",
+      "instance": 3
+    },
+    "149": {
+      "slug": "gate",
+      "instance": 4
+    },
+    "150": {
+      "slug": "ringmod",
+      "instance": 1
+    },
+    "151": {
+      "slug": "ringmod",
+      "instance": 2
+    },
+    "152": {
+      "slug": "ringmod",
+      "instance": 3
+    },
+    "153": {
+      "slug": "ringmod",
+      "instance": 4
+    },
+    "154": {
+      "slug": "multicomp",
+      "instance": 1
+    },
+    "155": {
+      "slug": "multicomp",
+      "instance": 2
+    },
+    "156": {
+      "slug": "multicomp",
+      "instance": 3
+    },
+    "157": {
+      "slug": "multicomp",
+      "instance": 4
+    },
+    "158": {
+      "slug": "tentap",
+      "instance": 1
+    },
+    "159": {
+      "slug": "tentap",
+      "instance": 2
+    },
+    "160": {
+      "slug": "tentap",
+      "instance": 3
+    },
+    "161": {
+      "slug": "tentap",
+      "instance": 4
+    },
+    "162": {
+      "slug": "resonator",
+      "instance": 1
+    },
+    "163": {
+      "slug": "resonator",
+      "instance": 2
+    },
+    "164": {
+      "slug": "resonator",
+      "instance": 3
+    },
+    "165": {
+      "slug": "resonator",
+      "instance": 4
+    },
+    "166": {
+      "slug": "looper",
+      "instance": 1
+    },
+    "167": {
+      "slug": "looper",
+      "instance": 2
+    },
+    "168": {
+      "slug": "looper",
+      "instance": 3
+    },
+    "169": {
+      "slug": "looper",
+      "instance": 4
+    },
+    "170": null,
+    "171": null,
+    "172": null,
+    "173": null,
+    "174": null,
+    "175": null,
+    "176": null,
+    "177": null,
+    "178": {
+      "slug": "plex",
+      "instance": 1
+    },
+    "179": {
+      "slug": "plex",
+      "instance": 2
+    },
+    "180": {
+      "slug": "plex",
+      "instance": 3
+    },
+    "181": {
+      "slug": "plex",
+      "instance": 4
+    },
+    "182": {
+      "slug": "send",
+      "instance": 1
+    },
+    "183": {
+      "slug": "send",
+      "instance": 2
+    },
+    "184": {
+      "slug": "send",
+      "instance": 3
+    },
+    "185": {
+      "slug": "send",
+      "instance": 4
+    },
+    "186": {
+      "slug": "return",
+      "instance": 1
+    },
+    "187": {
+      "slug": "return",
+      "instance": 2
+    },
+    "188": {
+      "slug": "return",
+      "instance": 3
+    },
+    "189": {
+      "slug": "return",
+      "instance": 4
+    },
+    "190": null,
+    "191": {
+      "slug": "multiplexer",
+      "instance": 1
+    },
+    "192": {
+      "slug": "multiplexer",
+      "instance": 2
+    },
+    "193": {
+      "slug": "multiplexer",
+      "instance": 3
+    },
+    "194": {
+      "slug": "multiplexer",
+      "instance": 4
+    },
+    "195": null,
+    "196": null,
+    "197": null,
+    "198": null,
+    "199": null,
+    "200": null
+  },
+  "slugByEid": {
+    "0": null,
+    "1": null,
+    "2": null,
+    "3": null,
+    "4": null,
+    "5": null,
+    "6": null,
+    "7": null,
+    "8": null,
+    "9": null,
+    "10": null,
+    "11": null,
+    "12": null,
+    "13": null,
+    "14": null,
+    "15": null,
+    "16": null,
+    "17": null,
+    "18": null,
+    "19": null,
+    "20": null,
+    "21": null,
+    "22": null,
+    "23": null,
+    "24": null,
+    "25": null,
+    "26": null,
+    "27": null,
+    "28": null,
+    "29": null,
+    "30": null,
+    "31": null,
+    "32": null,
+    "33": null,
+    "34": null,
+    "35": null,
+    "36": null,
+    "37": "input",
+    "38": "input",
+    "39": "input",
+    "40": "input",
+    "41": null,
+    "42": "output",
+    "43": "output",
+    "44": "output",
+    "45": "output",
+    "46": "comp",
+    "47": "comp",
+    "48": "comp",
+    "49": "comp",
+    "50": "geq",
+    "51": "geq",
+    "52": "geq",
+    "53": "geq",
+    "54": "peq",
+    "55": "peq",
+    "56": "peq",
+    "57": "peq",
+    "58": "amp",
+    "59": "amp",
+    "60": "amp",
+    "61": "amp",
+    "62": "cab",
+    "63": "cab",
+    "64": "cab",
+    "65": "cab",
+    "66": "reverb",
+    "67": "reverb",
+    "68": "reverb",
+    "69": "reverb",
+    "70": "delay",
+    "71": "delay",
+    "72": "delay",
+    "73": "delay",
+    "74": "multitap",
+    "75": "multitap",
+    "76": "multitap",
+    "77": "multitap",
+    "78": "chorus",
+    "79": "chorus",
+    "80": "chorus",
+    "81": "chorus",
+    "82": "flanger",
+    "83": "flanger",
+    "84": "flanger",
+    "85": "flanger",
+    "86": "rotary",
+    "87": "rotary",
+    "88": "rotary",
+    "89": "rotary",
+    "90": "phaser",
+    "91": "phaser",
+    "92": "phaser",
+    "93": "phaser",
+    "94": "wah",
+    "95": "wah",
+    "96": "wah",
+    "97": "wah",
+    "98": "formant",
+    "99": "formant",
+    "100": "formant",
+    "101": "formant",
+    "102": "volume",
+    "103": "volume",
+    "104": "volume",
+    "105": "volume",
+    "106": "tremolo",
+    "107": "tremolo",
+    "108": "tremolo",
+    "109": "tremolo",
+    "110": "pitch",
+    "111": "pitch",
+    "112": "pitch",
+    "113": "pitch",
+    "114": "filter",
+    "115": "filter",
+    "116": "filter",
+    "117": "filter",
+    "118": "drive",
+    "119": "drive",
+    "120": "drive",
+    "121": "drive",
+    "122": "enhancer",
+    "123": "enhancer",
+    "124": "enhancer",
+    "125": "enhancer",
+    "126": "mixer",
+    "127": "mixer",
+    "128": "mixer",
+    "129": "mixer",
+    "130": "synth",
+    "131": "synth",
+    "132": "synth",
+    "133": "synth",
+    "134": null,
+    "135": null,
+    "136": null,
+    "137": null,
+    "138": "megatap",
+    "139": "megatap",
+    "140": "megatap",
+    "141": "megatap",
+    "142": null,
+    "143": null,
+    "144": null,
+    "145": null,
+    "146": "gate",
+    "147": "gate",
+    "148": "gate",
+    "149": "gate",
+    "150": "ringmod",
+    "151": "ringmod",
+    "152": "ringmod",
+    "153": "ringmod",
+    "154": "multicomp",
+    "155": "multicomp",
+    "156": "multicomp",
+    "157": "multicomp",
+    "158": "tentap",
+    "159": "tentap",
+    "160": "tentap",
+    "161": "tentap",
+    "162": "resonator",
+    "163": "resonator",
+    "164": "resonator",
+    "165": "resonator",
+    "166": "looper",
+    "167": "looper",
+    "168": "looper",
+    "169": "looper",
+    "170": null,
+    "171": null,
+    "172": null,
+    "173": null,
+    "174": null,
+    "175": null,
+    "176": null,
+    "177": null,
+    "178": "plex",
+    "179": "plex",
+    "180": "plex",
+    "181": "plex",
+    "182": "send",
+    "183": "send",
+    "184": "send",
+    "185": "send",
+    "186": "return",
+    "187": "return",
+    "188": "return",
+    "189": "return",
+    "190": null,
+    "191": "multiplexer",
+    "192": "multiplexer",
+    "193": "multiplexer",
+    "194": "multiplexer",
+    "195": null,
+    "196": null,
+    "197": null,
+    "198": null,
+    "199": null,
+    "200": null
+  },
+  "instances": {
+    "amp": 4,
+    "cab": 4,
+    "chorus": 4,
+    "comp": 4,
+    "delay": 4,
+    "drive": 4,
+    "enhancer": 4,
+    "filter": 4,
+    "flanger": 4,
+    "formant": 4,
+    "gate": 4,
+    "geq": 4,
+    "input": 5,
+    "looper": 4,
+    "megatap": 4,
+    "mixer": 4,
+    "multicomp": 4,
+    "multiplexer": 4,
+    "multitap": 4,
+    "output": 4,
+    "peq": 4,
+    "phaser": 4,
+    "pitch": 4,
+    "plex": 4,
+    "resonator": 4,
+    "return": 4,
+    "reverb": 4,
+    "ringmod": 4,
+    "rotary": 4,
+    "send": 4,
+    "synth": 4,
+    "tentap": 4,
+    "tremolo": 4,
+    "volume": 4,
+    "wah": 4
+  }
+}

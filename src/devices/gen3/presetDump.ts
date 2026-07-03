@@ -406,3 +406,32 @@ export function extractPresetName(parsed: ParsedPresetDump): string {
  * re-importing from `fractal-midi/shared`.
  */
 export { fractalChecksum };
+
+/**
+ * Rewrite a preset dump's header (func 0x77) IN PLACE to target the EDIT
+ * BUFFER (0x3FFF, `7F 7F`) instead of the slot it was captured from, fixing
+ * the header frame's checksum. Returns true when a 0x77 header was found.
+ *
+ * A dump captured from slot N still names N in its header — re-sending it
+ * verbatim makes the unit treat it as a store-to-N, NOT a load. Retargeting
+ * to the edit-buffer sentinel is exactly what FM3-Edit's "Audition" does:
+ * the preset goes live in the edit buffer and no slot is written.
+ * Live-validated on FM3 by the ForgeFX server's version-audition flow.
+ */
+export function retargetPresetDumpToEditBuffer(bytes: number[]): boolean {
+  for (let i = 0; i + 7 < bytes.length; i++) {
+    // header: F0 00 01 74 <model> 77 <numHi> <numLo> ... <cksum> F7
+    if (bytes[i] !== 0xf0 || bytes[i + 1] !== 0x00 || bytes[i + 2] !== 0x01 || bytes[i + 3] !== 0x74) continue;
+    if (bytes[i + 5] !== FUNC_PRESET_HEADER) continue;
+    bytes[i + 6] = 0x7f; // numHi ┐ 0x3FFF = edit-buffer sentinel
+    bytes[i + 7] = 0x7f; // numLo ┘
+    const end = bytes.indexOf(0xf7, i); // checksum sits just before the frame's F7
+    if (end > i + 1) {
+      let acc = 0;
+      for (let k = i; k < end - 1; k++) acc ^= bytes[k]!;
+      bytes[end - 1] = acc & 0x7f;
+    }
+    return true; // only the first (dump-begin) header carries the target
+  }
+  return false;
+}

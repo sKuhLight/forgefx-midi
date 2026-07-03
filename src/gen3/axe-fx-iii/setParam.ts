@@ -1569,11 +1569,11 @@ export function buildSetBypass(
 }
 
 /** GET BYPASS (function 0x0A with `dd=0x7F`). Device responds with same envelope shape. */
-export function buildGetBypass(effectId: number): number[] {
+export function buildGetBypass(effectId: number, modelByte: number = AXE_FX_III_MODEL_ID): number[] {
   return buildEnvelope(FN_SET_GET_BYPASS, [
     ...encode14(effectId),
     QUERY_SENTINEL,
-  ]);
+  ], modelByte);
 }
 
 // ── 0x0B SET/GET CHANNEL ───────────────────────────────────────────
@@ -1599,11 +1599,11 @@ export function buildSetChannel(
 }
 
 /** GET CHANNEL (function 0x0B with `dd=0x7F`). */
-export function buildGetChannel(effectId: number): number[] {
+export function buildGetChannel(effectId: number, modelByte: number = AXE_FX_III_MODEL_ID): number[] {
   return buildEnvelope(FN_SET_GET_CHANNEL, [
     ...encode14(effectId),
     QUERY_SENTINEL,
-  ]);
+  ], modelByte);
 }
 
 // ── 0x0C SET/GET SCENE ─────────────────────────────────────────────
@@ -1672,16 +1672,16 @@ export function buildQueryPatchName(
  *
  * No SET variant in the spec.
  */
-export function buildQuerySceneName(sceneIndex: number | 'current'): number[] {
+export function buildQuerySceneName(sceneIndex: number | 'current', modelByte: number = AXE_FX_III_MODEL_ID): number[] {
   if (sceneIndex === 'current') {
-    return buildEnvelope(FN_QUERY_SCENE_NAME, [QUERY_SENTINEL]);
+    return buildEnvelope(FN_QUERY_SCENE_NAME, [QUERY_SENTINEL], modelByte);
   }
   if (!Number.isInteger(sceneIndex) || sceneIndex < 0 || sceneIndex > 7) {
     throw new Error(
       `buildQuerySceneName: sceneIndex ${sceneIndex} out of range (0..7).`,
     );
   }
-  return buildEnvelope(FN_QUERY_SCENE_NAME, [sceneIndex & 0x7f]);
+  return buildEnvelope(FN_QUERY_SCENE_NAME, [sceneIndex & 0x7f], modelByte);
 }
 
 // ── 0x0F SET/GET LOOPER STATE ──────────────────────────────────────
@@ -1711,8 +1711,8 @@ const LOOPER_ACTION_VALUES: Record<LooperAction, number> = {
  * Buttons per spec: 0=Record, 1=Play, 2=Undo, 3=Once, 4=Reverse,
  * 5=Half-speed.
  */
-export function buildSetLooper(action: LooperAction): number[] {
-  return buildEnvelope(FN_SET_GET_LOOPER, [LOOPER_ACTION_VALUES[action]]);
+export function buildSetLooper(action: LooperAction, modelByte: number = AXE_FX_III_MODEL_ID): number[] {
+  return buildEnvelope(FN_SET_GET_LOOPER, [LOOPER_ACTION_VALUES[action]], modelByte);
 }
 
 /**
@@ -1720,8 +1720,8 @@ export function buildSetLooper(action: LooperAction): number[] {
  * bitfield: bit 0=Record, 1=Play, 2=Overdub, 3=Once, 4=Reverse,
  * 5=Half-speed.
  */
-export function buildGetLooperState(): number[] {
-  return buildEnvelope(FN_SET_GET_LOOPER, [QUERY_SENTINEL]);
+export function buildGetLooperState(modelByte: number = AXE_FX_III_MODEL_ID): number[] {
+  return buildEnvelope(FN_SET_GET_LOOPER, [QUERY_SENTINEL], modelByte);
 }
 
 // ── 0x10 TEMPO TAP ─────────────────────────────────────────────────
@@ -1731,15 +1731,15 @@ export function buildGetLooperState(): number[] {
  * counts as one tap-tempo press; the III computes BPM from the
  * inter-tap interval the same way as the front-panel TAP button.
  */
-export function buildTempoTap(): number[] {
-  return buildEnvelope(FN_TEMPO_TAP, []);
+export function buildTempoTap(modelByte: number = AXE_FX_III_MODEL_ID): number[] {
+  return buildEnvelope(FN_TEMPO_TAP, [], modelByte);
 }
 
 // ── 0x11 TUNER ON/OFF ──────────────────────────────────────────────
 
 /** TUNER ON/OFF (function 0x11). */
-export function buildSetTuner(on: boolean): number[] {
-  return buildEnvelope(FN_TUNER_ON_OFF, [on ? 1 : 0]);
+export function buildSetTuner(on: boolean, modelByte: number = AXE_FX_III_MODEL_ID): number[] {
+  return buildEnvelope(FN_TUNER_ON_OFF, [on ? 1 : 0], modelByte);
 }
 
 // ── 0x13 STATUS DUMP ───────────────────────────────────────────────
@@ -1760,11 +1760,11 @@ export function buildStatusDump(modelByte: number = AXE_FX_III_MODEL_ID): number
  * pair). Range per spec is implicitly 0..16383; in practice the III
  * accepts ~30..250 BPM (front-panel range).
  */
-export function buildSetTempo(bpm: number): number[] {
+export function buildSetTempo(bpm: number, modelByte: number = AXE_FX_III_MODEL_ID): number[] {
   if (!Number.isInteger(bpm) || bpm < 0 || bpm > 0x3fff) {
     throw new Error(`buildSetTempo: bpm ${bpm} out of range (0..16383)`);
   }
-  return buildEnvelope(FN_SET_GET_TEMPO, encode14(bpm));
+  return buildEnvelope(FN_SET_GET_TEMPO, encode14(bpm), modelByte);
 }
 
 /** GET TEMPO (function 0x14 with `dd dd = 7F 7F`). */
@@ -1804,14 +1804,19 @@ function decodeName(bytes: readonly number[]): string {
   return String.fromCharCode(...bytes.slice(0, end));
 }
 
-export function isSetGetBypassResponse(bytes: readonly number[]): boolean {
-  return isAxeFxIIIFrame(bytes, FN_SET_GET_BYPASS);
+// NOTE (migration 2026-07): these predicates historically hard-locked the III
+// model byte (0x10), which forced multi-device consumers to parse gen-3
+// replies inline. They now take an optional `modelByte`; the 0x10 default is
+// kept for source compatibility inside this package, but device-facing code
+// should ALWAYS pass the attached unit's model byte explicitly.
+export function isSetGetBypassResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): boolean {
+  return isAxeFxIIIFrame(bytes, FN_SET_GET_BYPASS, modelByte);
 }
-export function isSetGetChannelResponse(bytes: readonly number[]): boolean {
-  return isAxeFxIIIFrame(bytes, FN_SET_GET_CHANNEL);
+export function isSetGetChannelResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): boolean {
+  return isAxeFxIIIFrame(bytes, FN_SET_GET_CHANNEL, modelByte);
 }
-export function isSetGetSceneResponse(bytes: readonly number[]): boolean {
-  return isAxeFxIIIFrame(bytes, FN_SET_GET_SCENE);
+export function isSetGetSceneResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): boolean {
+  return isAxeFxIIIFrame(bytes, FN_SET_GET_SCENE, modelByte);
 }
 export function isQueryPatchNameResponse(
   bytes: readonly number[],
@@ -1819,17 +1824,17 @@ export function isQueryPatchNameResponse(
 ): boolean {
   return isAxeFxIIIFrame(bytes, FN_QUERY_PATCH_NAME, modelByte);
 }
-export function isQuerySceneNameResponse(bytes: readonly number[]): boolean {
-  return isAxeFxIIIFrame(bytes, FN_QUERY_SCENE_NAME);
+export function isQuerySceneNameResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): boolean {
+  return isAxeFxIIIFrame(bytes, FN_QUERY_SCENE_NAME, modelByte);
 }
-export function isSetGetLooperResponse(bytes: readonly number[]): boolean {
-  return isAxeFxIIIFrame(bytes, FN_SET_GET_LOOPER);
+export function isSetGetLooperResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): boolean {
+  return isAxeFxIIIFrame(bytes, FN_SET_GET_LOOPER, modelByte);
 }
-export function isStatusDumpResponse(bytes: readonly number[]): boolean {
-  return isAxeFxIIIFrame(bytes, FN_STATUS_DUMP);
+export function isStatusDumpResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): boolean {
+  return isAxeFxIIIFrame(bytes, FN_STATUS_DUMP, modelByte);
 }
-export function isSetGetTempoResponse(bytes: readonly number[]): boolean {
-  return isAxeFxIIIFrame(bytes, FN_SET_GET_TEMPO);
+export function isSetGetTempoResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): boolean {
+  return isAxeFxIIIFrame(bytes, FN_SET_GET_TEMPO, modelByte);
 }
 export function isMultipurposeResponse(
   bytes: readonly number[],
@@ -1841,11 +1846,11 @@ export function isMultipurposeResponse(
 /**
  * Parse a 0x0A SET/GET BYPASS response. Payload is `[id_lo, id_hi, dd]`.
  */
-export function parseBypassResponse(bytes: readonly number[]): {
+export function parseBypassResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): {
   effectId: number;
   bypassed: boolean;
 } {
-  if (!isSetGetBypassResponse(bytes)) {
+  if (!isSetGetBypassResponse(bytes, modelByte)) {
     throw new Error(`parseBypassResponse: not a 0x0A frame (len=${bytes.length})`);
   }
   const payload = bytes.slice(6, -2);
@@ -1857,11 +1862,11 @@ export function parseBypassResponse(bytes: readonly number[]): {
 }
 
 /** Parse a 0x0B SET/GET CHANNEL response. */
-export function parseChannelResponse(bytes: readonly number[]): {
+export function parseChannelResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): {
   effectId: number;
   channel: number;
 } {
-  if (!isSetGetChannelResponse(bytes)) {
+  if (!isSetGetChannelResponse(bytes, modelByte)) {
     throw new Error(`parseChannelResponse: not a 0x0B frame`);
   }
   const payload = bytes.slice(6, -2);
@@ -1873,8 +1878,8 @@ export function parseChannelResponse(bytes: readonly number[]): {
 }
 
 /** Parse a 0x0C SET/GET SCENE response. Payload is `[scene]`. */
-export function parseSceneResponse(bytes: readonly number[]): { scene: number } {
-  if (!isSetGetSceneResponse(bytes)) {
+export function parseSceneResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): { scene: number } {
+  if (!isSetGetSceneResponse(bytes, modelByte)) {
     throw new Error(`parseSceneResponse: not a 0x0C frame`);
   }
   const payload = bytes.slice(6, -2);
@@ -1913,11 +1918,11 @@ export function parseQueryPatchNameResponse(
  *
  *   `F0 00 01 74 10 0E [nn scene] [dd*32 name] [cs] F7`
  */
-export function parseQuerySceneNameResponse(bytes: readonly number[]): {
+export function parseQuerySceneNameResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): {
   scene: number;
   name: string;
 } {
-  if (!isQuerySceneNameResponse(bytes)) {
+  if (!isQuerySceneNameResponse(bytes, modelByte)) {
     throw new Error(`parseQuerySceneNameResponse: not a 0x0E frame`);
   }
   const payload = bytes.slice(6, -2);
@@ -1941,8 +1946,8 @@ export interface LooperState {
   raw: number;
 }
 
-export function parseLooperStateResponse(bytes: readonly number[]): LooperState {
-  if (!isSetGetLooperResponse(bytes)) {
+export function parseLooperStateResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): LooperState {
+  if (!isSetGetLooperResponse(bytes, modelByte)) {
     throw new Error(`parseLooperStateResponse: not a 0x0F frame`);
   }
   const payload = bytes.slice(6, -2);
@@ -1960,8 +1965,8 @@ export function parseLooperStateResponse(bytes: readonly number[]): LooperState 
 }
 
 /** Parse a 0x14 SET/GET TEMPO response. Payload is the BPM as a septet pair. */
-export function parseTempoResponse(bytes: readonly number[]): { bpm: number } {
-  if (!isSetGetTempoResponse(bytes)) {
+export function parseTempoResponse(bytes: readonly number[], modelByte: number = AXE_FX_III_MODEL_ID): { bpm: number } {
+  if (!isSetGetTempoResponse(bytes, modelByte)) {
     throw new Error(`parseTempoResponse: not a 0x14 frame`);
   }
   const payload = bytes.slice(6, -2);
@@ -2241,6 +2246,37 @@ export interface ModernFractalCodec {
   buildBlockBulkReadPoll(effectId: number): number[];
   isGen3BroadcastFrame(bytes: readonly number[], fn: 0x74 | 0x75 | 0x76): boolean;
   assembleGen3BlockBulkRead(frames: readonly (readonly number[])[]): Gen3BlockBulkRead;
+  // ── added for the per-device driver migration (2026-07): the full builder/
+  //    parser surface a device driver needs, bound to one model byte so no
+  //    call site can fall back to the 0x10 default. ──
+  buildGetBypass(effectId: number): number[];
+  isSetGetBypassResponse(bytes: readonly number[]): boolean;
+  parseBypassResponse(bytes: readonly number[]): ReturnType<typeof parseBypassResponse>;
+  buildGetChannel(effectId: number): number[];
+  isSetGetChannelResponse(bytes: readonly number[]): boolean;
+  parseChannelResponse(bytes: readonly number[]): ReturnType<typeof parseChannelResponse>;
+  buildGetScene(): number[];
+  isSetGetSceneResponse(bytes: readonly number[]): boolean;
+  parseSceneResponse(bytes: readonly number[]): ReturnType<typeof parseSceneResponse>;
+  buildGetTempo(): number[];
+  buildSetTempo(bpm: number): number[];
+  isSetGetTempoResponse(bytes: readonly number[]): boolean;
+  parseTempoResponse(bytes: readonly number[]): ReturnType<typeof parseTempoResponse>;
+  buildTempoTap(): number[];
+  buildSetTuner(on: boolean): number[];
+  buildStatusDump(): number[];
+  isStatusDumpResponse(bytes: readonly number[]): boolean;
+  buildQuerySceneName(sceneIndex: number | 'current'): number[];
+  isQuerySceneNameResponse(bytes: readonly number[]): boolean;
+  parseQuerySceneNameResponse(bytes: readonly number[]): ReturnType<typeof parseQuerySceneNameResponse>;
+  buildSetSceneName(sceneIndex: number, name: string): number[];
+  buildRenamePreset(name: string): number[];
+  buildClearBlock(opts: { row: number; col: number; rows?: number }): number[];
+  buildClearBlockCompanion(opts: { row: number; col: number; rows?: number }): number[];
+  buildSetLooper(action: LooperAction): number[];
+  buildGetLooperState(): number[];
+  isSetGetLooperResponse(bytes: readonly number[]): boolean;
+  parseLooperStateResponse(bytes: readonly number[]): LooperState;
 }
 
 export function createModernFractalCodec(
@@ -2279,5 +2315,33 @@ export function createModernFractalCodec(
     buildBlockBulkReadPoll: (e) => buildBlockBulkReadPoll(e, modelByte),
     isGen3BroadcastFrame: (b, fn) => isGen3BroadcastFrame(b, fn, modelByte),
     assembleGen3BlockBulkRead: (frames) => assembleGen3BlockBulkRead(frames, modelByte),
+    buildGetBypass: (e) => buildGetBypass(e, modelByte),
+    isSetGetBypassResponse: (b) => isSetGetBypassResponse(b, modelByte),
+    parseBypassResponse: (b) => parseBypassResponse(b, modelByte),
+    buildGetChannel: (e) => buildGetChannel(e, modelByte),
+    isSetGetChannelResponse: (b) => isSetGetChannelResponse(b, modelByte),
+    parseChannelResponse: (b) => parseChannelResponse(b, modelByte),
+    buildGetScene: () => buildGetScene(modelByte),
+    isSetGetSceneResponse: (b) => isSetGetSceneResponse(b, modelByte),
+    parseSceneResponse: (b) => parseSceneResponse(b, modelByte),
+    buildGetTempo: () => buildGetTempo(modelByte),
+    buildSetTempo: (bpm) => buildSetTempo(bpm, modelByte),
+    isSetGetTempoResponse: (b) => isSetGetTempoResponse(b, modelByte),
+    parseTempoResponse: (b) => parseTempoResponse(b, modelByte),
+    buildTempoTap: () => buildTempoTap(modelByte),
+    buildSetTuner: (on) => buildSetTuner(on, modelByte),
+    buildStatusDump: () => buildStatusDump(modelByte),
+    isStatusDumpResponse: (b) => isStatusDumpResponse(b, modelByte),
+    buildQuerySceneName: (s) => buildQuerySceneName(s, modelByte),
+    isQuerySceneNameResponse: (b) => isQuerySceneNameResponse(b, modelByte),
+    parseQuerySceneNameResponse: (b) => parseQuerySceneNameResponse(b, modelByte),
+    buildSetSceneName: (s, n) => buildSetSceneName(s, n, modelByte),
+    buildRenamePreset: (n) => buildRenamePreset(n, modelByte),
+    buildClearBlock: (opts) => buildClearBlock(opts, modelByte),
+    buildClearBlockCompanion: (opts) => buildClearBlockCompanion(opts, modelByte),
+    buildSetLooper: (a) => buildSetLooper(a, modelByte),
+    buildGetLooperState: () => buildGetLooperState(modelByte),
+    isSetGetLooperResponse: (b) => isSetGetLooperResponse(b, modelByte),
+    parseLooperStateResponse: (b) => parseLooperStateResponse(b, modelByte),
   };
 }

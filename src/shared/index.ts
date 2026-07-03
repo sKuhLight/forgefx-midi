@@ -7,7 +7,17 @@
 //
 // Pure code — no MIDI transport dependency. Bring your own.
 
-export { fractalChecksum } from './checksum.js';
+export { fractalChecksum, fixFrameChecksums } from './checksum.js';
+export {
+  MODEL_BROADCAST,
+  FN_IDENTIFY,
+  DEVICE_MODELS,
+  buildIdentifyBroadcast,
+  isFractalHeaderFrame,
+  parseIdentifyResponse,
+  modelFromPortName,
+} from './identify.js';
+export type { DeviceModel } from './identify.js';
 export { resolveEffectId, FRACTAL_MODEL_BYTES } from './effectId.js';
 export { encode14, decode14, packValue16, unpackValue16 } from './septet16.js';
 export { displayToWire, wireToDisplay } from './displayScale.js';

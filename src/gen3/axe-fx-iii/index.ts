@@ -227,3 +227,42 @@ export {
   type Axe3LayoutPage,
   type Axe3LayoutControl,
 } from './layouts.generated.js';
+
+// Live telemetry (tuner / output meters / CPU) + the FM3-validated tempo
+// write. RE'd from FM3-Edit captures, live-validated on FM3 hardware; golden
+// frames under test/gen3/fm3/fixtures/telemetry.expected.json. Every builder
+// REQUIRES the model byte (no 0x10 default). See `telemetry.ts`.
+export {
+  FN_DISPLAY_PAGE,
+  SUB_PAGE_TUNER_OPEN,
+  SUB_PAGE_TUNER_CLOSE,
+  SUB_STATE_READ,
+  SUB_SYSTEM_STATUS,
+  TUNER_FIELD_ADDR,
+  TUNER_FIELD_SUB,
+  TEMPO_EFFECT_ID,
+  TEMPO_PARAM_ID,
+  buildTunerPageOpen,
+  buildTunerPageClose,
+  buildTunerPoll,
+  isTunerResponse,
+  parseTunerFreqHz,
+  GEN3_OUTPUT_METERS,
+  METER_RESPONSE_LEN,
+  METER_FLOOR_DB,
+  METER_CEIL_DB,
+  buildOutputMeterPoll,
+  isOutputMeterResponse,
+  parseOutputMeterRms,
+  meterRmsToDb,
+  CPU_RESPONSE_MIN_LEN,
+  CPU_RAW_OFFSET,
+  CPU_BASE,
+  CPU_SLOPE,
+  buildCpuPoll,
+  isCpuResponse,
+  parseCpuRawLoad,
+  cpuPercentFromRaw,
+  buildSetTempoViaParam,
+  type Gen3OutputMeter,
+} from './telemetry.js';

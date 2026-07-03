@@ -224,7 +224,8 @@ export function typeFieldByteOffset(
 }
 
 // Grid effect-id -> block family base. Instances 1..4 are base..base+3.
-const EFFECT_BASES: Record<number, string> = {
+// Exported for the roster projections (roster.ts) — one canonical table.
+export const EFFECT_BASES: Record<number, string> = {
   37: 'Input', 42: 'Output', 46: 'Comp', 50: 'GEQ', 54: 'PEQ', 58: 'Amp',
   62: 'Cab', 66: 'Reverb', 70: 'Delay', 74: 'MultiTap', 78: 'Chorus',
   82: 'Flanger', 86: 'Rotary', 90: 'Phaser', 94: 'Wah', 98: 'Formant',

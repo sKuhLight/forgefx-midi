@@ -4,5 +4,77 @@
  * `FM3_DESCRIPTOR`, `FM9_DESCRIPTOR`, `VP4_DESCRIPTOR` (plus the
  * `MODERN_FRACTAL_DESCRIPTORS` enumeration). VP4 keeps its
  * writes-gated behavior exactly as configured in `configs/vp4.ts`.
+ *
+ * Also exports the gen-3 preset codec pipeline for server-side consumers:
+ * dump framing (`parsePresetDump`, `retargetPresetDumpToEditBuffer`),
+ * raw-patch unpack + Huffman + CRC (`decodeRawPatch`), the structured body
+ * decode (`decodeGen3Body`, `decodeGen3PresetDump`), and the FM3-verified
+ * generic per-block param extraction (`readBlockParams`, blockParams.ts).
  */
 export * from './device.js';
+
+export {
+  parsePresetDump,
+  parsePresetBank,
+  serializePresetDump,
+  extractPresetName,
+  retargetPresetDumpToEditBuffer,
+  HEADER_LEN,
+  CHUNK_LEN,
+  FOOTER_LEN,
+  CHUNKS_PER_PRESET,
+  PRESET_DUMP_LEN,
+} from './presetDump.js';
+export type { ParsedPresetDump } from './presetDump.js';
+
+export {
+  decodeRawPatch,
+  computeRawPatchCrc,
+  computeRawPatchXor,
+  crc16ccitt,
+  huffmanUncompress,
+} from './presetHuffman.js';
+export type { DecodedRawPatch } from './presetHuffman.js';
+
+export {
+  decodeGen3Body,
+  decodeGen3PresetDump,
+  effectName,
+  modelName,
+  getProfile,
+  MODEL_AXE_FX_III,
+  MODEL_FM3,
+  MODEL_FM9,
+} from './presetBody.js';
+export type {
+  Gen3PresetBody,
+  Gen3DecodedPreset,
+  Gen3GridCell,
+  Gen3Block,
+  Gen3BlockChannel,
+  Gen3Modifier,
+  Gen3SceneController,
+} from './presetBody.js';
+
+export {
+  effectRoster,
+  blockRefForEid,
+  slugForEffectId,
+  blockInstances,
+} from './roster.js';
+
+export {
+  readBlockParams,
+  readBlockParamsForModel,
+  gen3BlockParamModel,
+  hasBlockParamModel,
+  modelsFromBlocks,
+  FM3_BLOCK_PARAM_TABLES,
+  FM3_BODY_LAYOUT,
+} from './blockParams.js';
+export type {
+  Gen3BlockParamTables,
+  Gen3BodyLayout,
+  DecodedBlock,
+  DecodedBlockParam,
+} from './blockParams.js';

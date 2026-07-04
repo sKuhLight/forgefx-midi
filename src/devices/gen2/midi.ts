@@ -19,8 +19,6 @@
  * `axe-fx` / `axefx` needles routes correctly on the founder's
  * two-Fractal-device setup.
  */
-import { createRequire } from 'node:module';
-
 import { createSysExAssembler } from '../../core/midi/transport.js';
 import { markClean, markDirty } from '../../core/server-shared/bufferDirty.js';
 
@@ -66,8 +64,21 @@ interface MidiModuleLike {
 let midiModule: MidiModuleLike | undefined;
 function loadMidi(): MidiModuleLike {
   if (midiModule === undefined) {
+    // process.getBuiltinModule (Node ≥20.16) instead of a static
+    // `import { createRequire } from 'node:module'` — a static node:* import
+    // would make this module (and every barrel that re-exports it, incl. the
+    // Axe-Fx II descriptor → registryCore) unbundleable for the browser. In a
+    // browser, loadMidi() throws the clear error below; merely importing this
+    // module stays fine (mirrors src/core/midi/transport.ts).
+    const nodeModule = globalThis.process?.getBuiltinModule?.('node:module');
+    if (!nodeModule) {
+      throw new Error(
+        'The node-midi transport requires Node.js — it is not available in the browser. ' +
+        'Browser runtimes (Axis Browser Direct) use Web MIDI / Web Serial transports instead.',
+      );
+    }
     try {
-      midiModule = createRequire(import.meta.url)('midi') as MidiModuleLike;
+      midiModule = nodeModule.createRequire(import.meta.url)('midi') as MidiModuleLike;
     } catch (err) {
       const cause = err instanceof Error ? err.message : String(err);
       throw new Error(

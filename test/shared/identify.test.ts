@@ -31,7 +31,7 @@ function fail(msg: string): never {
   throw new Error(`[shared/identify] ${msg}`);
 }
 
-export const IDENTIFY_CASE_COUNT = 9;
+export const IDENTIFY_CASE_COUNT = 11;
 
 export function runIdentifyTests(): void {
   // ── broadcast frame golden (checksum-inclusive) ──
@@ -52,10 +52,9 @@ export function runIdentifyTests(): void {
   if (parsed.modelId !== hs.runs[0]!.expected.modelId) fail('parsed modelId disagrees with frozen expected value');
 
   // ── registry sanity: live-codec devices ──
-  for (const [id, codec] of [[0x10, 'axe3'], [0x11, 'fm3'], [0x12, 'fm9'], [0x15, 'am4']] as const) {
+  for (const [id, codec] of [[0x07, 'axe2'], [0x10, 'axe3'], [0x11, 'fm3'], [0x12, 'fm9'], [0x14, 'vp4'], [0x15, 'am4']] as const) {
     if (DEVICE_MODELS[id]?.codec !== codec) fail(`DEVICE_MODELS[0x${id.toString(16)}].codec !== '${codec}'`);
   }
-  if (DEVICE_MODELS[0x14]?.codec !== null) fail('VP4 must stay codec:null until a live driver lands');
 
   // ── port-name fallback: longest-name-first ordering ──
   const cases: [string, number | null][] = [
@@ -64,7 +63,8 @@ export function runIdentifyTests(): void {
     ['FM3 MIDI In', 0x11],
     ['fm9 usb', 0x12],
     ['AM4 MIDI', 0x15],
-    ['Axe-Fx II XL+ MIDI', null], // no live codec → no match
+    ['Axe-Fx II XL+ MIDI', 0x07], // gen-2 now has a live codec
+    ['VP4 USB MIDI', 0x14],
     ['Some Random Interface', null],
   ];
   for (const [port, want] of cases) {

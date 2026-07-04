@@ -19,6 +19,20 @@
  * hardware-anchored by a geometric-mean knob reading on the Axe-Fx II).
  * These corrections supersede the original generator output; mirror
  * them in any future regeneration.
+ *
+ * 2026-07-04 dedup pass: 15 entries removed because the hand-authored
+ * registry renamed them (audit label pass) and kept the SAME wire
+ * address — both keys reaching KNOWN_PARAMS made every read/DTO emit
+ * the param twice (duplicate widget ids crashed the Axis block editor).
+ * The canonical keys live in params.ts; drop these on regeneration:
+ *   amp.compressor_clarity→amp.clarity, amp.compressor_amount→amp.amount,
+ *   amp.compressor_threshold→amp.threshold, reverb.shift_1→reverb.voice_1_shift,
+ *   reverb.shift_2→reverb.voice_2_shift, delay.diffusor→delay.diffuser,
+ *   chorus.lfo_rate→chorus.rate_right, chorus.width→chorus.lfo_2_depth,
+ *   chorus.lfo_freq→chorus.low_cut, chorus.lfo_depth_2→chorus.stereo_spread,
+ *   wah.min_frequency→wah.minimum_frequency, wah.max_frequency→wah.maximum_frequency,
+ *   compressor.attack→compressor.attack_time, compressor.release→compressor.release_time,
+ *   filter.freq→filter.frequency
  */
 import type { Param } from './params.js';
 
@@ -183,12 +197,6 @@ export const CACHE_PARAMS = {
     unit: 'ms', displayMin: 0.5, displayMax: 50,
     scaling: 'log10',
   },
-  'amp.compressor_clarity': {
-    block: 'amp', name: 'compressor_clarity',
-    pidLow: 0x003a, pidHigh: 0x004d,
-    unit: 'knob_0_10', displayMin: 0.1, displayMax: 10,
-    scaling: 'log10',
-  },
   'amp.input_eq_frequency': {
     block: 'amp', name: 'input_eq_frequency',
     pidLow: 0x003a, pidHigh: 0x004f,
@@ -199,16 +207,6 @@ export const CACHE_PARAMS = {
     block: 'amp', name: 'overdrive',
     pidLow: 0x003a, pidHigh: 0x0051,
     unit: 'knob_0_10', displayMin: 0, displayMax: 10,
-  },
-  'amp.compressor_amount': {
-    block: 'amp', name: 'compressor_amount',
-    pidLow: 0x003a, pidHigh: 0x0052,
-    unit: 'knob_0_10', displayMin: 0, displayMax: 10,
-  },
-  'amp.compressor_threshold': {
-    block: 'amp', name: 'compressor_threshold',
-    pidLow: 0x003a, pidHigh: 0x0053,
-    unit: 'db', displayMin: -60, displayMax: 0,
   },
   'amp.master_vol_trim': {
     block: 'amp', name: 'master_vol_trim',
@@ -696,16 +694,6 @@ export const CACHE_PARAMS = {
     pidLow: 0x0042, pidHigh: 0x0037,
     unit: 'percent', displayMin: 0, displayMax: 100,
   },
-  'reverb.shift_1': {
-    block: 'reverb', name: 'shift_1',
-    pidLow: 0x0042, pidHigh: 0x0038,
-    unit: 'semitones', displayMin: -24, displayMax: 24,
-  },
-  'reverb.shift_2': {
-    block: 'reverb', name: 'shift_2',
-    pidLow: 0x0042, pidHigh: 0x0039,
-    unit: 'semitones', displayMin: -24, displayMax: 24,
-  },
   'reverb.pitch_feedback': {
     block: 'reverb', name: 'pitch_feedback',
     pidLow: 0x0042, pidHigh: 0x003a,
@@ -920,11 +908,6 @@ export const CACHE_PARAMS = {
     unit: 'ms', displayMin: 1, displayMax: 1000,
     scaling: 'log10',
   },
-  'delay.diffusor': {
-    block: 'delay', name: 'diffusor',
-    pidLow: 0x0046, pidHigh: 0x0031,
-    unit: 'percent', displayMin: 0, displayMax: 100,
-  },
   'delay.diffusion_time': {
     block: 'delay', name: 'diffusion_time',
     pidLow: 0x0046, pidHigh: 0x0032,
@@ -1112,33 +1095,11 @@ export const CACHE_PARAMS = {
     pidLow: 0x004e, pidHigh: 0x0015,
     unit: 'percent', displayMin: 0, displayMax: 100,
   },
-  'chorus.lfo_rate': {
-    block: 'chorus', name: 'lfo_rate',
-    pidLow: 0x004e, pidHigh: 0x0016,
-    unit: 'hz', displayMin: 0.1, displayMax: 10,
-    scaling: 'log10',
-  },
-  'chorus.width': {
-    block: 'chorus', name: 'width',
-    pidLow: 0x004e, pidHigh: 0x0017,
-    unit: 'percent', displayMin: 0, displayMax: 100,
-  },
   'chorus.drive': {
     block: 'chorus', name: 'drive',
     pidLow: 0x004e, pidHigh: 0x0018,
     unit: 'knob_0_10', displayMin: 0.5, displayMax: 500,
     scaling: 'log10',
-  },
-  'chorus.lfo_freq': {
-    block: 'chorus', name: 'lfo_freq',
-    pidLow: 0x004e, pidHigh: 0x0019,
-    unit: 'hz', displayMin: 20, displayMax: 2000,
-    scaling: 'log10',
-  },
-  'chorus.lfo_depth_2': {
-    block: 'chorus', name: 'lfo_depth_2',
-    pidLow: 0x004e, pidHigh: 0x001a,
-    unit: 'bipolar_percent', displayMin: -200, displayMax: 200,
   },
   'chorus.left_depth': {
     block: 'chorus', name: 'left_depth',
@@ -1355,18 +1316,6 @@ export const CACHE_PARAMS = {
     unit: 'enum', displayMin: 0, displayMax: 8,
     enumValues: WAH_TYPES_VALUES,
   },
-  'wah.min_frequency': {
-    block: 'wah', name: 'min_frequency',
-    pidLow: 0x005e, pidHigh: 0x000b,
-    unit: 'hz', displayMin: 100, displayMax: 1000,
-    scaling: 'log10',
-  },
-  'wah.max_frequency': {
-    block: 'wah', name: 'max_frequency',
-    pidLow: 0x005e, pidHigh: 0x000c,
-    unit: 'hz', displayMin: 500, displayMax: 5000,
-    scaling: 'log10',
-  },
   'wah.q_resonance': {
     block: 'wah', name: 'q_resonance',
     pidLow: 0x005e, pidHigh: 0x000d,
@@ -1464,18 +1413,6 @@ export const CACHE_PARAMS = {
     block: 'compressor', name: 'ratio',
     pidLow: 0x002e, pidHigh: 0x000b,
     unit: 'ratio', displayMin: 1, displayMax: 20,
-    scaling: 'log10',
-  },
-  'compressor.attack': {
-    block: 'compressor', name: 'attack',
-    pidLow: 0x002e, pidHigh: 0x000c,
-    unit: 'ms', displayMin: 0.1, displayMax: 100,
-    scaling: 'log10',
-  },
-  'compressor.release': {
-    block: 'compressor', name: 'release',
-    pidLow: 0x002e, pidHigh: 0x000d,
-    unit: 'ms', displayMin: 2, displayMax: 2000,
     scaling: 'log10',
   },
   'compressor.sidechain_low_cut': {
@@ -1658,12 +1595,6 @@ export const CACHE_PARAMS = {
     pidLow: 0x0072, pidHigh: 0x000a,
     unit: 'enum', displayMin: 0, displayMax: 17,
     enumValues: FILTER_TYPES_VALUES,
-  },
-  'filter.freq': {
-    block: 'filter', name: 'freq',
-    pidLow: 0x0072, pidHigh: 0x000b,
-    unit: 'hz', displayMin: 20, displayMax: 20000,
-    scaling: 'log10',
   },
   'filter.q': {
     block: 'filter', name: 'q',

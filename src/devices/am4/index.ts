@@ -10,3 +10,8 @@ export * from './descriptor.js';
 // describe.ts. Browser-harmless — the factory is only invoked by
 // ensureConnection(), which browser runtimes never call.
 import './midi.js';
+
+// Live device-edit detection primitives (front-panel / AM4-Edit catch — HW-107): the device-true
+// "edited" bit (GET_PATCH byte[21]&0x04) + the fn-0x1F atomic param read. Both hardware-verified in
+// readOps.ts; surfaced here so ForgeFX's AM4 device-edit watcher can drive them.
+export { readActiveBufferEditedBit, readAllParams, type AtomicReadResult } from './shared/readOps.js';

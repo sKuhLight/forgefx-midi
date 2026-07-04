@@ -41,6 +41,37 @@ export const BLOCK_NAMES_BY_VALUE: Record<number, BlockTypeName> = Object.fromEn
 );
 
 /**
+ * Instance-aware reverse lookup for a slot-register block-type value.
+ *
+ * Observed on the wire (Axis beta log, factory preset "Bass NoAmp DI"):
+ * a SECOND instance of a block type occupies base+1 — the preset carries
+ * drive 0x76 in slot 4 AND 0x77 in slot 2, and the exact-match table above
+ * knows only 0x76. Known bases are ≥4 apart (each block owns a 4-code
+ * window; amp's integrated cab sits at its own base 0x3e = amp+4), so a
+ * code inside [base, base+3] resolves to that base's block with
+ * `instance = code - base` (0 = the plain/base instance).
+ *
+ * Whether instance N's params answer at pidLow base+N is capture-pending;
+ * this resolver pins the NAME + instance index, which is enough to render
+ * the chain and address the slot register. Returns undefined for 0
+ * ("none") and for codes outside every known window.
+ */
+export function resolveBlockTypeValue(
+  code: number,
+): { name: BlockTypeName; base: number; instance: number } | undefined {
+  if (!code) return undefined;
+  const direct = BLOCK_NAMES_BY_VALUE[code];
+  if (direct !== undefined) return { name: direct, base: code, instance: 0 };
+  let best: { name: BlockTypeName; base: number } | undefined;
+  for (const [name, base] of Object.entries(BLOCK_TYPE_VALUES) as [BlockTypeName, number][]) {
+    if (base !== 0 && base < code && code < base + 4 && (best === undefined || base > best.base)) {
+      best = { name, base };
+    }
+  }
+  return best === undefined ? undefined : { ...best, instance: code - best.base };
+}
+
+/**
  * Resolve a user-supplied block identifier to its wire value. Accepts the
  * lowercase block name (case-insensitive) or a numeric pidLow directly.
  * Returns undefined on an unknown name.

@@ -125,6 +125,72 @@ export function meterRmsToDb(rms: number, floorDb = METER_FLOOR_DB, ceilDb = MET
   return Math.max(floorDb, Math.min(ceilDb, db));
 }
 
+// ── per-block monitor meters (VU / level / gain-reduction) ───────────────
+// Same fn 0x01 sub 0x19 state-read as the output meters, but addressed by (effectId, monitorPid)
+// rather than a fixed output address — this is exactly how FM3-Edit polls each block's live meter
+// (FM3 capture 2026-07-04: comp eid46/pid25, gate eid146/pid13, m-comp eid154/pids 28-30; the output
+// meters are just the same frame at pseudo-address 0x2a/0x2b sub 0x10/0x11). The reply's value @12..16
+// is a NORMALIZED 0..1 float (`parseBlockMonitorNorm`), mapped to dB by the device's monitor table
+// (`fm3MonitorDb`/`fm9MonitorDb`/`axe3MonitorDb`). Model-generic across gen-3 (III/FM3/FM9/VP4).
+export function buildBlockMonitorPoll(effectId: number, monitorPid: number, modelByte: number): number[] {
+  const e14 = [effectId & 0x7f, (effectId >> 7) & 0x7f];
+  const p14 = [monitorPid & 0x7f, (monitorPid >> 7) & 0x7f];
+  return envelope(FN_PARAMETER, [SUB_STATE_READ, 0x00, ...e14, ...p14, 0, 0, 0, 0, 0, 0, 0, 0, 0], modelByte);
+}
+/** True for the reply to `buildBlockMonitorPoll(effectId, monitorPid, …)` (echoes eid+pid at 8-11). */
+export function isBlockMonitorResponse(frame: readonly number[], effectId: number, monitorPid: number): boolean {
+  return frame[5] === FN_PARAMETER && frame[6] === SUB_STATE_READ
+    && (((frame[8] ?? 0) | ((frame[9] ?? 0) << 7)) === effectId)
+    && (((frame[10] ?? 0) | ((frame[11] ?? 0) << 7)) === monitorPid)
+    && frame.length === METER_RESPONSE_LEN;
+}
+/** Normalized 0..1 monitor level from a block-monitor reply (5-septet float @12..16, clamped).
+ *  NOTE: this field is a 0..1 position, NOT the RMS energy the output meters carry — map it to dB
+ *  with the monitor table's linear `minDb + norm·(maxDb−minDb)`, not `meterRmsToDb`. */
+export function parseBlockMonitorNorm(frame: readonly number[]): number {
+  const v = decode5SeptetFloat32(frame[12] ?? 0, frame[13] ?? 0, frame[14] ?? 0, frame[15] ?? 0, frame[16] ?? 0);
+  return Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0;
+}
+
+// ── looper waveform (Looper block; FM3 capture 2026-07-04) ───────────────
+// The looper page's live waveform is streamed via fn 0x01 sub 0x23 addressed at the Looper effectId
+// (FM3: eid 166). The reply is a ~609-byte frame whose payload (bytes 12..len-2) is ~595 RAW 7-bit
+// envelope magnitudes (0..127), one per display column — NOT a float. The playhead position and the
+// looper level ride the ordinary block-monitor poll (sub 0x19): position at pid 14, level at pid 22
+// (both via `buildBlockMonitorPoll`/`parseBlockMonitorNorm`). Model-generic across gen-3 loopers
+// (FM3 renders the waveform too, contrary to older notes; FM9/III share the block).
+export const SUB_LOOPER_WAVEFORM = 0x23;
+export function buildLooperWaveformPoll(effectId: number, modelByte: number): number[] {
+  const e14 = [effectId & 0x7f, (effectId >> 7) & 0x7f];
+  return envelope(FN_PARAMETER, [SUB_LOOPER_WAVEFORM, 0x00, ...e14, 0, 0, 0, 0, 0, 0, 0, 0, 0], modelByte);
+}
+/** True for a looper-waveform reply (the long fn 0x01 sub 0x23 frame at `effectId`). */
+export function isLooperWaveformResponse(frame: readonly number[], effectId: number): boolean {
+  return frame[5] === FN_PARAMETER && frame[6] === SUB_LOOPER_WAVEFORM
+    && (((frame[8] ?? 0) | ((frame[9] ?? 0) << 7)) === effectId)
+    && frame.length > 100;
+}
+/** Decode the looper waveform envelope → normalized 0..1 magnitudes (one per display column).
+ *  Payload = raw 7-bit samples between the 12-byte header and the checksum+F7. */
+export function parseLooperWaveform(frame: readonly number[]): number[] {
+  const out: number[] = [];
+  for (let i = 12; i < frame.length - 2; i++) out.push((frame[i] ?? 0) / 127);
+  return out;
+}
+
+// ── looper transport control (Record / Play / Stop / Overdub / Undo / Once / Reverse / Half) ──
+// FM3 capture 2026-07-04: FM3-Edit toggles these via fn 0x01 SUB 0x10 → the Looper (effectId, controlPid)
+// with a 5-septet‑LE float value 1.0 (on/press) or 0.0 (off). e.g. Record on = `…01 10 00 <eid> 08 00
+// 00 00 00 7c 03` (0x3F800000 = 1.0); off = `…00 00 00 00 00`. Same envelope on all gen-3.
+export const SUB_LOOPER_CONTROL = 0x10;
+const F32_ONE_SEPTETS = [0x00, 0x00, 0x00, 0x7c, 0x03]; // 1.0f as 5 LE septets
+const F32_ZERO_SEPTETS = [0x00, 0x00, 0x00, 0x00, 0x00]; // 0.0f
+export function buildLooperControl(effectId: number, controlPid: number, on: boolean, modelByte: number): number[] {
+  const e14 = [effectId & 0x7f, (effectId >> 7) & 0x7f];
+  const p14 = [controlPid & 0x7f, (controlPid >> 7) & 0x7f];
+  return envelope(FN_PARAMETER, [SUB_LOOPER_CONTROL, 0x00, ...e14, ...p14, ...(on ? F32_ONE_SEPTETS : F32_ZERO_SEPTETS)], modelByte);
+}
+
 // ── CPU load ───────────────────────────────────────────────────────────
 
 /** Minimum length of the fn 0x01 sub 0x2E system-status frame. */

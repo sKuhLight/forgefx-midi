@@ -35,10 +35,10 @@ import { DispatchError } from '../../../core/protocol-generic/types.js';
 import { receivePresetDumpStream } from '../presetDump.js';
 
 import {
-  BLOCK_NAMES_BY_VALUE,
   BLOCK_SLOT_PID_HIGH_BASE,
   BLOCK_SLOT_PID_LOW,
   BLOCK_TYPE_VALUES,
+  resolveBlockTypeValue,
   KNOWN_PARAMS,
   buildBlockLayoutSnapshot,
   buildReadParam,
@@ -160,6 +160,7 @@ function decodeChannelSelector(
 async function readActiveChannelLetter(
   conn: import('../../../core/midi/transport.js').MidiConnection,
   blockType: string,
+  instance = 0, // pidLow shift for instance blocks (slot code = base + instance)
 ): Promise<{ letter?: string; failureReason?: string }> {
   const channelKey = `${blockType}.channel` as ParamKey;
   const channelParam = KNOWN_PARAMS[channelKey] as Param | undefined;
@@ -167,7 +168,7 @@ async function readActiveChannelLetter(
     return { failureReason: `no '${blockType}.channel' param registered in the codec` };
   }
   try {
-    const parsed = await sendReadAndParse(conn, channelParam.pidLow, channelParam.pidHigh);
+    const parsed = await sendReadAndParse(conn, channelParam.pidLow + instance, channelParam.pidHigh);
     return decodeChannelSelector(parsed, channelParam.enumValues as Record<number, string> | undefined);
   } catch (err) {
     return { failureReason: err instanceof Error ? err.message : String(err) };
@@ -177,9 +178,11 @@ async function readActiveChannelLetter(
 async function readBypassState(
   conn: import('../../../core/midi/transport.js').MidiConnection,
   blockType: string,
+  instance = 0, // pidLow shift for instance blocks (slot code = base + instance)
 ): Promise<boolean | undefined> {
-  const pidLow = BLOCK_TYPE_VALUES[blockType as BlockTypeName];
-  if (pidLow === undefined || pidLow === BLOCK_TYPE_VALUES.none) return undefined;
+  const base = BLOCK_TYPE_VALUES[blockType as BlockTypeName];
+  if (base === undefined || base === BLOCK_TYPE_VALUES.none) return undefined;
+  const pidLow = base + instance;
   try {
     const readBytes = buildReadParam(
       { pidLow, pidHigh: BYPASS_STATE_PID_HIGH },
@@ -292,7 +295,7 @@ const FRONT_PANEL_PARAMS: Record<string, readonly string[]> = {
   drive:      ['type', 'drive', 'tone', 'level', 'mix'],
   reverb:     ['type', 'mix', 'time', 'predelay', 'size', 'low_cut', 'high_cut'],
   delay:      ['type', 'time', 'tempo', 'feedback', 'mix', 'low_cut', 'high_cut'],
-  compressor: ['type', 'amount', 'attack', 'release', 'level'],
+  compressor: ['type', 'amount', 'attack_time', 'release_time', 'level'],
 };
 
 /**
@@ -374,7 +377,7 @@ export async function readSaveSnapshot(
       const pidHigh = BLOCK_SLOT_PID_HIGH_BASE + (position - 1);
       const parsed = await sendReadAndParse(ctx.conn, BLOCK_SLOT_PID_LOW, pidHigh);
       const u32 = parsed.asUInt32LE();
-      block_chain.push(BLOCK_NAMES_BY_VALUE[u32] ?? 'none');
+      block_chain.push(resolveBlockTypeValue(u32)?.name ?? 'none');
     } catch {
       block_chain.push('none');
       missing.push(`block_chain[slot ${position}]`);
@@ -597,7 +600,7 @@ export const reader: DeviceReader = {
       const pidHigh = BLOCK_SLOT_PID_HIGH_BASE + (position - 1);
       const parsed = await sendReadAndParse(ctx.conn, BLOCK_SLOT_PID_LOW, pidHigh);
       const u32 = parsed.asUInt32LE();
-      slots.push(BLOCK_NAMES_BY_VALUE[u32] ?? ('none' as BlockTypeName));
+      slots.push(resolveBlockTypeValue(u32)?.name ?? ('none' as BlockTypeName));
     }
     return buildBlockLayoutSnapshot([slots[0], slots[1], slots[2], slots[3]]);
   },
@@ -653,13 +656,17 @@ export const reader: DeviceReader = {
     // _meta.read_duration_ms (client-independent; alpha.17 finding).
     const readStartedMs = Date.now();
 
-    // 1. Block layout (4 slot reads).
-    const layoutSlots: BlockTypeName[] = [];
+    // 1. Block layout (4 slot reads). Instance-aware: a second instance of a
+    //    block type occupies base+1 in the slot register (observed on the wire
+    //    — see resolveBlockTypeValue), so the resolver keeps it from reading
+    //    back as 'none' and vanishing from the snapshot.
+    const layoutSlots: { name: BlockTypeName; instance: number }[] = [];
     for (const position of [1, 2, 3, 4] as const) {
       const pidHigh = BLOCK_SLOT_PID_HIGH_BASE + (position - 1);
       const parsed = await sendReadAndParse(ctx.conn, BLOCK_SLOT_PID_LOW, pidHigh);
       const u32 = parsed.asUInt32LE();
-      layoutSlots.push(BLOCK_NAMES_BY_VALUE[u32] ?? ('none' as BlockTypeName));
+      const info = resolveBlockTypeValue(u32);
+      layoutSlots.push(info === undefined ? { name: 'none' as BlockTypeName, instance: 0 } : { name: info.name, instance: info.instance });
     }
 
     // 2. Per placed slot: chunk-based read via fn 0x1F + bypass read.
@@ -670,7 +677,7 @@ export const reader: DeviceReader = {
     const errors: string[] = [];
     let totalPlaced = 0;
     for (let slotIdx = 0; slotIdx < 4; slotIdx++) {
-      const blockType = layoutSlots[slotIdx];
+      const { name: blockType, instance } = layoutSlots[slotIdx];
       if (blockType === 'none') continue;
       totalPlaced++;
 
@@ -680,13 +687,19 @@ export const reader: DeviceReader = {
           errors.push(`slot ${slotIdx + 1} (${blockType}): no documented params`);
           continue;
         }
+        // Instance blocks (slot code base+N): best-effort read at the shifted
+        // pidLow (the slot code IS the block's pidLow for the base instance,
+        // so instance N is assumed to answer at base+N — capture-pending).
+        // Chunks stay keyed by the BASE pidLow so the KNOWN_PARAMS join in
+        // decodeChannelParams is untouched; a wrong assumption lands in the
+        // per-slot catch below and degrades to an errors[] entry.
         const chunks = new Map<number, { itemCount: number; values: number[] }>();
         for (const pidLow of pidLows) {
-          const triple = await readAllParams(ctx.conn, pidLow);
+          const triple = await readAllParams(ctx.conn, pidLow + instance);
           chunks.set(pidLow, { itemCount: triple.itemCount, values: triple.values });
         }
 
-        const bypassed = await readBypassState(ctx.conn, blockType);
+        const bypassed = await readBypassState(ctx.conn, blockType, instance);
 
         // Shape decision: must match II reader so the response is consistent
         // across every channel-bearing block on every device. Non-channel
@@ -718,7 +731,7 @@ export const reader: DeviceReader = {
           // returns derived/cached firmware state (see decodeChannelSelector),
           // so amp degrades to channel A with channel_status='unknown'.
           const { letter: activeChannel, failureReason } =
-            await readActiveChannelLetter(ctx.conn, blockType);
+            await readActiveChannelLetter(ctx.conn, blockType, instance);
           if (activeChannel !== undefined) {
             const idx = ['A', 'B', 'C', 'D'].indexOf(activeChannel);
             paramsByChannel = {
@@ -773,7 +786,7 @@ export const reader: DeviceReader = {
       activeScene = undefined;
     }
 
-    const hasChannelBearing = layoutSlots.some((b) => CHANNEL_BLOCKS.has(b));
+    const hasChannelBearing = layoutSlots.some((b) => CHANNEL_BLOCKS.has(b.name));
     const channelStateHint = (!includeChannelState && hasChannelBearing)
       ? 'Only the active channel is included. Pass include_channel_state:true to get_preset for the full per-channel read (A/B/C/D, decoded from the same fn 0x1F dump; fast, no channel-state mutation).'
       : undefined;

@@ -32,6 +32,7 @@ export {
   BLOCK_TYPE_VALUES,
   BLOCK_NAMES_BY_VALUE,
   resolveBlockType,
+  resolveBlockTypeValue,
 } from './blockTypes.js';
 export type { BlockTypeName } from './blockTypes.js';
 export {

@@ -27,7 +27,7 @@ export interface DeviceModel {
   /** 1 = Axe-Fx Std/Ultra, 2 = Axe-Fx II family, 3 = III/FM3/FM9/VP4, 4 = AM4. */
   gen: number;
   /** Per-device live-codec key (null = recognized, no live codec wired). */
-  codec: 'fm3' | 'fm9' | 'axe3' | 'vp4' | 'am4' | null;
+  codec: 'fm3' | 'fm9' | 'axe3' | 'vp4' | 'axe2' | 'am4' | null;
 }
 
 /** Model byte (SysEx header f[4], fn 0x00 handshake reply) → device. */
@@ -37,13 +37,13 @@ export const DEVICE_MODELS: Record<number, DeviceModel> = {
   0x03: { name: 'Axe-Fx II', short: 'Axe-Fx II', gen: 2, codec: null },
   0x05: { name: 'FX8', short: 'FX8', gen: 2, codec: null },
   0x06: { name: 'Axe-Fx II XL', short: 'II XL', gen: 2, codec: null },
-  0x07: { name: 'Axe-Fx II XL+', short: 'II XL+', gen: 2, codec: null },
+  0x07: { name: 'Axe-Fx II XL+', short: 'II XL+', gen: 2, codec: 'axe2' },
   0x08: { name: 'AX8', short: 'AX8', gen: 2, codec: null },
   0x0a: { name: 'FX8 Mk II', short: 'FX8 II', gen: 2, codec: null },
   0x10: { name: 'Axe-Fx III', short: 'Axe-Fx III', gen: 3, codec: 'axe3' },
   0x11: { name: 'FM3', short: 'FM3', gen: 3, codec: 'fm3' },
   0x12: { name: 'FM9', short: 'FM9', gen: 3, codec: 'fm9' },
-  0x14: { name: 'VP4', short: 'VP4', gen: 3, codec: null }, // own value codec, no grid — flip to 'vp4' when a live driver lands
+  0x14: { name: 'VP4', short: 'VP4', gen: 3, codec: 'vp4' }, // gen-3 codec, AM4-shape 4-slot; reads + gated beta writes
   0x15: { name: 'AM4', short: 'AM4', gen: 4, codec: 'am4' }, // 4-slot, own codec, separate device path
 };
 

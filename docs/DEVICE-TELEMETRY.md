@@ -2,6 +2,10 @@
 
 **What each Fractal device streams to an editor, vs. what this codec already implements.**
 
+> Companion doc: [`CATALOG-COVERAGE.md`](./CATALOG-COVERAGE.md) covers the static **editing
+> catalog** (params / ranges / type rosters / enum vocab / layouts) per device. This doc is the
+> **streaming telemetry** side. Together they are the device implementation checklist.
+
 Scope: every device→editor telemetry / metering / broadcast stream — home in/out meters,
 per‑block level/VU/gain‑reduction meters, looper waveform+level, RTA spectrum, CPU, tuner,
 tempo, scene/preset change, status dump, modifier values. Cross‑referenced against the

@@ -13,7 +13,7 @@
 
 import { fractalChecksum } from '../shared/checksum.js';
 import { encode14 } from '../shared/septet16.js';
-import { packFloat32LE, packValue, packValueChunked, unpackValue, unpackValueChunked } from '../shared/packValue.js';
+import { packFloat32LE, packValue, packValueChunked, unpackValue, unpackValueChunked, unpackFloat32LE } from '../shared/packValue.js';
 import { KNOWN_PARAMS, encode, type ParamKey } from './params.js';
 
 export const AM4_MODEL_ID = 0x15;
@@ -724,6 +724,31 @@ const READ_TYPE_SHORT = 0x0e;
 const READ_RESPONSE_PAYLOAD_RAW_BYTES = 4;
 
 /**
+ * AM4-Edit live/value poll action. Capture-confirmed (BigCapture 2026-07-05,
+ * see docs/AM4-CAPTURE-2026-07-05.md): AM4-Edit reads live meter/tuner-style
+ * values with `action=0x0010`. The response is **byte-shape-identical** to a
+ * short read (23 bytes, `hdr4=0x0004`, 5 packed septets → 4 raw bytes) — only
+ * the action code differs. The 4 payload bytes are a `float32` LE (same
+ * encoding as writes), decoded via `ReadResponse.asFloat32()`.
+ */
+export const READ_TYPE_LIVE_POLL = 0x0010;
+/**
+ * AM4-Edit status/zero poll action. Same 4-byte response shape as the short
+ * read; observed returning zero-valued payloads in the capture.
+ */
+export const READ_TYPE_STATUS_POLL = 0x0026;
+/**
+ * Read-like actions whose response is the 23-byte / `hdr4=0x0004` /
+ * 4-raw-byte payload shape. `parseReadResponse` accepts any of these and
+ * reports which one via `ReadResponse.action`.
+ */
+export const POLL_READ_ACTIONS: readonly number[] = [
+  READ_TYPE_SHORT,
+  READ_TYPE_LIVE_POLL,
+  READ_TYPE_STATUS_POLL,
+];
+
+/**
  * Long-form param-descriptor read action. Empirically pinned 
  * from `samples/captured/session-46-front-panel-dly-rev-bypass.pcapng`:
  * AM4-Edit polls bypass state with `action=0x0d`, getting a 64-byte
@@ -792,6 +817,28 @@ export function isReadResponse(read: number[], response: number[]): boolean {
 }
 
 /**
+ * Shape-only predicate for a device-originated read-like response — the
+ * 23-byte / `hdr4=0x0004` / 4-raw-byte payload shared by short read
+ * (`0x000E`), live poll (`0x0010`) and status poll (`0x0026`). Unlike
+ * `isReadResponse`, this does NOT require a matching outgoing read, so it is
+ * the right matcher for **passive capture replay** where only the inbound
+ * stream is available. Validates the envelope, function byte, `hdr3=0`,
+ * `hdr4=0x0004`, and that the action is one of `POLL_READ_ACTIONS`.
+ */
+export function isPollResponse(response: number[]): boolean {
+  if (response.length !== 23) return false;
+  if (response[0] !== SYSEX_START || response[22] !== SYSEX_END) return false;
+  for (let i = 0; i < FRACTAL_MFR.length; i++) if (response[1 + i] !== FRACTAL_MFR[i]) return false;
+  if (response[4] !== AM4_MODEL_ID) return false;
+  if (response[5] !== FUNC_PARAM_RW) return false;
+  const action = response[10] | (response[11] << 7);
+  if (!POLL_READ_ACTIONS.includes(action)) return false;
+  if (response[12] !== 0x00 || response[13] !== 0x00) return false;
+  if (response[14] !== 0x04 || response[15] !== 0x00) return false;
+  return true;
+}
+
+/**
  * Predicate for the long-form (action=0x0d) READ response. Same envelope
  * + echoed-fields shape as `isReadResponse`, but with `hdr4=0x0028` and
  * a 64-byte total length. Used by `am4_get_block_bypass` to read the
@@ -846,32 +893,53 @@ export function parseLongReadBypassFlag(bytes: number[]): boolean {
 export interface ReadResponse {
   pidLow: number;
   pidHigh: number;
-  /** The unpacked 4 raw payload bytes — the firmware's u32 LE word. */
+  /**
+   * Which read-like action this response answered: `0x000E` (short read),
+   * `0x0010` (AM4-Edit live/value poll) or `0x0026` (status/zero poll). All
+   * three carry the identical 4-raw-byte payload shape.
+   */
+  action: number;
+  /** The unpacked 4 raw payload bytes — the firmware's value word. */
   rawValue: Uint8Array;
   /** Convenience: `rawValue` interpreted as little-endian uint32. */
   asUInt32LE(): number;
   /**
-   * Convenience: interpret the u32 as a Q16 fixed-point internal float
-   * (`u32 / 65536`). Use for knob / dB / hz / ms / % style continuous
-   * params; pass through `decode(param, internal)` to get a display value.
-   * For type-enum / block-placement registers, use `asUInt32LE()` instead
-   * — those store the wire enum index directly, not Q16-scaled.
+   * Interpret the 4 raw bytes as a little-endian `float32`. This is the
+   * correct accessor for **continuous** params and live-poll meters — the
+   * AM4 stores them as a normalized `[0,1]` float (the same encoding writes
+   * use via `packFloat32LE`). Pass the result through `decode(param, f)` to
+   * get a display value. Empirically confirmed against real
+   * `ingate.gain_monitor` (`0x0025/0x0010`) poll frames: float32 ≈ 0.925
+   * → ×10 = 9.25 on the `knob_0_10` scale.
+   */
+  asFloat32(): number;
+  /**
+   * Interpret the u32 as a fixed-point internal float (`u32 / 65534`). Use
+   * ONLY for normalized-**integer** registers that store a scaled magnitude
+   * this way. For continuous params / live meters use `asFloat32()`; for
+   * type-enum / block-placement registers use `asUInt32LE()` (the wire enum
+   * index directly).
    */
   asInternalFloat(): number;
 }
 
 /**
- * Parse a 0x01 READ response into its pidLow, pidHigh, and 4 raw payload
- * bytes. Validates the envelope (F0 / mfr / device id / function / F7),
- * checksum, action = readType (0x0E), and hdr4 = 0x0004. Throws on any
- * mismatch — callers should check `isReadResponse` first when matching
- * against a specific outgoing read, or feed validated bytes here.
+ * Parse a 0x01 READ response into its pidLow, pidHigh, action, and 4 raw
+ * payload bytes. Validates the envelope (F0 / mfr / device id / function /
+ * F7), checksum, hdr4 = 0x0004, and that the action is one of the read-like
+ * actions (`POLL_READ_ACTIONS`: short read 0x0E, live poll 0x10, status poll
+ * 0x26 — all share the identical 4-byte response shape). Throws on any
+ * mismatch — callers should check `isReadResponse`/`isPollResponse` first
+ * when matching against a specific outgoing read, or feed validated bytes here.
  *
  * The 5-byte packed payload is unpacked via the same `unpackValue` scheme
  * as writes. The resulting 4 raw bytes are returned for the caller to
- * interpret per param type — see SYSEX-MAP.md §6a's "Decode rule" note.
+ * interpret per param type — `asFloat32()` for continuous params/meters,
+ * `asUInt32LE()` for enum/type registers. See SYSEX-MAP.md §6a's "Decode
+ * rule" note.
  *
- * Decoded from `samples/captured/session-42-readprobe.pcapng`.
+ * Decoded from `samples/captured/session-42-readprobe.pcapng`; live-poll
+ * actions confirmed from BigCapture 2026-07-05.
  */
 export function parseReadResponse(bytes: number[]): ReadResponse {
   if (bytes.length !== 23) {
@@ -898,8 +966,11 @@ export function parseReadResponse(bytes: number[]): ReadResponse {
   const pidLow = bytes[6] | (bytes[7] << 7);
   const pidHigh = bytes[8] | (bytes[9] << 7);
   const action = bytes[10] | (bytes[11] << 7);
-  if (action !== READ_TYPE_SHORT) {
-    throw new Error(`Read response action 0x${action.toString(16).padStart(4, '0')} != 0x000E (short read).`);
+  if (!POLL_READ_ACTIONS.includes(action)) {
+    throw new Error(
+      `Read response action 0x${action.toString(16).padStart(4, '0')} is not a read-like action ` +
+        `(expected one of ${POLL_READ_ACTIONS.map((a) => `0x${a.toString(16).padStart(4, '0')}`).join(', ')}).`,
+    );
   }
   const hdr4 = bytes[14] | (bytes[15] << 7);
   if (hdr4 !== READ_RESPONSE_PAYLOAD_RAW_BYTES) {
@@ -910,9 +981,13 @@ export function parseReadResponse(bytes: number[]): ReadResponse {
   return {
     pidLow,
     pidHigh,
+    action,
     rawValue,
     asUInt32LE(): number {
       return new DataView(rawValue.buffer, rawValue.byteOffset, 4).getUint32(0, true);
+    },
+    asFloat32(): number {
+      return unpackFloat32LE(wire);
     },
     asInternalFloat(): number {
       return this.asUInt32LE() / READ_VALUE_DENOMINATOR;

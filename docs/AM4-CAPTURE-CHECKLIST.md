@@ -1,5 +1,7 @@
 ## Before Starting
 
+- Latest processed capture: 2026-07-05 BigCapture, analyzed 2026-07-06. Findings are summarized in
+  [`AM4-CAPTURE-2026-07-05.md`](./AM4-CAPTURE-2026-07-05.md).
 - Use a scratch preset if possible.
 - Start the MIDI/SysEx capture before opening AM4-Edit.
 - Wait 5 seconds before and after each test.
@@ -96,4 +98,3 @@ playing value if the screen shows numbers.
 
 Please check if AM4 has a Looper anywhere in AM4-Edit or on the device.
 If not, just write: "No Looper found on AM4."
-

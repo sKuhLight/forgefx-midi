@@ -71,12 +71,16 @@ export {
   isWriteEcho,
   isReadResponse,
   isReadResponseLong,
+  isPollResponse,
   parseReadResponse,
   parseLongReadBypassFlag,
   parseGetPresetNameResponse,
   BLOCK_SLOT_PID_LOW,
   BLOCK_SLOT_PID_HIGH_BASE,
   READ_TYPE_LONG,
+  READ_TYPE_LIVE_POLL,
+  READ_TYPE_STATUS_POLL,
+  POLL_READ_ACTIONS,
   LONG_READ_BYPASS_FLAG_BYTE,
   READ_VALUE_DENOMINATOR,
   PRESET_NAME_EMPTY_SENTINEL,
@@ -214,6 +218,23 @@ export {
   preferredDisplayLabel,
 } from './parameterBridge.js';
 export type { ParameterBridgeEntry } from './parameterBridge.js';
+export {
+  AM4_LIVE_POLL_CANDIDATES,
+  am4LivePollCandidateFor,
+} from './livePolls.js';
+export type {
+  Am4LivePollCandidate,
+  Am4LivePollConfidence,
+} from './livePolls.js';
+
+// Live-poll value decode — turn a 0x0010/0x0026 poll response into a display
+// value (known catalog params) or a candidate label (correlated addresses).
+export {
+  decodeAm4LiveValue,
+  decodeAm4PollResponse,
+  am4ParamKeyForPid,
+} from './liveDecode.js';
+export type { Am4LiveDecodeResult } from './liveDecode.js';
 
 // Variant resolver — block.parameterName → cache-id mappings.
 export {

@@ -27,8 +27,8 @@ RE/codec · **GAP** = wire shape unknown, needs a capture.
 |---|---|---|---|---|---|---|
 | Output levels (out1/2 L/R) | ✅ | ✅ | ✅ | ⛔ | **DONE** | — |
 | CPU load | ✅ push* | ✅ poll | ✅ | ⛔ | **DONE** (gen3 poll) | — |
-| Tuner (Hz/note/cents) | ✅ | ✅ | ✅ | ❓ | **DONE** | — |
-| Tempo / BPM | ✅ | ✅ | ✅ | ❓ | **DONE** | — |
+| Tuner (Hz/note/cents) | ✅ | ✅ | ✅ | 🟡polls | **DONE** for gen-3; AM4 parser absent | decode AM4 `action=0x0010` |
+| Tempo / BPM | ✅ | ✅ | ✅ | 🟡polls | **DONE** for gen-3; AM4 parser absent | decode AM4 `action=0x0010` |
 | Scene change | ✅ | ✅ | ✅ | ✅(4) | **DONE** | — |
 | Preset change (name/num) | ✅ | ✅ | ✅ | ✅ | **DONE** | — |
 | Input level | ✅ | ✅ | ✅ | ⛔ | **DONE** via `liveMonitors` | — |
@@ -38,7 +38,7 @@ RE/codec · **GAP** = wire shape unknown, needs a capture.
 | Looper waveform + playhead + level | ✅ | ✅ | 🟢 | ⛔ | **DONE** (2026-07-04, all gen-3) | — |
 | RTA spectrum bands | 🟡 | 🟡fw | 🟡 | ⛔ | **ABSENT/GAP** | capture RTA page |
 | Graph curves (PEQ/EQ/comp/LFO/ADSR) | ✅w | ✅w | ✅w | — | **ABSENT/GAP** | capture `AskGraphN` |
-| All AM4 live telemetry | — | — | — | ⛔ | **ABSENT** | fresh AM4 RE |
+| All AM4 live telemetry | — | — | — | 🟡 | **CAPTURED, UNMAPPED** | correlate `action=0x0010` |
 
 `*` III pushes CPU/meters as its own messages (`AxeCpu`, `Axe3In/OutMeters`) but over USB the
 editors poll; the genuine unsolicited pushes (tempo down‑beat `0x10`, tuner `0x11`) are
@@ -188,9 +188,13 @@ still un-decoded — Axis latches button state locally for now.
    message *names*; the frame bytes are not in the scratchpad and not in the 3rd‑party spec (which
    documents only tempo+tuner push). We already poll CPU/output meters the FM3/`0x19`/`0x2e` way, so
    this only matters if we want the III's native push.
-5. **All AM4 live telemetry** — the AM4 codec has **no** meter/tuner/cpu/looper/RTA builder or
-   parser. `GET_METER` is **wire‑confirmed dead** (100‑sample probe, zero variance); `LEARN_TEMPO`,
-   `GET_MODIFIER`, tuner are named‑but‑unprobed. AM4 metering is currently human‑in‑the‑loop only.
+5. **All AM4 live telemetry** — fresh AM4 capture analyzed 2026-07-06 from
+   `/home/pascal/Downloads/BigCapture/MISTER MEAL.pcapng`; see
+   [`AM4-CAPTURE-2026-07-05.md`](./AM4-CAPTURE-2026-07-05.md). No standalone gen-3-style AM4
+   telemetry or push channel appeared. AM4-Edit uses ordinary `fn 0x01 PARAM_RW` polls instead:
+   `action=0x0010` for live/value-like reads and `action=0x0026` for status/zero polls. The codec now
+   labels these shapes diagnostically, but it does **not** parse them into tuner/meter/CPU events yet.
+   `GET_METER` remains wire-confirmed dead (100-sample probe, zero variance).
 6. **VP4 (`0x14`)** — **no artifacts in the scratchpad at all**. Gen‑3 mechanisms *probably*
    transfer, but nothing is confirmed; no meter table, no telemetry flags.
 

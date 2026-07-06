@@ -9,6 +9,7 @@
  */
 
 import { toHex } from '../../core/midi/pure.js';
+import { am4LivePollCandidateFor } from '../../am4/livePolls.js';
 
 /**
  * AM4 SysEx envelope prefix: F0 00 01 74 15. Anything that doesn't start
@@ -40,6 +41,9 @@ function decode14(lo: number, hi: number): number {
  *           (save / preset-rename / scene-rename — addressing-only echo
  *           with zero payload).
  *   - 0x08 GET_FIRMWARE_VERSION response.
+ *   - 0x47 GET_SYSINFO-ish response (capture-confirmed from AM4-Edit
+ *           launch; same function number as gen-2 GET_SYSINFO, but AM4
+ *           payload is still opaque).
  *   - 0x14 GET_PRESET_NUMBER response (PP=bits 0-6, QQ=bits 7-13).
  *   - 0x12 mode switch (only ever sent outbound; included for round-trip
  *           captures — labelled "Mode switch" if it ever turns up inbound).
@@ -94,19 +98,55 @@ export function describeAm4InboundMessage(bytes: number[] | Uint8Array): string 
       const pidLow = decode14(payload[0]!, payload[1]!);
       const pidHigh = decode14(payload[2]!, payload[3]!);
       const action = decode14(payload[4]!, payload[5]!);
+      const hdr3 = payload.length >= 8 ? decode14(payload[6]!, payload[7]!) : undefined;
+      const hdr4 = payload.length >= 10 ? decode14(payload[8]!, payload[9]!) : undefined;
       const addr = `pidLow=0x${pidLow.toString(16).padStart(4, '0').toUpperCase()} pidHigh=0x${pidHigh.toString(16).padStart(4, '0').toUpperCase()} action=0x${action.toString(16).padStart(4, '0').toUpperCase()}`;
+      const hdr = hdr3 === undefined || hdr4 === undefined
+        ? ''
+        : ` hdr3=0x${hdr3.toString(16).padStart(4, '0').toUpperCase()} hdr4=0x${hdr4.toString(16).padStart(4, '0').toUpperCase()}`;
+      const livePollCandidate = am4LivePollCandidateFor(pidLow, pidHigh);
+      const livePollLabel = livePollCandidate
+        ? ` ${livePollCandidate.name} (${livePollCandidate.confidence})`
+        : '';
       // Save-to-location ack: action=0x001B.
       if (action === 0x001b) return `Save ACK (${addr})`;
       // Rename ack: action=0x000C.
       if (action === 0x000c) return `Rename ACK (${addr})`;
+      // Normal 23-byte short read responses. AM4-Edit also uses action=0x0010
+      // as a live/status value poll and action=0x0026 for a status/zero poll;
+      // both share the same 4-raw-byte response shape but remain semantically
+      // distinct from our public short read helper (action 0x000E).
+      if (arr.length === 23 && hdr4 === 0x0004) {
+        if (action === 0x000e) return `Short READ response (${addr}${hdr})`;
+        if (action === 0x0010) return `AM4-Edit live/value poll response${livePollLabel} (${addr}${hdr})`;
+        if (action === 0x0026) return `AM4-Edit status poll response${livePollLabel} (${addr}${hdr})`;
+        if (action === 0x0027) return `AM4-Edit action 0x0027 response (${addr}${hdr})`;
+        return `PARAM_RW 4-byte response (${addr}${hdr}, ${arr.length}B)`;
+      }
+      // 55-byte READ_PRESET_NAME response (action=0x0012, 32 raw name bytes).
+      if (arr.length === 55 && action === 0x0012 && hdr4 === 0x0020) {
+        return `Preset name READ response (${addr}${hdr})`;
+      }
+      // GET_PATCH descriptor (action=0x001F) is the large device-true dirty-bit
+      // response. AM4-Edit captures also contain other long descriptor actions
+      // (0x0000, 0x0007, 0x0008, 0x0017) with the same hdr4=0x0028 envelope.
+      if (arr.length >= 100 && action === 0x001f) {
+        return `GET_PATCH descriptor response (${addr}${hdr}, ${arr.length}B)`;
+      }
+      if (arr.length === 64 && hdr4 === 0x0028 && action === 0x000d) {
+        return `Long READ response (${addr}${hdr})`;
+      }
       // 18-byte command-ack shape (write-echo for save/rename family — zero
       // payload, action ≠ WRITE).
-      if (arr.length === 18) return `Command ACK (${addr})`;
+      if (arr.length === 18) return `Command ACK (${addr}${hdr})`;
       // 64-byte SET_PARAM write echo (hdr4=0x0028, 40-byte payload).
-      if (arr.length === 64 && action === 0x0001) return `SET_PARAM write echo (${addr})`;
+      if (arr.length === 64 && action === 0x0001) return `SET_PARAM write echo (${addr}${hdr})`;
+      if (arr.length === 64 && hdr4 === 0x0028) {
+        return `PARAM_RW descriptor response (${addr}${hdr})`;
+      }
       // Fall-through for shapes we haven't catalogued yet — include
       // addressing fields so future captures are identifiable in logs.
-      return `function 0x01 PARAM_RW (${addr}, ${arr.length}B)`;
+      return `function 0x01 PARAM_RW (${addr}${hdr}, ${arr.length}B)`;
     }
     case 0x08: {
       // GET_FIRMWARE_VERSION response — payload starts MAJ MIN R1 R2 R3 R4 R5
@@ -130,6 +170,14 @@ export function describeAm4InboundMessage(bytes: number[] | Uint8Array): string 
         return `Preset number response (slot=${slot})`;
       }
       return `function 0x14 GET_PRESET_NUMBER (short)`;
+    }
+    case 0x47: {
+      // Capture-confirmed on AM4-Edit launch:
+      // request  F0 00 01 74 15 47 <cs> F7
+      // response F0 00 01 74 15 47 4D 02 00 00 00 02 02 00 68 00 <cs> F7
+      // The payload is still opaque, but labelling it keeps diagnostics from
+      // classifying a known launch-time exchange as an unknown function.
+      return `System info response (function 0x47, ${arr.length}B) ${hex}`;
     }
     case 0x64: {
       // MULTIPURPOSE_RESPONSE: payload = [FN, RC]. RC=0x00 OK,

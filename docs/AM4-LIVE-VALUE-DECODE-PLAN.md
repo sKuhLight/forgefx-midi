@@ -96,11 +96,67 @@ live values today. Problem-B (tuner / main-output / vol-pan candidates) awaits t
 cache-join (B1) and audio-correlation (B2) passes below, for which the CSV tool is
 the input.
 
+### B1 — cache-join  ✅ DONE (2026-07-06) — see [`AM4-B1-CACHE-JOIN.md`](./AM4-B1-CACHE-JOIN.md)
+Join mechanics proven: **within a block, wire `pidHigh` == `cache_id`**; the
+section-2 `blockTag` is a cache-internal category index, NOT the wire pidLow, so
+blocks are identified by enum payload then joined by `id == pidHigh`. Float
+grammar `a,b,c,d = min,max,scale,step`, display = wire×scale, `log10` only for
+typecodes `{0x40,0x44,0x48,0x50}`.
+
+Results:
+- **`effectDefinitions_15_66p1.cache` is a partial preset snapshot** — ingate
+  (0x25), preset/Main-Levels (0x2a), wah (0x5e), volpan (0x66) blocks are ABSENT.
+- **Gain-monitor ×10 scaling is a display heuristic, not cache-anchored.** The
+  one monitor present (`compressor.gain_monitor` 0x2e/0x1f = id 31) has a
+  degenerate range (a=b=c=0) — the cache leaves meters unscaled. → true scaling
+  is a B2 job for all four gain/level meters.
+- **"tuner" candidates `0x0023/0x0001..4` are the modifier/control block**, not
+  the pitch tuner. Real 0..10 knob range (cache ids 1..4); per-slot meaning → B2.
+  livePolls.ts labels `tuner.live_channel_*` are misnamed → rename to
+  `control.live_slot_*` when we touch it.
+- **`volpan 0x0066/0x0014` = `VOLUME_METER`** (resolver-pinned, read-only meter);
+  range absent from 66p1 → B2. Do NOT ship as a settable knob.
+- **`main_output 0x002a/0x0016..0017`** — preset/Main-Levels family, unregistered
+  pidHighs, no cache record → pure B2.
+- Blocked follow-up: re-parsing the fuller `_2p0` cache would resolve the absent
+  blocks, but **`effectDefinitions_15_2p0.cache` is NOT on disk** (only `66p1`).
+  Would need to locate/extract it (older AM4-Edit build) — parked.
+
+**Net: no `KNOWN_PARAMS` changes are cache-safe yet.** Meter scaling all falls to B2.
+
+### B2 — audio correlation  ✅ DONE (2026-07-06) — see [`AM4-B2-AUDIO-CORRELATION.md`](./AM4-B2-AUDIO-CORRELATION.md)
+Full BigCapture extraction was cheap (9,586 USB bulk packets → 482,866 SysEx);
+the shipped decoder produced 33,930 value rows, 0 unparseable.
+- **Tuner `0x0023/0x0001..4` — FULLY DECODED (overrides B1's cache guess).** The
+  cache `blockTag` 0x23 was the modifier block; wire 0x23 is the tuner readout,
+  and its value ranges (23–382 Hz, ±48 cents) refute a 0..10 knob. Channels:
+  0x01 note index (MIDI = v+9), 0x02 freq Hz (absolute float32), 0x03 signed
+  cents, 0x04 string/band 0–5. Self-proving: note(freq)==index 99%; cents ==
+  1200·log2(freq/nearestNoteFreq). Independently re-verified here (A0/28.108 Hz/
+  +37.9 cents on a real frame set). **These are ABSOLUTE float32, not [0,1].**
+- **`main_output 0x002a/0x0016(L),0x0017(R)` — shape pinned:** normalized
+  float32 [0,1] stereo output meter (L/R r=0.999, max ~0.59). dB reference not
+  pinned (passive audio correlation too weak). Left as labelled candidates.
+- **`volpan 0x0066/0x0014` — partial:** only ~12 discrete values, mostly zero —
+  a discrete state/position indicator, not a continuous meter. Deferred.
+
+### PROMOTED to code (2026-07-06)
+- `src/am4/tuner.ts` (new): `decodeAm4Tuner`, `am4TunerNoteName`, channel
+  constants, `isAm4TunerChannel`. Test `test/am4/tuner.test.ts` (real frames).
+- `src/am4/livePolls.ts`: renamed tuner candidates → `tuner.{note_index,freq_hz,
+  cents,string_band}` @ `capture-decoded-value`; `main_output.{level_l,level_r}`
+  @ `capture-confirmed-address` ([0,1] meter); `volpan.meter_candidate` note.
+- Added `capture-decoded-value` confidence tier. All 43 suites pass; build clean;
+  ForgeFX typechecks.
+
 ### Later (not this session)
-- B1 cache-join pass: address → cacheId → cache-records scaling; promote resolved candidates.
-- B2 audio-correlation pass on BigCapture for the residue (tuner channels, main output).
+- `main_output` [0,1]→dB curve, `volpan` semantics, tuner ch4 literal string-map:
+  need a scripted hardware capture (ramp input gain / play known pitch) or the
+  `_2p0` cache (NOT on disk — would need locating from an older AM4-Edit build).
+- Gain monitors (`ingate`/`compressor`) stay at the heuristic `knob_0_10` 0..10
+  (range-consistent with the observed [0,1]); true dB unconfirmed.
 - Rewrite the stale roadmap negative `ROADMAP-full-api.md:72` ("AM4 live metering: wire-confirmed absent").
-- ForgeFX side: only after values are pinned — surface AM4 meters. Its driver telemetry flags stay `false` until then.
+- ForgeFX side: surface the AM4 tuner (values pinned). Meters wait on the dB curve. Driver telemetry flags stay `false` until wired.
 
 ## Conventions
 - No AI attribution in commits. Rebuild forgefx-midi (`npm run build`) after codec

@@ -33,7 +33,7 @@ export function runAm4LivePollTests(): void {
     '[am4/livePolls] input gate gain monitor lookup mismatch',
   );
   assert(
-    am4LivePollCandidateFor(0x0023, 0x0004)?.confidence === 'capture-correlated-candidate',
+    am4LivePollCandidateFor(0x0023, 0x0004)?.confidence === 'capture-decoded-value',
     '[am4/livePolls] tuner candidate confidence mismatch',
   );
 }

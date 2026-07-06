@@ -35,7 +35,7 @@ export function runAm4LiveDecodeTests(): void {
   //    no display value, but the candidate label is attached and it is NOT
   //    marked unknown (we know the address, just not its scaling).
   const t = decodeAm4LiveValue(0x0023, 0x0001, 0.5, 0, 0x0010);
-  if (t.candidate?.name !== 'tuner.live_channel_1') failed.push(`expected tuner.live_channel_1 candidate, got ${t.candidate?.name}`);
+  if (t.candidate?.name !== 'tuner.note_index') failed.push(`expected tuner.note_index candidate, got ${t.candidate?.name}`);
   if (t.display !== undefined) failed.push('candidate-only address must not invent a display value');
   if (t.unknown) failed.push('a correlated candidate address should not be flagged unknown');
 

@@ -236,6 +236,18 @@ export {
 } from './liveDecode.js';
 export type { Am4LiveDecodeResult } from './liveDecode.js';
 
+// Tuner readout (block 0x0023) — DECODED from BigCapture (B2). Absolute float32
+// note/freq/cents/string values, not the normalized meter treatment.
+export {
+  AM4_TUNER_PID_LOW,
+  AM4_TUNER_CHANNEL,
+  AM4_TUNER_MIDI_OFFSET,
+  isAm4TunerChannel,
+  am4TunerNoteName,
+  decodeAm4Tuner,
+} from './tuner.js';
+export type { Am4TunerReading } from './tuner.js';
+
 // Variant resolver — block.parameterName → cache-id mappings.
 export {
   VARIANT_RESOLVER_FIRMWARE,

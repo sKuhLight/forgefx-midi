@@ -10,6 +10,8 @@
 import type { ParamKey } from './params.js';
 
 export type Am4LivePollConfidence =
+  /** Value semantics + scaling proven from capture (B2 audio-correlation). */
+  | 'capture-decoded-value'
   | 'capture-confirmed-address'
   | 'capture-correlated-candidate';
 
@@ -59,68 +61,74 @@ export const AM4_LIVE_POLL_CANDIDATES: readonly Am4LivePollCandidate[] = [
     planPhase: 'Expression / Modifier',
     notes: 'Known catalog control address; repeatedly polled during the wah/modifier phase.',
   },
+  // Tuner readout (wire block 0x23). B2 audio-correlation (2026-07-06) DECODED
+  // all four channels — see docs/AM4-B2-AUDIO-CORRELATION.md and tuner.ts.
+  // NB: these are ABSOLUTE float32 engineering values, NOT the [0,1]/×scale
+  // treatment used for meters. (B1's cache-blockTag guess that 0x23 was the
+  // "modifier/control" block was the blockTag≠pidLow trap; the value ranges —
+  // 23–382 Hz, ±48 cents — refute a 0..10 knob.)
   {
-    name: 'tuner.live_channel_1',
+    name: 'tuner.note_index',
     pidLow: 0x0023,
     pidHigh: 0x0001,
     observedActions: [0x0010],
-    confidence: 'capture-correlated-candidate',
+    confidence: 'capture-decoded-value',
     planPhase: 'Tempo / Tuner',
-    notes: 'Tuner-phase cluster; channel meaning and value scaling still unknown.',
+    notes: 'Nearest-note index; MIDI note = value + 9. Decoded (B2): matches note(freq) in 99% of samples.',
   },
   {
-    name: 'tuner.live_channel_2',
+    name: 'tuner.freq_hz',
     pidLow: 0x0023,
     pidHigh: 0x0002,
     observedActions: [0x0010],
-    confidence: 'capture-correlated-candidate',
+    confidence: 'capture-decoded-value',
     planPhase: 'Tempo / Tuner',
-    notes: 'Tuner-phase cluster; channel meaning and value scaling still unknown.',
+    notes: 'Detected fundamental in Hz (absolute float32, ~23–382 in capture). Decoded (B2).',
   },
   {
-    name: 'tuner.live_channel_3',
+    name: 'tuner.cents',
     pidLow: 0x0023,
     pidHigh: 0x0003,
     observedActions: [0x0010],
-    confidence: 'capture-correlated-candidate',
+    confidence: 'capture-decoded-value',
     planPhase: 'Tempo / Tuner',
-    notes: 'Tuner-phase cluster; channel meaning and value scaling still unknown.',
+    notes: 'Signed cents deviation (±50). Decoded (B2): equals 1200·log2(freq/nearestNoteFreq), r=0.87.',
   },
   {
-    name: 'tuner.live_channel_4',
+    name: 'tuner.string_band',
     pidLow: 0x0023,
     pidHigh: 0x0004,
     observedActions: [0x0010],
-    confidence: 'capture-correlated-candidate',
+    confidence: 'capture-decoded-value',
     planPhase: 'Tempo / Tuner',
-    notes: 'Tuner-phase cluster; channel meaning and value scaling still unknown.',
+    notes: 'String/octave band index 0–5. Decoded (B2); literal per-index label still TBD.',
   },
   {
-    name: 'main_output.live_channel_1',
+    name: 'main_output.level_l',
     pidLow: 0x002a,
     pidHigh: 0x0016,
     observedActions: [0x0010, 0x0026],
-    confidence: 'capture-correlated-candidate',
+    confidence: 'capture-confirmed-address',
     planPhase: 'Meters / Main or Home',
-    notes: 'Preset/Main Levels family; appears in the main/home meter window before known scene-level params.',
+    notes: 'Main output level meter, LEFT. Normalized float32 [0,1] (B2: L/R correlate r=0.999). dB reference not yet pinned.',
   },
   {
-    name: 'main_output.live_channel_2',
+    name: 'main_output.level_r',
     pidLow: 0x002a,
     pidHigh: 0x0017,
     observedActions: [0x0010, 0x0026],
-    confidence: 'capture-correlated-candidate',
+    confidence: 'capture-confirmed-address',
     planPhase: 'Meters / Main or Home',
-    notes: 'Preset/Main Levels family; appears in the main/home meter window before known scene-level params.',
+    notes: 'Main output level meter, RIGHT. Normalized float32 [0,1] (B2). dB reference not yet pinned.',
   },
   {
-    name: 'volpan.auto_swell_monitor_candidate',
+    name: 'volpan.meter_candidate',
     pidLow: 0x0066,
     pidHigh: 0x0014,
     observedActions: [0x0010, 0x0026],
     confidence: 'capture-correlated-candidate',
     planPhase: 'Meters / Volume-Pan',
-    notes: 'Adjacent to known Auto-Swell release/hysteresis addresses; meaning and scaling still unknown.',
+    notes: 'Resolver-pinned cache_id 20 = VOLUME_METER (B1). B2: only ~12 discrete values, mostly zero — a discrete state/position indicator, not a continuous meter. Semantics still TBD.',
   },
 ];
 

@@ -14,9 +14,18 @@
  *   - `docs/devices/axe-fx-iii/manuals/Axe-Fx-III-MIDI-for-3rd-Party-Devices.txt`
  */
 import type { PresetSpec } from '../../../core/protocol-generic/types.js';
-import { PARAMS_BY_FAMILY } from '../../../gen3/axe-fx-iii/index.js';
+import { PARAMS_BY_FAMILY, AXE3_ENUM_OVERRIDES, AXE3_RANGES } from '../../../gen3/axe-fx-iii/index.js';
+import { informativeDeviceRanges, toSymbolEnumOverrides } from '../catalog.js';
 import type { FractalModernConfig } from '../factory.js';
 import { MODERN_AGENT_GUIDANCE } from './shared.js';
+
+// Device-true III enum vocabulary + display ranges, mined from the Axe-Fx
+// III-Edit effectDefinitions cache (10_32p6, 2026-07-05). FAMILY-shaped in the
+// package (uniform with FM3/FM9); re-keyed here to the symbol view the factory
+// consumes. Placeholder range rows are dropped so they can't clobber the param
+// table's 333 inline display bounds (informativeDeviceRanges).
+const AXE3_SYMBOL_ENUM_OVERRIDES = toSymbolEnumOverrides(PARAMS_BY_FAMILY, AXE3_ENUM_OVERRIDES);
+const AXE3_DEVICE_RANGES = informativeDeviceRanges(AXE3_RANGES);
 
 // ── Curated top-N first-page knob list per block ──────────────────
 //
@@ -131,6 +140,13 @@ export const AXE_FX_III_CONFIG: FractalModernConfig = {
     'III hardware: discrete set-by-name, save_preset, set_block, and the live grid read (sub=0x2E).',
   // The III's own catalog — the byte-identity anchor for the family.
   params_by_family: PARAMS_BY_FAMILY,
+  // Device-true enum vocabulary (591 lists, 43 families — every type roster
+  // incl. the 10 previously-missing families, plus modes/LFO/tempo/mic vocab)
+  // and display ranges, from the III's own editor cache (fw 32.6 era). The
+  // symbol table wins over the family-shared overlay; the cache is the newer
+  // authority (fw 32.6 renames like 'Vibra-King' supersede overlay spellings).
+  enum_overrides: AXE3_SYMBOL_ENUM_OVERRIDES,
+  device_ranges: AXE3_DEVICE_RANGES,
   canonical_terms: {
     block: 'block',
     slot: 'grid cell (row 1..6, col 1..14)',

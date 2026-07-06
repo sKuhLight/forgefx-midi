@@ -7504,7 +7504,7 @@
       "family": "DELAY",
       "slug": "delay",
       "instance": 1,
-      "typeName": "STEREO",
+      "typeName": "Digital Stereo",
       "params": [
         {
           "paramId": 0,

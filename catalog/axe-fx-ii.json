@@ -3,7 +3,7 @@
   "device": "axe-fx-ii",
   "model_byte": "0x07",
   "support_status": "hardware-verified (XL+, firmware Quantum 8.02)",
-  "source": "fractal-midi/src/gen2/axe-fx-ii — wiki SysEx tables + Axe-Edit __block_layout.xml + Ghidra param-table scan; enum values inline per param (enumValues)",
+  "source": "forgefx-midi/src/gen2/axe-fx-ii — wiki SysEx tables + Axe-Edit __block_layout.xml + param-table mining; enum values inline per param (enumValues)",
   "data": {
     "KNOWN_PARAMS": {
       "amp.effect_type": {

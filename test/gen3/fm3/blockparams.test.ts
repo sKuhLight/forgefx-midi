@@ -63,10 +63,12 @@ function diff(a: unknown, e: unknown, path: string): void {
 }
 
 export function runFm3BlockParamsTests(): void {
-  // model gating: FM3 verified, III/FM9 refused (device-specific paramIds)
+  // model gating: FM3 verified; VP4 refused (no calibration ground truth).
+  // III/FM9 gating moved to modern-family/blockparams-cross.test.ts, which
+  // owns their single-preset calibration goldens.
   if (!hasBlockParamModel(FM3)) throw new Error('[fm3/blockparams] FM3 (0x11) must be a verified model');
   gen3BlockParamModel(FM3);
-  for (const other of [0x10, 0x12, 0x14]) {
+  for (const other of [0x14]) {
     if (hasBlockParamModel(other)) throw new Error(`[fm3/blockparams] model 0x${other.toString(16)} must NOT be verified yet`);
     let threw = false;
     try { gen3BlockParamModel(other); } catch { threw = true; }

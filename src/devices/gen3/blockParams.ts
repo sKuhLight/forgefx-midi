@@ -40,6 +40,16 @@ import {
   FM3_ROSTERS,
   FM3_FAMILY_BY_EFFECT_ID,
 } from '../../gen3/fm3/index.js';
+import {
+  FM9_PARAMS_BY_FAMILY,
+  FM9_RANGES,
+  FM9_ENUM_OVERRIDES,
+} from '../../gen3/fm9/index.js';
+import {
+  PARAMS_BY_FAMILY as AXE3_PARAMS_BY_FAMILY,
+  AXE3_RANGES,
+  AXE3_ENUM_OVERRIDES,
+} from '../../gen3/axe-fx-iii/index.js';
 
 // ── table + layout contracts (device-parameterized) ───────────────────
 
@@ -69,6 +79,18 @@ export interface Gen3BodyLayout {
   ampChannels: number;
 }
 
+/** Catalog family symbol → UI slug (identical across the gen-3 grid family). */
+const GEN3_FAMILY_TO_SLUG: Record<string, string> = {
+  DISTORT: 'amp',
+  CABINET: 'cab',
+  COMP: 'comp',
+  DELAY: 'delay',
+  FUZZ: 'drive',
+  GEQ: 'geq',
+  REVERB: 'reverb',
+  WAH: 'wah',
+};
+
 /** FM3 layout — live-validated (see module header). */
 export const FM3_BODY_LAYOUT: Gen3BodyLayout = {
   paramRegionFloor: 0x1202,
@@ -85,23 +107,82 @@ export const FM3_BLOCK_PARAM_TABLES: Gen3BlockParamTables = {
   enumOverrides: FM3_ENUM_OVERRIDES as unknown as Gen3BlockParamTables['enumOverrides'],
   rosters: FM3_ROSTERS as unknown as Gen3BlockParamTables['rosters'],
   familyByEffectId: FM3_FAMILY_BY_EFFECT_ID as Record<string, string>,
-  familyToSlug: {
-    DISTORT: 'amp',
-    CABINET: 'cab',
-    COMP: 'comp',
-    DELAY: 'delay',
-    FUZZ: 'drive',
-    GEQ: 'geq',
-    REVERB: 'reverb',
-    WAH: 'wah',
-  },
+  familyToSlug: GEN3_FAMILY_TO_SLUG,
 };
 
-/** Verified (tables, layout) pairs by SysEx model byte. III (0x10) and FM9
- *  (0x12) are ABSENT on purpose: their param-region layout has not been
- *  calibrated against hardware ground truth yet (see module header). */
+// ── FM9 (0x12) + Axe-Fx III (0x10) calibration ─────────────────────────
+//
+// PROVENANCE: derived 2026-07-06 from the cross-device "Devs Gift Of Tone"
+// preset pair (FM9 .syx + III .syx of the SAME artist preset), validated by
+// enum-fit against each device's own cache-mined enum vocabulary:
+//   - paramArrayBase 0x2e maximizes enum-fit on BOTH devices with a sharp
+//     peak (FM9 115/122, III 127/136; every other base ≤ 60%) — the same
+//     base the FM3 live calibration produced. The residual non-fits are the
+//     FM3-known class of continuous values sharing a paramId with a 2-entry
+//     cache enum row; they surface as `#raw` labels, exactly as on FM3.
+//   - Both bodies decode the SAME models at the same ordinals (amp
+//     'Herbie CH3' @88, drive 'T808 OD' @6, delay 'Stereo BBD' @16, cab
+//     '1x10 BF PRINCETONE') — cross-device agreement on an independent
+//     ground truth.
+//   - ampChannelStride by per-channel enum-fit sweep (unique winner each):
+//     FM9 0x122 (145 u16 slots), III 0x118 (140) — device-specific, matching
+//     their different DISTORT param counts.
+//   - paramRegionFloor is set TIGHT-HIGH just below each preset's first real
+//     block header (FM9 0x1eaa, III 0x1412; a phantom INPUT header pattern
+//     sits at 0x10c in the controllers prelude on both). A too-high floor
+//     only SKIPS a block (search index misses an entry); a too-low floor
+//     risks phantom headers (plausible-but-wrong values) — so the floor errs
+//     high until more preset dumps pin the true region start.
+// Frozen as golden fixtures under test/gen3/{fm9,axe-fx-iii}/fixtures/.
+// Single-preset calibration: community-beta evidence grade.
+
+export const FM9_BODY_LAYOUT: Gen3BodyLayout = {
+  paramRegionFloor: 0x1e00,
+  paramArrayBase: 0x2e,
+  ampFamily: 'DISTORT',
+  ampChannelStride: 0x122,
+  ampChannels: 4,
+};
+
+/** FM9 catalog tables pre-wired for `readBlockParams`. Type names resolve via
+ *  the complete cache-mined FM9_ENUM_OVERRIDES (family → paramId → labels),
+ *  so no separate slug roster table is needed. */
+export const FM9_BLOCK_PARAM_TABLES: Gen3BlockParamTables = {
+  paramsByFamily: FM9_PARAMS_BY_FAMILY as Gen3BlockParamTables['paramsByFamily'],
+  ranges: FM9_RANGES as unknown as Gen3BlockParamTables['ranges'],
+  enumOverrides: FM9_ENUM_OVERRIDES as unknown as Gen3BlockParamTables['enumOverrides'],
+  rosters: {},
+  // the gen-3 grid family shares one effectId space (verified identical FM3 vs FM9)
+  familyByEffectId: FM3_FAMILY_BY_EFFECT_ID as Record<string, string>,
+  familyToSlug: GEN3_FAMILY_TO_SLUG,
+};
+
+export const AXE3_BODY_LAYOUT: Gen3BodyLayout = {
+  paramRegionFloor: 0x1400,
+  paramArrayBase: 0x2e,
+  ampFamily: 'DISTORT',
+  ampChannelStride: 0x118,
+  ampChannels: 4,
+};
+
+/** Axe-Fx III catalog tables pre-wired for `readBlockParams`. */
+export const AXE3_BLOCK_PARAM_TABLES: Gen3BlockParamTables = {
+  paramsByFamily: AXE3_PARAMS_BY_FAMILY as Gen3BlockParamTables['paramsByFamily'],
+  ranges: AXE3_RANGES as unknown as Gen3BlockParamTables['ranges'],
+  enumOverrides: AXE3_ENUM_OVERRIDES as unknown as Gen3BlockParamTables['enumOverrides'],
+  rosters: {},
+  familyByEffectId: FM3_FAMILY_BY_EFFECT_ID as Record<string, string>,
+  familyToSlug: GEN3_FAMILY_TO_SLUG,
+};
+
+/** Verified (tables, layout) pairs by SysEx model byte. FM3 is live-hardware
+ *  calibrated (429-dump parity); FM9 + III are single-preset calibrated from
+ *  the cross-device "Devs Gift Of Tone" pair (see calibration block above) —
+ *  community-beta. VP4 (0x14) stays ABSENT: no calibration ground truth. */
 const VERIFIED_MODELS: Record<number, { tables: Gen3BlockParamTables; layout: Gen3BodyLayout }> = {
+  0x10: { tables: AXE3_BLOCK_PARAM_TABLES, layout: AXE3_BODY_LAYOUT },
   0x11: { tables: FM3_BLOCK_PARAM_TABLES, layout: FM3_BODY_LAYOUT },
+  0x12: { tables: FM9_BLOCK_PARAM_TABLES, layout: FM9_BODY_LAYOUT },
 };
 
 /** Tables + layout for a model byte; throws for models without a verified
@@ -173,10 +254,17 @@ function findHeader(body: Uint8Array, eid: number, floor: number): number | null
   return null;
 }
 
-/** The single TYPE/model selector paramId per family (the `<FAMILY>_TYPE` catalog entry).
- *  Families whose type is multi-slot (CABINET = 4 IR slots, SYNTH = 3 voices) have none → null. */
+/** The single TYPE/model selector paramId per family. The user-facing model
+ *  selector is `<FAMILY>_MODEL` where it exists (DELAY: `DELAY_MODEL` is the
+ *  27-model list; the table's `DELAY_TYPE` is the 8-value MONO/STEREO/PING-PONG
+ *  routing enum — cache-confirmed on FM3/FM9/III, 2026-07-06), else the
+ *  `<FAMILY>_TYPE` catalog entry. Families whose type is multi-slot
+ *  (CABINET = 4 IR slots, SYNTH = 3 voices) have none → null. */
 function typeParamFor(tables: Gen3BlockParamTables, family: string): number | null {
-  const exact = tables.paramsByFamily[family]?.find((p) => p.name === `${family}_TYPE`);
+  const params = tables.paramsByFamily[family];
+  const model = params?.find((p) => p.name === `${family}_MODEL`);
+  if (model) return model.paramId;
+  const exact = params?.find((p) => p.name === `${family}_TYPE`);
   return exact ? exact.paramId : null;
 }
 

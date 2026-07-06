@@ -13,9 +13,17 @@ as gaps close so we never re-research the same status.
 Scope: gen-3+ only — **Axe-Fx III `0x10`, FM3 `0x11`, FM9 `0x12`, VP4 `0x14`, AM4 `0x15`**.
 Gen-1 (`0x01`) and Axe-Fx II (`0x07`) are out of scope.
 
-All counts verified **2026-07-05** from the generated `catalog/*.json` (authoritative;
-regenerate with `npm run catalog:export`, verify with `npm run catalog:check`) plus the
-TS calibration/profile modules. Re-verify counts after any catalog regen.
+All counts verified **2026-07-06** from the generated `catalog/*.json` (authoritative;
+regenerate with `npm run catalog:export`, verify with `npm run catalog:check` — both
+scripts now live in THIS package) plus the TS calibration/profile modules. Re-verify
+counts after any catalog regen.
+
+**2026-07-06 update:** community FM9 (`effectDefinitions_12_76p0`) and Axe-Fx III
+(`effectDefinitions_10_32p6`) editor caches arrived and were mined end-to-end (strict
+count-driven walker + seeded section voting, FM3 catalog as the validation oracle:
+466/471 enum lists exact, ranges 1831/1831). This closed the FM9 + III enum-vocab,
+type-roster, and display-range gaps below, and a cross-device "Devs Gift Of Tone"
+preset pair calibrated OFFLINE BODY DECODE for FM9 + III (single-preset evidence).
 
 ---
 
@@ -41,10 +49,14 @@ TS calibration/profile modules. Re-verify counts after any catalog regen.
 - **Live block editing works on ALL gen-3 today.** ForgeFX `gen3.blockParams()` reads the
   connected device via the fn-0x1F bulk read and applies the profile's ranges/enums. It is
   **not** gated by calibration.
-- **Offline preset-body decode is FM3-only** (`readBlockParamsForModel`, gated to model `0x11`).
-  It powers the **preset-library "search by model" index** (`modelsFromBlocks`) — decoding which
-  models a stored `.syx` uses *without loading it*. For III/FM9/VP4 that index is empty. **This does
-  not affect editing.** So body-calibration captures are lower priority than the editor-RE gaps.
+- **Offline preset-body decode now covers FM3 + FM9 + III** (`readBlockParamsForModel`;
+  VP4 still refused). It powers the **preset-library "search by model" index**
+  (`modelsFromBlocks`). Evidence grades differ: FM3 is live-hardware calibrated (429-dump
+  parity); FM9 + III are SINGLE-PRESET calibrated from the cross-device "Devs Gift Of
+  Tone" pair (both bodies decode to the same models through each device's own tables;
+  goldens in `test/gen3/{fm9,axe-fx-iii}/fixtures/`). Their `paramRegionFloor` is set
+  tight-high (a too-low floor risks phantom headers), so an unusual preset may have
+  blocks SKIPPED from the index until more dumps pin the true region start.
 
 ---
 
@@ -56,44 +68,55 @@ Legend: ✅ complete · 🟡 partial · ⚠️ sparse/stub · ⛔ absent
 |---|---|---|---|---|---|
 | Families / params | 48 / 2216 | 47 / 2021 | 47 / 2052 | 48 / 1690 | 20 / 909 |
 | Params present | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Ranges (display calib.) | 🟡 333 inline | ✅ 1831 (~91%) | ✅ 1891 (~92%) | ⛔ 0 | ✅ 909 (100%) |
-| Type rosters | 🟡 11 fam | ✅ all fam¹ | ⚠️ 3 fam² | ⛔ 0 | ✅ 17 |
-| Enum vocab (non-type) | ⚠️ ~21 params | ✅ 471 entries | ⛔ 0 | ⛔ 0 | ✅ 220 params |
+| Ranges (display calib.) | ✅ 2111 rows (1468 informative floats + 591 enums)¹ | ✅ 1831 (~91%) | ✅ 1902 rows (fw 76p0 regen)¹ | ⛔ 0 | ✅ 909 (100%) |
+| Type rosters | ✅ all fam² | ✅ all fam² | ✅ all fam² | ⛔ 0 | ✅ 17 |
+| Enum vocab (non-type) | ✅ 591 lists / 43 fam | ✅ 471 entries | ✅ 539 lists / 38 fam | ⛔ 0 | ✅ 220 params |
 | Editor layouts | ✅ 48 | ✅ 47 | ✅ 47 | ⛔ | (own UI) |
 | FC + Modifier | ✅ | ✅ | ✅ | ⛔ | ⛔ |
-| Cab IR names | live-only | ✅ bundled | ⛔ | ⛔ | n/a |
+| Cab IR names | ✅ factory banks⁴ | ✅ bundled | ✅ factory banks⁴ | ⛔ | n/a |
 | Live editing | ✅ | ✅ | ✅ | ✅ (reads + cont. writes) | ✅ (own codec) |
-| Offline body calibration | ⛔ | ✅ only device | ⛔ | ⛔ | ✅ (own codec) |
+| Offline body calibration | ✅ single-preset³ | ✅ live-validated | ✅ single-preset³ | ⛔ | ✅ (own codec) |
 | Telemetry | see DEVICE-TELEMETRY.md | ✅ | ✅ | ⛔ | ⛔ |
 
-¹ FM3: 8 explicit slug rosters (amp/cab/comp/delay/drive/geq/reverb/wah — with manufacturer/basedOn
-lineage) **+** enum-override fallback for every other `<FAMILY>_TYPE` family (wired in ForgeFX
-`fm3RosterFor`, 2026-07-05). All type families resolve.
-² FM9 real rosters: DISTORT (331), FUZZ (86), REVERB (79). FILTER is a **1-entry stub** → redo.
+¹ Mined 2026-07-06 from each editor's own `effectDefinitions` cache (III `10_32p6`, FM9
+`12_76p0`) by the strict count-driven walker; section→family assignment seeded from the
+FM3 oracle-validated map. Placeholder rows (all-zero float rows mirroring unused wire
+slots) are kept 1:1 for stride math; consumers filter them (`informativeDeviceRanges`).
+Unmapped (no cache section / below voting floor): III `FC, IRCAPTURE, MIDIBLOCK`; FM9
+`FC, IRCAPTURE, IRPLAYER, MIDIBLOCK, RTA, TONEMATCH, VOCODER`.
+² Every `<FAMILY>_TYPE` family resolves from the device-true enum vocabulary
+(`*_ENUM_OVERRIDES`, family → paramId → labels[], uniform shape across FM3/FM9/III).
+The DELAY family's user-facing model selector is `DELAY_MODEL` (`DELAY_TYPE` is the
+8-value MONO/STEREO routing enum — cache-confirmed on all three; FM3's old 22-entry
+delay roster was the MEGATAP pattern list, mis-bound at generation, now fixed).
+³ Cross-device "Devs Gift Of Tone" preset pair; goldens frozen in
+`test/gen3/{fm9,axe-fx-iii}/fixtures/` + `modern-family/blockparams-cross.test.ts`.
+⁴ `FM9_CAB_IRS` / `AXE3_CAB_IRS` (2026-07-06): FACTORY 1/2 (1024 each) + LEGACY (FM9 189,
+III 199) from the cab-IR bank table records (0xfff0-0xfff2) of the same caches — validated
+by reproducing `FM3_CAB_IRS` factory banks exactly from the FM3 cache. USER/SCRATCHPAD
+banks are deliberately NOT bundled (community-donor per-device content) — read live.
 
 ---
 
-## Axe-Fx III `0x10` — mostly complete; gaps are cosmetic
+## Axe-Fx III `0x10` — cache-mined 2026-07-06; near-complete
 
 **Support:** community-beta (decoded; community hardware confirmations).
-**Present:** all 2216 params (48 families); 11 type rosters from `GEN3_READ_ROSTERS`; full editor
-layouts (48); FC + modifier models; per-block monitor table; live editing.
+**Present:** all 2216 params (48 families); **complete device-true enum vocabulary**
+(`AXE3_ENUM_OVERRIDES`, 591 lists / 43 families, fw 32.6 era — every type roster incl. the 10
+previously-missing families, all modes/LFO/tempo/mic vocab); **device-true display ranges**
+(`AXE3_RANGES`, 2111 rows, 1468 informative floats) wired through the descriptor factory AND the
+ForgeFX profile (inline param bounds remain the fallback for cache placeholder rows); full editor
+layouts (48); FC + modifier models; per-block monitor table; live editing; **offline body decode**
+(single-preset calibration, see above).
 
-**Editor-RE gaps** (mine from Axe-Fx III-Edit; no user hardware):
-- [ ] **Display ranges** — only **333/2216** params carry explicit `displayMin/Max`. The rest fall
-      back to the classic **0–10 knob** (correct for natively-0–10 params; imprecise only for the
-      real-unit subset: ~42 dB, 27 Hz, 17 ms, 88 percent, 107 bipolar-percent). Fill engineering-unit
-      min/max. *Impact: cosmetic (units), not broken.*
-- [ ] **Enum vocab** — the TS overlay (`enumOverlay.ts`) labels only ~21 enum params; most non-type
-      enums render as raw ordinals. Mine the full III enum overlay.
-- [ ] **Type rosters** missing for 10 families: `DYNDIST, ENHANCER, GATE, GEQ, INPUT, MEGATAP, PITCH,
-      RINGMOD, TENTAP, VOLUME`. (Have: CHORUS 17, COMP 16, DELAY 24, DISTORT 284, FILTER 10, FLANGER 21,
-      FUZZ 58, PHASER 14, REVERB 59, TREMOLO 6, WAH 7.)
-- [ ] Ranges: zero-calib families `FC, INPUT, IRCAPTURE, MIDIBLOCK, MOD, PRESET`.
-
-**Capture gaps** (low priority — editing already works):
-- [ ] Offline preset-body calibration (unlocks library search-by-model only).
-- [ ] Cab IR names — read live from the unit today; bundling optional.
+**Remaining gaps:**
+- [ ] Ranges/enum vocab for `FC, IRCAPTURE, MIDIBLOCK` (no cache section / below voting floor).
+- [x] ~~Cab IR names~~ ✅ 2026-07-06 factory banks bundled (`AXE3_CAB_IRS`); user banks live-only.
+- [ ] Offline-decode floor (`paramRegionFloor 0x1400`) is single-preset evidence — collect more
+      III dumps to pin the true block-region start (a wrong-but-high floor only skips blocks).
+- [ ] fw 32.6 renamed labels vs the legacy `GEN3_READ_ROSTERS`/overlay spellings (e.g.
+      'Vibra-King') — the device-true list wins; the word-order-tolerant set-by-name resolver
+      keeps old spellings usable.
 
 ---
 
@@ -110,31 +133,36 @@ live editing.
       TONEMATCH, VOCODER`.
 - [ ] Ranges — partials: `CONTROLLERS 130/141, FLANGER 33/55, GEQ 20/21, PRESET 50/51, TENTAP 48/49`.
 
+**Fixed 2026-07-06:** the `delay` roster in `FM3_ROSTERS` was the 22-entry MEGATAP pattern list
+(mis-bound at generation); it now carries the device-true 27-model `DELAY_MODEL` list. The DELAY
+"type" resolution across the stack (offline decode `typeParamFor`, ForgeFX `#paramId`/rosters)
+prefers `<FAM>_MODEL` over `<FAM>_TYPE`, and the exact `<FAM>_TYPE` name over the old
+`unit==='enum' && /TYPE$/` heuristic — that heuristic silently bound the FM3/FM9 Drive block's
+"type" to `FUZZ_CLIPTYPE` (pid 10) and Pitch to `PITCH_XFADETYPE` (the field-reported
+drive-type bug).
+
 **Capture gaps:** none outstanding for editing. (Telemetry items tracked in DEVICE-TELEMETRY.md.)
 
 ---
 
-## FM9 `0x12` — highest-impact backlog (user-visible)
+## FM9 `0x12` — cache-mined 2026-07-06; near-complete
 
 **Support:** community-beta (decoded from FM9-Edit cache + community captures).
-**Present:** 2052 params (47 families); ranges ~92% (1891); editor layouts (47); FC + modifier;
-monitor table; live editing works.
+**Present:** 2052 params (47 families); **complete device-true enum vocabulary**
+(`FM9_ENUM_OVERRIDES`, now FAMILY-shaped like FM3's: 539 lists / 38 families, fw 76p0 — every
+former gap closed: the 16 missing type rosters, the FILTER 1-entry stub, all non-type enums);
+ranges regenerated from the 76p0 cache (1902 rows; amp roster grew 331→336, drive 86→87);
+editor layouts (47); FC + modifier; monitor table; live editing; **offline body decode**
+(single-preset calibration, `ampChannelStride 0x122`).
 
-**Editor-RE gaps** (mine from FM9-Edit cache — no user hardware; **do these first**):
-- [ ] **Enum vocab — ENTIRELY MISSING.** `FM9_ENUM_OVERRIDES` has only **5 entries** (the `*_TYPE`
-      keys). Every non-type enum (modes, LFO waveforms, tempo subdivisions, mic/cab pickers, slopes)
-      renders as a raw ordinal `#0/#1/…`. **This is the gap FM9 users will notice.**
-- [ ] **Type rosters** missing for **16 families**: `CHORUS, COMP, DELAY, ENHANCER, FLANGER, GATE,
-      GEQ, INPUT, MEGATAP, PHASER, PITCH, RINGMOD, TENTAP, TREMOLO, VOLUME, WAH`.
-- [ ] **FILTER roster is a 1-entry stub** → recapture/refill.
-      (Real rosters today: DISTORT 331, FUZZ 86, REVERB 79.)
-- [ ] Ranges — zero-calib families: `FC, IRCAPTURE, IRPLAYER, MIDIBLOCK, RTA, TONEMATCH, VOCODER`;
-      partials `CABINET 106/122, CONTROLLERS 130/141, GEQ 20/21, PRESET 50/51, TENTAP 48/49`.
-
-**Capture gaps** (lower priority):
-- [ ] Cab IR bank names (none bundled — wire live-read or capture).
-- [ ] Offline preset-body calibration (`paramArrayBase` / `ampChannelStride` / value-scale) — library
-      search-by-model only; not needed for editing.
+**Remaining gaps:**
+- [ ] Ranges/enum vocab for `FC, IRCAPTURE, IRPLAYER, MIDIBLOCK, RTA, TONEMATCH, VOCODER`
+      (no cache section on the FM9).
+- [x] ~~Cab IR bank names~~ ✅ 2026-07-06 factory banks bundled (`FM9_CAB_IRS`); user banks live-only.
+- [ ] `DISTORT_DYNPRES/DYNDEPTH` (pids 90/91): the 76p0 cache carries tc=0 stub rows; the
+      fw-11.0-mined ranges are kept for those two (flagged inline in ranges.generated.ts).
+- [ ] Offline-decode floor (`paramRegionFloor 0x1e00`) is single-preset evidence — more dumps
+      welcome (same caveat as the III).
 
 ---
 
@@ -172,16 +200,19 @@ complete.
 ## Consolidated backlog (priority order)
 
 **Editor RE — no user hardware needed (do these first):**
-1. **FM9 enum vocab** — mine full `FM9_ENUM_OVERRIDES` from FM9-Edit. *Most user-visible fix.*
-2. **FM9 type rosters** — 16 families + FILTER stub.
-3. **VP4 full display-side pass** — ranges, type rosters, enum vocab, layouts, FC/modifier from VP4-Edit.
-4. **III enum vocab** + engineering-unit ranges (cosmetic but broad).
-5. **III / remaining type rosters** (10 families).
+1. ~~FM9 enum vocab~~ ✅ 2026-07-06 (539 lists from the 76p0 cache).
+2. ~~FM9 type rosters~~ ✅ 2026-07-06 (all families resolve; FILTER stub replaced).
+3. **VP4 full display-side pass** — ranges, type rosters, enum vocab, layouts, FC/modifier from
+   VP4-Edit. *Still needs a VP4 owner's `effectDefinitions_14_*.cache`.* **Now the top item.**
+4. ~~III enum vocab + ranges~~ ✅ 2026-07-06 (591 lists, 2111 range rows from the 32.6 cache).
+5. ~~III remaining type rosters~~ ✅ 2026-07-06.
 6. **FM3 utility-family ranges** (low priority).
 
 **Hardware captures — need a user's device (lower priority; editing already works without them):**
-1. Offline preset-body calibration for FM9, III, VP4 (unlocks library *search-by-model*, not editing).
-2. Cab IR bank names for FM9 (and optionally III bundling).
+1. ~~Offline preset-body calibration for FM9 + III~~ ✅ 2026-07-06 single-preset ("Devs Gift Of
+   Tone" cross-device pair). Remaining: more FM9/III preset dumps to firm the region floors;
+   VP4 body calibration still open.
+2. ~~Cab IR bank names for FM9 + III~~ ✅ 2026-07-06 (factory banks from the same caches).
 3. Telemetry wire shapes — see [`DEVICE-TELEMETRY.md`](./DEVICE-TELEMETRY.md).
 
 ---

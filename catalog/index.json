@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "description": "Generated parameter/block/enum catalog for Fractal Audio devices. One file per device; keys under \"data\" mirror the same-named TypeScript exports in fractal-midi. See docs/CATALOG-SCHEMA.md. GENERATED — do not edit.",
+  "description": "Generated parameter/block/enum catalog for Fractal Audio devices. One file per device; keys under \"data\" mirror the same-named TypeScript exports in forgefx-midi. See docs/CATALOG-SCHEMA.md. GENERATED — do not edit.",
   "license": "Apache-2.0 (see LICENSE and NOTICE at the package root)",
   "devices": [
     {

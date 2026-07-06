@@ -80,6 +80,19 @@ export {
 export { resolveEnumValues, resolveEffectTypeEnum, enumOverlayStats } from './enumOverlay.js';
 export type { EnumOverlayEntry, EnumProvenance } from './enumOverlay.js';
 
+// Device-true III enum vocabulary + display ranges, mined from the Axe-Fx
+// III-Edit effectDefinitions cache (10_32p6) by the strict count-driven
+// walker. FAMILY-shaped (family -> paramId -> label list), uniform with FM3.
+export { AXE3_ENUM_OVERRIDES } from './enumOverrides.generated.js';
+export { AXE3_CAB_IRS } from './cabIrs.generated.js';
+export {
+  AXE3_RANGES,
+  AXE3_RANGE_SECTIONS,
+  AXE3_UNMAPPED_SECTIONS,
+  type Axe3ParamRange,
+  type Axe3RangeFamilyMeta,
+} from './ranges.generated.js';
+
 // Gen-3 enum set-by-name resolver: name → read-roster ORDINAL (the float32(ordinal)
 // set value). The ordinal IS the set value; there is no raw-id space. See `enumRawId.ts`.
 export {

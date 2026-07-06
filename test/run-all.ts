@@ -41,6 +41,7 @@ import { runModernFamilyTests, MODERN_FAMILY_CASE_COUNT } from './gen3/modern-fa
 import { runBoundCodecTests, BOUNDCODEC_CASE_COUNT } from './gen3/modern-family/boundcodec.test.js';
 import { runFm3MetersTests, FM3_METERS_CASE_COUNT } from './gen3/fm3/meters.test.js';
 import { runFm3BlockParamsTests, FM3_BLOCKPARAMS_CASE_COUNT } from './gen3/fm3/blockparams.test.js';
+import { runCrossBlockParamsTests, CROSS_BLOCKPARAMS_CASE_COUNT } from './gen3/modern-family/blockparams-cross.test.js';
 import { runFm3TelemetryTests, FM3_TELEMETRY_CASE_COUNT } from './gen3/fm3/telemetry.test.js';
 import { runGen3RosterTests, FM3_ROSTER_CASE_COUNT } from './gen3/fm3/roster.test.js';
 import { runFm9MetersTests, FM9_METERS_CASE_COUNT } from './gen3/fm9/meters.test.js';
@@ -99,6 +100,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `modern-family/boundcodec (${BOUNDCODEC_CASE_COUNT} model bytes, full surface)`, run: runBoundCodecTests },
   { name: `fm3/meters (${FM3_METERS_CASE_COUNT} cases)`, run: runFm3MetersTests },
   { name: `fm3/blockparams (${FM3_BLOCKPARAMS_CASE_COUNT} live-FM3 preset goldens)`, run: runFm3BlockParamsTests },
+  { name: `modern-family/blockparams-cross (${CROSS_BLOCKPARAMS_CASE_COUNT} cross-device preset goldens)`, run: runCrossBlockParamsTests },
   { name: `fm3/telemetry (${FM3_TELEMETRY_CASE_COUNT} live-FM3 frame goldens)`, run: runFm3TelemetryTests },
   { name: `gen3/roster (${FM3_ROSTER_CASE_COUNT} projection goldens)`, run: runGen3RosterTests },
   { name: `fm9/meters (${FM9_METERS_CASE_COUNT} cases)`, run: runFm9MetersTests },

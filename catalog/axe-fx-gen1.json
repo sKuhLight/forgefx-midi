@@ -3,7 +3,7 @@
   "device": "axe-fx-gen1",
   "model_byte": "0x01",
   "support_status": "community-beta (decoded byte-exactly from the published gen-1 SysEx spec; not hardware-verified; params with scaling \"pending\" require raw wire values)",
-  "source": "fractal-midi/src/gen1 — published \"Axe-FX Ultra System Exclusive Messages\" doc + its 0..255 conversion table",
+  "source": "forgefx-midi/src/gen1 — published \"Axe-FX Ultra System Exclusive Messages\" doc + its 0..255 conversion table",
   "data": {
     "KNOWN_PARAMS": {
       "compressor.threshold": {

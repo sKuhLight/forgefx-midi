@@ -2394,135 +2394,170 @@ const COMP_ROSTER: readonly Fm3TypeModel[] = [
 ];
 
 const DELAY_ROSTER: readonly Fm3TypeModel[] = [
+  // Device-true delay MODEL list (cache DELAY paramId 6, DELAY_MODEL). The
+  // previous 22-entry list was the MEGATAP pattern vocabulary (cache MEGATAP
+  // paramId 28), mis-bound at generation; the delay block's user-facing "type"
+  // is DELAY_MODEL — the table's DELAY_TYPE (paramId 7) is the 8-value
+  // routing enum (MONO/STEREO/PING-PONG/…).
   {
     "value": 0,
-    "name": "Reverb Pre-Swell",
+    "name": "Digital Mono",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 1,
-    "name": "Ping-Pong Echo Verb",
+    "name": "Digital Stereo",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 2,
-    "name": "Diffusion Swirl",
+    "name": "Analog Mono",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 3,
-    "name": "Decepticons",
+    "name": "Analog Stereo",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 4,
-    "name": "Reverse Reverb Echo",
+    "name": "Mono Tape",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 5,
-    "name": "Lazer Zaps",
+    "name": "Stereo Tape",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 6,
-    "name": "Creaky",
+    "name": "Ping-Pong",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 7,
-    "name": "Tap Verb Plush",
+    "name": "Dual Delay",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 8,
-    "name": "Tap Verb Grit",
+    "name": "Reverse Delay",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 9,
-    "name": "Bounce",
+    "name": "Sweep Delay",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 10,
-    "name": "Bounce Reverse",
+    "name": "Ducking Delay",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 11,
-    "name": "Motion Echoes",
+    "name": "Vintage Digital",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 12,
-    "name": "Staccato Spread",
+    "name": "2290 w/ Modulation",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 13,
-    "name": "Tank Taps",
+    "name": "Ambient Stereo",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 14,
-    "name": "Serpentine Swells",
+    "name": "Deluxe Mind Guy",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 15,
-    "name": "Late Bloomer",
+    "name": "Mono BBD",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 16,
-    "name": "Brute Force Reverb",
+    "name": "Stereo BBD",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 17,
-    "name": "Megaverb",
+    "name": "Lo-Fi Tape",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 18,
-    "name": "Gated Reverb",
+    "name": "Stereo Mind Guy",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 19,
-    "name": "Take Five",
+    "name": "Graphite Copy Delay",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 20,
-    "name": "Diffused Ping-Pong Echo",
+    "name": "DM-Two Delay",
     "manufacturer": null,
     "basedOn": null
   },
   {
     "value": 21,
-    "name": "Echo Room",
+    "name": "Worn Tape",
+    "manufacturer": null,
+    "basedOn": null
+  },
+  {
+    "value": 22,
+    "name": "Pan Delay",
+    "manufacturer": null,
+    "basedOn": null
+  },
+  {
+    "value": 23,
+    "name": "Stereo Trem Delay",
+    "manufacturer": null,
+    "basedOn": null
+  },
+  {
+    "value": 24,
+    "name": "Wandering Delays",
+    "manufacturer": null,
+    "basedOn": null
+  },
+  {
+    "value": 25,
+    "name": "Dual Head Tape",
+    "manufacturer": null,
+    "basedOn": null
+  },
+  {
+    "value": 26,
+    "name": "Surround Delay",
     "manufacturer": null,
     "basedOn": null
   }

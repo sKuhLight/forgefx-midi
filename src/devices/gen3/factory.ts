@@ -50,12 +50,7 @@ import {
   buildVp4Save,
   buildVp4SetParam,
 } from '../../gen3/vp4/index.js';
-import { FM9_RANGES } from '../../gen3/fm9/index.js';
-import { createModernCatalog, type AxeFxIIIParam } from './catalog.js';
-
-/** FM9 SysEx model byte: its device-true editor-cache ranges (FM9_RANGES) take
- *  precedence over the AM4-overlay-inferred catalog bounds. */
-const FM9_MODEL_ID = 0x12;
+import { createModernCatalog, type AxeFxIIIParam, type DeviceRangeTable } from './catalog.js';
 import { makeReader } from './reader.js';
 import { makeWriter } from './writer.js';
 
@@ -167,6 +162,15 @@ export interface FractalModernConfig {
    * devices with none.
    */
   enum_overrides?: Readonly<Record<string, Readonly<Record<number, string>>>>;
+  /**
+   * Device-true display ranges mined from THIS model's editor cache
+   * (family → paramId → range). They take precedence over the catalog's
+   * inferred bounds inside `buildParamSchema`/`resolveCalibration`. Pass an
+   * INFORMATIVE view (`informativeDeviceRanges(...)`) so all-zero placeholder
+   * rows (unused wire slots kept for stride math) don't clobber inline display
+   * bounds. Omit for devices without a mined range table.
+   */
+  device_ranges?: DeviceRangeTable;
   canonical_terms: CanonicalTermMap;
   agent_guidance: Readonly<Record<string, string>>;
   example_spec: PresetSpec;
@@ -216,12 +220,12 @@ export function createModernFractalDescriptor(config: FractalModernConfig): Devi
     deviceEnumOverrides: config.enum_overrides,
     sharedEnumRosters: config.grid !== undefined ? GEN3_READ_ROSTERS : undefined,
     excludeBlocks: config.exclude_blocks,
-    // FM9: device-true display ranges from the FM9-Edit effectDefinitions cache
-    // (community capture, fw 11.0) override the AM4-overlay-inferred bounds for
+    // Device-true display ranges (FM9 + III today, mined from each editor's
+    // effectDefinitions cache) override the AM4-overlay-inferred bounds for
     // calibration, correcting the float params whose inherited range contradicts
-    // the real front panel (DELAY_TIME, REVERB_PREDELAY, etc.). The III/FM3/VP4
-    // have no device-true range table yet, so they keep the catalog inference.
-    deviceRanges: config.model_byte === FM9_MODEL_ID ? FM9_RANGES : undefined,
+    // the real front panel (DELAY_TIME, REVERB_PREDELAY, etc.). FM3/VP4 have no
+    // wired range table yet, so they keep the catalog inference.
+    deviceRanges: config.device_ranges,
   });
 
   // Grid devices (III/FM3/FM9) advertise a 2-D grid + multi-instance blocks;

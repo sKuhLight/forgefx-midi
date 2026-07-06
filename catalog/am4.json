@@ -3,7 +3,7 @@
   "device": "am4",
   "model_byte": "0x15",
   "support_status": "hardware-verified",
-  "source": "fractal-midi/src/am4 — AM4-Edit metadata cache + hardware captures; see docs/devices/am4/SYSEX-MAP.md",
+  "source": "forgefx-midi/src/am4 — AM4-Edit metadata cache + hardware captures; see docs/devices/am4/SYSEX-MAP.md",
   "data": {
     "KNOWN_PARAMS": {
       "amp.balance": {
@@ -528,16 +528,6 @@
         "displayMax": 50,
         "scaling": "log10"
       },
-      "amp.compressor_clarity": {
-        "block": "amp",
-        "name": "compressor_clarity",
-        "pidLow": 58,
-        "pidHigh": 77,
-        "unit": "knob_0_10",
-        "displayMin": 0.1,
-        "displayMax": 10,
-        "scaling": "log10"
-      },
       "amp.input_eq_frequency": {
         "block": "amp",
         "name": "input_eq_frequency",
@@ -558,24 +548,6 @@
         "unit": "knob_0_10",
         "displayMin": 0,
         "displayMax": 10
-      },
-      "amp.compressor_amount": {
-        "block": "amp",
-        "name": "compressor_amount",
-        "pidLow": 58,
-        "pidHigh": 82,
-        "unit": "knob_0_10",
-        "displayMin": 0,
-        "displayMax": 10
-      },
-      "amp.compressor_threshold": {
-        "block": "amp",
-        "name": "compressor_threshold",
-        "pidLow": 58,
-        "pidHigh": 83,
-        "unit": "db",
-        "displayMin": -60,
-        "displayMax": 0
       },
       "amp.master_vol_trim": {
         "block": "amp",
@@ -1655,24 +1627,6 @@
         "displayMin": 0,
         "displayMax": 100
       },
-      "reverb.shift_1": {
-        "block": "reverb",
-        "name": "shift_1",
-        "pidLow": 66,
-        "pidHigh": 56,
-        "unit": "semitones",
-        "displayMin": -24,
-        "displayMax": 24
-      },
-      "reverb.shift_2": {
-        "block": "reverb",
-        "name": "shift_2",
-        "pidLow": 66,
-        "pidHigh": 57,
-        "unit": "semitones",
-        "displayMin": -24,
-        "displayMax": 24
-      },
       "reverb.pitch_feedback": {
         "block": "reverb",
         "name": "pitch_feedback",
@@ -2116,15 +2070,6 @@
         "displayMax": 1000,
         "scaling": "log10"
       },
-      "delay.diffusor": {
-        "block": "delay",
-        "name": "diffusor",
-        "pidLow": 70,
-        "pidHigh": 49,
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
-      },
       "delay.diffusion_time": {
         "block": "delay",
         "name": "diffusion_time",
@@ -2500,25 +2445,6 @@
         "displayMin": 0,
         "displayMax": 100
       },
-      "chorus.lfo_rate": {
-        "block": "chorus",
-        "name": "lfo_rate",
-        "pidLow": 78,
-        "pidHigh": 22,
-        "unit": "hz",
-        "displayMin": 0.1,
-        "displayMax": 10,
-        "scaling": "log10"
-      },
-      "chorus.width": {
-        "block": "chorus",
-        "name": "width",
-        "pidLow": 78,
-        "pidHigh": 23,
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
-      },
       "chorus.drive": {
         "block": "chorus",
         "name": "drive",
@@ -2529,25 +2455,6 @@
         "displayMin": 0.5,
         "displayMax": 500,
         "scaling": "log10"
-      },
-      "chorus.lfo_freq": {
-        "block": "chorus",
-        "name": "lfo_freq",
-        "pidLow": 78,
-        "pidHigh": 25,
-        "unit": "hz",
-        "displayMin": 20,
-        "displayMax": 2000,
-        "scaling": "log10"
-      },
-      "chorus.lfo_depth_2": {
-        "block": "chorus",
-        "name": "lfo_depth_2",
-        "pidLow": 78,
-        "pidHigh": 26,
-        "unit": "bipolar_percent",
-        "displayMin": -200,
-        "displayMax": 200
       },
       "chorus.left_depth": {
         "block": "chorus",
@@ -3011,26 +2918,6 @@
           "8": "Paragon"
         }
       },
-      "wah.min_frequency": {
-        "block": "wah",
-        "name": "min_frequency",
-        "pidLow": 94,
-        "pidHigh": 11,
-        "unit": "hz",
-        "displayMin": 100,
-        "displayMax": 1000,
-        "scaling": "log10"
-      },
-      "wah.max_frequency": {
-        "block": "wah",
-        "name": "max_frequency",
-        "pidLow": 94,
-        "pidHigh": 12,
-        "unit": "hz",
-        "displayMin": 500,
-        "displayMax": 5000,
-        "scaling": "log10"
-      },
       "wah.q_resonance": {
         "block": "wah",
         "name": "q_resonance",
@@ -3221,26 +3108,6 @@
         "unit": "ratio",
         "displayMin": 1,
         "displayMax": 20,
-        "scaling": "log10"
-      },
-      "compressor.attack": {
-        "block": "compressor",
-        "name": "attack",
-        "pidLow": 46,
-        "pidHigh": 12,
-        "unit": "ms",
-        "displayMin": 0.1,
-        "displayMax": 100,
-        "scaling": "log10"
-      },
-      "compressor.release": {
-        "block": "compressor",
-        "name": "release",
-        "pidLow": 46,
-        "pidHigh": 13,
-        "unit": "ms",
-        "displayMin": 2,
-        "displayMax": 2000,
         "scaling": "log10"
       },
       "compressor.sidechain_low_cut": {
@@ -3644,16 +3511,6 @@
           "16": "Auto-Wah",
           "17": "Touch-Wah"
         }
-      },
-      "filter.freq": {
-        "block": "filter",
-        "name": "freq",
-        "pidLow": 114,
-        "pidHigh": 11,
-        "unit": "hz",
-        "displayMin": 20,
-        "displayMax": 20000,
-        "scaling": "log10"
       },
       "filter.q": {
         "block": "filter",

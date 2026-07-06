@@ -7304,7 +7304,7 @@
       "family": "DELAY",
       "slug": "delay",
       "instance": 1,
-      "typeName": "STEREO",
+      "typeName": "Stereo Tape",
       "params": [
         {
           "paramId": 0,

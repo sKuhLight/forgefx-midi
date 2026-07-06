@@ -3,7 +3,7 @@
   "device": "vp4",
   "model_byte": "0x14",
   "support_status": "community-beta (reads + continuous-knob writes decoded from community captures; display calibration pending — wire values pass through as raw 0..65534)",
-  "source": "fractal-midi/src/gen3/vp4 — mined from the VP4-Edit binary; paramIds are VP4-true, NOT reused from the Axe-Fx III",
+  "source": "forgefx-midi/src/gen3/vp4 — mined from the VP4-Edit binary; paramIds are VP4-true, NOT reused from the Axe-Fx III",
   "notes": [
     "VP4 is a serial 4-slot chain with no amp/cab blocks."
   ],

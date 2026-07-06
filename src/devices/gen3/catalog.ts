@@ -295,6 +295,54 @@ export interface DeviceParamRange {
 export type DeviceRangeTable = Readonly<Record<string, Readonly<Record<number, DeviceParamRange>>>>;
 
 /**
+ * Drop the PLACEHOLDER rows from a device-true range table. The editor cache
+ * mirrors the fn=0x1F wire stride 1:1, so unused wire slots carry all-zero
+ * float rows (displayMin === displayMax === 0). Those rows exist for stride
+ * math, not display: passing them into `buildParamSchema` would clobber a
+ * param's inline displayMin/Max with 0/0 (resolveCalibration already ignores
+ * them, but the schema's reported bounds would still degrade). Enum rows and
+ * informative float rows pass through unchanged.
+ */
+export function informativeDeviceRanges(table: DeviceRangeTable): DeviceRangeTable {
+  const out: Record<string, Record<number, DeviceParamRange>> = {};
+  for (const [family, rows] of Object.entries(table)) {
+    for (const [pid, r] of Object.entries(rows)) {
+      if (r.kind === 'float' && r.displayMin === r.displayMax) continue;
+      (out[family] ??= {})[Number(pid)] = r;
+    }
+  }
+  return out;
+}
+
+/**
+ * Re-key a device-true FAMILY-shaped enum vocabulary (family → paramId →
+ * ordered label list, the FM3/FM9/III `*_ENUM_OVERRIDES` shape) into the
+ * SYMBOL-keyed {paramName → {ordinal → label}} table `deviceEnumOverrides`
+ * expects. Param names are globally unique on every gen-3 device (verified on
+ * the FM9 + III catalogs at generation time), so the re-key is lossless; lists
+ * whose paramId has no catalog param (editor-only vocab like the GLOBAL CC
+ * map) have no symbol to attach to and are skipped.
+ */
+export function toSymbolEnumOverrides(
+  paramsByFamily: Readonly<Record<string, readonly { paramId: number; name: string }[]>>,
+  familyOverrides: Readonly<Record<string, Readonly<Record<string, readonly string[]>>>>,
+): Readonly<Record<string, Readonly<Record<number, string>>>> {
+  const out: Record<string, Record<number, string>> = {};
+  for (const [family, params] of Object.entries(paramsByFamily)) {
+    const fam = familyOverrides[family];
+    if (!fam) continue;
+    for (const p of params) {
+      const labels = fam[String(p.paramId)];
+      if (!labels) continue;
+      const table: Record<number, string> = {};
+      for (let i = 0; i < labels.length; i++) table[i] = labels[i]!;
+      out[p.name] = table;
+    }
+  }
+  return out;
+}
+
+/**
  * Decide whether a param's catalog range yields a usable display↔wire
  * calibration. Requires a finite displayMin < displayMax; for log10 scaling
  * both bounds must be positive (the II resolver throws otherwise). Returns

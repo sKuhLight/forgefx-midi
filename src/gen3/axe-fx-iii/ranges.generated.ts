@@ -1,5 +1,5 @@
-// GENERATED — FM9 device-true display ranges. DO NOT EDIT BY HAND.
-// Source: FM9-Edit effectDefinitions_12_76p0.cache (community capture, 2026-07-05),
+// GENERATED — AXE3 device-true display ranges. DO NOT EDIT BY HAND.
+// Source: Axe-Fx III-Edit effectDefinitions_10_32p6.cache (community capture, 2026-07-05),
 // decoded by the strict count-driven cache walker (section := u32 tag , u32
 // recordCount , record*; record := u16 id , u16 typecode , u16 pad , f32
 // min/max/scale/step , enum-or-float tail). The generator is maintained outside
@@ -20,7 +20,7 @@
 // re-asserted at generation time.
 /* eslint-disable */
 
-export interface Fm9ParamRange {
+export interface Axe3ParamRange {
   readonly kind: 'enum' | 'float';
   /** Device-true display minimum (= cache min * scale). */
   readonly displayMin: number;
@@ -37,7 +37,7 @@ export interface Fm9ParamRange {
 }
 
 /** Per-family cache section tag + fn=0x1F channel-block stride. */
-export interface Fm9RangeFamilyMeta {
+export interface Axe3RangeFamilyMeta {
   readonly sectionTag: number;
   /** fn=0x1F channel-block WIRE stride: ordinary records only (id < 0xff00). */
   readonly stride: number;
@@ -48,38 +48,38 @@ export interface Fm9RangeFamilyMeta {
   readonly instanceTags?: readonly number[];
 }
 
-/** Device-true FM9 display ranges, keyed by catalog family then paramId. 1902 rows. */
-export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9ParamRange>>>> = {
-  /** sectionTag 11, wire stride 106 (fn=0x1F channel-block stride, ordinary records only); 110 cache records incl. 4 special table record(s). */
+/** Device-true AXE3 display ranges, keyed by catalog family then paramId. 2111 rows. */
+export const AXE3_RANGES: Readonly<Record<string, Readonly<Record<number, Axe3ParamRange>>>> = {
+  /** sectionTag 11, wire stride 106 (fn=0x1F channel-block stride, ordinary records only); 111 cache records incl. 5 special table record(s). */
   CABINET: {
-    0: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 1, typecode: 0x10, enumCount: 5 }, // CABINET_BANK1
-    1: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 1, typecode: 0x10, enumCount: 5 }, // CABINET_BANK2
-    2: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_BANK3
-    3: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_BANK4
+    0: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 1, step: 1, typecode: 0x10, enumCount: 6 }, // CABINET_BANK1
+    1: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 1, step: 1, typecode: 0x10, enumCount: 6 }, // CABINET_BANK2
+    2: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 1, step: 1, typecode: 0x10, enumCount: 6 }, // CABINET_BANK3
+    3: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 1, step: 1, typecode: 0x10, enumCount: 6 }, // CABINET_BANK4
     4: { kind: 'float', displayMin: 0, displayMax: 1023, scale: 1, step: 1, typecode: 0x20 }, // CABINET_TYPE1
     5: { kind: 'float', displayMin: 0, displayMax: 1023, scale: 1, step: 1, typecode: 0x20 }, // CABINET_TYPE2
-    6: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_TYPE3
-    7: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_TYPE4
+    6: { kind: 'float', displayMin: 0, displayMax: 1023, scale: 1, step: 1, typecode: 0x20 }, // CABINET_TYPE3
+    7: { kind: 'float', displayMin: 0, displayMax: 1023, scale: 1, step: 1, typecode: 0x20 }, // CABINET_TYPE4
     8: { kind: 'float', displayMin: -40, displayMax: 0, scale: 1, step: 0.05, typecode: 0x162 }, // CABINET_LEVEL1
     9: { kind: 'float', displayMin: -40, displayMax: 0, scale: 1, step: 0.05, typecode: 0x162 }, // CABINET_LEVEL2
-    10: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_LEVEL3
-    11: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_LEVEL4
+    10: { kind: 'float', displayMin: -40, displayMax: 0, scale: 1, step: 0.05, typecode: 0x162 }, // CABINET_LEVEL3
+    11: { kind: 'float', displayMin: -40, displayMax: 0, scale: 1, step: 0.05, typecode: 0x162 }, // CABINET_LEVEL4
     12: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // CABINET_PAN1
     13: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // CABINET_PAN2
-    14: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_PAN3
-    15: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_PAN4
-    16: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1000, step: 1e-06, typecode: 0x433 }, // CABINET_DELAY1
-    17: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1000, step: 1e-06, typecode: 0x433 }, // CABINET_DELAY2
-    18: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_DELAY3
-    19: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_DELAY4
+    14: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // CABINET_PAN3
+    15: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // CABINET_PAN4
+    16: { kind: 'float', displayMin: 0, displayMax: 10, scale: 1000, step: 1e-06, typecode: 0x433 }, // CABINET_DELAY1
+    17: { kind: 'float', displayMin: 0, displayMax: 10, scale: 1000, step: 1e-06, typecode: 0x433 }, // CABINET_DELAY2
+    18: { kind: 'float', displayMin: 0, displayMax: 10, scale: 1000, step: 1e-06, typecode: 0x433 }, // CABINET_DELAY3
+    19: { kind: 'float', displayMin: 0, displayMax: 10, scale: 1000, step: 1e-06, typecode: 0x433 }, // CABINET_DELAY4
     20: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_PROXIMITY1
     21: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_PROXIMITY2
-    22: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_PROXIMITY3
-    23: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_PROXIMITY4
+    22: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_PROXIMITY3
+    23: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_PROXIMITY4
     24: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // CABINET_MUTE1
     25: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // CABINET_MUTE2
-    26: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_MUTE3
-    27: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_MUTE4
+    26: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // CABINET_MUTE3
+    27: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // CABINET_MUTE4
     28: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.05, typecode: 0x181 }, // CABINET_LEVEL
     29: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // CABINET_PAN
     30: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0.001, typecode: 0xb0, enumCount: 2 }, // CABINET_BYPASSMODE
@@ -100,10 +100,10 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     45: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x132 }, // CABINET_MID
     46: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x132 }, // CABINET_TREBLE
     47: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // CABINET_OVERSAMPLE
-    48: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_SMOOTH1
-    49: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_SMOOTH2
-    50: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_SMOOTH3
-    51: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_SMOOTH4
+    48: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_SMOOTH1
+    49: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_SMOOTH2
+    50: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_SMOOTH3
+    51: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_SMOOTH4
     52: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_ORDER
     53: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // CABINET_FLOORLVL
     54: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CABINET_AIR
@@ -116,47 +116,47 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     61: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_VUMETER
     62: { kind: 'float', displayMin: 20, displayMax: 200, scale: 1, step: 0, typecode: 0x241 }, // CABINET_LOCUT1
     63: { kind: 'float', displayMin: 20, displayMax: 200, scale: 1, step: 0, typecode: 0x241 }, // CABINET_LOCUT2
-    64: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_LOCUT3
-    65: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_LOCUT4
+    64: { kind: 'float', displayMin: 20, displayMax: 200, scale: 1, step: 0, typecode: 0x241 }, // CABINET_LOCUT3
+    65: { kind: 'float', displayMin: 20, displayMax: 200, scale: 1, step: 0, typecode: 0x241 }, // CABINET_LOCUT4
     66: { kind: 'float', displayMin: 2000, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // CABINET_HICUT1
     67: { kind: 'float', displayMin: 2000, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // CABINET_HICUT2
-    68: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_HICUT3
-    69: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_HICUT4
-    70: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0.001, typecode: 0x10, enumCount: 2 }, // CABINET_LENGTH1
-    71: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0.001, typecode: 0x10, enumCount: 2 }, // CABINET_LENGTH2
-    72: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_LENGTH3
-    73: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_LENGTH4
+    68: { kind: 'float', displayMin: 2000, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // CABINET_HICUT3
+    69: { kind: 'float', displayMin: 2000, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // CABINET_HICUT4
+    70: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_LENGTH1
+    71: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_LENGTH2
+    72: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_LENGTH3
+    73: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_LENGTH4
     74: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_LOSLOPE1
     75: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_LOSLOPE2
-    76: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_LOSLOPE3
-    77: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_LOSLOPE4
+    76: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_LOSLOPE3
+    77: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_LOSLOPE4
     78: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_HISLOPE1
     79: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_HISLOPE2
-    80: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_HISLOPE3
-    81: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_HISLOPE4
+    80: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_HISLOPE3
+    81: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_HISLOPE4
     82: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_PRELOSLOPE
     83: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_PREHISLOPE
     84: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // CABINET_SCENEIGNORE
     85: { kind: 'enum', displayMin: 0, displayMax: 44, scale: 1, step: 0.001, typecode: 0x10, enumCount: 45 }, // CABINET_DYNACAB_TYPE1
     86: { kind: 'enum', displayMin: 0, displayMax: 44, scale: 1, step: 0.001, typecode: 0x10, enumCount: 45 }, // CABINET_DYNACAB_TYPE2
-    87: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_DYNACAB_TYPE3
-    88: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_DYNACAB_TYPE4
+    87: { kind: 'enum', displayMin: 0, displayMax: 44, scale: 1, step: 0.001, typecode: 0x10, enumCount: 45 }, // CABINET_DYNACAB_TYPE3
+    88: { kind: 'enum', displayMin: 0, displayMax: 44, scale: 1, step: 0.001, typecode: 0x10, enumCount: 45 }, // CABINET_DYNACAB_TYPE4
     89: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_DYNACAB_MIC1
     90: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_DYNACAB_MIC2
-    91: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_DYNACAB_MIC3
-    92: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_DYNACAB_MIC4
+    91: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_DYNACAB_MIC3
+    92: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.001, typecode: 0x10, enumCount: 4 }, // CABINET_DYNACAB_MIC4
     93: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_DYNACAB_R1
     94: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_DYNACAB_R2
-    95: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_DYNACAB_R3
-    96: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_DYNACAB_R4
+    95: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_DYNACAB_R3
+    96: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_DYNACAB_R4
     97: { kind: 'float', displayMin: 0, displayMax: 24, scale: 24, step: 0.001, typecode: 0xa32 }, // CABINET_DYNACAB_Z1
     98: { kind: 'float', displayMin: 0, displayMax: 24, scale: 24, step: 0.001, typecode: 0xa32 }, // CABINET_DYNACAB_Z2
-    99: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_DYNACAB_Z3
-    100: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CABINET_DYNACAB_Z4
-    101: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 },
-    102: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 },
-    103: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 },
-    104: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 },
+    99: { kind: 'float', displayMin: 0, displayMax: 24, scale: 24, step: 0.001, typecode: 0xa32 }, // CABINET_DYNACAB_Z3
+    100: { kind: 'float', displayMin: 0, displayMax: 24, scale: 24, step: 0.001, typecode: 0xa32 }, // CABINET_DYNACAB_Z4
+    101: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_DYNACAB_SMOOTH1
+    102: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_DYNACAB_SMOOTH2
+    103: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_DYNACAB_SMOOTH3
+    104: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CABINET_DYNACAB_SMOOTH4
     105: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // CABINET_AUTO_ALIGN
   },
   /** sectionTag 16, wire stride 32 (fn=0x1F channel-block stride, ordinary records only). */
@@ -168,14 +168,14 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     4: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CHORUS_DEPTH
     5: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // CHORUS_HICUT
     6: { kind: 'float', displayMin: 0.1, displayMax: 50, scale: 1000, step: 1e-05, typecode: 0x432 }, // CHORUS_DELAYTIME
-    7: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // CHORUS_LFOPHASE
+    7: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // CHORUS_LFOPHASE
     8: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // CHORUS_LFOTYPE
     9: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // CHORUS_AUTO
     10: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x570 }, // CHORUS_MIX
     11: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // CHORUS_LEVEL
     12: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // CHORUS_PAN
     13: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0xa0, enumCount: 3 }, // CHORUS_BYPASSMODE
-    14: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // CHORUS_GLOBALMIX
+    14: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // CHORUS_GLOBALMIX
     15: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // CHORUS_BYPASS
     16: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // CHORUS_PHASEREV
     17: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CHORUS_WIDTH
@@ -190,9 +190,9 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     26: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CHORUS_DEPTHR
     27: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // CHORUS_TEMPO2
     28: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // CHORUS_SCENEIGNORE
-    29: { kind: 'float', displayMin: 1, displayMax: 40, scale: 1000, step: 1e-05, typecode: 0x432 },
-    30: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 },
-    31: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 },
+    29: { kind: 'float', displayMin: 1, displayMax: 40, scale: 1000, step: 1e-05, typecode: 0x432 }, // CHORUS_DELAYRANGE
+    30: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CHORUS_BASS
+    31: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // CHORUS_TREBLE
   },
   /** sectionTag 7, wire stride 37 (fn=0x1F channel-block stride, ordinary records only). */
   COMP: {
@@ -206,7 +206,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     7: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // COMP_PEAKRMS
     8: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // COMP_LOWCUT
     9: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // COMP_BYPASS
-    10: { kind: 'enum', displayMin: 0, displayMax: 11, scale: 0, step: 0, typecode: 0x10, enumCount: 12 }, // COMP_SIDECHAIN
+    10: { kind: 'enum', displayMin: 0, displayMax: 12, scale: 0, step: 0, typecode: 0x10, enumCount: 13 }, // COMP_SIDECHAIN
     11: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // COMP_MIX
     12: { kind: 'enum', displayMin: 0, displayMax: 18, scale: 0, step: 0, typecode: 0x10, enumCount: 19 }, // COMP_TYPE
     13: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // COMP_SUSTAIN
@@ -234,19 +234,19 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     35: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // COMP_TONE
     36: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // COMP_DRIVE
   },
-  /** sectionTag 2, wire stride 130 (fn=0x1F channel-block stride, ordinary records only). */
+  /** sectionTag 2, wire stride 178 (fn=0x1F channel-block stride, ordinary records only). */
   CONTROLLERS: {
     0: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // CONTROLLERS_LFO1TYPE
     1: { kind: 'float', displayMin: 0.05, displayMax: 30, scale: 1, step: 0, typecode: 0x243 }, // CONTROLLERS_LFO1FREQ
     2: { kind: 'float', displayMin: 0, displayMax: 100, scale: 200, step: 0.0005, typecode: 0x531 }, // CONTROLLERS_LFO1DEPTH
     3: { kind: 'float', displayMin: 1, displayMax: 99, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_LFO1DUTY
-    4: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // CONTROLLERS_LFO1PHASE
+    4: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // CONTROLLERS_LFO1PHASE
     5: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // CONTROLLERS_LFO1TEMPO
     6: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // CONTROLLERS_LFO2TYPE
     7: { kind: 'float', displayMin: 0.05, displayMax: 30, scale: 1, step: 0, typecode: 0x243 }, // CONTROLLERS_LFO2FREQ
     8: { kind: 'float', displayMin: 0, displayMax: 100, scale: 200, step: 0.0005, typecode: 0x531 }, // CONTROLLERS_LFO2DEPTH
     9: { kind: 'float', displayMin: 1, displayMax: 99, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_LFO2DUTY
-    10: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // CONTROLLERS_LFO2PHASE
+    10: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // CONTROLLERS_LFO2PHASE
     11: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // CONTROLLERS_LFO2TEMPO
     12: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // CONTROLLERS_ADSR1MODE
     13: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // CONTROLLERS_ADSR1RETRIG
@@ -346,35 +346,83 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     107: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // CONTROLLERS_ADSR2SOURCE
     108: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // CONTROLLERS_ENVSOURCE
     109: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_ENV_GAINMONITOR
-    110: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // CONTROLLERS_PITCH_SOURCE
-    111: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000, step: 0, typecode: 0x443 }, // CONTROLLERS_SEQ_DAMPING
-    112: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_MANUAL1
-    113: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_MANUAL2
-    114: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_MANUAL3
-    115: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_MANUAL4
-    116: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_MANUAL5
-    117: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x243 }, // CONTROLLERS_ENVLOWCUT
-    118: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x243 }, // CONTROLLERS_ENVHIGHCUT
-    119: { kind: 'float', displayMin: 0.1, displayMax: 99.9, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_LFO1BETA
-    120: { kind: 'float', displayMin: 0.1, displayMax: 99.9, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_LFO2BETA
-    121: { kind: 'float', displayMin: 0.5, displayMax: 50, scale: 1, step: 0, typecode: 0x242 }, // CONTROLLERS_LFO1HICUT
-    122: { kind: 'float', displayMin: 0.5, displayMax: 50, scale: 1, step: 0, typecode: 0x242 }, // CONTROLLERS_LFO2HICUT
-    123: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CONTROLLERS_ADSR1_XMARK
-    124: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CONTROLLERS_ADSR1_YMARK
-    125: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CONTROLLERS_ADSR2_XMARK
-    126: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CONTROLLERS_ADSR2_YMARK
-    127: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10 }, // CONTROLLERS_SEQ_STEP
-    128: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // CONTROLLERS_ADSR1_TYPE
-    129: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // CONTROLLERS_ADSR2_TYPE
+    110: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE1_CS1_MODE
+    111: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE2_CS1_MODE
+    112: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE3_CS1_MODE
+    113: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE4_CS1_MODE
+    114: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE5_CS1_MODE
+    115: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE6_CS1_MODE
+    116: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE7_CS1_MODE
+    117: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE8_CS1_MODE
+    118: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE1_CS2_MODE
+    119: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE2_CS2_MODE
+    120: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE3_CS2_MODE
+    121: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE4_CS2_MODE
+    122: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE5_CS2_MODE
+    123: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE6_CS2_MODE
+    124: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE7_CS2_MODE
+    125: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE8_CS2_MODE
+    126: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE1_CS3_MODE
+    127: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE2_CS3_MODE
+    128: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE3_CS3_MODE
+    129: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE4_CS3_MODE
+    130: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE5_CS3_MODE
+    131: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE6_CS3_MODE
+    132: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE7_CS3_MODE
+    133: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE8_CS3_MODE
+    134: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE1_CS4_MODE
+    135: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE2_CS4_MODE
+    136: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE3_CS4_MODE
+    137: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE4_CS4_MODE
+    138: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE5_CS4_MODE
+    139: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE6_CS4_MODE
+    140: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE7_CS4_MODE
+    141: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE8_CS4_MODE
+    142: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE1_CS5_MODE
+    143: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE2_CS5_MODE
+    144: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE3_CS5_MODE
+    145: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE4_CS5_MODE
+    146: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE5_CS5_MODE
+    147: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE6_CS5_MODE
+    148: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE7_CS5_MODE
+    149: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE8_CS5_MODE
+    150: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE1_CS6_MODE
+    151: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE2_CS6_MODE
+    152: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE3_CS6_MODE
+    153: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE4_CS6_MODE
+    154: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE5_CS6_MODE
+    155: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE6_CS6_MODE
+    156: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE7_CS6_MODE
+    157: { kind: 'float', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0xf0 }, // CONTROLLERS_SCENE8_CS6_MODE
+    158: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // CONTROLLERS_PITCH_SOURCE
+    159: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000, step: 0, typecode: 0x443 }, // CONTROLLERS_SEQ_DAMPING
+    160: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_MANUAL1
+    161: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_MANUAL2
+    162: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_MANUAL3
+    163: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_MANUAL4
+    164: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_MANUAL5
+    165: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x243 }, // CONTROLLERS_ENVLOWCUT
+    166: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x243 }, // CONTROLLERS_ENVHIGHCUT
+    167: { kind: 'float', displayMin: 0.1, displayMax: 99.9, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_LFO1BETA
+    168: { kind: 'float', displayMin: 0.1, displayMax: 99.9, scale: 100, step: 0.001, typecode: 0x531 }, // CONTROLLERS_LFO2BETA
+    169: { kind: 'float', displayMin: 0.5, displayMax: 50, scale: 1, step: 0, typecode: 0x242 }, // CONTROLLERS_LFO1HICUT
+    170: { kind: 'float', displayMin: 0.5, displayMax: 50, scale: 1, step: 0, typecode: 0x242 }, // CONTROLLERS_LFO2HICUT
+    171: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CONTROLLERS_ADSR1_XMARK
+    172: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CONTROLLERS_ADSR1_YMARK
+    173: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CONTROLLERS_ADSR2_XMARK
+    174: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // CONTROLLERS_ADSR2_YMARK
+    175: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10 }, // CONTROLLERS_SEQ_STEP
+    176: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // CONTROLLERS_ADSR1_TYPE
+    177: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // CONTROLLERS_ADSR2_TYPE
   },
   /** sectionTag 34, wire stride 15 (fn=0x1F channel-block stride, ordinary records only). */
   CROSSOVER: {
     0: { kind: 'float', displayMin: 40, displayMax: 800, scale: 1, step: 0, typecode: 0x41 }, // CROSSOVER_FREQ
     1: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // CROSSOVER_FREQRANGE
-    2: { kind: 'float', displayMin: 0.0001, displayMax: 1, scale: 1, step: 0, typecode: 0x162 }, // CROSSOVER_LOWGAINL
-    3: { kind: 'float', displayMin: 0.0001, displayMax: 1, scale: 1, step: 0, typecode: 0x162 }, // CROSSOVER_HIGAINL
-    4: { kind: 'float', displayMin: 0.0001, displayMax: 1, scale: 1, step: 0, typecode: 0x162 }, // CROSSOVER_LOWGAINR
-    5: { kind: 'float', displayMin: 0.0001, displayMax: 1, scale: 1, step: 0, typecode: 0x162 }, // CROSSOVER_HIGAINR
+    2: { kind: 'float', displayMin: -80, displayMax: 0, scale: 1, step: 0.1, typecode: 0x162 }, // CROSSOVER_LOWGAINL
+    3: { kind: 'float', displayMin: -80, displayMax: 0, scale: 1, step: 0.1, typecode: 0x162 }, // CROSSOVER_HIGAINL
+    4: { kind: 'float', displayMin: -80, displayMax: 0, scale: 1, step: 0.1, typecode: 0x162 }, // CROSSOVER_LOWGAINR
+    5: { kind: 'float', displayMin: -80, displayMax: 0, scale: 1, step: 0.1, typecode: 0x162 }, // CROSSOVER_HIGAINR
     6: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x31 }, // CROSSOVER_LOWPANL
     7: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x31 }, // CROSSOVER_HIPANL
     8: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x31 }, // CROSSOVER_LOWPANR
@@ -385,249 +433,259 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     13: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xb0, enumCount: 2 }, // CROSSOVER_BYPASSMODE
     14: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // CROSSOVER_BYPASS
   },
-  /** sectionTag 13, wire stride 91 (fn=0x1F channel-block stride, ordinary records only). */
+  /** sectionTag 13, wire stride 89 (fn=0x1F channel-block stride, ordinary records only). */
   DELAY: {
-    0: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x571 }, // DELAY_MIX
-    1: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // DELAY_LEVEL
-    2: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // DELAY_PAN
-    3: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 1, typecode: 0xc0, enumCount: 5 }, // DELAY_BYPASSMODE
-    4: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // DELAY_GLOBALMIX
-    5: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // DELAY_BYPASS
-    6: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DELAY_SCENEIGNORE
-    7: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10 }, // DELAY_KILLDRY
-    8: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10 },
-    9: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10 },
-    10: { kind: 'enum', displayMin: 0, displayMax: 28, scale: 1, step: 0, typecode: 0x10, enumCount: 29 }, // DELAY_MODEL
-    11: { kind: 'enum', displayMin: 0, displayMax: 7, scale: 1, step: 0, typecode: 0x10, enumCount: 8 }, // DELAY_TYPE
-    12: { kind: 'float', displayMin: 1, displayMax: 16000, scale: 1000, step: 0.001, typecode: 0x430 }, // DELAY_TIME
-    13: { kind: 'float', displayMin: 1, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_RATIO
-    14: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_FEED
-    15: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_FEEDL
-    16: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_FEEDR
-    17: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // DELAY_DELAYPAN
-    18: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_SPREAD
-    19: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_TEMPO
-    20: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x241 }, // DELAY_LOCUT
-    21: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x240 }, // DELAY_HICUT
-    22: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // DELAY_RATE1
-    23: { kind: 'float', displayMin: 0.2, displayMax: 20, scale: 1, step: 0, typecode: 0x243 }, // DELAY_RATE2
-    24: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DEPTH1
-    25: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DEPTH2
-    26: { kind: 'float', displayMin: 0.5, displayMax: 500, scale: 10, step: 0.001, typecode: 0x52 }, // DELAY_DRIVE
-    27: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_GAIN
-    28: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // DELAY_LFO1TYPE
-    29: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // DELAY_LFO2TYPE
-    30: { kind: 'float', displayMin: 1, displayMax: 16000, scale: 1000, step: 0.001, typecode: 0x430 }, // DELAY_TIMER
-    31: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // DELAY_HOLD
-    32: { kind: 'float', displayMin: 0, displayMax: 200, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_MSTRFDBK
-    33: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_TEMPOR
-    34: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_FEEDLR
-    35: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_FEEDRL
-    36: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_LEVELL
-    37: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_LEVELR
-    38: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // DELAY_PANL
-    39: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // DELAY_PANR
-    40: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // DELAY_LFO1PHASE
-    41: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // DELAY_LFO2PHASE
-    42: { kind: 'float', displayMin: 1, displayMax: 255, scale: 1000, step: 0.001, typecode: 0x431 }, // DELAY_SPLICETIME
-    43: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // DELAY_RUN
-    44: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DELAY_MODE
-    45: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0x10, enumCount: 5 }, // DELAY_LPF_ORDER
-    46: { kind: 'float', displayMin: 0, displayMax: 80, scale: 1, step: 0.1, typecode: 0x131 }, // DELAY_ATTEN
-    47: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x131 }, // DELAY_THRESH
-    48: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000, step: 0, typecode: 0x441 }, // DELAY_RELEASE
-    49: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DIFFUSE
-    50: { kind: 'float', displayMin: 1, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DIFFTIME
-    51: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // DELAY_PHASEREV
-    52: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DELAY_LFO1TARGET
-    53: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DELAY_LFO2TARGET
-    54: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_LFO1TEMPO
-    55: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_LFO2TEMPO
-    56: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // DELAY_RATE3
-    57: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // DELAY_LFO3TYPE
-    58: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // DELAY_LFO3PHASE
-    59: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_LFO3TEMPO
-    60: { kind: 'float', displayMin: 100, displayMax: 1000, scale: 1, step: 0, typecode: 0x240 }, // DELAY_FSTART
-    61: { kind: 'float', displayMin: 500, displayMax: 5000, scale: 1, step: 0, typecode: 0x240 }, // DELAY_FSTOP
-    62: { kind: 'float', displayMin: 2, displayMax: 200, scale: 10, step: 0, typecode: 0x52 }, // DELAY_Q
-    63: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DELAY_FILTERQ
-    64: { kind: 'float', displayMin: 0, displayMax: 24, scale: 1, step: 1, typecode: 0x10 }, // DELAY_BITREDUCE
-    65: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // DELAY_FREQ1
-    66: { kind: 'float', displayMin: 100, displayMax: 10000, scale: 1, step: 0, typecode: 0x242 }, // DELAY_FREQ2
-    67: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DELAY_Q1
-    68: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DELAY_Q2
-    69: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.05, typecode: 0x132 }, // DELAY_GAIN1
-    70: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.05, typecode: 0x132 }, // DELAY_GAIN2
-    71: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DELAY_MAXDEPTH
-    72: { kind: 'float', displayMin: 0.5, displayMax: 2, scale: 1, step: 0, typecode: 0x43 }, // DELAY_SPEED
-    73: { kind: 'float', displayMin: 0, displayMax: 100, scale: 1000, step: 0.0001, typecode: 0x431 }, // DELAY_OFFSET
-    74: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0x10, enumCount: 5 }, // DELAY_HPF_ORDER
-    75: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DELAY_COMPANDER
-    76: { kind: 'float', displayMin: 1, displayMax: 100, scale: 1000, step: 0, typecode: 0x443 }, // DELAY_COMPTIME
-    77: { kind: 'float', displayMin: -100, displayMax: -20, scale: 1, step: 0.05, typecode: 0x162 }, // DELAY_COMPTHRESH
-    78: { kind: 'float', displayMin: 25, displayMax: 400, scale: 100, step: 0.001, typecode: 0x541 }, // DELAY_MSTRTIME
-    79: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // DELAY_DIFFRATE
-    80: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DIFFDEPTH
-    81: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // DELAY_LFO4TYPE
-    82: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // DELAY_RATE4
-    83: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_LFO4TEMPO
-    84: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DEPTH4
-    85: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // DELAY_LFO4PHASE
-    86: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // DELAY_LFO4TARGET
-    87: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_STACKFDBK
-    88: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_HOLDFDBK
-    89: { kind: 'enum', displayMin: 1, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DELAY_SVFTYPE
-    90: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 },
+    0: { kind: 'enum', displayMin: 0, displayMax: 28, scale: 1, step: 0, typecode: 0x10, enumCount: 29 }, // DELAY_MODEL
+    1: { kind: 'enum', displayMin: 0, displayMax: 7, scale: 1, step: 0, typecode: 0x10, enumCount: 8 }, // DELAY_TYPE
+    2: { kind: 'float', displayMin: 1, displayMax: 16000, scale: 1000, step: 0.001, typecode: 0x430 }, // DELAY_TIME
+    3: { kind: 'float', displayMin: 1, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_RATIO
+    4: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_FEED
+    5: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_FEEDL
+    6: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_FEEDR
+    7: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // DELAY_DELAYPAN
+    8: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_SPREAD
+    9: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_TEMPO
+    10: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x241 }, // DELAY_LOCUT
+    11: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x240 }, // DELAY_HICUT
+    12: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // DELAY_RATE1
+    13: { kind: 'float', displayMin: 0.2, displayMax: 20, scale: 1, step: 0, typecode: 0x243 }, // DELAY_RATE2
+    14: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DEPTH1
+    15: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DEPTH2
+    16: { kind: 'float', displayMin: 0.5, displayMax: 500, scale: 10, step: 0.001, typecode: 0x52 }, // DELAY_DRIVE
+    17: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x571 }, // DELAY_MIX
+    18: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // DELAY_LEVEL
+    19: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // DELAY_PAN
+    20: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 1, typecode: 0xc0, enumCount: 5 }, // DELAY_BYPASSMODE
+    21: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // DELAY_GLOBALMIX
+    22: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // DELAY_BYPASS
+    23: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_GAIN
+    24: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // DELAY_LFO1TYPE
+    25: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // DELAY_LFO2TYPE
+    26: { kind: 'float', displayMin: 1, displayMax: 16000, scale: 1000, step: 0.001, typecode: 0x430 }, // DELAY_TIMER
+    27: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // DELAY_HOLD
+    28: { kind: 'float', displayMin: 0, displayMax: 200, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_MSTRFDBK
+    29: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_TEMPOR
+    30: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_FEEDLR
+    31: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // DELAY_FEEDRL
+    32: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_LEVELL
+    33: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_LEVELR
+    34: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // DELAY_PANL
+    35: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // DELAY_PANR
+    36: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // DELAY_LFO1PHASE
+    37: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // DELAY_LFO2PHASE
+    38: { kind: 'float', displayMin: 1, displayMax: 255, scale: 1000, step: 0.001, typecode: 0x431 }, // DELAY_SPLICETIME
+    39: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // DELAY_RUN
+    40: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DELAY_MODE
+    41: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0x10, enumCount: 5 }, // DELAY_LPF_ORDER
+    42: { kind: 'float', displayMin: 0, displayMax: 80, scale: 1, step: 0.1, typecode: 0x131 }, // DELAY_ATTEN
+    43: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x131 }, // DELAY_THRESH
+    44: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000, step: 0, typecode: 0x441 }, // DELAY_RELEASE
+    45: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DIFFUSE
+    46: { kind: 'float', displayMin: 1, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DIFFTIME
+    47: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // DELAY_PHASEREV
+    48: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DELAY_LFO1TARGET
+    49: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DELAY_LFO2TARGET
+    50: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_LFO1TEMPO
+    51: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_LFO2TEMPO
+    52: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // DELAY_RATE3
+    53: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // DELAY_LFO3TYPE
+    54: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // DELAY_LFO3PHASE
+    55: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_LFO3TEMPO
+    56: { kind: 'float', displayMin: 100, displayMax: 1000, scale: 1, step: 0, typecode: 0x240 }, // DELAY_FSTART
+    57: { kind: 'float', displayMin: 500, displayMax: 5000, scale: 1, step: 0, typecode: 0x240 }, // DELAY_FSTOP
+    58: { kind: 'float', displayMin: 2, displayMax: 200, scale: 10, step: 0, typecode: 0x52 }, // DELAY_Q
+    59: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DELAY_FILTERQ
+    60: { kind: 'float', displayMin: 0, displayMax: 24, scale: 1, step: 1, typecode: 0x10 }, // DELAY_BITREDUCE
+    61: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // DELAY_FREQ1
+    62: { kind: 'float', displayMin: 100, displayMax: 10000, scale: 1, step: 0, typecode: 0x242 }, // DELAY_FREQ2
+    63: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DELAY_Q1
+    64: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DELAY_Q2
+    65: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.05, typecode: 0x132 }, // DELAY_GAIN1
+    66: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.05, typecode: 0x132 }, // DELAY_GAIN2
+    67: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DELAY_MAXDEPTH
+    68: { kind: 'float', displayMin: 0.5, displayMax: 2, scale: 1, step: 0, typecode: 0x43 }, // DELAY_SPEED
+    69: { kind: 'float', displayMin: 0, displayMax: 100, scale: 1000, step: 0.0001, typecode: 0x431 }, // DELAY_OFFSET
+    70: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0x10, enumCount: 5 }, // DELAY_HPF_ORDER
+    71: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DELAY_COMPANDER
+    72: { kind: 'float', displayMin: 1, displayMax: 100, scale: 1000, step: 0, typecode: 0x443 }, // DELAY_COMPTIME
+    73: { kind: 'float', displayMin: -100, displayMax: -20, scale: 1, step: 0.05, typecode: 0x162 }, // DELAY_COMPTHRESH
+    74: { kind: 'float', displayMin: 25, displayMax: 400, scale: 100, step: 0.001, typecode: 0x541 }, // DELAY_MSTRTIME
+    75: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // DELAY_DIFFRATE
+    76: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DIFFDEPTH
+    77: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // DELAY_LFO4TYPE
+    78: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // DELAY_RATE4
+    79: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // DELAY_LFO4TEMPO
+    80: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DEPTH4
+    81: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // DELAY_LFO4PHASE
+    82: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // DELAY_LFO4TARGET
+    83: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DELAY_SCENEIGNORE
+    84: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_STACKFDBK
+    85: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_HOLDFDBK
+    86: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // DELAY_KILLDRY
+    87: { kind: 'enum', displayMin: 1, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DELAY_SVFTYPE
+    88: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DELAY_DRYDIFFUSE
   },
-  /** sectionTag 10, wire stride 147 (fn=0x1F channel-block stride, ordinary records only). */
+  /** sectionTag 10, wire stride 142 (fn=0x1F channel-block stride, ordinary records only). */
   DISTORT: {
-    0: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 },
-    1: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // DISTORT_LEVEL
-    2: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // DISTORT_PAN
-    3: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xb0, enumCount: 2 }, // DISTORT_BYPASSMODE
-    4: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 },
-    5: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // DISTORT_BYPASS
-    6: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_SCENEIGNORE
-    7: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10 },
-    8: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10 },
-    9: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10 },
-    10: { kind: 'enum', displayMin: 0, displayMax: 335, scale: 1, step: 0, typecode: 0x10, enumCount: 336 }, // DISTORT_TYPE
-    11: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_DRIVE
-    12: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_BASS
-    13: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_MID
-    14: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_TREBLE
-    15: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_MASTER
-    16: { kind: 'float', displayMin: 10, displayMax: 1000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_HPFREQ
-    17: { kind: 'float', displayMin: 400, displayMax: 40000, scale: 1, step: 0, typecode: 0x240 }, // DISTORT_LPFREQ
-    18: { kind: 'float', displayMin: 200, displayMax: 2000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_TONEFREQ
-    19: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_XFLEAKAGE
-    20: { kind: 'float', displayMin: 10, displayMax: 10000, scale: 1000000, step: 0, typecode: 0x841 }, // DISTORT_BRIGHTCAP
-    21: { kind: 'float', displayMin: 400, displayMax: 40000, scale: 1, step: 0, typecode: 0x240 }, // DISTORT_WSLPF
-    22: { kind: 'float', displayMin: 5, displayMax: 500, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_XFHPF
-    23: { kind: 'float', displayMin: 4000, displayMax: 40000, scale: 1, step: 0, typecode: 0x240 }, // DISTORT_XFLPF
-    24: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0x10, enumCount: 5 }, // DISTORT_TONELOC
-    25: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_INPUTSELECT
-    26: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_DEPTH
-    27: { kind: 'float', displayMin: -1, displayMax: 1, scale: 1, step: 0.002, typecode: 0x33 }, // DISTORT_OFFSET1
-    28: { kind: 'enum', displayMin: 0, displayMax: 12, scale: 1, step: 0, typecode: 0x10, enumCount: 13 }, // DISTORT_CLIPTYPE2
-    29: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_SUPPLYSAG
-    30: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_PRESENCE
-    31: { kind: 'float', displayMin: 0, displayMax: 10, scale: 100, step: 0.0001, typecode: 0x32 }, // DISTORT_BETA
-    32: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DISTORT_PRESFREQ
-    33: { kind: 'float', displayMin: 40, displayMax: 400, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_SPKRLFREQ
-    34: { kind: 'float', displayMin: 0, displayMax: 10, scale: 0.41666666, step: 0.024, typecode: 0x32 }, // DISTORT_SPKRLFGAIN
-    35: { kind: 'float', displayMin: 50, displayMax: 500, scale: 1, step: 0, typecode: 0x242 }, // DISTORT_DEPTHFREQ
-    36: { kind: 'enum', displayMin: 0, displayMax: 7, scale: 1, step: 0, typecode: 0x10, enumCount: 8 }, // DISTORT_DRIVETYPE
-    37: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000000, step: 0, typecode: 0x841 }, // DISTORT_MVCAP
-    38: { kind: 'float', displayMin: 2, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // DISTORT_WSHPF
-    39: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0.001, typecode: 0x33 }, // DISTORT_CFCLIP
-    40: { kind: 'enum', displayMin: 0, displayMax: 137, scale: 1, step: 0, typecode: 0x10, enumCount: 138 }, // DISTORT_TONETYPE
-    41: { kind: 'float', displayMin: 1, displayMax: 100, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_TIMECONST
-    42: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_BIAS
-    43: { kind: 'enum', displayMin: 0, displayMax: 68, scale: 1, step: 0, typecode: 0x10, enumCount: 69 }, // DISTORT_FBTYPE
-    44: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0.001, typecode: 0x33 }, // DISTORT_PI_RATIO
-    45: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_BRIGHT
-    46: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // DISTORT_BOOST
-    47: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DISTORT_SPKRLFQ
-    48: { kind: 'float', displayMin: -1, displayMax: 1, scale: 1, step: 0.002, typecode: 0x33 }, // DISTORT_OFFSET2
-    49: { kind: 'float', displayMin: 400, displayMax: 4000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_SPKRHFREQ
-    50: { kind: 'float', displayMin: 0, displayMax: 10, scale: 0.41666666, step: 0.024, typecode: 0x32 }, // DISTORT_SPKRHFGAIN
-    51: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_CUT
-    52: { kind: 'float', displayMin: 0.01, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DISTORT_XDRIVE
-    53: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DISTORT_TRIM
-    54: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_HARDNESS2
-    55: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_MVPOSITION
-    56: { kind: 'float', displayMin: 0, displayMax: 10, scale: 2, step: 0.001, typecode: 0x33 }, // DISTORT_SPKRDRIVE
-    57: { kind: 'float', displayMin: 0.5, displayMax: 2, scale: 1, step: 0.001, typecode: 0x43 }, // DISTORT_XFMATCH
-    58: { kind: 'float', displayMin: 1, displayMax: 100, scale: 1, step: 0.001, typecode: 0x42 }, // DISTORT_SCREENFREQ
-    59: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0.001, typecode: 0x43 }, // DISTORT_SCREENQ
-    60: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_SATSWITCH
-    61: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ1
-    62: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ2
-    63: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ3
-    64: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ4
-    65: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ5
-    66: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ6
-    67: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ7
-    68: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ8
-    69: { kind: 'float', displayMin: 0, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // DISTORT_BIASEXCURSION
-    70: { kind: 'float', displayMin: 0.25, displayMax: 25, scale: 1000, step: 0, typecode: 0x443 }, // DISTORT_EXCURSIONTIME
-    71: { kind: 'float', displayMin: 0.5, displayMax: 50, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_RECOVERYTIME
-    72: { kind: 'float', displayMin: 400, displayMax: 40000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_FEEDFWDFREQ2
-    73: { kind: 'float', displayMin: 400, displayMax: 40000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_FEEDFWDFREQ1
-    74: { kind: 'enum', displayMin: 0, displayMax: 25, scale: 1, step: 0, typecode: 0x10, enumCount: 26 }, // DISTORT_TUBETYPE
-    75: { kind: 'enum', displayMin: 0, displayMax: 8, scale: 1, step: 0, typecode: 0x10, enumCount: 9 }, // DISTORT_PRETUBETYPE
-    76: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 10, step: 0.001, typecode: 0x52 }, // DISTORT_CLARITY
-    77: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0.001, typecode: 0x43 }, // DISTORT_INEQQ
-    78: { kind: 'float', displayMin: 100, displayMax: 10000, scale: 1, step: 0, typecode: 0x242 }, // DISTORT_INEQFREQ
-    79: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // DISTORT_INEQGAIN
-    80: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_DRIVE2
-    81: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_COMPRESSION
-    82: { kind: 'float', displayMin: -60, displayMax: 0, scale: 1, step: 0.1, typecode: 0x131 }, // DISTORT_THRESHOLD
-    83: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DISTORT_MVTRIM
-    84: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_FAT
-    85: { kind: 'float', displayMin: -10.00014, displayMax: 10.00014, scale: 31.623, step: 0.000316, typecode: 0x32 }, // DISTORT_DEFINITION
-    86: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_CFTHRESH
-    87: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_CFGRID
-    88: { kind: 'float', displayMin: 0, displayMax: 0, scale: 1, step: 0, typecode: 0x10 }, // DISTORT_VERSION
-    89: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_HICUT
-    90: { kind: 'float', displayMin: -10, displayMax: 10, scale: 10, step: 0.002, typecode: 0x32 }, // DISTORT_DYNPRES [kept from fw-11.0 mine: fw-76p0 record is a tc=0 stub]
-    91: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_DYNDEPTH [kept from fw-11.0 mine: fw-76p0 record is a tc=0 stub]
-    92: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_SUPPLYTYPE
-    93: { kind: 'float', displayMin: 30, displayMax: 100, scale: 1, step: 5, typecode: 0x230 }, // DISTORT_LINEFREQ
-    94: { kind: 'float', displayMin: 2.5, displayMax: 40, scale: 10, step: 0.001, typecode: 0x52 }, // DISTORT_PAHARDNESS
-    95: { kind: 'float', displayMin: 0.2, displayMax: 20, scale: 1, step: 0, typecode: 0x243 }, // DISTORT_TREMFREQ
-    96: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_TREMDEPTH
-    97: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_BIASTYPE
-    98: { kind: 'enum', displayMin: 0, displayMax: 10, scale: 1, step: 0, typecode: 0x10, enumCount: 11 }, // DISTORT_EQTYPE
-    99: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_CBRATIO
-    100: { kind: 'float', displayMin: 1, displayMax: 100, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_CBTIME
-    101: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_DYNIMP
-    102: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_PRESAG
-    103: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.024, typecode: 0x132 }, // DISTORT_HITREBLE
-    104: { kind: 'float', displayMin: -1, displayMax: 1, scale: 1, step: 0.002, typecode: 0x33 }, // DISTORT_PAOFFSET
-    105: { kind: 'float', displayMin: -10, displayMax: 10, scale: 10, step: 0.002, typecode: 0x32 }, // DISTORT_INDYNAMICS
-    106: { kind: 'float', displayMin: 1, displayMax: 10, scale: 10, step: 0, typecode: 0x43 }, // DISTORT_SPKRHFQ
-    107: { kind: 'float', displayMin: 50, displayMax: 150, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_VARIAC
-    108: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // DISTORT_INEQTYPE
-    109: { kind: 'float', displayMin: 10, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_GRIDHARDNESS
-    110: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_PRESSHIFT
-    111: { kind: 'float', displayMin: 1, displayMax: 10, scale: 1, step: 0.01, typecode: 0x33 }, // DISTORT_SATDRIVE
-    112: { kind: 'float', displayMin: 0, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // DISTORT_TRIODE2RATIO
-    113: { kind: 'float', displayMin: 0.1, displayMax: 100, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_TRIODE2EXTIME
-    114: { kind: 'float', displayMin: 0.2, displayMax: 200, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_TRIODE2RECTIME
-    115: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_COMPTYPE
-    116: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_EQPOSITION
-    117: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_PRECOMPTYPE
-    118: { kind: 'float', displayMin: -200, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // DISTORT_TRIODE1RATIO
-    119: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_CFHARDNESS
-    120: { kind: 'float', displayMin: 0, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // DISTORT_PIEXCURSION
-    121: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_MOTORDRIVE
-    122: { kind: 'float', displayMin: 100, displayMax: 10000, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_MDTIME
-    123: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_RESOLUTION
-    124: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_VCCMON
-    125: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_GAINMON
-    126: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_MDMON
-    127: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_INDYNMON
-    128: { kind: 'float', displayMin: 0, displayMax: 24, scale: 1, step: 0.05, typecode: 0x132 }, // DISTORT_BOOSTLVL
-    129: { kind: 'enum', displayMin: 0, displayMax: 14, scale: 1, step: 0, typecode: 0x10, enumCount: 15 }, // DISTORT_BOOSTTYPE
-    130: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_OUTPUTTYPE
-    131: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_SPKRDYNAMICS
-    132: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_EQONOFF
-    133: { kind: 'float', displayMin: 0.5, displayMax: 2, scale: 1, step: 0.001, typecode: 0x43 }, // DISTORT_SPKRDCR
-    134: { kind: 'enum', displayMin: 0, displayMax: 92, scale: 1, step: 0, typecode: 0x10, enumCount: 93 }, // DISTORT_SPKRMODEL
-    135: { kind: 'float', displayMin: 0, displayMax: 200, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_CABRESONANCE
-    136: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_VPLATEMON
-    137: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_PREPRESENCE
-    138: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_BIASX
-    139: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_PAHICUT
-    140: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_PAONOFF
-    141: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_SPKRBREAKUP
-    142: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_SPKRTHUMP
-    143: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_PLATEDIODE
-    144: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_GLOBALMASTER
-    145: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_AUTO_SPKR_Z
-    146: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_NFBCOMP
+    0: { kind: 'enum', displayMin: 0, displayMax: 335, scale: 1, step: 0, typecode: 0x10, enumCount: 336 }, // DISTORT_TYPE
+    1: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_DRIVE
+    2: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_BASS
+    3: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_MID
+    4: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_TREBLE
+    5: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_MASTER
+    6: { kind: 'float', displayMin: 10, displayMax: 1000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_HPFREQ
+    7: { kind: 'float', displayMin: 400, displayMax: 40000, scale: 1, step: 0, typecode: 0x240 }, // DISTORT_LPFREQ
+    8: { kind: 'float', displayMin: 200, displayMax: 2000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_TONEFREQ
+    9: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_XFLEAKAGE
+    10: { kind: 'float', displayMin: 10, displayMax: 10000, scale: 1000000, step: 0, typecode: 0x841 }, // DISTORT_BRIGHTCAP
+    11: { kind: 'float', displayMin: 400, displayMax: 40000, scale: 1, step: 0, typecode: 0x240 }, // DISTORT_WSLPF
+    12: { kind: 'float', displayMin: 5, displayMax: 500, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_XFHPF
+    13: { kind: 'float', displayMin: 4000, displayMax: 40000, scale: 1, step: 0, typecode: 0x240 }, // DISTORT_XFLPF
+    14: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0x10, enumCount: 5 }, // DISTORT_TONELOC
+    15: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_INPUTSELECT
+    16: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_DEPTH
+    17: { kind: 'float', displayMin: -1, displayMax: 1, scale: 1, step: 0.002, typecode: 0x33 }, // DISTORT_OFFSET1
+    18: { kind: 'enum', displayMin: 0, displayMax: 12, scale: 1, step: 0, typecode: 0x10, enumCount: 13 }, // DISTORT_CLIPTYPE2
+    19: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_SUPPLYSAG
+    20: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_PRESENCE
+    21: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // DISTORT_LEVEL
+    22: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // DISTORT_PAN
+    23: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xb0, enumCount: 2 }, // DISTORT_BYPASSMODE
+    24: { kind: 'float', displayMin: 0, displayMax: 10, scale: 100, step: 0.0001, typecode: 0x32 }, // DISTORT_BETA
+    25: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DISTORT_PRESFREQ
+    26: { kind: 'float', displayMin: 40, displayMax: 400, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_SPKRLFREQ
+    27: { kind: 'float', displayMin: 0, displayMax: 10, scale: 0.41666666, step: 0.024, typecode: 0x32 }, // DISTORT_SPKRLFGAIN
+    28: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // DISTORT_BYPASS
+    29: { kind: 'float', displayMin: 50, displayMax: 500, scale: 1, step: 0, typecode: 0x242 }, // DISTORT_DEPTHFREQ
+    30: { kind: 'enum', displayMin: 0, displayMax: 7, scale: 1, step: 0, typecode: 0x10, enumCount: 8 }, // DISTORT_DRIVETYPE
+    31: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000000, step: 0, typecode: 0x841 }, // DISTORT_MVCAP
+    32: { kind: 'float', displayMin: 2, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // DISTORT_WSHPF
+    33: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0.001, typecode: 0x33 }, // DISTORT_CFCLIP
+    34: { kind: 'enum', displayMin: 0, displayMax: 137, scale: 1, step: 0, typecode: 0x10, enumCount: 138 }, // DISTORT_TONETYPE
+    35: { kind: 'float', displayMin: 1, displayMax: 100, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_TIMECONST
+    36: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_BIAS
+    37: { kind: 'enum', displayMin: 0, displayMax: 68, scale: 1, step: 0, typecode: 0x10, enumCount: 69 }, // DISTORT_FBTYPE
+    38: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0.001, typecode: 0x33 }, // DISTORT_PI_RATIO
+    39: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_BRIGHT
+    40: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // DISTORT_BOOST
+    41: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DISTORT_SPKRLFQ
+    42: { kind: 'float', displayMin: -1, displayMax: 1, scale: 1, step: 0.002, typecode: 0x33 }, // DISTORT_OFFSET2
+    43: { kind: 'float', displayMin: 400, displayMax: 4000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_SPKRHFREQ
+    44: { kind: 'float', displayMin: 0, displayMax: 10, scale: 0.41666666, step: 0.024, typecode: 0x32 }, // DISTORT_SPKRHFGAIN
+    45: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_CUT
+    46: { kind: 'float', displayMin: 0.01, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DISTORT_XDRIVE
+    47: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DISTORT_TRIM
+    48: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_HARDNESS2
+    49: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_MVPOSITION
+    50: { kind: 'float', displayMin: 0, displayMax: 10, scale: 2, step: 0.001, typecode: 0x33 }, // DISTORT_SPKRDRIVE
+    51: { kind: 'float', displayMin: 0.5, displayMax: 2, scale: 1, step: 0.001, typecode: 0x43 }, // DISTORT_XFMATCH
+    52: { kind: 'float', displayMin: 1, displayMax: 100, scale: 1, step: 0.001, typecode: 0x42 }, // DISTORT_SCREENFREQ
+    53: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0.001, typecode: 0x43 }, // DISTORT_SCREENQ
+    54: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_SATSWITCH
+    55: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ1
+    56: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ2
+    57: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ3
+    58: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ4
+    59: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ5
+    60: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ6
+    61: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ7
+    62: { kind: 'float', displayMin: -12, displayMax: 12, scale: 12, step: 0.002, typecode: 0x32 }, // DISTORT_EQ8
+    63: { kind: 'float', displayMin: 0, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // DISTORT_BIASEXCURSION
+    64: { kind: 'float', displayMin: 0.25, displayMax: 25, scale: 1000, step: 0, typecode: 0x443 }, // DISTORT_EXCURSIONTIME
+    65: { kind: 'float', displayMin: 0.5, displayMax: 50, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_RECOVERYTIME
+    66: { kind: 'float', displayMin: 400, displayMax: 40000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_FEEDFWDFREQ2
+    67: { kind: 'float', displayMin: 400, displayMax: 40000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_FEEDFWDFREQ1
+    68: { kind: 'enum', displayMin: 0, displayMax: 25, scale: 1, step: 0, typecode: 0x10, enumCount: 26 }, // DISTORT_TUBETYPE
+    69: { kind: 'enum', displayMin: 0, displayMax: 8, scale: 1, step: 0, typecode: 0x10, enumCount: 9 }, // DISTORT_PRETUBETYPE
+    70: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 10, step: 0.001, typecode: 0x52 }, // DISTORT_CLARITY
+    71: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0.001, typecode: 0x43 }, // DISTORT_INEQQ
+    72: { kind: 'float', displayMin: 100, displayMax: 10000, scale: 1, step: 0, typecode: 0x242 }, // DISTORT_INEQFREQ
+    73: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // DISTORT_INEQGAIN
+    74: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_DRIVE2
+    75: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_COMPRESSION
+    76: { kind: 'float', displayMin: -60, displayMax: 0, scale: 1, step: 0.1, typecode: 0x131 }, // DISTORT_THRESHOLD
+    77: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DISTORT_MVTRIM
+    78: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_FAT
+    79: { kind: 'float', displayMin: -10.00014, displayMax: 10.00014, scale: 31.623, step: 0.000316, typecode: 0x32 }, // DISTORT_DEFINITION
+    80: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_CFTHRESH
+    81: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_CFGRID
+    82: { kind: 'float', displayMin: 0, displayMax: 0, scale: 1, step: 0, typecode: 0x10 }, // DISTORT_VERSION
+    83: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // DISTORT_HICUT
+    84: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_DYNPRES
+    85: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_DYNDEPTH
+    86: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_SUPPLYTYPE
+    87: { kind: 'float', displayMin: 30, displayMax: 100, scale: 1, step: 5, typecode: 0x230 }, // DISTORT_LINEFREQ
+    88: { kind: 'float', displayMin: 2.5, displayMax: 40, scale: 10, step: 0.001, typecode: 0x52 }, // DISTORT_PAHARDNESS
+    89: { kind: 'float', displayMin: 0.2, displayMax: 20, scale: 1, step: 0, typecode: 0x243 }, // DISTORT_TREMFREQ
+    90: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_TREMDEPTH
+    91: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_BIASTYPE
+    92: { kind: 'enum', displayMin: 0, displayMax: 10, scale: 1, step: 0, typecode: 0x10, enumCount: 11 }, // DISTORT_EQTYPE
+    93: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_CBRATIO
+    94: { kind: 'float', displayMin: 1, displayMax: 100, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_CBTIME
+    95: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_DYNIMP
+    96: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_PRESAG
+    97: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.024, typecode: 0x132 }, // DISTORT_HITREBLE
+    98: { kind: 'float', displayMin: -1, displayMax: 1, scale: 1, step: 0.002, typecode: 0x33 }, // DISTORT_PAOFFSET
+    99: { kind: 'float', displayMin: -10, displayMax: 10, scale: 10, step: 0.002, typecode: 0x32 }, // DISTORT_INDYNAMICS
+    100: { kind: 'float', displayMin: 1, displayMax: 10, scale: 10, step: 0, typecode: 0x43 }, // DISTORT_SPKRHFQ
+    101: { kind: 'float', displayMin: 50, displayMax: 150, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_VARIAC
+    102: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // DISTORT_INEQTYPE
+    103: { kind: 'float', displayMin: 10, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_GRIDHARDNESS
+    104: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_PRESSHIFT
+    105: { kind: 'float', displayMin: 1, displayMax: 10, scale: 1, step: 0.01, typecode: 0x33 }, // DISTORT_SATDRIVE
+    106: { kind: 'float', displayMin: 0, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // DISTORT_TRIODE2RATIO
+    107: { kind: 'float', displayMin: 0.1, displayMax: 100, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_TRIODE2EXTIME
+    108: { kind: 'float', displayMin: 0.2, displayMax: 200, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_TRIODE2RECTIME
+    109: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_COMPTYPE
+    110: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_EQPOSITION
+    111: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_PRECOMPTYPE
+    112: { kind: 'float', displayMin: -200, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // DISTORT_TRIODE1RATIO
+    113: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_CFHARDNESS
+    114: { kind: 'float', displayMin: 0, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // DISTORT_PIEXCURSION
+    115: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_MOTORDRIVE
+    116: { kind: 'float', displayMin: 100, displayMax: 10000, scale: 1000, step: 0, typecode: 0x442 }, // DISTORT_MDTIME
+    117: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_RESOLUTION
+    118: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_VCCMON
+    119: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_GAINMON
+    120: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_MDMON
+    121: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_INDYNMON
+    122: { kind: 'float', displayMin: 0, displayMax: 24, scale: 1, step: 0.05, typecode: 0x132 }, // DISTORT_BOOSTLVL
+    123: { kind: 'enum', displayMin: 0, displayMax: 14, scale: 1, step: 0, typecode: 0x10, enumCount: 15 }, // DISTORT_BOOSTTYPE
+    124: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_OUTPUTTYPE
+    125: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_SPKRDYNAMICS
+    126: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_EQONOFF
+    127: { kind: 'float', displayMin: 0.5, displayMax: 2, scale: 1, step: 0.001, typecode: 0x43 }, // DISTORT_SPKRDCR
+    128: { kind: 'enum', displayMin: 0, displayMax: 92, scale: 1, step: 0, typecode: 0x10, enumCount: 93 }, // DISTORT_SPKRMODEL
+    129: { kind: 'float', displayMin: 0, displayMax: 200, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_CABRESONANCE
+    130: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x0 }, // DISTORT_VPLATEMON
+    131: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_PREPRESENCE
+    132: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // DISTORT_BIASX
+    133: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_PAHICUT
+    134: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_PAONOFF
+    135: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_SCENEIGNORE
+    136: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DISTORT_SPKRBREAKUP
+    137: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_SPKRTHUMP
+    138: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_PLATEDIODE
+    139: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DISTORT_GLOBALMASTER
+    140: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_AUTO_SPKR_Z
+    141: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DISTORT_NFBCOMP
+  },
+  /** sectionTag 59, wire stride 14 (fn=0x1F channel-block stride, ordinary records only). */
+  DYNDIST: {
+    0: { kind: 'enum', displayMin: 4, displayMax: 6, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // DYNDIST_BQTYPE
+    1: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // DYNDIST_FREQ
+    2: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // DYNDIST_Q
+    3: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // DYNDIST_GAIN
+    4: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0x10, enumCount: 5 }, // DYNDIST_CLIPYPE
+    5: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DYNDIST_SHAPE
+    6: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // DYNDIST_BIAS
+    7: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 10, step: 0.1, typecode: 0x52 }, // DYNDIST_DRIVE
+    8: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // DYNDIST_LEVEL
+    9: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // DYNDIST_PAN
+    10: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xb0, enumCount: 2 }, // DYNDIST_BYPASSMODE
+    11: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // DYNDIST_BYPASS
+    12: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // DYNDIST_STEREO
+    13: { kind: 'enum', displayMin: 0, displayMax: 6, scale: 1, step: 0, typecode: 0x10, enumCount: 7 }, // DYNDIST_TYPE
   },
   /** sectionTag 26, wire stride 12 (fn=0x1F channel-block stride, ordinary records only). */
   ENHANCER: {
@@ -650,7 +708,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     1: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // FDBKRET_LEVEL
     2: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // FDBKRET_PAN
     3: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0xa0, enumCount: 3 }, // FDBKRET_BYPASSMODE
-    4: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // FDBKRET_GLOBALMIX
+    4: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // FDBKRET_GLOBALMIX
     5: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // FDBKRET_BYPASS
   },
   /** sectionTag 29, wire stride 2 (fn=0x1F channel-block stride, ordinary records only). */
@@ -692,7 +750,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     29: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000, step: 0, typecode: 0x443 }, // FILTER_ATTACK
     30: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1000, step: 0, typecode: 0x442 }, // FILTER_RELEASE
     31: { kind: 'float', displayMin: 0, displayMax: 10, scale: 5, step: 0.002, typecode: 0x32 }, // FILTER_BETA
-    32: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 1, typecode: 0x10, enumCount: 4 }, // FILTER_SOURCE
+    32: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 1, typecode: 0x10, enumCount: 5 }, // FILTER_SOURCE
     33: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // FILTER_DETMON
     34: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // FILTER_EMPH
     35: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // FILTER_TEMPO
@@ -700,36 +758,36 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
   },
   /** sectionTag 17, wire stride 33 (fn=0x1F channel-block stride, ordinary records only). */
   FLANGER: {
-    0: { kind: 'enum', displayMin: 0, displayMax: 30, scale: 1, step: 0, typecode: 0x10, enumCount: 31 }, // FLANGER_TYPE
-    1: { kind: 'float', displayMin: 0.05, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // FLANGER_RATE
-    2: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // FLANGER_TEMPO
-    3: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // FLANGER_DEPTH
-    4: { kind: 'float', displayMin: -99.5, displayMax: 99.5, scale: 100, step: 0.001, typecode: 0x531 }, // FLANGER_FEEDBACK
-    5: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // FLANGER_MANUAL
-    6: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // FLANGER_DRYDELAY
-    7: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // FLANGER_LFOPHASE
-    8: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // FLANGER_LFOTYPE
-    9: { kind: 'float', displayMin: 0.5, displayMax: 50, scale: 1, step: 0, typecode: 0x242 }, // FLANGER_LFOFILTER
-    10: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // FLANGER_AUTO
-    11: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x571 }, // FLANGER_MIX
-    12: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // FLANGER_LEVEL
-    13: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // FLANGER_PAN
-    14: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0xa0, enumCount: 3 }, // FLANGER_BYPASSMODE
-    15: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // FLANGER_GLOBALMIX
-    16: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // FLANGER_BYPASS
-    17: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // FLANGER_PHASEREV
-    18: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // FLANGER_THRUZERO
-    19: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // FLANGER_LPFREQ
-    20: { kind: 'float', displayMin: 0.05, displayMax: 50, scale: 10, step: 0.001, typecode: 0x52 }, // FLANGER_DRIVE
-    21: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x243 }, // FLANGER_HPFREQ
-    22: { kind: 'float', displayMin: -200, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // FLANGER_SPREAD
-    23: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0x10, enumCount: 5 }, // FLANGER_LFORESET
-    24: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 1, step: 0, typecode: 0x10, enumCount: 6 }, // FLANGER_LPF_ORDER
-    25: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // FLANGER_HPF_ORDER
-    26: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 10, step: 0.001, typecode: 0x52 }, // FLANGER_FOCUS
-    27: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // FLANGER_VCO_CURVE
-    28: { kind: 'float', displayMin: 0.34, displayMax: 2, scale: 1000, step: 2e-06, typecode: 0x433 }, // FLANGER_TMIN
-    29: { kind: 'float', displayMin: 2, displayMax: 20, scale: 1000, step: 1e-05, typecode: 0x432 }, // FLANGER_TMAX
+    0: { kind: 'enum', displayMin: 0, displayMax: 30, scale: 1, step: 0, typecode: 0x10, enumCount: 31 }, // FLANGER_OLD_TYPE
+    1: { kind: 'float', displayMin: 0.05, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // FLANGER_OLD_RATE
+    2: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // FLANGER_OLD_TEMPO
+    3: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // FLANGER_OLD_DEPTH
+    4: { kind: 'float', displayMin: -99.5, displayMax: 99.5, scale: 100, step: 0.001, typecode: 0x531 }, // FLANGER_OLD_FEEDBACK
+    5: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // FLANGER_OLD_DELAYTIME
+    6: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // FLANGER_OLD_MANUAL
+    7: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // FLANGER_OLD_LFOPHASE
+    8: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // FLANGER_OLD_LFOTYPE
+    9: { kind: 'float', displayMin: 0.5, displayMax: 50, scale: 1, step: 0, typecode: 0x242 }, // FLANGER_OLD_LFOFILTER
+    10: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // FLANGER_OLD_AUTO
+    11: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x571 }, // FLANGER_OLD_MIX
+    12: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // FLANGER_OLD_LEVEL
+    13: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // FLANGER_OLD_PAN
+    14: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0xa0, enumCount: 3 }, // FLANGER_OLD_BYPASSMODE
+    15: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // FLANGER_OLD_GLOBALMIX
+    16: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // FLANGER_OLD_BYPASS
+    17: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // FLANGER_OLD_PHASEREV
+    18: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // FLANGER_OLD_THRUZERO
+    19: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // FLANGER_OLD_LPFREQ
+    20: { kind: 'float', displayMin: 0.05, displayMax: 50, scale: 10, step: 0.001, typecode: 0x52 }, // FLANGER_OLD_DRIVE
+    21: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x243 }, // FLANGER_OLD_HPFREQ
+    22: { kind: 'float', displayMin: -200, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // FLANGER_OLD_SPREAD
+    23: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0x10, enumCount: 5 }, // FLANGER_OLD_LFORESET
+    24: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 1, step: 0, typecode: 0x10, enumCount: 6 }, // FLANGER_OLD_DRY_LPFREQ
+    25: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // FLANGER_OLD_DRY_HPFREQ
+    26: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 10, step: 0.001, typecode: 0x52 }, // FLANGER_OLD_LPF_ORDER
+    27: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // FLANGER_OLD_HPF_ORDER
+    28: { kind: 'float', displayMin: 0.34, displayMax: 2, scale: 1000, step: 2e-06, typecode: 0x433 }, // FLANGER_OLD_DRY_LPF_ORDER
+    29: { kind: 'float', displayMin: 2, displayMax: 20, scale: 1000, step: 1e-05, typecode: 0x432 }, // FLANGER_OLD_DRY_HPF_ORDER
     30: { kind: 'enum', displayMin: 1, displayMax: 32, scale: 1, step: 1, typecode: 0x10, enumCount: 32 }, // FLANGER_LFOQUANTIZE
     31: { kind: 'float', displayMin: 0.01, displayMax: 100, scale: 1, step: 0, typecode: 0x43 }, // FLANGER_VCOK
     32: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // FLANGER_SCENEIGNORE
@@ -746,7 +804,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     7: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // FORMANT_PAN
     8: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // FORMANT_BYPASS
     9: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0xa0, enumCount: 3 }, // FORMANT_BYPASSMODE
-    10: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // FORMANT_GLOBALMIX
+    10: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // FORMANT_GLOBALMIX
     11: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // FORMANT_SCENEIGNORE
   },
   /** sectionTag 25, wire stride 44 (fn=0x1F channel-block stride, ordinary records only). */
@@ -794,7 +852,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     40: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // FUZZ_WICKER
     41: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // FUZZ_TONESWITCH
     42: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // FUZZ_DRIVE2
-    43: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 },
+    43: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // FUZZ_OVERSAMPLE
   },
   /** sectionTag 35, wire stride 19 (fn=0x1F channel-block stride, ordinary records only). */
   GATE: {
@@ -803,7 +861,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     2: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000, step: 0, typecode: 0x442 }, // GATE_HOLD
     3: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000, step: 0, typecode: 0x442 }, // GATE_RELEASE
     4: { kind: 'float', displayMin: 1, displayMax: 20, scale: 1, step: 0, typecode: 0x42 }, // GATE_RATIO
-    5: { kind: 'enum', displayMin: 0, displayMax: 11, scale: 0, step: 0, typecode: 0x10, enumCount: 12 }, // GATE_KEY
+    5: { kind: 'enum', displayMin: 0, displayMax: 12, scale: 0, step: 0, typecode: 0x10, enumCount: 13 }, // GATE_KEY
     6: { kind: 'float', displayMin: 10, displayMax: 1000, scale: 1, step: 0, typecode: 0x242 }, // GATE_LOWCUT
     7: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GATE_HICUT
     8: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // GATE_MIX
@@ -841,7 +899,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     18: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // GEQ_BYPASS
     19: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // GEQ_SCENEIGNORE
   },
-  /** sectionTag 1, wire stride 224 (fn=0x1F channel-block stride, ordinary records only); 225 cache records incl. 1 special table record(s). */
+  /** sectionTag 1, wire stride 265 (fn=0x1F channel-block stride, ordinary records only); 266 cache records incl. 1 special table record(s). */
   GLOBAL: {
     1: { kind: 'float', displayMin: 50, displayMax: 150, scale: 100, step: 0.001, typecode: 0x531 }, // GLOBAL_REVERBMIX
     2: { kind: 'float', displayMin: 50, displayMax: 150, scale: 100, step: 0.001, typecode: 0x531 }, // GLOBAL_EFFECTSMIX
@@ -879,196 +937,237 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     34: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT2EQ9
     35: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT2EQ10
     36: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x62 }, // GLOBAL_LEVEL2
-    37: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ1
-    38: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ2
-    39: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ3
-    40: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ4
-    41: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ5
-    42: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ6
-    43: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ7
-    44: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ8
-    45: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ9
-    46: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ10
-    47: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x62 }, // GLOBAL_LEVEL3
-    50: { kind: 'float', displayMin: -40, displayMax: 40, scale: 1, step: 0.1, typecode: 0x132 }, // GLOBAL_GATE_OFFSET
-    51: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_TAP_TEMPO_MODE
-    52: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_IN2_CONFIG
-    53: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_IN3_CONFIG
-    55: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // GLOBAL_IN1_TRIM
-    56: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // GLOBAL_IN2_TRIM
-    57: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // GLOBAL_IN3_TRIM
-    59: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_OUT1_CONFIG
-    60: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_OUT2_CONFIG
-    61: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 0, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_OUT3_CONFIG
-    63: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT1_PHASE
-    64: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT2_PHASE
-    65: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT3_PHASE
-    67: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT1_PAD
-    68: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT2_PAD
-    69: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_OUT3_PAD
-    71: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_COPY_OUTPUT
-    72: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_IN1_SOURCE
-    73: { kind: 'enum', displayMin: 1, displayMax: 2, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_DIGITAL_SOURCE
-    74: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_AES_SOURCE
-    75: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_CLOCK_SOURCE
-    77: { kind: 'enum', displayMin: 0, displayMax: 7, scale: 0, step: 0, typecode: 0x10, enumCount: 8 }, // GLOBAL_FC_HOLD_TIMEOUT
-    78: { kind: 'float', displayMin: 1, displayMax: 12, scale: 1, step: 1, typecode: 0x10 }, // GLOBAL_FC_BANKSIZE
-    79: { kind: 'enum', displayMin: 0, displayMax: 16, scale: 0, step: 0, typecode: 0x10, enumCount: 17 }, // GLOBAL_MIDI_CHAN
-    80: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_MIDI_PROG_CHANGE
-    81: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_NO_REDUNDANT_PC
-    82: { kind: 'float', displayMin: 0, displayMax: 383, scale: 1, step: 0, typecode: 0x20 }, // GLOBAL_PC_OFFSET
-    83: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10 }, // GLOBAL_DISPLAY_OFFSET
-    84: { kind: 'enum', displayMin: 0, displayMax: 17, scale: 1, step: 0, typecode: 0x10, enumCount: 18 }, // GLOBAL_SEND_MIDIPC
-    94: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 0, step: 0, typecode: 0x20, enumCount: 147 },
-    95: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 0, step: 0, typecode: 0x20, enumCount: 147 },
-    96: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 0, step: 0, typecode: 0x20, enumCount: 147 },
-    97: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 0, step: 0, typecode: 0x20, enumCount: 147 },
-    98: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 0, step: 0, typecode: 0x20, enumCount: 147 },
-    99: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 0, step: 0, typecode: 0x20, enumCount: 147 },
-    100: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 0, step: 0, typecode: 0x20, enumCount: 147 },
-    101: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 0, step: 0, typecode: 0x20, enumCount: 147 },
-    102: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 0, step: 0, typecode: 0x20, enumCount: 147 },
-    103: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 0, step: 0, typecode: 0x20, enumCount: 128 },
-    104: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 0, step: 0, typecode: 0x20, enumCount: 128 },
-    105: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 0, step: 0, typecode: 0x20, enumCount: 147 },
-    106: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 0, step: 0, typecode: 0x20, enumCount: 147 },
-    107: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_SCENE_REVERT
-    108: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 0, step: 0, typecode: 0x20, enumCount: 128 },
-    109: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 0, step: 0, typecode: 0x20, enumCount: 128 },
-    111: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_MIDI_MAPPING
-    113: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 0, step: 0, typecode: 0x10, enumCount: 6 }, // GLOBAL_USB_OUTEP_BUFF_SIZE
-    114: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_TUNER_SOURCE
-    116: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT3_COPY_IN1
-    118: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_CC_BYPASS_TYPE
-    119: { kind: 'enum', displayMin: 0, displayMax: 8, scale: 0, step: 0, typecode: 0x10, enumCount: 9 }, // GLOBAL_DEFAULT_SCENE
-    120: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_PRESET_PROMPT
-    121: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_VALUE_PUSH_FUNC
-    122: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_SHOW_PRESET_NUM
-    123: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_SHOW_SCENE_NUM
-    124: { kind: 'float', displayMin: 25, displayMax: 100, scale: 1, step: 1, typecode: 0x531 }, // GLOBAL_FC_RING_BRIGHT_LEVEL
-    125: { kind: 'float', displayMin: 1, displayMax: 50, scale: 1, step: 1, typecode: 0x531 }, // GLOBAL_FC_RING_DIM_LEVEL
-    126: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_LINEFREQ
-    127: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_SEND_REALTIME_SYSEX
-    129: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 0, step: 0, typecode: 0x20, enumCount: 128 },
-    130: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 0, step: 0, typecode: 0x20, enumCount: 128 },
-    131: { kind: 'float', displayMin: 0, displayMax: 511, scale: 1, step: 0, typecode: 0x20 },
-    132: { kind: 'float', displayMin: 0, displayMax: 511, scale: 1, step: 0, typecode: 0x20 },
-    133: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_METLEVEL1
-    134: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_METLEVEL2
-    135: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_METLEVEL3
-    136: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_USB78_SOURCE
-    137: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_USBLEVEL1
-    138: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_USBLEVEL2
-    139: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_USBLEVEL3
-    140: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_USBLEVEL4
-    145: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_AESLEVEL
-    146: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_USB_MAPPING
-    3612: { kind: 'enum', displayMin: 1, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_TYPE_PFC1
-    3613: { kind: 'enum', displayMin: 1, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_TYPE_PFC2
-    3614: { kind: 'enum', displayMin: 1, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_TYPE_PFC3
-    3616: { kind: 'float', displayMin: 1, displayMax: 9, scale: 1, step: 0.1, typecode: 0x10 }, // GLOBAL_FC_DEFAULT_LAYOUT_PFC1
-    3617: { kind: 'float', displayMin: 1, displayMax: 9, scale: 1, step: 0.1, typecode: 0x10 }, // GLOBAL_FC_DEFAULT_LAYOUT_PFC2
-    3618: { kind: 'float', displayMin: 1, displayMax: 9, scale: 1, step: 0.1, typecode: 0x10 }, // GLOBAL_FC_DEFAULT_LAYOUT_PFC3
-    3620: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 }, // GLOBAL_FC_CLONE_PFC1
-    3621: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 }, // GLOBAL_FC_CLONE_PFC2
-    3622: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 }, // GLOBAL_FC_CLONE_PFC3
-    3624: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 }, // GLOBAL_FC_LAYOUT_SWITCHCFG_BEGIN
-    3625: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
-    3626: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
-    3627: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
-    3628: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
-    3629: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
-    3630: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
-    3631: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
-    3632: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
-    6009: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_MLM_DISABLED
-    6127: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_PERPRESETS_DISABLED
-    6993: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS1_ENABLE
-    6999: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 1, step: 1, typecode: 0x10, enumCount: 6 }, // GLOBAL_CS_EDIT_NUMBER
-    7000: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // GLOBAL_CS_COMMAND_BEGIN
-    7024: { kind: 'float', displayMin: 1, displayMax: 16, scale: 1, step: 1, typecode: 0x10 }, // GLOBAL_CS_CHAN_BEGIN
-    7121: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS1_EXCLUSIVE
-    7122: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS2_EXCLUSIVE
-    7123: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS3_EXCLUSIVE
-    7124: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS4_EXCLUSIVE
-    7125: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS5_EXCLUSIVE
-    7126: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS6_EXCLUSIVE
-    7127: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 0, step: 0, typecode: 0x20, enumCount: 128 },
-    7128: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 0, step: 0, typecode: 0x20, enumCount: 128 },
-    7403: { kind: 'enum', displayMin: 1, displayMax: 5, scale: 1, step: 1, typecode: 0x10, enumCount: 5 }, // GLOBAL_FC_MAINLCD_NOTIF_TIMEOUT
-    7436: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_HOLD_FUNCTION_MODE
-    7439: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_FC6_FC12_MODE
-    7441: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 },
-    8306: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 1, step: 1, typecode: 0x20, enumCount: 147 },
-    8307: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_FS_TUNER_MODE
-    8308: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_FS_INVERT
-    8659: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 0, step: 0, typecode: 0x10, enumCount: 5 }, // GLOBAL_DOWNTUNE
-    8660: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 0, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_TUNERACCIDENTALS
-    8661: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_EQ1_TYPE
-    8662: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_EQ2_TYPE
-    8663: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_EQ3_TYPE
-    8664: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ1_FREQ1
-    8665: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ1_FREQ2
-    8666: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ1_FREQ3
-    8667: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ1_FREQ4
-    8668: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ1_FREQ5
-    8669: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ1_Q1
-    8670: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ1_Q2
-    8671: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ1_Q3
-    8672: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ1_Q4
-    8673: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ1_Q5
-    8674: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ1_GAIN1
-    8675: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ1_GAIN2
-    8676: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ1_GAIN3
-    8677: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ1_GAIN4
-    8678: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ1_GAIN5
-    8679: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ2_FREQ1
-    8680: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ2_FREQ2
-    8681: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ2_FREQ3
-    8682: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ2_FREQ4
-    8683: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ2_FREQ5
-    8684: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ2_Q1
-    8685: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ2_Q2
-    8686: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ2_Q3
-    8687: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ2_Q4
-    8688: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ2_Q5
-    8689: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ2_GAIN1
-    8690: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ2_GAIN2
-    8691: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ2_GAIN3
-    8692: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ2_GAIN4
-    8693: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ2_GAIN5
-    8694: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ3_FREQ1
-    8695: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ3_FREQ2
-    8696: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ3_FREQ3
-    8697: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ3_FREQ4
-    8698: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ3_FREQ5
-    8699: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ3_Q1
-    8700: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ3_Q2
-    8701: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ3_Q3
-    8702: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ3_Q4
-    8703: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ3_Q5
-    8704: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ3_GAIN1
-    8705: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ3_GAIN2
-    8706: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ3_GAIN3
-    8707: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ3_GAIN4
-    8708: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ3_GAIN5
-    8709: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_INPUT_GAIN
-    8710: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_IN2_SOURCE
-    8711: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_IN3_SOURCE
-    8712: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_IN4_SOURCE
-    8713: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_EDIT_ON_SCENE_CHANGE
-    8714: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_BANK_LIMITS
-    8715: { kind: 'enum', displayMin: 0, displayMax: 93, scale: 1, step: 0, typecode: 0x10, enumCount: 94 }, // GLOBAL_SPRK_MODEL
-    8717: { kind: 'float', displayMin: 1, displayMax: 2, scale: 1, step: 1, typecode: 0x10 }, // GLOBAL_FC_STARTUP_WINDOW_FC1
-    8718: { kind: 'float', displayMin: 1, displayMax: 2, scale: 1, step: 1, typecode: 0x10 }, // GLOBAL_FC_STARTUP_WINDOW_FC2
-    8719: { kind: 'float', displayMin: 1, displayMax: 2, scale: 1, step: 1, typecode: 0x10 }, // GLOBAL_FC_STARTUP_WINDOW_FC3
-    14902: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // GLOBAL_GAP_FILL
-    14903: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // GLOBAL_RCV_MIDI_CLOCK
-    14904: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 1, typecode: 0x10, enumCount: 4 }, // GLOBAL_SEND_MIDI_CLOCK
-    14907: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_METRONOME
-    14908: { kind: 'enum', displayMin: 1, displayMax: 147, scale: 1, step: 1, typecode: 0x20, enumCount: 147 }, // GLOBAL_METRONOME_CC
+    37: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_IRCAPTURE_MODE
+    38: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_IRCAPTURE_METHOD
+    39: { kind: 'float', displayMin: -40, displayMax: 40, scale: 1, step: 0.1, typecode: 0x132 }, // GLOBAL_GATE_OFFSET
+    40: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_TAP_TEMPO_MODE
+    41: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_IN2_CONFIG
+    42: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_IN3_CONFIG
+    43: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_IN4_CONFIG
+    44: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // GLOBAL_IN1_TRIM
+    45: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // GLOBAL_IN2_TRIM
+    46: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // GLOBAL_IN3_TRIM
+    47: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // GLOBAL_IN4_TRIM
+    48: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_OUT1_CONFIG
+    49: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_OUT2_CONFIG
+    50: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 0, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_OUT3_CONFIG
+    51: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 0, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_OUT4_CONFIG
+    52: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT1_PHASE
+    53: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT2_PHASE
+    54: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT3_PHASE
+    55: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT4_PHASE
+    56: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT1_PAD
+    57: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT2_PAD
+    58: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_OUT3_PAD
+    59: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_OUT4_PAD
+    60: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_COPY_OUTPUT
+    61: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_IN1_SOURCE
+    62: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 0, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_DIGITAL_SOURCE
+    63: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 0, step: 0, typecode: 0x10, enumCount: 4 }, // GLOBAL_AES_SOURCE
+    64: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_CLOCK_SOURCE
+    66: { kind: 'enum', displayMin: 0, displayMax: 7, scale: 0, step: 0, typecode: 0x10, enumCount: 8 }, // GLOBAL_FC_HOLD_TIMEOUT
+    67: { kind: 'float', displayMin: 1, displayMax: 12, scale: 1, step: 1, typecode: 0x10 }, // GLOBAL_FC_BANKSIZE
+    68: { kind: 'enum', displayMin: 0, displayMax: 16, scale: 0, step: 0, typecode: 0x10, enumCount: 17 }, // GLOBAL_MIDI_CHAN
+    69: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_MIDI_PROG_CHANGE
+    70: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_NO_REDUNDANT_PC
+    71: { kind: 'float', displayMin: 0, displayMax: 383, scale: 1, step: 0, typecode: 0x20 }, // GLOBAL_PC_OFFSET
+    72: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10 }, // GLOBAL_DISPLAY_OFFSET
+    73: { kind: 'enum', displayMin: 0, displayMax: 17, scale: 1, step: 0, typecode: 0x10, enumCount: 18 }, // GLOBAL_SEND_MIDIPC
+    80: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    81: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    82: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    83: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    84: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    85: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    86: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    87: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    88: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    89: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 1, step: 1, typecode: 0x20, enumCount: 128 },
+    90: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 1, step: 1, typecode: 0x20, enumCount: 128 },
+    91: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    92: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    93: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_SCENE_REVERT
+    94: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 1, step: 1, typecode: 0x20, enumCount: 128 },
+    95: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 1, step: 1, typecode: 0x20, enumCount: 128 },
+    97: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_MIDI_MAPPING
+    99: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 0, step: 0, typecode: 0x10, enumCount: 6 }, // GLOBAL_USB_OUTEP_BUFF_SIZE
+    100: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0x10, enumCount: 5 }, // GLOBAL_TUNER_SOURCE
+    102: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT3_COPY_IN1
+    103: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OUT4_COPY_IN1
+    104: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_CC_BYPASS_TYPE
+    105: { kind: 'enum', displayMin: 0, displayMax: 8, scale: 0, step: 0, typecode: 0x10, enumCount: 9 }, // GLOBAL_DEFAULT_SCENE
+    106: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_PRESET_PROMPT
+    107: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_VALUE_PUSH_FUNC
+    108: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_SHOW_PRESET_NUM
+    109: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_SHOW_SCENE_NUM
+    110: { kind: 'float', displayMin: 25, displayMax: 100, scale: 1, step: 1, typecode: 0x531 }, // GLOBAL_FC_RING_BRIGHT_LEVEL
+    111: { kind: 'float', displayMin: 1, displayMax: 50, scale: 1, step: 1, typecode: 0x531 }, // GLOBAL_FC_RING_DIM_LEVEL
+    112: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_LINEFREQ
+    113: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_SEND_REALTIME_SYSEX
+    115: { kind: 'enum', displayMin: 1, displayMax: 130, scale: 1, step: 1, typecode: 0x20, enumCount: 130 },
+    116: { kind: 'enum', displayMin: 1, displayMax: 130, scale: 1, step: 1, typecode: 0x20, enumCount: 130 },
+    117: { kind: 'float', displayMin: 0, displayMax: 511, scale: 1, step: 0, typecode: 0x20 },
+    118: { kind: 'float', displayMin: 0, displayMax: 511, scale: 1, step: 0, typecode: 0x20 },
+    119: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_METLEVEL1
+    120: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_METLEVEL2
+    121: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_METLEVEL3
+    122: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 0, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_USB78_SOURCE
+    123: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_USBLEVEL1
+    124: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_USBLEVEL2
+    125: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_USBLEVEL3
+    126: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_USBLEVEL4
+    127: { kind: 'float', displayMin: 0, displayMax: 2, scale: 0, step: 0, typecode: 0x0 }, // GLOBAL_IRCAPTURE_PROCESS
+    128: { kind: 'float', displayMin: 0, displayMax: 50, scale: 1000, step: 5e-05, typecode: 0x432 }, // GLOBAL_IRCAPTURE_DELAY
+    129: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_IRCAPTURE_DECONV
+    131: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.1, typecode: 0x162 }, // GLOBAL_AESLEVEL
+    132: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_USB_MAPPING
+    133: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 0, step: 0, typecode: 0x10, enumCount: 5 }, // GLOBAL_DOWNTUNE
+    3598: { kind: 'enum', displayMin: 1, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_TYPE_PFC1
+    3599: { kind: 'enum', displayMin: 1, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_TYPE_PFC2
+    3600: { kind: 'enum', displayMin: 1, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_TYPE_PFC3
+    3601: { kind: 'enum', displayMin: 1, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_TYPE_PFC4
+    3602: { kind: 'float', displayMin: 1, displayMax: 9, scale: 1, step: 0.1, typecode: 0x10 }, // GLOBAL_FC_DEFAULT_LAYOUT_PFC1
+    3603: { kind: 'float', displayMin: 1, displayMax: 9, scale: 1, step: 0.1, typecode: 0x10 }, // GLOBAL_FC_DEFAULT_LAYOUT_PFC2
+    3604: { kind: 'float', displayMin: 1, displayMax: 9, scale: 1, step: 0.1, typecode: 0x10 }, // GLOBAL_FC_DEFAULT_LAYOUT_PFC3
+    3605: { kind: 'float', displayMin: 1, displayMax: 9, scale: 1, step: 0.1, typecode: 0x10 }, // GLOBAL_FC_DEFAULT_LAYOUT_PFC4
+    3606: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.1, typecode: 0x10, enumCount: 4 }, // GLOBAL_FC_CLONE_PFC1
+    3607: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.1, typecode: 0x10, enumCount: 4 }, // GLOBAL_FC_CLONE_PFC2
+    3608: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.1, typecode: 0x10, enumCount: 4 }, // GLOBAL_FC_CLONE_PFC3
+    3609: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0.1, typecode: 0x10, enumCount: 4 }, // GLOBAL_FC_CLONE_PFC4
+    3610: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 }, // GLOBAL_FC_LAYOUT_SWITCHCFG_BEGIN
+    3611: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
+    3612: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
+    3613: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
+    3614: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
+    3615: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
+    3616: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
+    3617: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
+    3618: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0.1, typecode: 0x10, enumCount: 3 },
+    5995: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_MLM_DISABLED
+    6113: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_PERPRESETS_DISABLED
+    6979: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS1_ENABLE
+    6985: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 1, step: 1, typecode: 0x10, enumCount: 6 }, // GLOBAL_CS_EDIT_NUMBER
+    6986: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // GLOBAL_CS_COMMAND_BEGIN
+    7010: { kind: 'float', displayMin: 1, displayMax: 16, scale: 1, step: 1, typecode: 0x10 }, // GLOBAL_CS_CHAN_BEGIN
+    7107: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS1_EXCLUSIVE
+    7108: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS2_EXCLUSIVE
+    7109: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS3_EXCLUSIVE
+    7110: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS4_EXCLUSIVE
+    7111: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS5_EXCLUSIVE
+    7112: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_CS6_EXCLUSIVE
+    7113: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 1, step: 1, typecode: 0x20, enumCount: 128 },
+    7114: { kind: 'enum', displayMin: 1, displayMax: 128, scale: 1, step: 1, typecode: 0x20, enumCount: 128 },
+    7115: { kind: 'enum', displayMin: 1, displayMax: 5, scale: 1, step: 1, typecode: 0x10, enumCount: 5 }, // GLOBAL_FC_MAINLCD_NOTIF_TIMEOUT
+    7498: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_HOLD_FUNCTION_MODE
+    7499: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_FC6_FC12_MODE
+    7500: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // GLOBAL_TUNERACCIDENTALS
+    8367: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_INPUT_GAIN
+    8370: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_EQ1_TYPE
+    8371: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_EQ2_TYPE
+    8372: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_EQ3_TYPE
+    8373: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // GLOBAL_EQ4_TYPE
+    8374: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ1
+    8375: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ2
+    8376: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ3
+    8377: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ4
+    8378: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ5
+    8379: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ6
+    8380: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ7
+    8381: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ8
+    8382: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ9
+    8383: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT3EQ10
+    8384: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x62 }, // GLOBAL_LEVEL3
+    8385: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT4EQ1
+    8386: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT4EQ2
+    8387: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT4EQ3
+    8388: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT4EQ4
+    8389: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT4EQ5
+    8390: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT4EQ6
+    8391: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT4EQ7
+    8392: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT4EQ8
+    8393: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT4EQ9
+    8394: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x32 }, // GLOBAL_OUT4EQ10
+    8395: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.025, typecode: 0x62 }, // GLOBAL_LEVEL4
+    8396: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ1_FREQ1
+    8397: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ1_FREQ2
+    8398: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ1_FREQ3
+    8399: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ1_FREQ4
+    8400: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ1_FREQ5
+    8401: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ1_Q1
+    8402: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ1_Q2
+    8403: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ1_Q3
+    8404: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ1_Q4
+    8405: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ1_Q5
+    8406: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ1_GAIN1
+    8407: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ1_GAIN2
+    8408: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ1_GAIN3
+    8409: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ1_GAIN4
+    8410: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ1_GAIN5
+    8411: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ2_FREQ1
+    8412: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ2_FREQ2
+    8413: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ2_FREQ3
+    8414: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ2_FREQ4
+    8415: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ2_FREQ5
+    8416: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ2_Q1
+    8417: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ2_Q2
+    8418: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ2_Q3
+    8419: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ2_Q4
+    8420: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ2_Q5
+    8421: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ2_GAIN1
+    8422: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ2_GAIN2
+    8423: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ2_GAIN3
+    8424: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ2_GAIN4
+    8425: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ2_GAIN5
+    8426: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ3_FREQ1
+    8427: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ3_FREQ2
+    8428: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ3_FREQ3
+    8429: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ3_FREQ4
+    8430: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ3_FREQ5
+    8431: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ3_Q1
+    8432: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ3_Q2
+    8433: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ3_Q3
+    8434: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ3_Q4
+    8435: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ3_Q5
+    8436: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ3_GAIN1
+    8437: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ3_GAIN2
+    8438: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ3_GAIN3
+    8439: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ3_GAIN4
+    8440: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ3_GAIN5
+    8441: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ4_FREQ1
+    8442: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ4_FREQ2
+    8443: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ4_FREQ3
+    8444: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ4_FREQ4
+    8445: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // GLOBAL_EQ4_FREQ5
+    8446: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ4_Q1
+    8447: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ4_Q2
+    8448: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ4_Q3
+    8449: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ4_Q4
+    8450: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // GLOBAL_EQ4_Q5
+    8451: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ4_GAIN1
+    8452: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ4_GAIN2
+    8453: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ4_GAIN3
+    8454: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ4_GAIN4
+    8455: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // GLOBAL_EQ4_GAIN5
+    8456: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 },
+    8457: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_IN2_SOURCE
+    8458: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_IN3_SOURCE
+    8459: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_IN4_SOURCE
+    8460: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_FS_INVERT
+    8461: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_EDIT_ON_SCENE_CHANGE
+    8462: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_FC_BANK_LIMITS
+    8463: { kind: 'enum', displayMin: 0, displayMax: 93, scale: 1, step: 0, typecode: 0x10, enumCount: 94 }, // GLOBAL_SPRK_MODEL
+    8465: { kind: 'float', displayMin: 1, displayMax: 2, scale: 1, step: 1, typecode: 0x10 }, // GLOBAL_FC_STARTUP_WINDOW_FC1
+    8466: { kind: 'float', displayMin: 1, displayMax: 2, scale: 1, step: 1, typecode: 0x10 }, // GLOBAL_FC_STARTUP_WINDOW_FC2
+    8467: { kind: 'float', displayMin: 1, displayMax: 2, scale: 1, step: 1, typecode: 0x10 }, // GLOBAL_FC_STARTUP_WINDOW_FC3
+    8468: { kind: 'float', displayMin: 1, displayMax: 2, scale: 1, step: 1, typecode: 0x10 }, // GLOBAL_FC_STARTUP_WINDOW_FC4
+    8469: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_OVERSAMPLE_MODE
+    14650: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // GLOBAL_GAP_FILL
+    14651: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // GLOBAL_RCV_MIDI_CLOCK
+    14652: { kind: 'float', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0xf0 }, // GLOBAL_SEND_MIDI_CLOCK
+    14655: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // GLOBAL_METRONOME
+    14656: { kind: 'enum', displayMin: 1, displayMax: 162, scale: 1, step: 1, typecode: 0x20, enumCount: 162 }, // GLOBAL_METRONOME_CC
   },
-  /** sectionTag 41, wire stride 10 (fn=0x1F channel-block stride, ordinary records only); identical instance sections 41/42/43/44. */
+  /** sectionTag 41, wire stride 10 (fn=0x1F channel-block stride, ordinary records only); identical instance sections 41/42/43/44/45. */
   INPUT: {
     0: { kind: 'float', displayMin: -100, displayMax: 0, scale: 1, step: 0.1, typecode: 0x131 }, // INPUT_THRESH
     1: { kind: 'float', displayMin: 1, displayMax: 20, scale: 1, step: 0, typecode: 0x42 }, // INPUT_RATIO
@@ -1080,6 +1179,29 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     7: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // INPUT_TYPE
     8: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // INPUT_GAINMONITOR
     9: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // INPUT_MODE
+  },
+  /** sectionTag 55, wire stride 20 (fn=0x1F channel-block stride, ordinary records only). */
+  IRPLAYER: {
+    0: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 1, step: 1, typecode: 0x10, enumCount: 6 }, // IRPLAYER_BANK1
+    1: { kind: 'float', displayMin: 0, displayMax: 1023, scale: 1, step: 1, typecode: 0x20 }, // IRPLAYER_TYPE1
+    2: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x241 }, // IRPLAYER_LOCUT
+    3: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x240 }, // IRPLAYER_HICUT
+    4: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // IRPLAYER_ORDER
+    5: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 1, typecode: 0x10, enumCount: 4 }, // IRPLAYER_INPUTSEL
+    6: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0.001, typecode: 0x10, enumCount: 5 }, // IRPLAYER_LENGTH1
+    7: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.05, typecode: 0x181 }, // IRPLAYER_LEVEL
+    8: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // IRPLAYER_PAN
+    9: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 0, step: 0.001, typecode: 0xb0, enumCount: 2 }, // IRPLAYER_BYPASSMODE
+    10: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // IRPLAYER_BYPASS
+    11: { kind: 'enum', displayMin: 0, displayMax: 5, scale: 1, step: 1, typecode: 0x10, enumCount: 6 }, // IRPLAYER_BANK2
+    12: { kind: 'float', displayMin: 0, displayMax: 1023, scale: 1, step: 1, typecode: 0x20 }, // IRPLAYER_TYPE2
+    13: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0.001, typecode: 0x10, enumCount: 5 }, // IRPLAYER_LENGTH2
+    14: { kind: 'float', displayMin: -40, displayMax: 0, scale: 1, step: 0.025, typecode: 0x162 }, // IRPLAYER_LEVEL1
+    15: { kind: 'float', displayMin: -40, displayMax: 0, scale: 1, step: 0.025, typecode: 0x162 }, // IRPLAYER_LEVEL2
+    16: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // IRPLAYER_PAN1
+    17: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // IRPLAYER_PAN2
+    18: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x571 }, // IRPLAYER_MIX
+    19: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // IRPLAYER_MODE
   },
   /** sectionTag 50, wire stride 24 (fn=0x1F channel-block stride, ordinary records only). */
   LOOPER: {
@@ -1106,14 +1228,14 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     20: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // LOOPER_HALF
     21: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // LOOPER_XFADE
     22: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // LOOPER_LEVEL
-    23: { kind: 'float', displayMin: 0, displayMax: 120, scale: 1, step: 0.1, typecode: 0x331 }, // LOOPER_MAXTIME
+    23: { kind: 'float', displayMin: 0, displayMax: 240.2987, scale: 1, step: 0.1, typecode: 0x331 }, // LOOPER_MAXTIME
   },
   /** sectionTag 33, wire stride 35 (fn=0x1F channel-block stride, ordinary records only). */
   MEGATAP: {
     0: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MEGATAP_INGAIN
     1: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MEGATAP_MASTERLVL
     2: { kind: 'float', displayMin: 1, displayMax: 4000, scale: 1000, step: 0.001, typecode: 0x430 }, // MEGATAP_TIME
-    3: { kind: 'float', displayMin: 1, displayMax: 64, scale: 1, step: 0, typecode: 0x10 }, // MEGATAP_NUMTAPS
+    3: { kind: 'float', displayMin: 1, displayMax: 128, scale: 1, step: 0, typecode: 0x10 }, // MEGATAP_NUMTAPS
     4: { kind: 'float', displayMin: 0, displayMax: 1000, scale: 1000, step: 0.001, typecode: 0x430 }, // MEGATAP_PREDELAY
     5: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // MEGATAP_TIMESHAPE
     6: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MEGATAP_TIMEALPHA
@@ -1131,7 +1253,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     18: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // MEGATAP_LEVEL
     19: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // MEGATAP_PAN
     20: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0xc0, enumCount: 5 }, // MEGATAP_BYPASSMODE
-    21: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // MEGATAP_GLOBALMIX
+    21: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // MEGATAP_GLOBALMIX
     22: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // MEGATAP_BYPASS
     23: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // MEGATAP_INPUTSELECT
     24: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MEGATAP_FEEDBACK
@@ -1144,7 +1266,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     31: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // MEGATAP_DIFFRATE
     32: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MEGATAP_DIFFDEPTH
     33: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // MEGATAP_SCENEIGNORE
-    34: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // MEGATAP_KILLDRY
+    34: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // MEGATAP_KILLDRY
   },
   /** sectionTag 28, wire stride 23 (fn=0x1F channel-block stride, ordinary records only). */
   MIXER: {
@@ -1165,16 +1287,16 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     14: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // MIXER_MODE
     15: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xb0, enumCount: 2 }, // MIXER_BYPASSMODE
     16: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // MIXER_BYPASS
-    17: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 },
-    18: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 },
-    19: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 },
-    20: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 },
-    21: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 },
-    22: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 },
+    17: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 }, // MIXER_DELAY1
+    18: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 }, // MIXER_DELAY2
+    19: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 }, // MIXER_DELAY3
+    20: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 }, // MIXER_DELAY4
+    21: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 }, // MIXER_DELAY5
+    22: { kind: 'float', displayMin: 0, displayMax: 64, scale: 1, step: 0.1, typecode: 0x31 }, // MIXER_DELAY6
   },
   /** sectionTag 3, wire stride 25 (fn=0x1F channel-block stride, ordinary records only). */
   MOD: {
-    0: { kind: 'enum', displayMin: 0, displayMax: 59, scale: 1, step: 0, typecode: 0x10, enumCount: 60 }, // MOD_CTRLID
+    0: { kind: 'enum', displayMin: 0, displayMax: 74, scale: 1, step: 0, typecode: 0x10, enumCount: 75 }, // MOD_CTRLID
     1: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // MOD_MIN
     2: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // MOD_MAX
     3: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MOD_STARTPT
@@ -1182,7 +1304,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     5: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MOD_ENDPT
     6: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MOD_SLOPE
     7: { kind: 'float', displayMin: 0, displayMax: 10000, scale: 1000, step: 0.001, typecode: 0x431 }, // MOD_ATTACK
-    8: { kind: 'float', displayMin: 0, displayMax: 201, scale: 1, step: 0, typecode: 0x10 }, // MOD_EFFECTID
+    8: { kind: 'float', displayMin: 0, displayMax: 205, scale: 1, step: 0, typecode: 0x10 }, // MOD_EFFECTID
     9: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // MOD_PARAM
     10: { kind: 'enum', displayMin: 0, displayMax: 6, scale: 1, step: 0, typecode: 0x10, enumCount: 7 }, // MOD_AUTOENGAGE
     11: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // MOD_PCRESET
@@ -1194,10 +1316,10 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     17: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0x10, enumCount: 5 }, // MOD_CHANNEL
     18: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // MOD_XMARK
     19: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // MOD_YMARK
-    20: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // MOD_CTRLID2
-    21: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // MOD_SCALE1
-    22: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // MOD_SCALE2
-    23: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // MOD_OPERATION
+    20: { kind: 'enum', displayMin: 0, displayMax: 74, scale: 1, step: 0, typecode: 0x10, enumCount: 75 }, // MOD_CTRLID2
+    21: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MOD_SCALE1
+    22: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MOD_SCALE2
+    23: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // MOD_OPERATION
     24: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // MOD_DAMPING
   },
   /** sectionTag 37, wire stride 37 (fn=0x1F channel-block stride, ordinary records only). */
@@ -1242,7 +1364,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
   },
   /** sectionTag 54, wire stride 7 (fn=0x1F channel-block stride, ordinary records only). */
   MULTIPLEXER: {
-    0: { kind: 'enum', displayMin: 0, displayMax: 10, scale: 1, step: 1, typecode: 0x10, enumCount: 11 }, // MULTIPLEXER_INPUTSEL
+    0: { kind: 'enum', displayMin: 0, displayMax: 11, scale: 1, step: 1, typecode: 0x10, enumCount: 12 }, // MULTIPLEXER_INPUTSEL
     1: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 1, typecode: 0x10, enumCount: 4 }, // MULTIPLEXER_INPUTMODE
     2: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // MULTIPLEXER_LEVEL
     3: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // MULTIPLEXER_PAN
@@ -1281,13 +1403,13 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     26: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // MULTITAP_LFOTYPE2
     27: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // MULTITAP_LFOTEMPO1
     28: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // MULTITAP_LFOTEMPO2
-    29: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // MULTITAP_LFOPHASE1
-    30: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // MULTITAP_LFOPHASE2
+    29: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // MULTITAP_LFOPHASE1
+    30: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // MULTITAP_LFOPHASE2
     31: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x571 }, // MULTITAP_MIX
     32: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // MULTITAP_LEVEL
     33: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // MULTITAP_PAN
     34: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0xc0, enumCount: 5 }, // MULTITAP_BYPASSMODE
-    35: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // MULTITAP_GLOBALMIX
+    35: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // MULTITAP_GLOBALMIX
     36: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MULTITAP_INGAIN
     37: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // MULTITAP_BYPASS
     38: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MULTITAP_DIFFMIX
@@ -1322,7 +1444,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     67: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // MULTITAP_FLTDEPTH
     68: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // MULTITAP_FLTTYPE
     69: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // MULTITAP_FLTTEMPO
-    70: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // MULTITAP_FLTPHASE
+    70: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // MULTITAP_FLTPHASE
     71: { kind: 'float', displayMin: -100, displayMax: 0, scale: 1, step: 0.1, typecode: 0x131 }, // MULTITAP_ENVTHRESH
     72: { kind: 'float', displayMin: 10, displayMax: 10000, scale: 1000, step: 0, typecode: 0x443 }, // MULTITAP_ENVATTACK
     73: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000, step: 0, typecode: 0x443 }, // MULTITAP_ENVRELEASE
@@ -1372,9 +1494,9 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     117: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // MULTITAP_FEEDBACK23
     118: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // MULTITAP_FEEDBACK34
     119: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // MULTITAP_FEEDBACK41
-    120: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // MULTITAP_KILLDRY
+    120: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // MULTITAP_KILLDRY
   },
-  /** sectionTag 46, wire stride 26 (fn=0x1F channel-block stride, ordinary records only); identical instance sections 46/47/48. */
+  /** sectionTag 46, wire stride 26 (fn=0x1F channel-block stride, ordinary records only); identical instance sections 46/47/48/49. */
   OUTPUT: {
     0: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.04, typecode: 0x132 }, // OUTPUT_LEVEL1
     1: { kind: 'float', displayMin: -20, displayMax: 20, scale: 1, step: 0.04, typecode: 0x132 }, // OUTPUT_LEVEL2
@@ -1428,7 +1550,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     20: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // PEQ_LEVEL
     21: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // PEQ_PAN
     22: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xb0, enumCount: 2 }, // PEQ_BYPASSMODE
-    23: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // PEQ_GLOBALMIX
+    23: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // PEQ_GLOBALMIX
     24: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // PEQ_BYPASS
     25: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // PEQ_SOLO1
     26: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // PEQ_SOLO2
@@ -1450,13 +1572,13 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     6: { kind: 'float', displayMin: -99.99, displayMax: 99.99, scale: 111.1, step: 0.002, typecode: 0x531 }, // PHASER_FEEDBACK
     7: { kind: 'float', displayMin: 5, displayMax: 500, scale: 1, step: 0, typecode: 0x242 }, // PHASER_FMIN
     8: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // PHASER_FMAX
-    9: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // PHASER_LFOPHASE
+    9: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // PHASER_LFOPHASE
     10: { kind: 'float', displayMin: -1, displayMax: 1, scale: 1, step: 0.002, typecode: 0x33 }, // PHASER_BIAS
     11: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x571 }, // PHASER_MIX
     12: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // PHASER_LEVEL
     13: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // PHASER_PAN
     14: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0xa0, enumCount: 3 }, // PHASER_BYPASSMODE
-    15: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // PHASER_GLOBALMIX
+    15: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // PHASER_GLOBALMIX
     16: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // PHASER_BYPASS
     17: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // PHASER_MODE
     18: { kind: 'float', displayMin: 0, displayMax: 11, scale: 1, step: 0, typecode: 0x10 }, // PHASER_FBTAP
@@ -1521,7 +1643,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     39: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // PITCH_LEVEL
     40: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // PITCH_PAN
     41: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0xc0, enumCount: 5 }, // PITCH_BYPASSMODE
-    42: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // PITCH_GLOBALMIX
+    42: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // PITCH_GLOBALMIX
     43: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // PITCH_GAIN
     44: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // PITCH_BYPASS
     45: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // PITCH_XFADE
@@ -1578,7 +1700,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     96: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // PITCH_PANALPHA
     97: { kind: 'float', displayMin: 0, displayMax: 250, scale: 1000, step: 0.0001, typecode: 0x431 }, // PITCH_TIME1
     98: { kind: 'float', displayMin: 0, displayMax: 250, scale: 1000, step: 0.0001, typecode: 0x431 }, // PITCH_TIME2
-    99: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 1, typecode: 0x10, enumCount: 4 }, // PITCH_SOURCE
+    99: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 1, typecode: 0x10, enumCount: 5 }, // PITCH_SOURCE
     100: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // PITCH_INMODE
     101: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // PITCH_LEARN
     102: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // PITCH_HPFREQ
@@ -1591,7 +1713,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     109: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // PITCH_DIFFMIX
     110: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // PITCH_DIFFTIME
     111: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // PITCH_SCENEIGNORE
-    112: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // PITCH_KILLDRY
+    112: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // PITCH_KILLDRY
     113: { kind: 'float', displayMin: -100, displayMax: 0, scale: 1, step: 0.1, typecode: 0x131 }, // PITCH_THRESH
   },
   /** sectionTag 15, wire stride 96 (fn=0x1F channel-block stride, ordinary records only). */
@@ -1673,7 +1795,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     74: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // PLEX_LEVEL
     75: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // PLEX_PAN
     76: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0xc0, enumCount: 5 }, // PLEX_BYPASSMODE
-    77: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // PLEX_GLOBALMIX
+    77: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // PLEX_GLOBALMIX
     78: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // PLEX_BYPASS
     79: { kind: 'float', displayMin: 1, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // PLEX_SIZE
     80: { kind: 'float', displayMin: -200, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // PLEX_SPREAD
@@ -1691,7 +1813,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     92: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x243 }, // PLEX_FLTLFOFREQ
     93: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 0, typecode: 0x241 }, // PLEX_FLTLFOMODFREQ
     94: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // PLEX_SCENEIGNORE
-    95: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // PLEX_KILLDRY
+    95: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // PLEX_KILLDRY
   },
   /** sectionTag 57, wire stride 50 (fn=0x1F channel-block stride, ordinary records only). */
   PRESET: {
@@ -1785,85 +1907,83 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     34: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // RESONATOR_LEVEL
     35: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // RESONATOR_PAN
     36: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0xa0, enumCount: 3 }, // RESONATOR_BYPASSMODE
-    37: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // RESONATOR_GLOBALMIX
+    37: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // RESONATOR_GLOBALMIX
     38: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // RESONATOR_BYPASS
     39: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // RESONATOR_INPUTMODE
   },
-  /** sectionTag 12, wire stride 73 (fn=0x1F channel-block stride, ordinary records only). */
+  /** sectionTag 12, wire stride 71 (fn=0x1F channel-block stride, ordinary records only). */
   REVERB: {
-    0: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x571 }, // REVERB_MIX
-    1: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // REVERB_LEVEL
-    2: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // REVERB_PAN
-    3: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0xc0, enumCount: 5 }, // REVERB_BYPASSMODE
-    4: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // REVERB_GLOBALMIX
-    5: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // REVERB_BYPASS
-    6: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // REVERB_SCENEIGNORE
-    7: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10 }, // REVERB_KILLDRY
-    8: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10 },
-    9: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10 },
-    10: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // REVERB_TYPE
-    11: { kind: 'float', displayMin: 0.1, displayMax: 100, scale: 1, step: 0.02, typecode: 0x332 }, // REVERB_TIME
-    12: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // REVERB_HICUT
-    13: { kind: 'float', displayMin: 0.01, displayMax: 1, scale: 1, step: 0.001, typecode: 0x44 }, // REVERB_HFRATIO
-    14: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_DIFFUSION
-    15: { kind: 'float', displayMin: 1, displayMax: 100, scale: 100, step: 0.001, typecode: 0x31 }, // REVERB_SIZE
-    16: { kind: 'float', displayMin: 0, displayMax: 250, scale: 1000, step: 0.001, typecode: 0x431 }, // REVERB_REVERBDELAY
-    17: { kind: 'float', displayMin: -40, displayMax: 10, scale: 1, step: 0.05, typecode: 0x162 }, // REVERB_EARLYLEVEL
-    18: { kind: 'float', displayMin: -40, displayMax: 10, scale: 1, step: 0.05, typecode: 0x162 }, // REVERB_REVERBLEVEL
-    19: { kind: 'float', displayMin: 0, displayMax: 1000, scale: 1000, step: 0.00025, typecode: 0x431 }, // REVERB_PREDELAY
-    20: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x241 }, // REVERB_LOWCUT
-    21: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_DEPTH
-    22: { kind: 'float', displayMin: 0.01, displayMax: 1, scale: 1, step: 0, typecode: 0x243 }, // REVERB_RATE
-    23: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_GAIN
-    24: { kind: 'float', displayMin: 4, displayMax: 8, scale: 1, step: 0, typecode: 0x10 }, // REVERB_DENSITY
-    25: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_INPDIFF
-    26: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_INDIFFTIME
-    27: { kind: 'float', displayMin: 2, displayMax: 6, scale: 1, step: 0, typecode: 0x10 }, // REVERB_NUMSPRINGS
-    28: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // REVERB_TONE
-    29: { kind: 'float', displayMin: 0, displayMax: 200, scale: 200, step: 0.001, typecode: 0xa31 }, // REVERB_WIDTH
-    30: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // REVERB_FREQ1
-    31: { kind: 'float', displayMin: 100, displayMax: 10000, scale: 1, step: 0, typecode: 0x242 }, // REVERB_FREQ2
-    32: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // REVERB_Q1
-    33: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // REVERB_Q2
-    34: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.05, typecode: 0x132 }, // REVERB_GAIN1
-    35: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.05, typecode: 0x132 }, // REVERB_GAIN2
-    36: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 10, step: 0.001, typecode: 0x52 }, // REVERB_DRIVE
-    37: { kind: 'float', displayMin: 0.02, displayMax: 2, scale: 1, step: 0, typecode: 0x44 }, // REVERB_LFTIME
-    38: { kind: 'float', displayMin: 100, displayMax: 10000, scale: 1, step: 0, typecode: 0x242 }, // REVERB_LFXOVER
-    39: { kind: 'float', displayMin: -200, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // REVERB_SPREAD
-    40: { kind: 'float', displayMin: 0, displayMax: 80, scale: 1, step: 0.1, typecode: 0x131 }, // REVERB_ATTEN
-    41: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x131 }, // REVERB_THRESH
-    42: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000, step: 0, typecode: 0x441 }, // REVERB_RELEASE
-    43: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_EARLYDIFF
-    44: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_EARLYDIFFTIME
-    45: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // REVERB_EARLYDECAY
-    46: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_EARLYSEND
-    47: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // REVERB_QUALITY
-    48: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // REVERB_HOLD
-    49: { kind: 'float', displayMin: 0, displayMax: 8, scale: 1, step: 1, typecode: 0x10 }, // REVERB_BASETYPE
-    50: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // REVERB_LFOPHASE
-    51: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // REVERB_INPUTSELECT
-    52: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_DISPERSION
-    53: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // REVERB_LOWSLOPE
-    54: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // REVERB_HIGHSLOPE
-    55: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_PITCHMIX
-    56: { kind: 'float', displayMin: -24, displayMax: 24, scale: 1, step: 1, typecode: 0x10 }, // REVERB_SHIFT1
-    57: { kind: 'float', displayMin: -24, displayMax: 24, scale: 1, step: 1, typecode: 0x10 }, // REVERB_SHIFT2
-    58: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_PITCHFDBK
-    59: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 1, typecode: 0x10, enumCount: 4 }, // REVERB_PITCHDIR
-    60: { kind: 'float', displayMin: 10, displayMax: 2000, scale: 1000, step: 0.001, typecode: 0x431 }, // REVERB_PITCHTIME
-    61: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // REVERB_PITCHPOS
-    62: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_PITCHMOD
-    63: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // REVERB_PITCHBAL
-    64: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // REVERB_PREDLYTEMPO
-    65: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_PREDLYFDBK
-    66: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_PREDLYMIX
-    67: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // REVERB_PITCHLPF
-    68: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // REVERB_SPRINGTYPE
-    69: { kind: 'float', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10 }, // REVERB_TONETYPE
-    70: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // REVERB_PREDLYTAP
-    71: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // REVERB_LOWQ
-    72: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // REVERB_HIGHQ
+    0: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // REVERB_TYPE
+    1: { kind: 'float', displayMin: 0.1, displayMax: 100, scale: 1, step: 0.02, typecode: 0x332 }, // REVERB_TIME
+    2: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // REVERB_HICUT
+    3: { kind: 'float', displayMin: 0.01, displayMax: 1, scale: 1, step: 0.001, typecode: 0x44 }, // REVERB_HFRATIO
+    4: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_DIFFUSION
+    5: { kind: 'float', displayMin: 1, displayMax: 100, scale: 100, step: 0.001, typecode: 0x31 }, // REVERB_SIZE
+    6: { kind: 'float', displayMin: 0, displayMax: 250, scale: 1000, step: 0.001, typecode: 0x431 }, // REVERB_REVERBDELAY
+    7: { kind: 'float', displayMin: -40, displayMax: 10, scale: 1, step: 0.05, typecode: 0x162 }, // REVERB_EARLYLEVEL
+    8: { kind: 'float', displayMin: -40, displayMax: 10, scale: 1, step: 0.05, typecode: 0x162 }, // REVERB_REVERBLEVEL
+    9: { kind: 'float', displayMin: 0, displayMax: 1000, scale: 1000, step: 0.00025, typecode: 0x431 }, // REVERB_PREDELAY
+    10: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x241 }, // REVERB_LOWCUT
+    11: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_DEPTH
+    12: { kind: 'float', displayMin: 0.01, displayMax: 1, scale: 1, step: 0, typecode: 0x243 }, // REVERB_RATE
+    13: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x571 }, // REVERB_MIX
+    14: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // REVERB_LEVEL
+    15: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // REVERB_PAN
+    16: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0xc0, enumCount: 5 }, // REVERB_BYPASSMODE
+    17: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // REVERB_GLOBALMIX
+    18: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_GAIN
+    19: { kind: 'float', displayMin: 4, displayMax: 8, scale: 1, step: 0, typecode: 0x10 }, // REVERB_DENSITY
+    20: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_INPDIFF
+    21: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_INDIFFTIME
+    22: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // REVERB_BYPASS
+    23: { kind: 'float', displayMin: 2, displayMax: 6, scale: 1, step: 0, typecode: 0x10 }, // REVERB_NUMSPRINGS
+    24: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // REVERB_TONE
+    25: { kind: 'float', displayMin: 0, displayMax: 200, scale: 200, step: 0.001, typecode: 0xa31 }, // REVERB_WIDTH
+    26: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x242 }, // REVERB_FREQ1
+    27: { kind: 'float', displayMin: 100, displayMax: 10000, scale: 1, step: 0, typecode: 0x242 }, // REVERB_FREQ2
+    28: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // REVERB_Q1
+    29: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // REVERB_Q2
+    30: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.05, typecode: 0x132 }, // REVERB_GAIN1
+    31: { kind: 'float', displayMin: -12, displayMax: 12, scale: 1, step: 0.05, typecode: 0x132 }, // REVERB_GAIN2
+    32: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 10, step: 0.001, typecode: 0x52 }, // REVERB_DRIVE
+    33: { kind: 'float', displayMin: 0.02, displayMax: 2, scale: 1, step: 0, typecode: 0x44 }, // REVERB_LFTIME
+    34: { kind: 'float', displayMin: 100, displayMax: 10000, scale: 1, step: 0, typecode: 0x242 }, // REVERB_LFXOVER
+    35: { kind: 'float', displayMin: -200, displayMax: 200, scale: 100, step: 0.002, typecode: 0x531 }, // REVERB_SPREAD
+    36: { kind: 'float', displayMin: 0, displayMax: 80, scale: 1, step: 0.1, typecode: 0x131 }, // REVERB_ATTEN
+    37: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x131 }, // REVERB_THRESH
+    38: { kind: 'float', displayMin: 1, displayMax: 1000, scale: 1000, step: 0, typecode: 0x441 }, // REVERB_RELEASE
+    39: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_EARLYDIFF
+    40: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_EARLYDIFFTIME
+    41: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // REVERB_EARLYDECAY
+    42: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_EARLYSEND
+    43: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10, enumCount: 4 }, // REVERB_QUALITY
+    44: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // REVERB_HOLD
+    45: { kind: 'float', displayMin: 0, displayMax: 8, scale: 1, step: 1, typecode: 0x10 }, // REVERB_BASETYPE
+    46: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // REVERB_LFOPHASE
+    47: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // REVERB_INPUTSELECT
+    48: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_DISPERSION
+    49: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // REVERB_LOWSLOPE
+    50: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // REVERB_HIGHSLOPE
+    51: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_PITCHMIX
+    52: { kind: 'float', displayMin: -24, displayMax: 24, scale: 1, step: 1, typecode: 0x10 }, // REVERB_SHIFT1
+    53: { kind: 'float', displayMin: -24, displayMax: 24, scale: 1, step: 1, typecode: 0x10 }, // REVERB_SHIFT2
+    54: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_PITCHFDBK
+    55: { kind: 'enum', displayMin: 0, displayMax: 3, scale: 1, step: 1, typecode: 0x10, enumCount: 4 }, // REVERB_PITCHDIR
+    56: { kind: 'float', displayMin: 10, displayMax: 2000, scale: 1000, step: 0.001, typecode: 0x431 }, // REVERB_PITCHTIME
+    57: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // REVERB_PITCHPOS
+    58: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_PITCHMOD
+    59: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // REVERB_PITCHBAL
+    60: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // REVERB_SCENEIGNORE
+    61: { kind: 'enum', displayMin: 0, displayMax: 78, scale: 1, step: 0, typecode: 0x10, enumCount: 79 }, // REVERB_PREDLYTEMPO
+    62: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_PREDLYFDBK
+    63: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // REVERB_PREDLYMIX
+    64: { kind: 'float', displayMin: 200, displayMax: 20000, scale: 1, step: 0, typecode: 0x242 }, // REVERB_PITCHLPF
+    65: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // REVERB_SPRINGTYPE
+    66: { kind: 'float', displayMin: 0, displayMax: 3, scale: 1, step: 0, typecode: 0x10 }, // REVERB_TONETYPE
+    67: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // REVERB_PREDLYTAP
+    68: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // REVERB_KILLDRY
+    69: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // REVERB_LOWQ
+    70: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // REVERB_HIGHQ
   },
   /** sectionTag 36, wire stride 13 (fn=0x1F channel-block stride, ordinary records only). */
   RINGMOD: {
@@ -1875,7 +1995,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     5: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // RINGMOD_LEVEL
     6: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // RINGMOD_PAN
     7: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0xa0, enumCount: 3 }, // RINGMOD_BYPASSMODE
-    8: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // RINGMOD_GLOBALMIX
+    8: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // RINGMOD_GLOBALMIX
     9: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // RINGMOD_BYPASS
     10: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 0, step: 0, typecode: 0x10, enumCount: 3 }, // RINGMOD_TYPE
     11: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // RINGMOD_SCENEIGNORE
@@ -1892,7 +2012,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     6: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // ROTARY_LEVEL
     7: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // ROTARY_PAN
     8: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0xa0, enumCount: 3 }, // ROTARY_BYPASSMODE
-    9: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // ROTARY_GLOBALMIX
+    9: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // ROTARY_GLOBALMIX
     10: { kind: 'float', displayMin: 0.1, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // ROTARY_HFLENGTH
     11: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // ROTARY_BYPASS
     12: { kind: 'float', displayMin: 0, displayMax: 100, scale: 31.830988, step: 0.0031415927, typecode: 0x531 }, // ROTARY_WIDTH
@@ -1904,6 +2024,15 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     18: { kind: 'float', displayMin: 0.01, displayMax: 1, scale: 1, step: 0.001, typecode: 0x42 }, // ROTARY_MICDIST
     19: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // ROTARY_INPUTSELECT
     20: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // ROTARY_SCENEIGNORE
+  },
+  /** sectionTag 52, wire stride 6 (fn=0x1F channel-block stride, ordinary records only). */
+  RTA: {
+    0: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // RTA_SOURCE
+    1: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // RTA_NUMBANDS
+    2: { kind: 'float', displayMin: 0, displayMax: 100, scale: 1000, step: 0.0001, typecode: 0x431 }, // RTA_DECAY
+    3: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // RTA_WINDOW
+    4: { kind: 'float', displayMin: 0, displayMax: 127, scale: 1, step: 0, typecode: 0x10 }, // RTA_BAND
+    5: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // RTA_FREQ
   },
   /** sectionTag 31, wire stride 42 (fn=0x1F channel-block stride, ordinary records only). */
   SYNTH: {
@@ -1934,7 +2063,7 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     24: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // SYNTH_LEVEL
     25: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // SYNTH_PAN
     26: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0xa0, enumCount: 3 }, // SYNTH_BYPASSMODE
-    27: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // SYNTH_GLOBALMIX
+    27: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // SYNTH_GLOBALMIX
     28: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // SYNTH_BYPASS
     29: { kind: 'enum', displayMin: 0, displayMax: 7, scale: 1, step: 0, typecode: 0x10, enumCount: 8 }, // SYNTH_TYPE3
     30: { kind: 'float', displayMin: 20, displayMax: 20000, scale: 1, step: 1, typecode: 0x242 }, // SYNTH_FREQ3
@@ -1996,10 +2125,35 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     41: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // TENTAP_LEVEL
     42: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // TENTAP_PAN
     43: { kind: 'enum', displayMin: 0, displayMax: 4, scale: 1, step: 0, typecode: 0xc0, enumCount: 5 }, // TENTAP_BYPASSMODE
-    44: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0xd0 }, // TENTAP_GLOBALMIX
+    44: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // TENTAP_GLOBALMIX
     45: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // TENTAP_BYPASS
     46: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // TENTAP_LEARN
     47: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // TENTAP_SCENEIGNORE
+  },
+  /** sectionTag 51, wire stride 22 (fn=0x1F channel-block stride, ordinary records only). */
+  TONEMATCH: {
+    0: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // TONEMATCH_AMOUNT
+    1: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // TONEMATCH_SMOOTHING
+    2: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // TONEMATCH_CAPTUREREF
+    3: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // TONEMATCH_CAPTUREUSER
+    4: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x10 }, // TONEMATCH_MATCH
+    5: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.05, typecode: 0x181 }, // TONEMATCH_LEVEL
+    6: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // TONEMATCH_PAN
+    7: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0.001, typecode: 0xb0, enumCount: 2 }, // TONEMATCH_BYPASSMODE
+    8: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // TONEMATCH_BYPASS
+    9: { kind: 'enum', displayMin: 0, displayMax: 14, scale: 0, step: 0, typecode: 0x10, enumCount: 15 }, // TONEMATCH_SOURCE
+    10: { kind: 'float', displayMin: 0.1, displayMax: 100, scale: 1, step: 0, typecode: 0x43 }, // TONEMATCH_TIME
+    11: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // TONEMATCH_REFCHANNEL
+    12: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // TONEMATCH_USERCHANNEL
+    13: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // TONEMATCH_REFSOLO
+    14: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 1, typecode: 0x10, enumCount: 3 }, // TONEMATCH_TAPER
+    15: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // TONEMATCH_ACCUMULATE
+    16: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0.001, typecode: 0x0 }, // TONEMATCH_NORM1
+    17: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0.001, typecode: 0x0 }, // TONEMATCH_NORM2
+    18: { kind: 'enum', displayMin: 2, displayMax: 3, scale: 1, step: 1, typecode: 0x10, enumCount: 2 }, // TONEMATCH_BANK
+    19: { kind: 'float', displayMin: 0, displayMax: 1023, scale: 1, step: 1, typecode: 0x20 }, // TONEMATCH_SLOT
+    20: { kind: 'float', displayMin: -40, displayMax: 20, scale: 1, step: 0.05, typecode: 0x132 }, // TONEMATCH_REFLEVEL
+    21: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // TONEMATCH_MODE
   },
   /** sectionTag 22, wire stride 22 (fn=0x1F channel-block stride, ordinary records only). */
   TREMOLO: {
@@ -2014,17 +2168,87 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
     8: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x90 }, // TREMOLO_PAN
     9: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xb0, enumCount: 2 }, // TREMOLO_BYPASSMODE
     10: { kind: 'float', displayMin: 0, displayMax: 0, scale: 0, step: 0, typecode: 0x0 }, // TREMOLO_GLOBALMIX
-    11: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.003141593, typecode: 0x631 }, // TREMOLO_PHASE
+    11: { kind: 'float', displayMin: 0, displayMax: 180, scale: 57.295776, step: 0.0031415927, typecode: 0x631 }, // TREMOLO_PHASE
     12: { kind: 'float', displayMin: 0, displayMax: 400, scale: 100, step: 0.004, typecode: 0x531 }, // TREMOLO_WIDTH
     13: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // TREMOLO_CENTER
     14: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // TREMOLO_BYPASS
-    15: { kind: 'float', displayMin: 0, displayMax: 360, scale: 114.59155, step: 0.003141593, typecode: 0x631 }, // TREMOLO_STARTPHASE
+    15: { kind: 'float', displayMin: 0, displayMax: 360, scale: 114.59155, step: 0.0031415927, typecode: 0x631 }, // TREMOLO_STARTPHASE
     16: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0x10, enumCount: 3 }, // TREMOLO_ORDER
     17: { kind: 'float', displayMin: 200, displayMax: 2000, scale: 1, step: 0, typecode: 0x243 }, // TREMOLO_XOVER
     18: { kind: 'float', displayMin: -60, displayMax: 20, scale: 1, step: 0.1, typecode: 0x131 }, // TREMOLO_THRESH
     19: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // TREMOLO_SCENEIGNORE
     20: { kind: 'float', displayMin: 0.1, displayMax: 99.9, scale: 100, step: 0.001, typecode: 0x531 }, // TREMOLO_BETA
     21: { kind: 'float', displayMin: 0, displayMax: 10, scale: 10, step: 0.001, typecode: 0x32 }, // TREMOLO_DUCKING
+  },
+  /** sectionTag 32, wire stride 67 (fn=0x1F channel-block stride, ordinary records only). */
+  VOCODER: {
+    0: { kind: 'enum', displayMin: 0, displayMax: 9, scale: 1, step: 0, typecode: 0x10, enumCount: 10 }, // VOCODER_ANSOURCE
+    1: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // VOCODER_ANCHANNEL
+    2: { kind: 'float', displayMin: 4, displayMax: 24, scale: 1, step: 0, typecode: 0x10 }, // VOCODER_NUMBANDS
+    3: { kind: 'float', displayMin: 20, displayMax: 2000, scale: 1, step: 0, typecode: 0x241 }, // VOCODER_FREQSTART
+    4: { kind: 'float', displayMin: 2000, displayMax: 20000, scale: 1, step: 0, typecode: 0x240 }, // VOCODER_FREQSTOP
+    5: { kind: 'float', displayMin: 0.5, displayMax: 2, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_CSHIFT
+    6: { kind: 'enum', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0x10, enumCount: 2 }, // VOCODER_FREEZE
+    7: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // VOCODER_MASTERLVL
+    8: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x531 }, // VOCODER_MASTERPAN
+    9: { kind: 'float', displayMin: 0.2, displayMax: 5, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_RES
+    10: { kind: 'float', displayMin: 5, displayMax: 1000, scale: 1000, step: 0, typecode: 0x442 }, // VOCODER_ATTACK
+    11: { kind: 'float', displayMin: 5, displayMax: 1000, scale: 1000, step: 0, typecode: 0x442 }, // VOCODER_RELEASE
+    12: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x531 }, // VOCODER_HPMIX
+    13: { kind: 'float', displayMin: 0, displayMax: 100, scale: 100, step: 0.001, typecode: 0x571 }, // VOCODER_MIX
+    14: { kind: 'float', displayMin: -80, displayMax: 20, scale: 1, step: 0.1, typecode: 0x181 }, // VOCODER_LEVEL
+    15: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x91 }, // VOCODER_PAN
+    16: { kind: 'enum', displayMin: 0, displayMax: 2, scale: 1, step: 0, typecode: 0xa0, enumCount: 3 }, // VOCODER_BYPASSMODE
+    17: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xd0 }, // VOCODER_GLOBALMIX
+    18: { kind: 'float', displayMin: 0, displayMax: 1, scale: 1, step: 0, typecode: 0xe0 }, // VOCODER_BYPASS
+    19: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL1
+    20: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL2
+    21: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL3
+    22: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL4
+    23: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL5
+    24: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL6
+    25: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL7
+    26: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL8
+    27: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL9
+    28: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL10
+    29: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL11
+    30: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL12
+    31: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL13
+    32: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL14
+    33: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL15
+    34: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL16
+    35: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL17
+    36: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL18
+    37: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL19
+    38: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL20
+    39: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL21
+    40: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL22
+    41: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL23
+    42: { kind: 'float', displayMin: 0.1, displayMax: 10, scale: 1, step: 0, typecode: 0x43 }, // VOCODER_LEVEL24
+    43: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN1
+    44: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN2
+    45: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN3
+    46: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN4
+    47: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN5
+    48: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN6
+    49: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN7
+    50: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN8
+    51: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN9
+    52: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN10
+    53: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN11
+    54: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN12
+    55: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN13
+    56: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN14
+    57: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN15
+    58: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN16
+    59: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN17
+    60: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN18
+    61: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN19
+    62: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN20
+    63: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN21
+    64: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN22
+    65: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN23
+    66: { kind: 'float', displayMin: -100, displayMax: 100, scale: 100, step: 0.002, typecode: 0x31 }, // VOCODER_PAN24
   },
   /** sectionTag 40, wire stride 15 (fn=0x1F channel-block stride, ordinary records only). */
   VOLUME: {
@@ -2075,14 +2299,15 @@ export const FM9_RANGES: Readonly<Record<string, Readonly<Record<number, Fm9Para
 };
 
 /** Family -> (sectionTag, wire stride, raw recordCount). */
-export const FM9_RANGE_SECTIONS: Readonly<Record<string, Fm9RangeFamilyMeta>> = {
-  CABINET: { sectionTag: 11, stride: 106, recordCount: 110 },
+export const AXE3_RANGE_SECTIONS: Readonly<Record<string, Axe3RangeFamilyMeta>> = {
+  CABINET: { sectionTag: 11, stride: 106, recordCount: 111 },
   CHORUS: { sectionTag: 16, stride: 32, recordCount: 32 },
   COMP: { sectionTag: 7, stride: 37, recordCount: 37 },
-  CONTROLLERS: { sectionTag: 2, stride: 130, recordCount: 130 },
+  CONTROLLERS: { sectionTag: 2, stride: 178, recordCount: 178 },
   CROSSOVER: { sectionTag: 34, stride: 15, recordCount: 15 },
-  DELAY: { sectionTag: 13, stride: 91, recordCount: 91 },
-  DISTORT: { sectionTag: 10, stride: 147, recordCount: 147 },
+  DELAY: { sectionTag: 13, stride: 89, recordCount: 89 },
+  DISTORT: { sectionTag: 10, stride: 142, recordCount: 142 },
+  DYNDIST: { sectionTag: 59, stride: 14, recordCount: 14 },
   ENHANCER: { sectionTag: 26, stride: 12, recordCount: 12 },
   FDBKRET: { sectionTag: 30, stride: 6, recordCount: 6 },
   FDBKSEND: { sectionTag: 29, stride: 2, recordCount: 2 },
@@ -2092,8 +2317,9 @@ export const FM9_RANGE_SECTIONS: Readonly<Record<string, Fm9RangeFamilyMeta>> = 
   FUZZ: { sectionTag: 25, stride: 44, recordCount: 44 },
   GATE: { sectionTag: 35, stride: 19, recordCount: 19 },
   GEQ: { sectionTag: 8, stride: 20, recordCount: 20 },
-  GLOBAL: { sectionTag: 1, stride: 224, recordCount: 225 },
-  INPUT: { sectionTag: 41, stride: 10, recordCount: 10, instanceTags: [41, 42, 43, 44] },
+  GLOBAL: { sectionTag: 1, stride: 265, recordCount: 266 },
+  INPUT: { sectionTag: 41, stride: 10, recordCount: 10, instanceTags: [41, 42, 43, 44, 45] },
+  IRPLAYER: { sectionTag: 55, stride: 20, recordCount: 20 },
   LOOPER: { sectionTag: 50, stride: 24, recordCount: 24 },
   MEGATAP: { sectionTag: 33, stride: 35, recordCount: 35 },
   MIXER: { sectionTag: 28, stride: 23, recordCount: 23 },
@@ -2101,28 +2327,32 @@ export const FM9_RANGE_SECTIONS: Readonly<Record<string, Fm9RangeFamilyMeta>> = 
   MULTICOMP: { sectionTag: 37, stride: 37, recordCount: 37 },
   MULTIPLEXER: { sectionTag: 54, stride: 7, recordCount: 7 },
   MULTITAP: { sectionTag: 14, stride: 121, recordCount: 121 },
-  OUTPUT: { sectionTag: 46, stride: 26, recordCount: 26, instanceTags: [46, 47, 48] },
+  OUTPUT: { sectionTag: 46, stride: 26, recordCount: 26, instanceTags: [46, 47, 48, 49] },
   PEQ: { sectionTag: 9, stride: 33, recordCount: 33 },
   PHASER: { sectionTag: 19, stride: 35, recordCount: 35 },
   PITCH: { sectionTag: 23, stride: 114, recordCount: 114 },
   PLEX: { sectionTag: 15, stride: 96, recordCount: 96 },
   PRESET: { sectionTag: 57, stride: 50, recordCount: 50 },
   RESONATOR: { sectionTag: 39, stride: 40, recordCount: 40 },
-  REVERB: { sectionTag: 12, stride: 73, recordCount: 73 },
+  REVERB: { sectionTag: 12, stride: 71, recordCount: 71 },
   RINGMOD: { sectionTag: 36, stride: 13, recordCount: 13 },
   ROTARY: { sectionTag: 18, stride: 21, recordCount: 21 },
+  RTA: { sectionTag: 52, stride: 6, recordCount: 6 },
   SYNTH: { sectionTag: 31, stride: 42, recordCount: 42 },
   TENTAP: { sectionTag: 38, stride: 48, recordCount: 48 },
+  TONEMATCH: { sectionTag: 51, stride: 22, recordCount: 22 },
   TREMOLO: { sectionTag: 22, stride: 22, recordCount: 22 },
+  VOCODER: { sectionTag: 32, stride: 67, recordCount: 67 },
   VOLUME: { sectionTag: 40, stride: 15, recordCount: 15 },
   WAH: { sectionTag: 20, stride: 25, recordCount: 25 },
 };
 
 /** Cache sections with no confident catalog-family match (system/telemetry
  *  blocks and families whose paramId overlap stayed under the voting floor). */
-export const FM9_UNMAPPED_SECTIONS: readonly { sectionTag: number; recordCount: number; wireStride: number }[] = [
+export const AXE3_UNMAPPED_SECTIONS: readonly { sectionTag: number; recordCount: number; wireStride: number }[] = [
   { sectionTag: 4, recordCount: 7, wireStride: 7 },
+  { sectionTag: 5, recordCount: 3, wireStride: 3 },
   { sectionTag: 53, recordCount: 257, wireStride: 257 },
-  { sectionTag: 56, recordCount: 8, wireStride: 8 },
+  { sectionTag: 56, recordCount: 10, wireStride: 10 },
   { sectionTag: 58, recordCount: 350, wireStride: 350 },
 ];

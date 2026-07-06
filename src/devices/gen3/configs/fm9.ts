@@ -15,13 +15,22 @@
  * Identity Reply, so a Fractal-native query is the ID path. community-beta
  * (the explicit-effectId SET path is still owner-round-trip pending).
  */
-import { FM9_PARAMS_BY_FAMILY, FM9_ENUM_OVERRIDES } from '../../../gen3/fm9/index.js';
+import { FM9_PARAMS_BY_FAMILY, FM9_ENUM_OVERRIDES, FM9_RANGES } from '../../../gen3/fm9/index.js';
+import { informativeDeviceRanges, toSymbolEnumOverrides } from '../catalog.js';
 import type { FractalModernConfig } from '../factory.js';
 import {
   MODERN_AGENT_GUIDANCE,
   MODERN_BLOCK_PARAMS_SUMMARY,
   WIDE_GRID_EXAMPLE_SPEC,
 } from './shared.js';
+
+// FM9_ENUM_OVERRIDES ships FAMILY-shaped (family → paramId → label list, the
+// uniform gen-3 shape); the descriptor factory wants the symbol-keyed
+// {paramName → {ordinal → name}} view. Param names are globally unique, so the
+// re-key is lossless. Placeholder range rows are dropped so they can't clobber
+// inline display bounds (see informativeDeviceRanges).
+const FM9_SYMBOL_ENUM_OVERRIDES = toSymbolEnumOverrides(FM9_PARAMS_BY_FAMILY, FM9_ENUM_OVERRIDES);
+const FM9_DEVICE_RANGES = informativeDeviceRanges(FM9_RANGES);
 
 export const FM9_CONFIG: FractalModernConfig = {
   id: 'fm9',
@@ -63,13 +72,16 @@ export const FM9_CONFIG: FractalModernConfig = {
     'save_preset, set_block placement, and the live grid read (fn=0x01 sub=0x2E).',
   params_by_family: FM9_PARAMS_BY_FAMILY,
   device_true_roster: true,
-  // Device-true FM9 model rosters, mined from the FM9-Edit effectDefinitions
-  // cache (fw 11.0) by anchored walk and validated against hardware ordinals:
-  // amp 331 (@65/179/264), drive/FUZZ 86 (@15/36), reverb 79 (@16/45). The
-  // ordinal IS the discrete-SET value, so these are read labels AND settable by
-  // name across the whole roster. FM9-specific (the family-shared overlay leaves
-  // these numeric for the III/FM3). See enumOverrides.ts / rosters.generated.ts.
-  enum_overrides: FM9_ENUM_OVERRIDES,
+  // Device-true FM9 enum vocabulary, mined COMPLETE from the FM9-Edit
+  // effectDefinitions cache (76p0, 2026-07-05) by the strict count-driven
+  // walker and validated against hardware ordinal anchors: amp 336 (@65/179/264),
+  // drive/FUZZ 87 (@15/36), reverb 79 (@16/45), DISTORT_FBTYPE (@0/39/53),
+  // FILTER_TYPE (@6). Covers every enum param (539 lists, 38 families) — modes,
+  // LFO shapes, tempo subdivisions, mic picks — not just the type rosters. The
+  // ordinal IS the discrete-SET value, so all lists are read labels AND
+  // settable by name. See enumOverrides.generated.ts / rosters.generated.ts.
+  enum_overrides: FM9_SYMBOL_ENUM_OVERRIDES,
+  device_ranges: FM9_DEVICE_RANGES,
   canonical_terms: {
     block: 'block',
     slot: 'grid cell (row 1..6, col 1..14)',

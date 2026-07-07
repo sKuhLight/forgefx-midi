@@ -62,6 +62,8 @@ for (const [name, mb] of [
     ['buildSetBypass', codec.buildSetBypass(66, true)],
     ['buildStorePreset', codec.buildStorePreset(5)],
     ['buildSetScene', codec.buildSetScene(0)],
+    ['buildSetSceneNative', codec.buildSetSceneNative(0)],
+    ['buildSetChannelNative', codec.buildSetChannelNative(58, 1)],
   ];
   for (const [op, frame] of frames) {
     cases.push(() => assert(wellFormed(frame, mb), `${name} ${op}: model 0x${mb.toString(16)} + checksum`));

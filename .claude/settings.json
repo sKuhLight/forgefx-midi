@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(rg:*)",
+      "Bash(grep:*)",
+      "Bash(npm test)",
+      "Bash(npm run build:*)",
+      "Bash(npm run catalog:check)",
+      "Bash(npm run check:browser)",
+      "Bash(tsx test/:*)"
+    ],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(npm publish:*)",
+      "Bash(npm run catalog:export)"
+    ],
+    "deny": [
+      "Bash(rm -rf /:*)",
+      "Bash(git push --force:*)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Edit(src/**/*.generated.ts)",
+      "Write(src/**/*.generated.ts)",
+      "Edit(src/am4/paramNamesGenerated.ts)",
+      "Write(src/am4/paramNamesGenerated.ts)",
+      "Edit(src/version.ts)",
+      "Write(src/version.ts)",
+      "Edit(catalog/**)",
+      "Write(catalog/**)",
+      "Edit(dist/**)",
+      "Write(dist/**)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard-bash.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/guard-generated.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

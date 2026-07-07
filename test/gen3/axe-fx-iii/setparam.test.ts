@@ -19,8 +19,10 @@ import {
   buildSetBypass,
   buildGetBypass,
   buildSetChannel,
+  buildSetChannelNative,
   buildGetChannel,
   buildSetScene,
+  buildSetSceneNative,
   buildGetScene,
   buildQueryPatchName,
   buildQuerySceneName,
@@ -76,11 +78,15 @@ const cases: Case[] = [
   { label: 'buildSetChannel(46, 1)', built: buildSetChannel(46, 1), expected: 'f0000174100b2e000131f7' },
   { label: 'buildSetChannel(46, 3)', built: buildSetChannel(46, 3), expected: 'f0000174100b2e000333f7' },
   { label: 'buildGetChannel(46)', built: buildGetChannel(46), expected: 'f0000174100b2e007f4ff7' },
+  { label: 'buildSetChannelNative(58, 0, 0x11) — FM3-Edit Amp A capture', built: buildSetChannelNative(58, 0, 0x11), expected: 'f0000174110116003a00000000000000000000000039f7' },
+  { label: 'buildSetChannelNative(58, 1, 0x11) — FM3-Edit Amp B capture', built: buildSetChannelNative(58, 1, 0x11), expected: 'f0000174110116003a00000001000000000000000038f7' },
 
   // 0x0C SET/GET SCENE
   { label: 'buildSetScene(0)', built: buildSetScene(0), expected: 'f0000174100c0019f7' },
   { label: 'buildSetScene(7)', built: buildSetScene(7), expected: 'f0000174100c071ef7' },
   { label: 'buildGetScene()', built: buildGetScene(), expected: 'f0000174100c7f66f7' },
+  { label: 'buildSetSceneNative(0, 0x11) — FM3-Edit scene 1 capture', built: buildSetSceneNative(0, 0x11), expected: 'f0000174110124000000010000000000000000000030f7' },
+  { label: 'buildSetSceneNative(1, 0x11) — FM3-Edit scene 2 capture', built: buildSetSceneNative(1, 0x11), expected: 'f0000174110124000000010001000000000000000031f7' },
 
   // SWITCH PRESET — raw MIDI Bank Select (CC0+CC32) + Program Change.
   // Per-device bank encoding: 'standard' (III/FM3) = bank in CC0<<7|CC32;

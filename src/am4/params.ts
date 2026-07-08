@@ -2512,6 +2512,19 @@ export const KNOWN_PARAMS = {
     unit: 'enum', displayMin: 0, displayMax: 19,
     enumValues: CHORUS_TYPES_VALUES,
   },
+  // 2026-07-08: `channel` (A/B/C/D per-block channel switch) is
+  // hardware-confirmed at pidHigh=0x07d2 on amp/drive/reverb/delay
+  // (session-09/session-18 goldens in test/am4/setparam.test.ts) and
+  // that offset is otherwise unused anywhere else in this catalog —
+  // pattern-extended here to every remaining block. Not independently
+  // capture-confirmed for THIS block; flag if a capture ever
+  // contradicts it.
+  'chorus.channel': {
+    block: 'chorus', name: 'channel',
+    pidLow: 0x004e, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
+  },
   'chorus.rate': {
     // resolved: NOT an encoding bug.
     // AM4-Edit wire for Rate→3.4 Hz wrote pidLow=0x004e/pidHigh=0x000c
@@ -2681,6 +2694,13 @@ export const KNOWN_PARAMS = {
     unit: 'enum', displayMin: 0, displayMax: 31,
     enumValues: FLANGER_TYPES_VALUES,
   },
+  // pattern-extended `channel` — see chorus.channel note.
+  'flanger.channel': {
+    block: 'flanger', name: 'channel',
+    pidLow: 0x0052, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
+  },
   // wire-verified at 1.7 Hz on an
   // Analog Stereo flanger (left unconfirmed in Round 2).
   'flanger.rate': {
@@ -2742,6 +2762,13 @@ export const KNOWN_PARAMS = {
     unit: 'enum', displayMin: 0, displayMax: 16,
     enumValues: PHASER_TYPES_VALUES,
   },
+  // pattern-extended `channel` — see chorus.channel note.
+  'phaser.channel': {
+    block: 'phaser', name: 'channel',
+    pidLow: 0x005a, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
+  },
   // wire-verified at 2.3 Hz on a Digital
   // Mono phaser (left unconfirmed in Round 2).
   'phaser.rate': {
@@ -2799,6 +2826,13 @@ export const KNOWN_PARAMS = {
     pidLow: 0x005e, pidHigh: 0x000a,
     unit: 'enum', displayMin: 0, displayMax: 8,
     enumValues: WAH_TYPES_VALUES,
+  },
+  // pattern-extended `channel` — see chorus.channel note.
+  'wah.channel': {
+    block: 'wah', name: 'channel',
+    pidLow: 0x005e, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
   },
   // 2026-04-29: Wah Expert-Edit page from
   // session-40-wah-expert.pcapng (FAS Wah). 18 new params + 3 hand-
@@ -3001,6 +3035,13 @@ export const KNOWN_PARAMS = {
     unit: 'enum', displayMin: 0, displayMax: 18,
     enumValues: COMPRESSOR_TYPES_VALUES,
   },
+  // pattern-extended `channel` — see chorus.channel note.
+  'compressor.channel': {
+    block: 'compressor', name: 'channel',
+    pidLow: 0x002e, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
+  },
   // 2026-04-29: Compressor Expert-Edit
   // Sidechain section + Drive-engine knobs from
   // session-31-comp-jfet-expert.pcapng + paired AM4-Edit screenshot
@@ -3141,6 +3182,13 @@ export const KNOWN_PARAMS = {
     unit: 'enum', displayMin: 0, displayMax: 17,
     enumValues: GEQ_TYPES_VALUES,
   },
+  // pattern-extended `channel` — see chorus.channel note.
+  'geq.channel': {
+    block: 'geq', name: 'channel',
+    pidLow: 0x0032, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
+  },
   // continued — 5 more Type/Mode selectors from block-placement
   // captures. PEQ (pidLow=0x36) and Rotary (pidLow=0x56) are also confirmed
   // block addresses but have no Type enum — their params will be added when
@@ -3163,6 +3211,13 @@ export const KNOWN_PARAMS = {
     pidLow: 0x0072, pidHigh: 0x000a,
     unit: 'enum', displayMin: 0, displayMax: 17,
     enumValues: FILTER_TYPES_VALUES,
+  },
+  // pattern-extended `channel` — see chorus.channel note.
+  'filter.channel': {
+    block: 'filter', name: 'channel',
+    pidLow: 0x0072, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
   },
   // renamed for UI-label match (audit row: FILTER 11)
   'filter.frequency': {
@@ -3228,6 +3283,13 @@ export const KNOWN_PARAMS = {
     pidLow: 0x006a, pidHigh: 0x000a,
     unit: 'enum', displayMin: 0, displayMax: 6,
     enumValues: TREMOLO_TYPES_VALUES,
+  },
+  // pattern-extended `channel` — see chorus.channel note.
+  'tremolo.channel': {
+    block: 'tremolo', name: 'channel',
+    pidLow: 0x006a, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
   },
   'tremolo.rate': {
     block: 'tremolo', name: 'rate',
@@ -3354,6 +3416,13 @@ export const KNOWN_PARAMS = {
     unit: 'enum', displayMin: 0, displayMax: 2,
     enumValues: ENHANCER_TYPES_VALUES,
   },
+  // pattern-extended `channel` — see chorus.channel note.
+  'enhancer.channel': {
+    block: 'enhancer', name: 'channel',
+    pidLow: 0x007a, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
+  },
   //: wire-verified — Modern Gate displayed
   // exactly. Round 4 first-time test for this block type.
   'gate.type': {
@@ -3361,6 +3430,13 @@ export const KNOWN_PARAMS = {
     pidLow: 0x0092, pidHigh: 0x0013,
     unit: 'enum', displayMin: 0, displayMax: 3,
     enumValues: GATE_TYPES_VALUES,
+  },
+  // pattern-extended `channel` — see chorus.channel note.
+  'gate.channel': {
+    block: 'gate', name: 'channel',
+    pidLow: 0x0092, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
   },
   // 2026-04-26: slot-Gate first-page knobs on a
   // Modern Gate type — `session-34-slotgate-extended.pcapng`. Wire-
@@ -3602,6 +3678,13 @@ export const KNOWN_PARAMS = {
     pidLow: 0x0066, pidHigh: 0x0001,
     unit: 'percent', displayMin: 0, displayMax: 100,
   },
+  // pattern-extended `channel` — see chorus.channel note.
+  'volpan.channel': {
+    block: 'volpan', name: 'channel',
+    pidLow: 0x0066, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
+  },
 
   // Input Noise Gate. Always-on input stage
   // (per docs/BLOCK-PARAMS.md "Input Noise Gate (global, not a block
@@ -3652,6 +3735,16 @@ export const KNOWN_PARAMS = {
     unit: 'enum', displayMin: 0, displayMax: 2,
     enumValues: { 0: 'Classic Expander', 1: 'Intelligent', 2: 'Noise Reducer' },
   },
+  // pattern-extended `channel` — see chorus.channel note. Ingate is the
+  // always-on input stage (not a slot-placeable block); unlike the
+  // others this one has no independent confirmation that the channel
+  // concept even applies here — flag first if it turns out not to.
+  'ingate.channel': {
+    block: 'ingate', name: 'channel',
+    pidLow: 0x0025, pidHigh: 0x07d2,
+    unit: 'enum', displayMin: 0, displayMax: 3,
+    enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
+  },
 
   // Universal per-block output Balance ( cont — P1-010
   // second unit-extension pass, introduced `bipolar_percent`).
@@ -3697,6 +3790,8 @@ export const KNOWN_PARAMS = {
   'rotary.balance':    { block: 'rotary',     name: 'balance', pidLow: 0x0056, pidHigh: 0x0002, unit: 'bipolar_percent', displayMin: -100, displayMax: 100 },
   'wah.mix':           { block: 'wah',        name: 'mix',     pidLow: 0x005e, pidHigh: 0x0001, unit: 'percent', displayMin: 0, displayMax: 100 },
   'peq.mix':           { block: 'peq',        name: 'mix',     pidLow: 0x0036, pidHigh: 0x0001, unit: 'percent', displayMin: 0, displayMax: 100 },
+  // pattern-extended `channel` — see chorus.channel note.
+  'peq.channel':       { block: 'peq',        name: 'channel', pidLow: 0x0036, pidHigh: 0x07d2, unit: 'enum', displayMin: 0, displayMax: 3, enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' } },
   'rotary.mix':        { block: 'rotary',     name: 'mix',     pidLow: 0x0056, pidHigh: 0x0001, unit: 'percent', displayMin: 0, displayMax: 100 },
   // GEQ Expert-Edit 10-band mirrors + master_q.
   'geq.mix':           { block: 'geq',        name: 'mix',     pidLow: 0x0032, pidHigh: 0x0001, unit: 'percent', displayMin: 0, displayMax: 100 },
@@ -3833,6 +3928,8 @@ export const KNOWN_PARAMS = {
   //   id 20 (NEW)                      → `stereo_spread` (bipolar_percent -200..200)
   //   id 23 (NEW)                      → `input_select` (enum [L+R/LEFT/RIGHT], hand-authored)
   'rotary.level': { block: 'rotary', name: 'level', pidLow: 0x0056, pidHigh: 0x0000, unit: 'db', displayMin: -80, displayMax: 20 },
+  // pattern-extended `channel` — see chorus.channel note.
+  'rotary.channel': { block: 'rotary', name: 'channel', pidLow: 0x0056, pidHigh: 0x07d2, unit: 'enum', displayMin: 0, displayMax: 3, enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' } },
   'rotary.bypass_mode': {
     block: 'rotary', name: 'bypass_mode',
     pidLow: 0x0056, pidHigh: 0x0004,

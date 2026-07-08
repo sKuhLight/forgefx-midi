@@ -36,4 +36,8 @@ export function runAm4LivePollTests(): void {
     am4LivePollCandidateFor(0x0023, 0x0004)?.confidence === 'capture-decoded-value',
     '[am4/livePolls] tuner candidate confidence mismatch',
   );
+  assert(
+    am4LivePollCandidateFor(0x0003, 0x001c)?.name === 'modifier.slot1_live_value',
+    '[am4/livePolls] modifier slot1 live value lookup mismatch',
+  );
 }

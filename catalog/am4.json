@@ -6703,6 +6703,21 @@
           "3": "D"
         }
       },
+      "chorus.channel": {
+        "block": "chorus",
+        "name": "channel",
+        "pidLow": 78,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
+      },
       "chorus.level": {
         "block": "chorus",
         "name": "level",
@@ -6866,6 +6881,21 @@
         "displayMin": -80,
         "displayMax": 20
       },
+      "flanger.channel": {
+        "block": "flanger",
+        "name": "channel",
+        "pidLow": 82,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
+      },
       "flanger.manual": {
         "block": "flanger",
         "name": "manual",
@@ -6885,6 +6915,21 @@
         "unit": "degrees",
         "displayMin": 0,
         "displayMax": 180
+      },
+      "phaser.channel": {
+        "block": "phaser",
+        "name": "channel",
+        "pidLow": 90,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
       },
       "phaser.level": {
         "block": "phaser",
@@ -6924,6 +6969,21 @@
         "unit": "knob_0_10",
         "displayMin": 0,
         "displayMax": 10
+      },
+      "wah.channel": {
+        "block": "wah",
+        "name": "channel",
+        "pidLow": 94,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
       },
       "wah.level": {
         "block": "wah",
@@ -7046,6 +7106,21 @@
           "1": "ON"
         }
       },
+      "compressor.channel": {
+        "block": "compressor",
+        "name": "channel",
+        "pidLow": 46,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
+      },
       "compressor.bypass_mode": {
         "block": "compressor",
         "name": "bypass_mode",
@@ -7114,6 +7189,21 @@
           "11": "PEAKING 2"
         }
       },
+      "geq.channel": {
+        "block": "geq",
+        "name": "channel",
+        "pidLow": 50,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
+      },
       "filter.level": {
         "block": "filter",
         "name": "level",
@@ -7122,6 +7212,21 @@
         "unit": "db",
         "displayMin": -80,
         "displayMax": 20
+      },
+      "filter.channel": {
+        "block": "filter",
+        "name": "channel",
+        "pidLow": 114,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
       },
       "filter.frequency": {
         "block": "filter",
@@ -7133,6 +7238,21 @@
         "displayMin": 20,
         "displayMax": 20000,
         "scaling": "log10"
+      },
+      "tremolo.channel": {
+        "block": "tremolo",
+        "name": "channel",
+        "pidLow": 106,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
       },
       "tremolo.waveform": {
         "block": "tremolo",
@@ -7204,6 +7324,36 @@
         "unit": "db",
         "displayMin": -80,
         "displayMax": 20
+      },
+      "enhancer.channel": {
+        "block": "enhancer",
+        "name": "channel",
+        "pidLow": 122,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
+      },
+      "gate.channel": {
+        "block": "gate",
+        "name": "channel",
+        "pidLow": 146,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
       },
       "gate.level": {
         "block": "gate",
@@ -7420,6 +7570,21 @@
         "displayMin": 0,
         "displayMax": 100
       },
+      "volpan.channel": {
+        "block": "volpan",
+        "name": "channel",
+        "pidLow": 102,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
+      },
       "ingate.level": {
         "block": "ingate",
         "name": "level",
@@ -7462,6 +7627,36 @@
           "0": "Classic Expander",
           "1": "Intelligent",
           "2": "Noise Reducer"
+        }
+      },
+      "ingate.channel": {
+        "block": "ingate",
+        "name": "channel",
+        "pidLow": 37,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
+      },
+      "peq.channel": {
+        "block": "peq",
+        "name": "channel",
+        "pidLow": 54,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
         }
       },
       "peq.bypass_mode": {
@@ -7657,6 +7852,21 @@
         "unit": "db",
         "displayMin": -80,
         "displayMax": 20
+      },
+      "rotary.channel": {
+        "block": "rotary",
+        "name": "channel",
+        "pidLow": 86,
+        "pidHigh": 2002,
+        "unit": "enum",
+        "displayMin": 0,
+        "displayMax": 3,
+        "enumValues": {
+          "0": "A",
+          "1": "B",
+          "2": "C",
+          "3": "D"
+        }
       },
       "rotary.bypass_mode": {
         "block": "rotary",

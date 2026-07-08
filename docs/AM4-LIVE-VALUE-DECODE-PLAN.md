@@ -149,6 +149,15 @@ the shipped decoder produced 33,930 value rows, 0 unparseable.
 - Added `capture-decoded-value` confidence tier. All 43 suites pass; build clean;
   ForgeFX typechecks.
 
+### B3 — remaining plan windows ✅ DONE (2026-07-08) — see [`AM4-B3-REMAINING-WINDOWS.md`](./AM4-B3-REMAINING-WINDOWS.md)
+Closed out the Tempo/BPM, CPU, Footswitch, and Looper plan sections (all
+either already covered by existing `KNOWN_PARAMS` or reconfirmed absent) and
+the two Expression/Modifier stragglers from the 2026-07-05 correlation table.
+`0x0003/0x001c` promoted to `modifier.slot1_live_value` (shape pinned, [0,1]).
+`0x0002/0x0056` and the re-scoped `0x002e/0x0022` promoted as candidates only.
+New tool: `action=0x0017`/`pidHigh=0x3e81` is a block-navigation marker —
+pins exact plan-phase window boundaries for future correlation passes.
+
 ### Later (not this session)
 - `main_output` [0,1]→dB curve, `volpan` semantics, tuner ch4 literal string-map:
   need a scripted hardware capture (ramp input gain / play known pitch) or the

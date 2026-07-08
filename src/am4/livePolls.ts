@@ -52,6 +52,15 @@ export const AM4_LIVE_POLL_CANDIDATES: readonly Am4LivePollCandidate[] = [
     notes: 'Known catalog monitor address; dominant variable poll in the compressor meter window.',
   },
   {
+    name: 'compressor.unassigned_monitor',
+    pidLow: 0x002e,
+    pidHigh: 0x0022,
+    observedActions: [0x0010, 0x0026],
+    confidence: 'capture-correlated-candidate',
+    planPhase: 'Meters / Compressor (tentative)',
+    notes: 'Flagged unassigned in the 2026-07-05 capture doc. B3: active across 63-933s, not compressor-exclusive as first guessed — spans baseline through volpan windows. Float32 range [-0.24, 0.68] (can go negative, unlike gain_monitor\'s [0,1]) — not a simple normalized meter. Semantics still open.',
+  },
+  {
     name: 'wah.wah_control',
     pidLow: 0x005e,
     pidHigh: 0x000f,
@@ -129,6 +138,29 @@ export const AM4_LIVE_POLL_CANDIDATES: readonly Am4LivePollCandidate[] = [
     confidence: 'capture-correlated-candidate',
     planPhase: 'Meters / Volume-Pan',
     notes: 'Resolver-pinned cache_id 20 = VOLUME_METER (B1). B2: only ~12 discrete values, mostly zero — a discrete state/position indicator, not a continuous meter. Semantics still TBD.',
+  },
+  // Expression/Modifier stragglers from the 2026-07-05 correlation table
+  // (pidLow 0x0003/0x001c and 0x0002/0x0056), resolved in the 2026-07-08 B3
+  // pass — see docs/AM4-B3-REMAINING-WINDOWS.md. Block-navigation markers
+  // (action=0x0017, pidHigh=0x3e81) pin pidLow 0x0003 = "Modifier 1" slot,
+  // opened at the same timestamp this address starts polling.
+  {
+    name: 'modifier.slot1_live_value',
+    pidLow: 0x0003,
+    pidHigh: 0x001c,
+    observedActions: [0x0010],
+    confidence: 'capture-confirmed-address',
+    planPhase: 'Expression / Modifier',
+    notes: 'Live output of the Modifier 1 slot. Normalized float32 [0,1] (B3: full-range sweep, 262 unique values over 2564 samples), continuous for the whole 1253-1530s modifier test window — shape matches the pedal heel/half/toe sweep in the plan. dB/knob-unit mapping not pinned; depends on whatever the modifier is assigned to.',
+  },
+  {
+    name: 'modifier.slot2_or_envelope_candidate',
+    pidLow: 0x0002,
+    pidHigh: 0x0056,
+    observedActions: [0x0010],
+    confidence: 'capture-correlated-candidate',
+    planPhase: 'Expression / Modifier',
+    notes: 'B3: narrow 1315-1338s sub-window (right after the pedal sweep), float32 in [0,0.03] with only ~20 values — too small/quantised to be the pedal readout again. Coincides with the plan’s "try External 1 / Envelope as sources" step; likely an envelope-follower or second modifier-slot live value. Semantics unpinned.',
   },
 ];
 

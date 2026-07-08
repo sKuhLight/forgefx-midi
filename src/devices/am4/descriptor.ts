@@ -164,7 +164,15 @@ export const AM4_DESCRIPTOR: DeviceDescriptor = {
     scene_count: 4,
     has_channels: true,
     channel_names: ['A', 'B', 'C', 'D'],
-    channel_blocks: ['amp', 'drive', 'reverb', 'delay'],
+    // 2026-07-08: HW-009 (2026-04-19) only tested amp/drive/reverb/delay and
+    // concluded those were the only channel-bearing blocks — incomplete;
+    // every block has an independent channel register at the same wire
+    // offset (see CHANNEL_BLOCKS in shared/channels.ts, src/am4/params.ts).
+    channel_blocks: [
+      'amp', 'drive', 'reverb', 'delay',
+      'chorus', 'flanger', 'phaser', 'wah', 'compressor', 'geq', 'filter',
+      'gate', 'enhancer', 'ingate', 'tremolo', 'volpan', 'peq', 'rotary',
+    ],
     preset_location_format: /^[A-Z]0?[1-4]$/,
     supports_save: true,
     supports_lineage: true,

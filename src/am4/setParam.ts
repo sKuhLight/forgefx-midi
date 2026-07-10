@@ -15,6 +15,7 @@ import { fractalChecksum } from '../shared/checksum.js';
 import { encode14 } from '../shared/septet16.js';
 import { packFloat32LE, packValue, packValueChunked, unpackValue, unpackValueChunked, unpackFloat32LE } from '../shared/packValue.js';
 import { KNOWN_PARAMS, encode, type ParamKey } from './params.js';
+import { encodeRawIntRegister } from './midiRegisters.js';
 
 export const AM4_MODEL_ID = 0x15;
 const SYSEX_START = 0xf0;
@@ -91,6 +92,20 @@ export function buildSetFloatParam(param: ParamId, value: number): number[] {
 export function buildSetParam(key: ParamKey, displayValue: number): number[] {
   const param = KNOWN_PARAMS[key];
   return buildSetFloatParam(param, encode(param, displayValue));
+}
+
+/**
+ * Build a WRITE for a raw-integer MIDI-config register (the `global` MIDI
+ * map + per-scene MIDI transmit slots). These registers take the display
+ * integer verbatim (the `count` scale is 1), so numeric writes already work
+ * through `buildSetParam`; this builder adds the `'None'`/`'off'` → 128
+ * sentinel path (GAP-2) on `_cc` CC-assignment registers and range-checks
+ * the integer. Throws on a non-integer / out-of-range value, or `'None'` on
+ * a register that has no unassigned state.
+ */
+export function buildSetRawIntRegister(key: ParamKey, value: number | string): number[] {
+  const param = KNOWN_PARAMS[key];
+  return buildSetParam(key, encodeRawIntRegister(param, value));
 }
 
 /**

@@ -19,6 +19,7 @@
 import { KNOWN_PARAMS, decode, formatDisplay, type Param, type ParamKey, type Unit } from './params.js';
 import { parseReadResponse, type ReadResponse } from './setParam.js';
 import { am4LivePollCandidateFor, type Am4LivePollCandidate } from './livePolls.js';
+import { isRawIntRegister, decodeRawIntRegister } from './midiRegisters.js';
 
 /** Reverse index: `"<pidLow>,<pidHigh>"` → catalog param key. Built once. */
 const PARAM_BY_PID: Map<string, ParamKey> = (() => {
@@ -104,6 +105,19 @@ export function decodeAm4LiveValue(
       unit: param.unit,
       display: idx,
       formatted: param.enumValues?.[idx] ?? String(idx),
+    };
+  }
+  if (isRawIntRegister(param)) {
+    // Raw-integer registers (global MIDI-config map + per-scene MIDI transmit
+    // slots): the read u32 IS the display integer, NOT a Q16-scaled float.
+    // Decode from the u32 directly and never touch the float path (BUG-6).
+    const value = decodeRawIntRegister(param, rawUInt32);
+    return {
+      ...base,
+      paramKey,
+      unit: param.unit,
+      display: typeof value === 'number' ? value : rawUInt32,
+      formatted: String(value),
     };
   }
   const display = decode(param, rawFloat);

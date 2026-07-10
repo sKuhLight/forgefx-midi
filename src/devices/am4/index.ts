@@ -15,3 +15,10 @@ import './midi.js';
 // "edited" bit (GET_PATCH byte[21]&0x04) + the fn-0x1F atomic param read. Both hardware-verified in
 // readOps.ts; surfaced here so ForgeFX's AM4 device-edit watcher can drive them.
 export { readActiveBufferEditedBit, readAllParams, type AtomicReadResult } from './shared/readOps.js';
+
+// Opt-in container decode that sits ON TOP of the opaque backup / round-trip surface: unpack the
+// chunk payloads, verify the CRC, Huffman-decompress the body, and surface the preset + scene names
+// and amp params. Surfaced here so ForgeFX can enrich its backup/decode DTOs with crcValid + scene
+// names without reaching into the (non-exported) presetDump module path.
+export { decodeAm4PresetDump, decodeAm4PresetDumpBytes } from './presetDump.js';
+export type { Am4DecodedPreset } from './presetDump.js';

@@ -1,4 +1,8 @@
 export { FM9_PARAMS, FM9_PARAMS_BY_FAMILY, FM9_FAMILIES } from './params.js';
+// Discrete-ordinal classification overlay (param firmware symbol -> maxOrdinal).
+// Params the enum/range paths classify continuous but the device treats as
+// ORDINALS; routed DISCRETE (sub 09 00) so the device stores the right value.
+export { FM9_ROUNDTRIP_DISCRETE } from './discreteOverlay.js';
 export { FM9_ENUM_OVERRIDES } from './enumOverrides.generated.js';
 export { FM9_CAB_IRS } from './cabIrs.generated.js';
 export {

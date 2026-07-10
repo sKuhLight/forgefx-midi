@@ -278,17 +278,27 @@ export function encode5SeptetFloat32(value: number): [number, number, number, nu
 }
 
 /**
- * Parse the 60-byte gen-3 SET value-echo response (FM9-confirmed). The
- * device answers a typed SET (`sub 09 00`) or a mouse-drag SET
- * (`sub 52 00`) with this synchronous echo: it carries the effectId,
- * paramId, and the device's quantized NORMALIZED value as a 5-septet
- * float32 at bytes 12-16, followed by a descriptor/metadata block.
- * Read-only decode of device-emitted bytes; emits nothing on the wire.
+ * Parse the gen-3 SET value-echo / GET response (FM9-confirmed). The device
+ * answers a typed SET (`sub 09 00`), a mouse-drag SET (`sub 52 00`), or a GET
+ * (`sub 09 00`/`1F 00` with the value field zero) with a synchronous frame
+ * carrying the effectId, paramId, and the device's quantized NORMALIZED value
+ * as a 5-septet float32 at bytes 12-16.
+ *
+ * For a CONTINUOUS knob the float field is the value. For a DISCRETE type/model
+ * selector the float field is ZERO and the device's current type NAME rides as
+ * a length-prefixed 8→7 packed string later in the frame — surfaced here as
+ * `displayName` when present (FM9 capture 2026-06-19: a reverb-type GET returned
+ * float32=0 + "Small Room"; the old code reported only the misleading 0). The
+ * CALLER picks which to trust by the param's `wire_kind` (discrete → displayName,
+ * continuous → normalizedValue); do NOT infer kind from "value is zero" alone
+ * (a knob legitimately at 0.0 is also zero). Read-only; emits nothing on the wire.
  */
 export function parseGen3SetValueEcho(bytes: readonly number[]): {
   effectId: number;
   paramId: number;
   normalizedValue: number;
+  /** Device's current display string (type NAME for discrete params), when the frame carries one. */
+  displayName?: string;
 } {
   if (
     bytes.length < 22 || bytes[0] !== 0xf0 || bytes[1] !== 0x00
@@ -296,10 +306,23 @@ export function parseGen3SetValueEcho(bytes: readonly number[]): {
   ) {
     throw new Error('parseGen3SetValueEcho: not a fn=0x01 echo frame');
   }
+  // A type/model GET/echo carries the device's display string (the NAME) in the
+  // length-prefixed region parsed by parseGetParameterResponse. Use the frame's
+  // OWN model byte (FM9=0x12, III=0x10, …) so the predicate's model gate passes.
+  let displayName: string | undefined;
+  const modelByte = bytes[4];
+  try {
+    if (isGetParameterResponse(bytes, modelByte)) {
+      displayName = parseGetParameterResponse(bytes, modelByte).displayString;
+    }
+  } catch {
+    // not a display-string frame; leave displayName undefined.
+  }
   return {
     effectId: decode14(bytes[8], bytes[9]),
     paramId: decode14(bytes[10], bytes[11]),
     normalizedValue: decode5SeptetFloat32(bytes[12], bytes[13], bytes[14], bytes[15], bytes[16]),
+    displayName,
   };
 }
 
@@ -429,6 +452,39 @@ export function buildGetParameter(
     ...SUB_ACTION_SET_TYPED,
     ...encode14(effectId),
     ...encode14(paramId),
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00,
+  ], modelByte);
+}
+
+/**
+ * GET CURRENT TYPE NAME (function 0x01, sub-action 0x1F 0x00).
+ *
+ * The gen-3 editor reads a block's current type/model NAME with this sub-action
+ * (effectId + the block's "type" paramId as the target; the value field stays
+ * zero). The device replies with the long fn=0x01 GET frame whose display-string
+ * region carries the model name — decode the reply with `parseGetParameterResponse`
+ * (`.displayString`). Byte-confirmed on FM9 fw 11.0 (capture 2026-06-19): the
+ * reverb/amp/drive type reads returned "Small Room" / "59 Bassguy Bright" /
+ * "Rat Distortion". (`buildGetParameter`'s `09 00` GET elicits the same
+ * display-string reply; this `1F 00` form matches what the editor sends.)
+ *
+ * Wire (23 bytes): `F0 00 01 74 <model> 01 1F 00 <eid:14b LE> <pid:14b LE>
+ *  00*9 <cks> F7`. Read-only; carries no value, mutates nothing.
+ */
+export const SUB_ACTION_GET_TYPE_NAME = 0x1f;
+
+export function buildRequestCurrentTypeName(
+  effectId: number,
+  typeParamId: number,
+  modelByte: number = AXE_FX_III_MODEL_ID,
+): number[] {
+  return buildEnvelope(FN_PARAMETER_SETGET, [
+    SUB_ACTION_GET_TYPE_NAME,
+    0x00,
+    ...encode14(effectId),
+    ...encode14(typeParamId),
     0x00, 0x00, 0x00,
     0x00, 0x00, 0x00,
     0x00, 0x00, 0x00,
@@ -2264,6 +2320,8 @@ export interface ModernFractalCodec {
   /** CONTINUOUS SET (sub 52 00): `normalized` in [0,1] → float32(normalized) @pos12. */
   buildSetParameterContinuous(effectId: number, paramId: number, normalized: number): number[];
   buildGetParameter(effectId: number, paramId: number): number[];
+  /** GET CURRENT TYPE NAME (sub 1F 00): reply decodes via parseGetParameterResponse().displayString. */
+  buildRequestCurrentTypeName(effectId: number, typeParamId: number): number[];
   isGetParameterResponse(bytes: readonly number[]): boolean;
   parseGetParameterResponse(
     bytes: readonly number[],
@@ -2347,6 +2405,7 @@ export function createModernFractalCodec(
     buildSetParameter: (e, p, v) => buildSetParameter(e, p, v, modelByte),
     buildSetParameterContinuous: (e, p, v) => buildSetParameterContinuous(e, p, v, modelByte),
     buildGetParameter: (e, p) => buildGetParameter(e, p, modelByte),
+    buildRequestCurrentTypeName: (e, p) => buildRequestCurrentTypeName(e, p, modelByte),
     buildSetBypass: (e, b) => buildSetBypass(e, b, modelByte),
     buildSetChannel: (e, c) => buildSetChannel(e, c, modelByte),
     buildSetChannelNative: (e, c) => buildSetChannelNative(e, c, modelByte),

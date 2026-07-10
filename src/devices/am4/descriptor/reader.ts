@@ -47,6 +47,8 @@ import {
   formatLocationCode,
   decode as am4Decode,
   roundDisplayValue,
+  isRawIntRegister,
+  decodeRawIntRegister,
   isReadResponseLong,
   parseLongReadBypassFlag,
   READ_TYPE_LONG,
@@ -452,7 +454,10 @@ export const reader: DeviceReader = {
       await switchBlockChannel(ctx.conn, block, channel);
     }
     const { parsed, raw_response } = await sendReadAndParseRaw(ctx.conn, param.pidLow, param.pidHigh);
-    const wire = param.unit === 'enum'
+    // Raw-integer registers (global MIDI-config map + per-scene MIDI slots) read
+    // back the display integer directly, NOT a Q16-scaled float (BUG-6).
+    const isRawInt = param.unit !== 'enum' && isRawIntRegister(param);
+    const wire = (param.unit === 'enum' || isRawInt)
       ? parsed.asUInt32LE()
       : parsed.asInternalFloat();
     let display: number | string;
@@ -469,6 +474,8 @@ export const reader: DeviceReader = {
       } else {
         display = Math.round(wire);
       }
+    } else if (isRawInt) {
+      display = decodeRawIntRegister(param, wire);
     } else {
       display = roundDisplayValue(param, am4Decode(param, wire));
     }

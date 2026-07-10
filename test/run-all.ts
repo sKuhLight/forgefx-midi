@@ -31,12 +31,15 @@ import { runAm4DescribeTests, AM4_DESCRIBE_CASE_COUNT } from './am4/describe.tes
 import { runAm4LivePollTests, AM4_LIVE_POLL_CASE_COUNT } from './am4/livepolls.test.js';
 import { runAm4PollDecodeTests, AM4_POLL_DECODE_CASE_COUNT } from './am4/polldecode.test.js';
 import { runAm4LiveDecodeTests, AM4_LIVE_DECODE_CASE_COUNT } from './am4/livedecode.test.js';
+import { runAm4MidiRegisterTests, AM4_MIDI_REGISTERS_CASE_COUNT } from './am4/midiregisters.test.js';
 import { runAm4TunerTests, AM4_TUNER_CASE_COUNT } from './am4/tuner.test.js';
 import { runAm4ChannelTests, AM4_CHANNEL_CASE_COUNT } from './am4/channel.test.js';
+import { runAm4PresetContainerTests, AM4_PRESET_CONTAINER_CASE_COUNT } from './am4/presetcontainer.test.js';
 import { runAxeFxIISetParamTests, AXEFX2_GOLDEN_CASE_COUNT } from './gen2/axe-fx-ii/setparam.test.js';
 import { runAxeFxIIRoutingTests, AXEFX2_ROUTING_CASE_COUNT } from './gen2/axe-fx-ii/routing.test.js';
 import { runAxeFxGen1SetParamTests, AXEFXGEN1_GOLDEN_CASE_COUNT } from './gen1/setparam.test.js';
 import { runAxeFxGen1ReadParamTests, AXEFXGEN1_READ_CASE_COUNT } from './gen1/readparam.test.js';
+import { runAxeFxGen1PatchDumpTests, GEN1_PATCHDUMP_CASE_COUNT } from './gen1/patchdump.test.js';
 import { runAxeFxIIAnnotationCoverageTests, AXEFX2_ANNOTATION_CASE_COUNT } from './gen2/axe-fx-ii/annotation-coverage.test.js';
 import { runAxeFxIIISetParamTests, AXEFX3_GOLDEN_CASE_COUNT } from './gen3/axe-fx-iii/setparam.test.js';
 import { runAxeFxIIICalibrationTest } from './gen3/axe-fx-iii/calibration.test.js';
@@ -57,6 +60,12 @@ import { runAxe3MetersTests, AXE3_METERS_CASE_COUNT } from './gen3/axe-fx-iii/me
 import { runAxe3FootControllerTests, AXE3_FC_CASE_COUNT } from './gen3/axe-fx-iii/footcontroller.test.js';
 import { runAxe3ModifierTests, AXE3_MOD_CASE_COUNT } from './gen3/axe-fx-iii/modifiers.test.js';
 import { runVp4SetParamTests, VP4_SETPARAM_CASE_COUNT } from './gen3/vp4/setparam.test.js';
+import { runVp4StructureBlobTests, VP4_STRUCTUREBLOB_CASE_COUNT } from './gen3/vp4/structureblob.test.js';
+import { runDiscreteOverlayTests, DISCRETE_OVERLAY_CASE_COUNT } from './gen3/discrete-overlay.test.js';
+import { runGen3TypeNameTests, GEN3_TYPENAME_CASE_COUNT } from './gen3/axe-fx-iii/typename.test.js';
+import { runAm4InternalFromDisplayTests, AM4_INTERNAL_FROM_DISPLAY_CASE_COUNT } from './am4/internalfromdisplay.test.js';
+import { runAxeFxIIApplicabilityTests, AXEFX2_APPLICABILITY_CASE_COUNT } from './gen2/axe-fx-ii/applicability.test.js';
+import { runSharedDisplayScaleTests, SHARED_DISPLAYSCALE_CASE_COUNT } from './shared/displayscale.test.js';
 import { runDevicesSmokeTests, DEVICES_SMOKE_CASE_COUNT } from './devices-smoke.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
@@ -96,12 +105,15 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `am4/livePolls (${AM4_LIVE_POLL_CASE_COUNT} candidates)`, run: runAm4LivePollTests },
   { name: `am4/pollDecode (${AM4_POLL_DECODE_CASE_COUNT} real-frame cases)`, run: runAm4PollDecodeTests },
   { name: `am4/liveDecode (${AM4_LIVE_DECODE_CASE_COUNT} cases)`, run: runAm4LiveDecodeTests },
+  { name: `am4/midiRegisters (${AM4_MIDI_REGISTERS_CASE_COUNT} cases)`, run: runAm4MidiRegisterTests },
   { name: `am4/tuner (${AM4_TUNER_CASE_COUNT} real-frame cases)`, run: runAm4TunerTests },
   { name: `am4/channel (${AM4_CHANNEL_CASE_COUNT} cases)`, run: runAm4ChannelTests },
+  { name: `am4/presetcontainer (${AM4_PRESET_CONTAINER_CASE_COUNT} cases)`, run: runAm4PresetContainerTests },
   { name: `axe-fx-ii/setparam (${AXEFX2_GOLDEN_CASE_COUNT} goldens)`, run: runAxeFxIISetParamTests },
   { name: `axe-fx-ii/routing (${AXEFX2_ROUTING_CASE_COUNT} goldens)`, run: runAxeFxIIRoutingTests },
   { name: `axe-fx-gen1/setparam (${AXEFXGEN1_GOLDEN_CASE_COUNT} goldens)`, run: runAxeFxGen1SetParamTests },
   { name: `axe-fx-gen1/readparam (${AXEFXGEN1_READ_CASE_COUNT} goldens)`, run: runAxeFxGen1ReadParamTests },
+  { name: `axe-fx-gen1/patchdump (${GEN1_PATCHDUMP_CASE_COUNT} goldens)`, run: runAxeFxGen1PatchDumpTests },
   { name: `axe-fx-ii/annotation-coverage (${AXEFX2_ANNOTATION_CASE_COUNT} goldens)`, run: runAxeFxIIAnnotationCoverageTests },
   { name: `axe-fx-iii/setparam (${AXEFX3_GOLDEN_CASE_COUNT} goldens)`, run: runAxeFxIIISetParamTests },
   { name: 'axe-fx-iii/calibration', run: runAxeFxIIICalibrationTest },
@@ -122,6 +134,12 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `axe-fx-iii/footcontroller (${AXE3_FC_CASE_COUNT} cases)`, run: runAxe3FootControllerTests },
   { name: `axe-fx-iii/modifiers (${AXE3_MOD_CASE_COUNT} cases)`, run: runAxe3ModifierTests },
   { name: `vp4/setparam (${VP4_SETPARAM_CASE_COUNT} goldens)`, run: runVp4SetParamTests },
+  { name: `vp4/structureblob (${VP4_STRUCTUREBLOB_CASE_COUNT} goldens)`, run: runVp4StructureBlobTests },
+  { name: `gen3/discrete-overlay (${DISCRETE_OVERLAY_CASE_COUNT} cases)`, run: runDiscreteOverlayTests },
+  { name: `gen3/typename (${GEN3_TYPENAME_CASE_COUNT} goldens)`, run: runGen3TypeNameTests },
+  { name: `am4/internalFromDisplay (${AM4_INTERNAL_FROM_DISPLAY_CASE_COUNT} cases)`, run: runAm4InternalFromDisplayTests },
+  { name: `axe-fx-ii/applicability (${AXEFX2_APPLICABILITY_CASE_COUNT} cases)`, run: runAxeFxIIApplicabilityTests },
+  { name: `shared/displayScale (${SHARED_DISPLAYSCALE_CASE_COUNT} cases)`, run: runSharedDisplayScaleTests },
   { name: `devices/smoke (${DEVICES_SMOKE_CASE_COUNT} descriptors, from dist)`, run: runDevicesSmokeTests },
 ];
 

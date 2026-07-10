@@ -94,7 +94,10 @@ delay roster was the MEGATAP pattern list, mis-bound at generation, now fixed).
 ⁴ `FM9_CAB_IRS` / `AXE3_CAB_IRS` (2026-07-06): FACTORY 1/2 (1024 each) + LEGACY (FM9 189,
 III 199) from the cab-IR bank table records (0xfff0-0xfff2) of the same caches — validated
 by reproducing `FM3_CAB_IRS` factory banks exactly from the FM3 cache. USER/SCRATCHPAD
-banks are deliberately NOT bundled (community-donor per-device content) — read live.
+banks are deliberately NOT bundled (community-donor per-device content). Axis calls
+`/cab/irs?refresh=1` during its cache build so a device-true live reader can merge those
+per-unit banks into the local IndexedDB cache; until that wire read is decoded, refresh
+falls back to the bundled firmware banks without failing the picker.
 
 ---
 

@@ -122,6 +122,8 @@ export const FN_PARAMETER_SETGET = 0x01;
 /** III parameter SETGET sub-action codes (pos 6-7 of the envelope). */
 const SUB_ACTION_SET_TYPED: readonly [number, number] = [0x09, 0x00];
 const SUB_ACTION_STATE_BROADCAST: readonly [number, number] = [0x04, 0x01];
+export const SUB_ACTION_SET_CHANNEL_NATIVE: readonly [number, number] = [0x16, 0x00];
+export const SUB_ACTION_SET_SCENE_NATIVE: readonly [number, number] = [0x24, 0x00];
 
 /** Query sentinel — when this is the value byte, the device responds with current state. */
 export const QUERY_SENTINEL = 0x7f;
@@ -376,6 +378,22 @@ function buildSetParameterFloat(
     ...encode14(effectId),
     ...encode14(paramId),
     ...encode5SeptetFloat32(floatValue),
+    0x00, 0x00, 0x00, 0x00,
+  ], modelByte);
+}
+
+function buildFn01RawValueFrame(
+  subAction: readonly [number, number],
+  effectId: number,
+  paramId: number,
+  rawValue: number,
+  modelByte: number,
+): number[] {
+  return buildEnvelope(FN_PARAMETER_SETGET, [
+    ...subAction,
+    ...encode14(effectId),
+    ...encode14(paramId),
+    ...pack5Septet32(rawValue),
     0x00, 0x00, 0x00, 0x00,
   ], modelByte);
 }
@@ -1654,6 +1672,26 @@ export function buildSetChannel(
   ], modelByte);
 }
 
+/**
+ * SET CHANNEL via FM3-Edit's fn=0x01 native write shape.
+ *
+ * FM3-Edit 2026-07 capture: Amp channel A/B uses sub-action `16 00`,
+ * effectId = block id, paramId = 0, and the channel index as a raw 32-bit
+ * integer in the fn=0x01 value field. This is intentionally separate from
+ * `buildSetChannel` (the public-spec 0x0B frame) because non-FM3 devices are
+ * not yet capture-confirmed for this write path.
+ */
+export function buildSetChannelNative(
+  effectId: number,
+  channel: 0 | 1 | 2 | 3,
+  modelByte: number = AXE_FX_III_MODEL_ID,
+): number[] {
+  if (!Number.isInteger(channel) || channel < 0 || channel > 3) {
+    throw new Error(`buildSetChannelNative: channel ${channel} out of range (0..3 = A..D)`);
+  }
+  return buildFn01RawValueFrame(SUB_ACTION_SET_CHANNEL_NATIVE, effectId, 0, channel, modelByte);
+}
+
 /** GET CHANNEL (function 0x0B with `dd=0x7F`). */
 export function buildGetChannel(effectId: number, modelByte: number = AXE_FX_III_MODEL_ID): number[] {
   return buildEnvelope(FN_SET_GET_CHANNEL, [
@@ -1676,6 +1714,24 @@ export function buildSetScene(
     throw new Error(`buildSetScene: sceneIndex ${sceneIndex} out of range (0..7)`);
   }
   return buildEnvelope(FN_SET_GET_SCENE, [sceneIndex & 0x7f], modelByte);
+}
+
+/**
+ * SET SCENE via FM3-Edit's fn=0x01 native write shape.
+ *
+ * FM3-Edit 2026-07 capture: scene switches use sub-action `24 00`,
+ * effectId = 0, paramId = 1, and the scene index as a raw 32-bit integer
+ * in the fn=0x01 value field. Kept separate from `buildSetScene` so callers
+ * can opt in only for devices where this path is verified.
+ */
+export function buildSetSceneNative(
+  sceneIndex: number,
+  modelByte: number = AXE_FX_III_MODEL_ID,
+): number[] {
+  if (!Number.isInteger(sceneIndex) || sceneIndex < 0 || sceneIndex > 7) {
+    throw new Error(`buildSetSceneNative: sceneIndex ${sceneIndex} out of range (0..7)`);
+  }
+  return buildFn01RawValueFrame(SUB_ACTION_SET_SCENE_NATIVE, 0, 1, sceneIndex, modelByte);
 }
 
 /** GET SCENE (function 0x0C with `dd=0x7F`). */
@@ -2272,7 +2328,9 @@ export interface ModernFractalCodec {
   ): ReturnType<typeof parseGetParameterResponse>;
   buildSetBypass(effectId: number, bypassed: boolean): number[];
   buildSetChannel(effectId: number, channel: 0 | 1 | 2 | 3): number[];
+  buildSetChannelNative(effectId: number, channel: 0 | 1 | 2 | 3): number[];
   buildSetScene(sceneIndex: number): number[];
+  buildSetSceneNative(sceneIndex: number): number[];
   buildSetGridCell(opts: { row: number; col: number; blockId: number; rows?: number }): number[];
   buildSetGridRouting(opts: { srcRow: number; srcCol: number; destRow: number; rows?: number; op?: number }): number[];
   buildSetPresetName(name: string): number[];
@@ -2350,7 +2408,9 @@ export function createModernFractalCodec(
     buildRequestCurrentTypeName: (e, p) => buildRequestCurrentTypeName(e, p, modelByte),
     buildSetBypass: (e, b) => buildSetBypass(e, b, modelByte),
     buildSetChannel: (e, c) => buildSetChannel(e, c, modelByte),
+    buildSetChannelNative: (e, c) => buildSetChannelNative(e, c, modelByte),
     buildSetScene: (s) => buildSetScene(s, modelByte),
+    buildSetSceneNative: (s) => buildSetSceneNative(s, modelByte),
     buildSetGridCell: (opts) => buildSetGridCell(opts, modelByte),
     buildSetGridRouting: (opts) => buildSetGridRouting(opts, modelByte),
     buildSetPresetName: (n) => buildSetPresetName(n, modelByte),

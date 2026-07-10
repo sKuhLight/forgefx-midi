@@ -1,0 +1,24 @@
+name: ci
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# forgefx-midi is self-contained (no sibling checkout needed). The gate mirrors the
+# local one: build FIRST (the devices-smoke suite loads descriptors from dist/), then
+# the full test chain (run-all + check-browser-safe + catalog:check + cache:check).
+jobs:
+  build-test:
+    name: build + test (goldens + browser-safe + catalog:check + cache:check)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm test

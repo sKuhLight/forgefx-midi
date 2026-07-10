@@ -1,13 +1,24 @@
 /**
  * Channel awareness + applicability advisory state shared by every tool
- * that writes to or reads a channel-bearing block (amp / drive / reverb /
- * delay).
+ * that writes to or reads a channel-bearing block.
  *
  * Channels (A/B/C/D) are the data container for block param values; scenes
  * are selectors that choose which channel each block uses. Two scenes
  * pointing at the same channel will both reflect any write to that channel,
  * confirmed on hardware HW-009 (2026-04-19). See SYSEX-MAP.md §6a and
  * docs/_private/HARDWARE-TASKS.md HW-009 for the full explanation.
+ *
+ * 2026-07-08: HW-009 only tested amp/drive/reverb/delay and concluded those
+ * were the ONLY channel-bearing blocks. That was incomplete — every block
+ * type has an independent channel register at the same wire offset
+ * (0x07d2, relative to its own pidLow); see forgefx-midi's
+ * `docs/AM4-LIVE-VALUE-DECODE-PLAN.md` and `src/am4/params.ts`
+ * (`chorus.channel` etc.). `CHANNEL_BLOCKS` now covers every block; the
+ * underlying reader (`decodeChannelParams` in `descriptor/reader.ts`)
+ * already self-detects channel-blocked wire chunks per-param from the
+ * actual `itemCount % 4` shape, so this list only drives the advisory
+ * text + the explicit switch-then-read/write helpers below, not the byte
+ * decode math.
  *
  * The cache below holds whatever channel the server LAST EXPLICITLY SET
  * for each channel-bearing block. It is not authoritative — a hardware
@@ -30,7 +41,11 @@ import type { MidiConnection } from '../../../core/midi/transport.js';
 
 import { WRITE_ECHO_TIMEOUT_MS, recordAckOutcome } from '../../../core/server-shared/connections.js';
 
-export const CHANNEL_BLOCKS = new Set(['amp', 'drive', 'reverb', 'delay']);
+export const CHANNEL_BLOCKS = new Set([
+    'amp', 'drive', 'reverb', 'delay',
+    'chorus', 'flanger', 'phaser', 'wah', 'compressor', 'geq', 'filter',
+    'gate', 'enhancer', 'ingate', 'tremolo', 'volpan', 'peq', 'rotary',
+]);
 
 export const lastKnownChannel: Partial<Record<string, number>> = {};
 
@@ -80,8 +95,9 @@ export function resolveChannel(input: string | number): number {
 
 /**
  * Render the channel-context status line appended to every param-write
- * response. Returns empty string for blocks that don't have channels
- * (chorus, flanger, phaser, etc. — the secondary effect blocks).
+ * response. Returns empty string for a block key `CHANNEL_BLOCKS` doesn't
+ * recognize at all (unknown/typo'd block name — every real AM4 block is
+ * channel-bearing as of 2026-07-08, see the module doc comment above).
  *
  * `justSwitched` is true when the caller explicitly used the `channel`
  * param on this call and the switch acked; the message is more assertive
@@ -124,9 +140,7 @@ export async function switchBlockChannel(
     channel: string | number,
 ): Promise<{ switched: boolean }> {
     if (!CHANNEL_BLOCKS.has(block)) {
-        throw new Error(
-            `Block "${block}" doesn't expose a channel register (only amp / drive / reverb / delay have channels on AM4). Drop the \`channel\` argument.`,
-        );
+        throw new Error(`Unknown AM4 block "${block}" — not in the channel-bearing block list.`);
     }
     const targetIndex = resolveChannel(channel);
     if (lastKnownChannel[block] === targetIndex) {

@@ -34,6 +34,7 @@ import { runAm4LiveDecodeTests, AM4_LIVE_DECODE_CASE_COUNT } from './am4/livedec
 import { runAm4MidiRegisterTests, AM4_MIDI_REGISTERS_CASE_COUNT } from './am4/midiregisters.test.js';
 import { runAm4TunerTests, AM4_TUNER_CASE_COUNT } from './am4/tuner.test.js';
 import { runAm4ChannelTests, AM4_CHANNEL_CASE_COUNT } from './am4/channel.test.js';
+import { runAm4PresetContainerTests, AM4_PRESET_CONTAINER_CASE_COUNT } from './am4/presetcontainer.test.js';
 import { runAxeFxIISetParamTests, AXEFX2_GOLDEN_CASE_COUNT } from './gen2/axe-fx-ii/setparam.test.js';
 import { runAxeFxIIRoutingTests, AXEFX2_ROUTING_CASE_COUNT } from './gen2/axe-fx-ii/routing.test.js';
 import { runAxeFxGen1SetParamTests, AXEFXGEN1_GOLDEN_CASE_COUNT } from './gen1/setparam.test.js';
@@ -102,6 +103,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `am4/midiRegisters (${AM4_MIDI_REGISTERS_CASE_COUNT} cases)`, run: runAm4MidiRegisterTests },
   { name: `am4/tuner (${AM4_TUNER_CASE_COUNT} real-frame cases)`, run: runAm4TunerTests },
   { name: `am4/channel (${AM4_CHANNEL_CASE_COUNT} cases)`, run: runAm4ChannelTests },
+  { name: `am4/presetcontainer (${AM4_PRESET_CONTAINER_CASE_COUNT} cases)`, run: runAm4PresetContainerTests },
   { name: `axe-fx-ii/setparam (${AXEFX2_GOLDEN_CASE_COUNT} goldens)`, run: runAxeFxIISetParamTests },
   { name: `axe-fx-ii/routing (${AXEFX2_ROUTING_CASE_COUNT} goldens)`, run: runAxeFxIIRoutingTests },
   { name: `axe-fx-gen1/setparam (${AXEFXGEN1_GOLDEN_CASE_COUNT} goldens)`, run: runAxeFxGen1SetParamTests },

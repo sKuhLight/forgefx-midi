@@ -31,6 +31,8 @@
 
 import { fractalChecksum } from '../../shared/index.js';
 import type { MidiConnection } from '../../core/midi/transport.js';
+import { decodeAm4Container, type Am4ContainerDecode } from './presetContainer.js';
+import { decodeAm4AmpBlock, type Am4AmpBlockValues } from './presetBody.js';
 
 const SYSEX_START = 0xf0;
 const SYSEX_END = 0xf7;
@@ -188,6 +190,54 @@ export function parsePresetBank(bytes: Uint8Array): ParsedPresetDump[] {
     out.push(parsePresetDump(bytes, i * PRESET_DUMP_LEN));
   }
   return out;
+}
+
+/**
+ * Container-decoded form of one AM4 preset dump: the CRC-validated raw_patch,
+ * the Huffman-decompressed body, the plaintext preset + scene names, and the
+ * decoded AMP block param values.
+ *
+ * This is an OPT-IN decode path that sits ON TOP of the opaque backup /
+ * round-trip surface (`parsePresetDump` / `serializePresetDump` still treat
+ * the chunk payloads as opaque blobs and are unchanged). Extends the
+ * container-decode result with the amp-block param map.
+ */
+export interface Am4DecodedPreset extends Am4ContainerDecode {
+  /** Alias for `name` — the plaintext preset name. */
+  readonly presetName: string;
+  /**
+   * The decoded AMP block (per-channel A/B/C/D param maps), or `undefined`
+   * when the preset has no amp block. AMP is the only block with a validated
+   * record shape; cab / FX are intentionally not decoded.
+   */
+  readonly ampParams: Am4AmpBlockValues | undefined;
+}
+
+/**
+ * Decode a parsed AM4 preset dump into its container-decoded form: unpack the
+ * chunk payloads to the 8,192-byte raw_patch, verify the CRC, Huffman-
+ * decompress the body, and extract the preset name, the four scene names, and
+ * the AMP block param values. Pure — no MIDI I/O.
+ *
+ * CRC / footer-XOR / Huffman-termination outcomes are reported via flags on
+ * the result (never thrown) so a caller can surface a corrupt dump usefully.
+ */
+export function decodeAm4PresetDump(parsed: ParsedPresetDump): Am4DecodedPreset {
+  const container = decodeAm4Container(parsed.chunkPayloads, parsed.footerPayload);
+  return {
+    ...container,
+    presetName: container.name,
+    ampParams: decodeAm4AmpBlock(container.decompressedBody, container.decompSize),
+  };
+}
+
+/**
+ * Convenience wrapper: parse one dump from raw wire bytes at `offset`, then
+ * container-decode it. Equivalent to
+ * `decodeAm4PresetDump(parsePresetDump(bytes, offset))`.
+ */
+export function decodeAm4PresetDumpBytes(bytes: Uint8Array, offset = 0): Am4DecodedPreset {
+  return decodeAm4PresetDump(parsePresetDump(bytes, offset));
 }
 
 function buildMessage(

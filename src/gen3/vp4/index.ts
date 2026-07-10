@@ -14,5 +14,15 @@ export {
   buildVp4Save,
   parseVp4WriteEcho,
   isVp4SaveAck,
+  buildVp4Frame,
   type Vp4WriteEcho,
 } from './setParam.js';
+export {
+  VP4_STRUCTURE_EFFECT_ID,
+  VP4_STRUCTURE_PARAM_ID,
+  TC_STRUCTURE_BLOB,
+  buildVp4GetStructureBlob,
+  parseVp4StructureBlob,
+  type Vp4ChainSlot,
+  type Vp4StructureBlob,
+} from './structureBlob.js';

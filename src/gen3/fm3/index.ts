@@ -1,4 +1,11 @@
 export { FM3_PARAMS, FM3_PARAMS_BY_FAMILY, FM3_FAMILIES } from './params.js';
+// Discrete-ordinal classification overlay (param firmware symbol -> maxOrdinal),
+// FM3 family-join: the enum-flow correction routed DISCRETE (sub 09 00).
+export {
+  FM3_FAMILY_JOIN_DISCRETE,
+  FM3_FAMILY_JOIN_PROVENANCE,
+  type Fm3FamilyJoinProvenance,
+} from './discreteOverlay.js';
 export {
   FM3_RANGES,
   FM3_RANGE_SECTIONS,

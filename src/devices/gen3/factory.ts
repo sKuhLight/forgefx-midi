@@ -40,16 +40,37 @@ import { listConceptKeysForDevice } from '../../core/protocol-generic/concept-ke
 import {
   createModernFractalCodec,
   AXE_FX_III_BLOCKS,
+  AXE_FX_III_MODEL_ID,
   resolveEffectId,
   GEN3_READ_ROSTERS,
+  III_ROUNDTRIP_DISCRETE,
   ampOrdinalsExposingParams,
 } from '../../gen3/axe-fx-iii/index.js';
+import { FM9_ROUNDTRIP_DISCRETE } from '../../gen3/fm9/index.js';
+import { FM3_FAMILY_JOIN_DISCRETE } from '../../gen3/fm3/index.js';
 import {
   VP4_MODEL_ID,
   buildVp4SetBypass,
   buildVp4Save,
   buildVp4SetParam,
 } from '../../gen3/vp4/index.js';
+
+/**
+ * Discrete-ordinal classification overlays, keyed by SysEx model byte. The III
+ * (0x10) and FM9 (0x12) each come from that device's OWN full hardware roundtrip
+ * sweep; the FM3 (0x11) is a family-join over those siblings by (family, SYMBOL).
+ * A param whose firmware symbol appears here routes DISCRETE (float32(ordinal),
+ * sub 09 00) bounded by its maxOrdinal instead of continuous — the device treats
+ * it as an ordinal and quantizes a continuous SET, so continuous stores the wrong
+ * value. Applied as a CLASSIFICATION overlay in `createModernCatalog`; no range
+ * value is overwritten, and symbols absent from a device's catalog are skipped.
+ * VP4 (0x14) has no overlay (its discrete SET wire shape is undecoded).
+ */
+const ROUNDTRIP_DISCRETE_BY_MODEL: Readonly<Record<number, Readonly<Record<string, number>>>> = {
+  [AXE_FX_III_MODEL_ID]: III_ROUNDTRIP_DISCRETE, // Axe-Fx III (0x10)
+  0x11: FM3_FAMILY_JOIN_DISCRETE, // FM3
+  0x12: FM9_ROUNDTRIP_DISCRETE, // FM9
+};
 import { createModernCatalog, type AxeFxIIIParam, type DeviceRangeTable } from './catalog.js';
 import { makeReader } from './reader.js';
 import { makeWriter } from './writer.js';
@@ -226,6 +247,12 @@ export function createModernFractalDescriptor(config: FractalModernConfig): Devi
     // the real front panel (DELAY_TIME, REVERB_PREDELAY, etc.). FM3/VP4 have no
     // wired range table yet, so they keep the catalog inference.
     deviceRanges: config.device_ranges,
+    // Discrete-ordinal classification overlay for this model byte (III/FM9 from
+    // each device's own hardware roundtrip; FM3 via sibling family-join). Params
+    // the enum paths missed but the device treats as ordinals route DISCRETE
+    // (sub 09 00) instead of continuous. VP4 (0x14) has no overlay entry. This
+    // is a classification overlay only — it never overwrites our range values.
+    roundtripDiscreteOrdinals: ROUNDTRIP_DISCRETE_BY_MODEL[config.model_byte],
   });
 
   // Grid devices (III/FM3/FM9) advertise a 2-D grid + multi-instance blocks;

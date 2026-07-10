@@ -18,6 +18,11 @@ export {
 export type { AxeFxIIIBlock, ConfidenceTag } from './blockTypes.js';
 export { PARAMS, PARAMS_BY_FAMILY, PARAM_BY_KEY, FAMILIES } from './params.js';
 export type { Unit, Param } from './params.js';
+
+// Discrete-ordinal classification overlay (param firmware symbol -> maxOrdinal).
+// Params the enum/range paths classify continuous but the device treats as
+// ORDINALS; routed DISCRETE (sub 09 00) so the device stores the right value.
+export { III_ROUNDTRIP_DISCRETE } from './discreteOverlay.js';
 export {
   AXE3_MONITOR_PARAMS,
   axe3MonitorParamsFor,

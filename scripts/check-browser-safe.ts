@@ -20,6 +20,7 @@ import { build } from 'esbuild';
 
 const ENTRIES = [
   'src/index.ts',
+  'src/cache/index.ts',
   'src/shared/index.ts',
   'src/core/index.ts',
   'src/am4/index.ts',

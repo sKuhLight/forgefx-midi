@@ -135,6 +135,8 @@ export {
   buildSetParameter,
   buildSetParameterContinuous,
   buildGetParameter,
+  buildRequestCurrentTypeName,
+  SUB_ACTION_GET_TYPE_NAME,
   buildSetParameterBypass,
   isSetGetParameterResponse,
   parseSetGetParameterResponse,

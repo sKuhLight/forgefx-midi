@@ -20,7 +20,7 @@ export {
 export type { DeviceModel } from './identify.js';
 export { resolveEffectId, FRACTAL_MODEL_BYTES } from './effectId.js';
 export { encode14, decode14, packValue16, unpackValue16 } from './septet16.js';
-export { displayToWire, wireToDisplay } from './displayScale.js';
+export { displayToWire, wireToDisplay, displayQuantum, withinDisplayQuantum } from './displayScale.js';
 export type { DisplayScale, DisplayToWireOptions } from './displayScale.js';
 export {
   packValue,

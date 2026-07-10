@@ -13,6 +13,7 @@ export {
   SCENE_MIDI_TYPE_ENUM,
   encode,
   decode,
+  internalFromDisplay,
   formatDisplay,
   roundDisplayValue,
   formatUnitSuffix,

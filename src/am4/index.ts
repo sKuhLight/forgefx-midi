@@ -52,6 +52,7 @@ export {
   AM4_MODEL_ID,
   buildSetFloatParam,
   buildSetParam,
+  buildSetRawIntRegister,
   buildSetParamNorm,
   buildNudgeParam,
   buildToggleBlockBypass,
@@ -235,6 +236,17 @@ export {
   am4ParamKeyForPid,
 } from './liveDecode.js';
 export type { Am4LiveDecodeResult } from './liveDecode.js';
+
+// Raw-integer MIDI-config register class — the global MIDI map + per-scene MIDI
+// transmit slots read back a literal integer (NOT a Q16 float), with 128 = the
+// "None"/unassigned sentinel on _cc CC-assignment registers (BUG-6/GAP-2).
+export {
+  RAW_INT_NONE_SENTINEL,
+  isRawIntRegister,
+  rawIntRegisterHasNone,
+  decodeRawIntRegister,
+  encodeRawIntRegister,
+} from './midiRegisters.js';
 
 // Tuner readout (block 0x0023) — DECODED from BigCapture (B2). Absolute float32
 // note/freq/cents/string values, not the normalized meter treatment.

@@ -1,6 +1,6 @@
 {
   "name": "forgefx-midi",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "description": "Fractal Audio device codec + catalogs for ForgeFX (gen1, Axe-Fx II, gen3 FM3/FM9/Axe-Fx III/VP4, AM4)",
   "license": "Apache-2.0",
   "type": "module",
@@ -79,11 +79,12 @@
   ],
   "scripts": {
     "build": "tsx scripts/gen-version.ts && tsc -p tsconfig.json && tsx scripts/copy-build-assets.ts",
-    "test": "tsx test/run-all.ts && tsx scripts/check-browser-safe.ts && tsx scripts/export-catalog.ts --check",
+    "test": "tsx test/run-all.ts && tsx scripts/check-browser-safe.ts && tsx scripts/export-catalog.ts --check && tsx scripts/cache-check.ts",
     "check:browser": "tsx scripts/check-browser-safe.ts",
     "prepack": "npm run build",
     "catalog:export": "tsx scripts/export-catalog.ts",
-    "catalog:check": "tsx scripts/export-catalog.ts --check"
+    "catalog:check": "tsx scripts/export-catalog.ts --check",
+    "cache:check": "tsx scripts/cache-check.ts"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

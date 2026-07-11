@@ -2,6 +2,9 @@ node_modules/
 dist/
 *.tgz
 
+# Claude Code session git worktrees (per-session .wt-* checkouts)
+.wt-*/
+
 # Claude Code local config (private: Plane MCP, personal settings)
 .mcp.json
 CLAUDE.local.md

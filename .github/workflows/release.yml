@@ -1,0 +1,55 @@
+name: release
+
+# Stage 1 of the cross-repo release chain (forgefx-midi → ForgeFX → Axis → axisapp.live).
+# Tag a version (vX.Y.Z) to run the FULL gate, publish a GitHub release with the packed
+# tarball, and notify ForgeFX CI that a new codec release exists so it re-validates the
+# server against it. See docs/RELEASING.md.
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: gate + publish + notify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      # Full gate — build FIRST (the devices-smoke suite reads descriptors from dist/),
+      # then the complete test chain, exactly like ci.yml.
+      - run: npm ci
+      - run: npm run build
+      - run: npm test
+      - name: Pack tarball (forgefx-midi-<version>.tgz)
+        run: npm pack
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: false
+          name: forgefx-midi ${{ github.ref_name }}
+          generate_release_notes: true
+          files: '*.tgz'
+      # Cross-repo dispatch: tell ForgeFX CI a new codec release landed so it re-validates
+      # the server against codec default-branch HEAD (which now contains this tagged release).
+      # Soft-gated: if STACK_DISPATCH_TOKEN is unset, print a notice and succeed (same pattern
+      # as Axis deploy-remote's gate) so forks / unconfigured repos never see a red X.
+      - name: Notify ForgeFX (codec-released)
+        env:
+          TOKEN: ${{ secrets.STACK_DISPATCH_TOKEN }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "STACK_DISPATCH_TOKEN not configured — skipping ForgeFX notify."
+            exit 0
+          fi
+          VERSION="$(node -p "require('./package.json').version")"
+          curl -sf -X POST \
+            -H "Authorization: Bearer $TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/sKuhLight/ForgeFX/dispatches \
+            -d "{\"event_type\":\"codec-released\",\"client_payload\":{\"version\":\"$VERSION\",\"tag\":\"${{ github.ref_name }}\",\"sha\":\"${{ github.sha }}\"}}"

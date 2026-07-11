@@ -17,8 +17,46 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run build
       - run: npm test
+
+  # ADVISORY, NOT A GATE (continue-on-error): the fixed cross-repo change chain lands
+  # protocol facts HERE FIRST, so a breaking codec change is EXPECTED to fail the ForgeFX
+  # server suite until ForgeFX ripples the change up. This job is early-warning signal —
+  # it tells us the downstream server still builds/typechecks/tests against codec HEAD —
+  # but it must never block a legitimate protocol-first change. Checks out ForgeFX's
+  # default branch and builds the codec + server side by side (the server links the codec
+  # as a sibling file: dependency).
+  downstream-forgefx:
+    name: "downstream: ForgeFX server vs this codec (advisory)"
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: forgefx-midi
+      - uses: actions/checkout@v4
+        with:
+          repository: sKuhLight/ForgeFX
+          path: ForgeFX
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            forgefx-midi/package-lock.json
+            ForgeFX/server/package-lock.json
+      - name: Build codec (this checkout — server exports resolve to dist/)
+        working-directory: forgefx-midi
+        run: |
+          npm ci
+          npm run build
+      - name: ForgeFX server typecheck + tests against codec HEAD
+        working-directory: ForgeFX/server
+        run: |
+          npm ci
+          npm run typecheck
+          npm test

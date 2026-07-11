@@ -33,3 +33,15 @@ is part of *their* release checklists, not this one.
 - `STACK_DISPATCH_TOKEN` — a PAT with `repo` scope on `sKuhLight/ForgeFX`, used by the
   notify step. If unset, the notify step prints a notice and succeeds (the release still
   publishes).
+
+## Automation
+
+- **version-guard** (`ci.yml`) enforces a version bump on every non-docs PR: unless the PR
+  touches only `*.md`, `package.json`'s version must be greater than the base branch's
+  (`npm version X.Y.Z --no-git-tag-version` — bump the lockfile too). Docs-only PRs pass
+  without a bump.
+- **After a release**, ForgeFX automatically receives a pin-bump PR (its `codec-bump.yml`
+  reacts to our `codec-released` dispatch and bumps `stack.lock.json → forgefx-midi.ref`).
+  Merging that PR adopts the new codec pin; whether it also becomes a ForgeFX *release* is
+  a human decision — see the decision rule in ForgeFX's `docs/RELEASING.md` (wire/API- or
+  catalog-affecting change → release; internal-only → the pin rides the next release).

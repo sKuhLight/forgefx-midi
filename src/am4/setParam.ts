@@ -780,6 +780,60 @@ const LONG_READ_RESPONSE_HDR4 = 0x0028;
 export const LONG_READ_BYPASS_FLAG_BYTE = 22;
 
 /**
+ * AM4 per-block ACTIVE-CHANNEL read register.
+ *
+ * The channel-SELECT register `0x07D2` (see `<block>.channel` in `params.ts`)
+ * is write-only for *switching* — reading it back returns derived/cached
+ * firmware state, not a clean 0..3 index (FORGEFXMID-16). The RELIABLE source
+ * of the current channel is a SEPARATE register `0x07DD`: a long read
+ * (`action=0x0D`) of `(blockPidLow, 0x07DD)` returns a block-status structure
+ * whose **byte 50** (of the 8→7-unpacked payload) is the active channel index
+ * (0=A … 3=D). Decoded byte-exact from `Channels.pcapng` (AM4-Edit swap A→B→C→D→A
+ * both in-app and from the front panel) — see docs/AM4-CHANNEL-SWITCH-DECODE.md.
+ * Verified per-block for amp/drive/reverb/enhancer; other channel-bearing blocks
+ * follow the same `(pidLow, 0x07DD)` pattern.
+ */
+export const AM4_CHANNEL_STATUS_PID_HIGH = 0x07dd;
+/** Byte offset of the active-channel index in the unpacked 0x07DD payload. */
+export const AM4_CHANNEL_STATUS_INDEX_BYTE = 50;
+
+/**
+ * Build a long read (`action=0x0D`) of a block's active-channel status register
+ * (`pidHigh=0x07DD`). Parse the response with `parseActiveChannelResponse`.
+ *
+ * @param blockPidLow the block's own pidLow (e.g. amp=0x3A, drive=0x76). Use the
+ *   `.pidLow` of that block's catalog params, or `BLOCK_TYPE_VALUES[block]`.
+ */
+export function buildReadActiveChannel(blockPidLow: number): number[] {
+  return buildReadParam(
+    { pidLow: blockPidLow, pidHigh: AM4_CHANNEL_STATUS_PID_HIGH },
+    READ_TYPE_LONG,
+  );
+}
+
+/**
+ * Parse a `0x07DD` active-channel long-read response → the current channel
+ * index (0..3), or `null` if the frame is not a well-formed `0x07DD` response
+ * or the decoded index is out of range. Never throws — safe to call in a poll
+ * loop on possibly-truncated/interleaved input.
+ */
+export function parseActiveChannelResponse(bytes: readonly number[]): number | null {
+  const b = bytes;
+  if (b.length < 18) return null;
+  if (b[0] !== SYSEX_START || b[b.length - 1] !== SYSEX_END) return null;
+  for (let i = 0; i < FRACTAL_MFR.length; i++) if (b[1 + i] !== FRACTAL_MFR[i]) return null;
+  if (b[4] !== AM4_MODEL_ID || b[5] !== FUNC_PARAM_RW) return null;
+  const pidHigh = b[8] | (b[9] << 7);
+  if (pidHigh !== AM4_CHANNEL_STATUS_PID_HIGH) return null;
+  const rawLen = b[14] | (b[15] << 7);
+  if (rawLen <= AM4_CHANNEL_STATUS_INDEX_BYTE) return null;
+  const wire = new Uint8Array(b.slice(16, b.length - 2));
+  const raw = unpackValueChunked(wire, rawLen);
+  const idx = raw[AM4_CHANNEL_STATUS_INDEX_BYTE];
+  return idx >= 0 && idx <= 3 ? idx : null;
+}
+
+/**
  * Denominator the AM4 uses to encode internal floats into the u32 read-
  * response field. **Empirically pinned at 65534 (= 0xFFFE = 2¹⁶ - 2)
  * by +** across 4 byte-exact

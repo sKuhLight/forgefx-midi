@@ -245,12 +245,21 @@ export {
 // Editor block-editor UI layouts (pages/tabs + labels + param mapping),
 // keyed by catalog family. Powers editor-authentic block-editor tabs incl.
 // Setup (Global) / Controllers / Modifier. See `layouts.generated.ts`.
+export { AXE3_LAYOUTS } from './layouts.generated.js';
 export {
-  AXE3_LAYOUTS,
-  type Axe3BlockLayout,
-  type Axe3LayoutPage,
-  type Axe3LayoutControl,
-} from './layouts.generated.js';
+  normalizeWidget,
+  EDITOR_WIDGET_KINDS,
+  type DeviceEditorLayouts,
+  type EditorBlockLayout,
+  type EditorLayoutVariant,
+  type EditorLayoutPage,
+  type EditorLayoutRow,
+  type EditorLayoutControl,
+  type EditorControlPlacement,
+  type EditorCrossBlockRef,
+  type EditorWidgetKind,
+  type EditorFwRange,
+} from '../../editorLayouts.js';
 
 // Live telemetry (tuner / output meters / CPU) + the FM3-validated tempo
 // write. RE'd from FM3-Edit captures, live-validated on FM3 hardware; golden

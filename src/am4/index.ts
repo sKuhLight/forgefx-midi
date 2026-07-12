@@ -290,3 +290,22 @@ export {
   paramKey,
   resolveValue,
 } from './shared/paramHelpers.js';
+
+// Editor block-editor UI layouts (v2 schema): pages/tabs → rows → controls,
+// keyed by catalog family; paramId joins the editor parameterName to the AM4
+// cache-id resolver. See src/editorLayouts.ts.
+export { AM4_LAYOUTS } from './editorLayouts.generated.js';
+export {
+  normalizeWidget,
+  EDITOR_WIDGET_KINDS,
+  type DeviceEditorLayouts,
+  type EditorBlockLayout,
+  type EditorLayoutVariant,
+  type EditorLayoutPage,
+  type EditorLayoutRow,
+  type EditorLayoutControl,
+  type EditorControlPlacement,
+  type EditorCrossBlockRef,
+  type EditorWidgetKind,
+  type EditorFwRange,
+} from '../editorLayouts.js';

@@ -20,12 +20,21 @@ export {
   type Fm9EffectIdEntry,
   type Fm9EffectAddressing,
 } from './effectIds.js';
+export { FM9_LAYOUTS } from './layouts.generated.js';
 export {
-  FM9_LAYOUTS,
-  type Fm9BlockLayout,
-  type Fm9LayoutPage,
-  type Fm9LayoutControl,
-} from './layouts.generated.js';
+  normalizeWidget,
+  EDITOR_WIDGET_KINDS,
+  type DeviceEditorLayouts,
+  type EditorBlockLayout,
+  type EditorLayoutVariant,
+  type EditorLayoutPage,
+  type EditorLayoutRow,
+  type EditorLayoutControl,
+  type EditorControlPlacement,
+  type EditorCrossBlockRef,
+  type EditorWidgetKind,
+  type EditorFwRange,
+} from '../../editorLayouts.js';
 export {
   FM9_MONITOR_PARAMS,
   fm9MonitorParamsFor,

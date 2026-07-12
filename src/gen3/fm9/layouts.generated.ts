@@ -19,7 +19,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Cab",
     "family": "CABINET",
     "variants": [
-      { "name": "Cabinet", "value": null, "pages": [
+      { "name": "0", "value": "0", "pages": [
         { "name": "Cab", "pageNum": 0, "fw": {"lt":"5,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"CAB 1","paramName":"CABINET_LABEL1","paramId":65288,"widget":"label","rawWidget":"labelBold","placement":{"positionExact":"315,63"}},
@@ -64,7 +64,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Cab", "pageNum": 0, "fw": {"gtet":"5,00"}, "value": "0", "selectorParamName": "CABINET_MODE", "rows": [
+        { "name": "Cab", "pageNum": 0, "fw": {"gtet":"5,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"CAB 1","paramName":"CABINET_LABEL1","paramId":65288,"widget":"label","rawWidget":"labelBold","placement":{"positionExact":"315,63"}},
             {"label":"Picker","paramName":"CABINET_PICKER1","paramId":65280,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"376,63"}},
@@ -108,7 +108,177 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Cab", "pageNum": 0, "fw": {"gtet":"5,00"}, "value": "1", "selectorParamName": "CABINET_MODE", "rows": [
+        { "name": "Preamp", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Preamp Type","paramName":"CABINET_PRETYPE","paramId":43,"widget":"dropdown","rawWidget":"dropdown1p5"},
+            {"label":"Preamp Mode","paramName":"CABINET_OVERSAMPLE","paramId":47,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"435,50"}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Drive","paramName":"CABINET_DRIVE","paramId":33,"widget":"knob","rawWidget":"knob"},
+            {"label":"Saturation","paramName":"CABINET_BIAS","paramId":34,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"VU","paramName":"CABINET_VUMETER","paramId":61,"widget":"meter","rawWidget":"meterVuVert"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"TONE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+            {"label":"Bass","paramName":"CABINET_BASS","paramId":44,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Mid","paramName":"CABINET_MID","paramId":45,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Treble","paramName":"CABINET_TREBLE","paramId":46,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":3}},
+            {"label":"FILTERS","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"}},
+            {"label":"Low\nCut","paramName":"CABINET_LOCUT","paramId":38,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Low Cut\nSlope","paramName":"CABINET_PRELOSLOPE","paramId":82,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":5}},
+            {"label":"High\nCut","paramName":"CABINET_HICUT","paramId":39,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+            {"label":"High Cut\nSlope","paramName":"CABINET_PREHISLOPE","paramId":83,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":7}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"CABINET_LEVEL","paramId":28,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"CABINET_PAN","paramId":29,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nMode","paramName":"CABINET_INPUTSEL","paramId":42,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass\nMode","paramName":"CABINET_BYPASSMODE","paramId":30,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Room/Air", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Room\nLevel","paramName":"CABINET_ROOMMIX","paramId":35,"widget":"knob","rawWidget":"knob"},
+            {"label":"Room\nSize","paramName":"CABINET_ROOMSIZE","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Room\nShape","paramName":"CABINET_ROOMSHAPE","paramId":56,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Floor\nReflections","paramName":"CABINET_FLOORLVL","paramId":53,"widget":"knob","rawWidget":"knob"},
+            {"label":"Room\nDiffusion","paramName":"CABINET_DIFFUSION","paramId":59,"widget":"knob","rawWidget":"knob"},
+            {"label":"LF\nDamping","paramName":"CABINET_LFDAMPING","paramId":57,"widget":"knob","rawWidget":"knob"},
+            {"label":"HF\nDamping","paramName":"CABINET_HFDAMPING","paramId":58,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mic\nSpacing","paramName":"CABINET_MICSPACE","paramId":37,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Air","paramName":"CABINET_AIR","paramId":54,"widget":"knob","rawWidget":"knob"},
+            {"label":"Frequency","paramName":"CABINET_AIRFREQ","paramId":55,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Proximity\nFrequency","paramName":"CABINET_PROXFREQ","paramId":41,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"CABINET_LEVEL","paramId":28,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"CABINET_PAN","paramId":29,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nMode","paramName":"CABINET_INPUTSEL","paramId":42,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass\nMode","paramName":"CABINET_BYPASSMODE","paramId":30,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Align", "pageNum": 3, "fw": {"lt":"5,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_cab","placement":{"positionExact":"305,18"}},
+            {"label":"Bank","paramName":"CABINET_BANK1","paramId":0,"widget":"dropdown","rawWidget":"dropdownCabBank","placement":{"positionExact":"311,223"}},
+            {"label":"Type","paramName":"CABINET_TYPE1","paramId":4,"widget":"readout","rawWidget":"readoutCabNumber","placement":{"positionExact":"430,223"}},
+            {"label":"Name","paramName":"CABINET_NAME1","paramId":65284,"widget":"label","rawWidget":"labelCabName","placement":{"positionExact":"311,253"}},
+            {"label":"Picker","paramName":"CABINET_PICKER1","paramId":65280,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"326,305"}},
+            {"label":"M","paramName":"CABINET_BTN_MUTE1","paramId":65292,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"330,344"}},
+            {"label":"S","paramName":"CABINET_BTN_SOLO1","paramId":65296,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"366,344"}},
+            {"label":"Distance 1","paramName":"CABINET_DELAY1","paramId":16,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"416,282"}},
+            {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"518,245"}},
+            {"label":"Bank","paramName":"CABINET_BANK2","paramId":1,"widget":"dropdown","rawWidget":"dropdownCabBank","placement":{"positionExact":"526,223"}},
+            {"label":"Type","paramName":"CABINET_TYPE2","paramId":5,"widget":"readout","rawWidget":"readoutCabNumber","placement":{"positionExact":"645,223"}},
+            {"label":"Name","paramName":"CABINET_NAME2","paramId":65285,"widget":"label","rawWidget":"labelCabName","placement":{"positionExact":"526,253"}},
+            {"label":"Picker","paramName":"CABINET_PICKER2","paramId":65281,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"541,305"}},
+            {"label":"M","paramName":"CABINET_BTN_MUTE2","paramId":65293,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"545,344"}},
+            {"label":"S","paramName":"CABINET_BTN_SOLO2","paramId":65297,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"581,344"}},
+            {"label":"Distance 2","paramName":"CABINET_DELAY2","paramId":17,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"631,282"}},
+            {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"733,245"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"CABINET_LEVEL","paramId":28,"widget":"knob","rawWidget":"knobCompact"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"CABINET_PAN","paramId":29,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,185"}},
+            {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Align", "pageNum": 3, "fw": {"gtet":"5,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_cab","placement":{"positionExact":"305,18"},"fw":{"lt":"11,00"}},
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_cab_mm","placement":{"positionExact":"305,18"},"fw":{"gtet":"11,00"}},
+            {"label":"Bank","paramName":"CABINET_BANK1","paramId":0,"widget":"dropdown","rawWidget":"dropdownCabBank","placement":{"positionExact":"311,223"}},
+            {"label":"Type","paramName":"CABINET_TYPE1","paramId":4,"widget":"readout","rawWidget":"readoutCabNumber","placement":{"positionExact":"430,223"}},
+            {"label":"Name","paramName":"CABINET_NAME1","paramId":65284,"widget":"label","rawWidget":"labelCabName","placement":{"positionExact":"311,253"}},
+            {"label":"Picker","paramName":"CABINET_PICKER1","paramId":65280,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"326,305"}},
+            {"label":"M","paramName":"CABINET_BTN_MUTE1","paramId":65292,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"330,344"}},
+            {"label":"S","paramName":"CABINET_BTN_SOLO1","paramId":65296,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"366,344"}},
+            {"label":"Distance 1","paramName":"CABINET_DELAY1","paramId":16,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"416,282"},"fw":{"lt":"11,00"}},
+            {"label":"Delay 1","paramName":"CABINET_DELAY1","paramId":16,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"416,282"},"fw":{"gtet":"11,00"}},
+            {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"518,223"}},
+            {"label":"Bank","paramName":"CABINET_BANK2","paramId":1,"widget":"dropdown","rawWidget":"dropdownCabBank","placement":{"positionExact":"526,223"}},
+            {"label":"Type","paramName":"CABINET_TYPE2","paramId":5,"widget":"readout","rawWidget":"readoutCabNumber","placement":{"positionExact":"645,223"}},
+            {"label":"Name","paramName":"CABINET_NAME2","paramId":65285,"widget":"label","rawWidget":"labelCabName","placement":{"positionExact":"526,253"}},
+            {"label":"Picker","paramName":"CABINET_PICKER2","paramId":65281,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"541,305"}},
+            {"label":"M","paramName":"CABINET_BTN_MUTE2","paramId":65293,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"545,344"}},
+            {"label":"S","paramName":"CABINET_BTN_SOLO2","paramId":65297,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"581,344"}},
+            {"label":"Distance 2","paramName":"CABINET_DELAY2","paramId":17,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"631,282"},"fw":{"lt":"11,00"}},
+            {"label":"Delay 2","paramName":"CABINET_DELAY2","paramId":17,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"631,282"},"fw":{"gtet":"11,00"}},
+            {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"733,223"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"CABINET_LEVEL","paramId":28,"widget":"knob","rawWidget":"knobCompact"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"CABINET_PAN","paramId":29,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,185"}},
+            {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "1", "value": "1", "pages": [
+        { "name": "Cab", "pageNum": 0, "fw": {"lt":"5,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"CAB 1","paramName":"CABINET_LABEL1","paramId":65288,"widget":"label","rawWidget":"labelBold","placement":{"positionExact":"315,63"}},
+            {"label":"Picker","paramName":"CABINET_PICKER1","paramId":65280,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"376,63"}},
+            {"label":"M","paramName":"CABINET_BTN_MUTE1","paramId":65292,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"455,63"}},
+            {"label":"S","paramName":"CABINET_BTN_SOLO1","paramId":65296,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"491,63"}},
+            {"label":"Bank","paramName":"CABINET_BANK1","paramId":0,"widget":"dropdown","rawWidget":"dropdownCabBank","placement":{"positionExact":"321,105"}},
+            {"label":"Type","paramName":"CABINET_TYPE1","paramId":4,"widget":"readout","rawWidget":"readoutCabNumber","placement":{"positionExact":"440,105"}},
+            {"label":"Name","paramName":"CABINET_NAME1","paramId":65284,"widget":"label","rawWidget":"labelCabName","placement":{"positionExact":"321,135"}},
+            {"label":"IR Length","paramName":"CABINET_LENGTH1","paramId":70,"widget":"dropdown","rawWidget":"dropdownLeftLabelLong","placement":{"positionExact":"321,165"}},
+            {"label":"Level","paramName":"CABINET_LEVEL1","paramId":8,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Pan","paramName":"CABINET_PAN1","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Low Cut","paramName":"CABINET_LOCUT1","paramId":62,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"High Cut","paramName":"CABINET_HICUT1","paramId":66,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+            {"label":"Low Slope","paramName":"CABINET_LOSLOPE1","paramId":74,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":7}},
+            {"label":"High Slope","paramName":"CABINET_HISLOPE1","paramId":78,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":8}},
+            {"label":"Proximity","paramName":"CABINET_PROXIMITY1","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":9}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"CAB 2","paramName":"CABINET_LABEL2","paramId":65289,"widget":"label","rawWidget":"labelBold","placement":{"positionExact":"315,243"}},
+            {"label":"Picker","paramName":"CABINET_PICKER2","paramId":65281,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"376,243"}},
+            {"label":"M","paramName":"CABINET_BTN_MUTE2","paramId":65293,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"455,243"}},
+            {"label":"S","paramName":"CABINET_BTN_SOLO2","paramId":65297,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"491,243"}},
+            {"label":"Bank","paramName":"CABINET_BANK2","paramId":1,"widget":"dropdown","rawWidget":"dropdownCabBank","placement":{"positionExact":"321,285"}},
+            {"label":"Type","paramName":"CABINET_TYPE2","paramId":5,"widget":"readout","rawWidget":"readoutCabNumber","placement":{"positionExact":"440,285"}},
+            {"label":"Name","paramName":"CABINET_NAME2","paramId":65285,"widget":"label","rawWidget":"labelCabName","placement":{"positionExact":"321,315"}},
+            {"label":"IR Length","paramName":"CABINET_LENGTH2","paramId":71,"widget":"dropdown","rawWidget":"dropdownLeftLabelLong","placement":{"positionExact":"321,345"}},
+            {"label":"Level","paramName":"CABINET_LEVEL2","paramId":9,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Pan","paramName":"CABINET_PAN2","paramId":13,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Low Cut","paramName":"CABINET_LOCUT2","paramId":63,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"High Cut","paramName":"CABINET_HICUT2","paramId":67,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+            {"label":"Low Slope","paramName":"CABINET_LOSLOPE2","paramId":75,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":7}},
+            {"label":"High Slope","paramName":"CABINET_HISLOPE2","paramId":79,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":8}},
+            {"label":"Proximity","paramName":"CABINET_PROXIMITY2","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":9}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"CABINET_LEVEL","paramId":28,"widget":"knob","rawWidget":"knobCompact"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"CABINET_PAN","paramId":29,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,185"}},
+            {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Cab", "pageNum": 0, "fw": {"gtet":"5,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"CAB 1","paramName":"CABINET_LABEL1","paramId":65288,"widget":"label","rawWidget":"labelBold","placement":{"positionExact":"303,25"}},
             {"label":"","paramName":"CABINET_DYNACAB_TYPE1","paramId":85,"widget":"dropdown","rawWidget":"dropdownCabDyna","placement":{"positionExact":"359,25"}},
@@ -243,39 +413,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Align", "pageNum": 3, "fw": {"gtet":"5,00"}, "value": "0", "selectorParamName": "CABINET_MODE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_cab","placement":{"positionExact":"305,18"},"fw":{"lt":"11,00"}},
-            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_cab_mm","placement":{"positionExact":"305,18"},"fw":{"gtet":"11,00"}},
-            {"label":"Bank","paramName":"CABINET_BANK1","paramId":0,"widget":"dropdown","rawWidget":"dropdownCabBank","placement":{"positionExact":"311,223"}},
-            {"label":"Type","paramName":"CABINET_TYPE1","paramId":4,"widget":"readout","rawWidget":"readoutCabNumber","placement":{"positionExact":"430,223"}},
-            {"label":"Name","paramName":"CABINET_NAME1","paramId":65284,"widget":"label","rawWidget":"labelCabName","placement":{"positionExact":"311,253"}},
-            {"label":"Picker","paramName":"CABINET_PICKER1","paramId":65280,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"326,305"}},
-            {"label":"M","paramName":"CABINET_BTN_MUTE1","paramId":65292,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"330,344"}},
-            {"label":"S","paramName":"CABINET_BTN_SOLO1","paramId":65296,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"366,344"}},
-            {"label":"Distance 1","paramName":"CABINET_DELAY1","paramId":16,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"416,282"},"fw":{"lt":"11,00"}},
-            {"label":"Delay 1","paramName":"CABINET_DELAY1","paramId":16,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"416,282"},"fw":{"gtet":"11,00"}},
-            {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"518,223"}},
-            {"label":"Bank","paramName":"CABINET_BANK2","paramId":1,"widget":"dropdown","rawWidget":"dropdownCabBank","placement":{"positionExact":"526,223"}},
-            {"label":"Type","paramName":"CABINET_TYPE2","paramId":5,"widget":"readout","rawWidget":"readoutCabNumber","placement":{"positionExact":"645,223"}},
-            {"label":"Name","paramName":"CABINET_NAME2","paramId":65285,"widget":"label","rawWidget":"labelCabName","placement":{"positionExact":"526,253"}},
-            {"label":"Picker","paramName":"CABINET_PICKER2","paramId":65281,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"541,305"}},
-            {"label":"M","paramName":"CABINET_BTN_MUTE2","paramId":65293,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"545,344"}},
-            {"label":"S","paramName":"CABINET_BTN_SOLO2","paramId":65297,"widget":"button","rawWidget":"btnSquare","placement":{"positionExact":"581,344"}},
-            {"label":"Distance 2","paramName":"CABINET_DELAY2","paramId":17,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"631,282"},"fw":{"lt":"11,00"}},
-            {"label":"Delay 2","paramName":"CABINET_DELAY2","paramId":17,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"631,282"},"fw":{"gtet":"11,00"}},
-            {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"733,223"}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Level","paramName":"CABINET_LEVEL","paramId":28,"widget":"knob","rawWidget":"knobCompact"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Balance","paramName":"CABINET_PAN","paramId":29,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,185"}},
-            {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene"},
-          ] }
-        ] },
-        { "name": "Align", "pageNum": 3, "fw": {"gtet":"5,00"}, "value": "1", "selectorParamName": "CABINET_MODE", "rows": [
+        { "name": "Align", "pageNum": 3, "fw": {"gtet":"5,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_cab","placement":{"positionExact":"305,18"},"fw":{"lt":"11,00"}},
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_cab_mm","placement":{"positionExact":"305,18"},"fw":{"gtet":"11,00"}},
@@ -7321,8 +7459,8 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Filter",
     "family": "FILTER",
     "variants": [
-      { "name": "Filter", "value": null, "pages": [
-        { "name": "Filter", "pageNum": 0, "value": "0,1,2,3,4,5,6,7,8,9,10,11", "selectorParamName": "FILTER_TYPE", "rows": [
+      { "name": "0,1,2,3,4,5,6,7,8,9,10,11", "value": "0,1,2,3,4,5,6,7,8,9,10,11", "pages": [
+        { "name": "Filter", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"315,30"}},
             {"label":"Order","paramName":"FILTER_ORDER","paramId":7,"widget":"dropdown","rawWidget":"dropdownCompact3","placement":{"positionExact":"305,230"}},
@@ -7346,7 +7484,55 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Balance","paramName":"FILTER_BAL","paramId":5,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,38"}},
           ] }
         ] },
-        { "name": "Filter", "pageNum": 0, "value": "12,13", "selectorParamName": "FILTER_TYPE", "rows": [
+        { "name": "LFO", "pageNum": 1, "fw": {"lt":"8,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"315,30"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":16,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"305,230"}},
+            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":17,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"397,230"}},
+            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"489,230"}},
+            {"label":"Duty","paramName":"FILTER_LFODUTY","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"581,230"}},
+            {"label":"Quantize","paramName":"FILTER_QUANTIZE","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"673,230"}},
+            {"label":"Mod\nFrequency","paramName":"FILTER_MODFREQ","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"765,230"}},
+            {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"886,230"}},
+            {"label":"Left Pan","paramName":"FILTER_PANL","paramId":9,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"901,230"}},
+            {"label":"Right Pan","paramName":"FILTER_PANR","paramId":10,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"993,230"}},
+            {"label":"Phase Invert","paramName":"FILTER_PHASE","paramId":11,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"1085,230"}},
+            {"label":"Bypass\nMode","paramName":"FILTER_BYPASSMODE","paramId":6,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"1179,230"}},
+            {"label":"Scene\nIgnore","paramName":"FILTER_SCENEIGNORE","paramId":23,"widget":"button","rawWidget":"btnIgnoreScene","placement":{"positionExact":"1104,360"},"fw":{"gtet":"2,03"}},
+            {"label":"Bypass","paramName":"FILTER_BYPASS","paramId":8,"widget":"button","rawWidget":"btnBypass","placement":{"positionExact":"1188,360"}},
+            {"label":"Mix","paramName":"FILTER_MIX","paramId":36,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"991,38"},"fw":{"gtet":"8,01"}},
+            {"label":"Level","paramName":"FILTER_LEVEL","paramId":4,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1085,38"}},
+            {"label":"Balance","paramName":"FILTER_BAL","paramId":5,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,38"}},
+          ] }
+        ] },
+        { "name": "Modulation", "pageNum": 1, "fw": {"gtet":"8,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"315,30"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":16,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"305,230"}},
+            {"label":"RANGE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"400,209"}},
+            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"397,230"}},
+            {"label":"Mod\nFrequency","paramName":"FILTER_MODFREQ","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"489,230"}},
+            {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"584,209"}},
+            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":17,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"581,230"}},
+            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"673,230"}},
+            {"label":"Tempo","paramName":"FILTER_TEMPO","paramId":35,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"765,230"}},
+            {"label":"Duty","paramName":"FILTER_LFODUTY","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"857,230"}},
+            {"label":"Quantize","paramName":"FILTER_QUANTIZE","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"949,230"}},
+            {"label":"Bypass\nMode","paramName":"FILTER_BYPASSMODE","paramId":6,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"1179,230"}},
+            {"label":"Scene\nIgnore","paramName":"FILTER_SCENEIGNORE","paramId":23,"widget":"button","rawWidget":"btnIgnoreScene","placement":{"positionExact":"1104,360"}},
+            {"label":"Bypass","paramName":"FILTER_BYPASS","paramId":8,"widget":"button","rawWidget":"btnBypass","placement":{"positionExact":"1188,360"}},
+            {"label":"Mix","paramName":"FILTER_MIX","paramId":36,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"991,38"}},
+            {"label":"Level","paramName":"FILTER_LEVEL","paramId":4,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1085,38"}},
+            {"label":"Balance","paramName":"FILTER_BAL","paramId":5,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,38"}},
+          ] }
+        ] }
+      ] },
+      { "name": "12,13", "value": "12,13", "pages": [
+        { "name": "Filter", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"315,30"}},
             {"label":"Delay Time","paramName":"FILTER_COMBTIME","paramId":14,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"397,230"}},
@@ -7367,8 +7553,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Level","paramName":"FILTER_LEVEL","paramId":4,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1085,38"}},
             {"label":"Balance","paramName":"FILTER_BAL","paramId":5,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,38"}},
           ] }
-        ] },
-        { "name": "Filter", "pageNum": 0, "value": "14", "selectorParamName": "FILTER_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "14", "value": "14", "pages": [
+        { "name": "Filter", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"315,30"}},
             {"label":"Order","paramName":"FILTER_APORDER","paramId":22,"widget":"dropdown","rawWidget":"dropdownCompact3","placement":{"positionExact":"305,230"}},
@@ -7391,7 +7579,32 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Balance","paramName":"FILTER_BAL","paramId":5,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,38"}},
           ] }
         ] },
-        { "name": "Filter", "pageNum": 0, "value": "15,17", "selectorParamName": "FILTER_TYPE", "rows": [
+        { "name": "Modulation", "pageNum": 1, "fw": {"gtet":"8,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"315,30"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":16,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"305,230"}},
+            {"label":"RANGE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"400,209"}},
+            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"397,230"}},
+            {"label":"Mod\nFrequency","paramName":"FILTER_MODFREQ","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"489,230"}},
+            {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"584,209"}},
+            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":17,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"581,230"}},
+            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"673,230"}},
+            {"label":"Tempo","paramName":"FILTER_TEMPO","paramId":35,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"765,230"}},
+            {"label":"Duty","paramName":"FILTER_LFODUTY","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"857,230"}},
+            {"label":"Quantize","paramName":"FILTER_QUANTIZE","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"949,230"}},
+            {"label":"Bypass\nMode","paramName":"FILTER_BYPASSMODE","paramId":6,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"1179,230"}},
+            {"label":"Scene\nIgnore","paramName":"FILTER_SCENEIGNORE","paramId":23,"widget":"button","rawWidget":"btnIgnoreScene","placement":{"positionExact":"1104,360"}},
+            {"label":"Bypass","paramName":"FILTER_BYPASS","paramId":8,"widget":"button","rawWidget":"btnBypass","placement":{"positionExact":"1188,360"}},
+            {"label":"Mix","paramName":"FILTER_MIX","paramId":36,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"991,38"}},
+            {"label":"Level","paramName":"FILTER_LEVEL","paramId":4,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1085,38"}},
+            {"label":"Balance","paramName":"FILTER_BAL","paramId":5,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,38"}},
+          ] }
+        ] }
+      ] },
+      { "name": "15,17", "value": "15,17", "pages": [
+        { "name": "Filter", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mode","paramName":"FILTER_EVFTYPE","paramId":24,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
             {"label":"Peak","paramName":"FILTER_EVFQ","paramId":25,"widget":"knob","rawWidget":"knob","placement":{"col":1},"fw":{"lt":"8,01"}},
@@ -7419,8 +7632,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Level","paramName":"FILTER_LEVEL","paramId":4,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1085,38"}},
             {"label":"Balance","paramName":"FILTER_BAL","paramId":5,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,38"}},
           ] }
-        ] },
-        { "name": "Filter", "pageNum": 0, "value": "16", "selectorParamName": "FILTER_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "16", "value": "16", "pages": [
+        { "name": "Filter", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mode","paramName":"FILTER_EVFTYPE","paramId":24,"widget":"dropdown","rawWidget":"dropdown1"},
             {"label":"Resonance","paramName":"FILTER_EVFQ","paramId":25,"widget":"knob","rawWidget":"knob"},
@@ -7441,75 +7656,6 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
           ] },
           { "section": "parameters", "controls": [
             {"label":"Mix","paramName":"FILTER_MIX","paramId":36,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"991,38"},"fw":{"gtet":"8,01"}},
-            {"label":"Level","paramName":"FILTER_LEVEL","paramId":4,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1085,38"}},
-            {"label":"Balance","paramName":"FILTER_BAL","paramId":5,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,38"}},
-          ] }
-        ] },
-        { "name": "LFO", "pageNum": 1, "fw": {"lt":"8,01"}, "value": "0,1,2,3,4,5,6,7,8,9,10,11", "selectorParamName": "FILTER_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"315,30"}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":16,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"305,230"}},
-            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":17,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"397,230"}},
-            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"489,230"}},
-            {"label":"Duty","paramName":"FILTER_LFODUTY","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"581,230"}},
-            {"label":"Quantize","paramName":"FILTER_QUANTIZE","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"673,230"}},
-            {"label":"Mod\nFrequency","paramName":"FILTER_MODFREQ","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"765,230"}},
-            {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"886,230"}},
-            {"label":"Left Pan","paramName":"FILTER_PANL","paramId":9,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"901,230"}},
-            {"label":"Right Pan","paramName":"FILTER_PANR","paramId":10,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"993,230"}},
-            {"label":"Phase Invert","paramName":"FILTER_PHASE","paramId":11,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"1085,230"}},
-            {"label":"Bypass\nMode","paramName":"FILTER_BYPASSMODE","paramId":6,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"1179,230"}},
-            {"label":"Scene\nIgnore","paramName":"FILTER_SCENEIGNORE","paramId":23,"widget":"button","rawWidget":"btnIgnoreScene","placement":{"positionExact":"1104,360"},"fw":{"gtet":"2,03"}},
-            {"label":"Bypass","paramName":"FILTER_BYPASS","paramId":8,"widget":"button","rawWidget":"btnBypass","placement":{"positionExact":"1188,360"}},
-            {"label":"Mix","paramName":"FILTER_MIX","paramId":36,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"991,38"},"fw":{"gtet":"8,01"}},
-            {"label":"Level","paramName":"FILTER_LEVEL","paramId":4,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1085,38"}},
-            {"label":"Balance","paramName":"FILTER_BAL","paramId":5,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,38"}},
-          ] }
-        ] },
-        { "name": "Modulation", "pageNum": 1, "fw": {"gtet":"8,01"}, "value": "0,1,2,3,4,5,6,7,8,9,10,11", "selectorParamName": "FILTER_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"315,30"}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":16,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"305,230"}},
-            {"label":"RANGE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"400,209"}},
-            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"397,230"}},
-            {"label":"Mod\nFrequency","paramName":"FILTER_MODFREQ","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"489,230"}},
-            {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"584,209"}},
-            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":17,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"581,230"}},
-            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"673,230"}},
-            {"label":"Tempo","paramName":"FILTER_TEMPO","paramId":35,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"765,230"}},
-            {"label":"Duty","paramName":"FILTER_LFODUTY","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"857,230"}},
-            {"label":"Quantize","paramName":"FILTER_QUANTIZE","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"949,230"}},
-            {"label":"Bypass\nMode","paramName":"FILTER_BYPASSMODE","paramId":6,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"1179,230"}},
-            {"label":"Scene\nIgnore","paramName":"FILTER_SCENEIGNORE","paramId":23,"widget":"button","rawWidget":"btnIgnoreScene","placement":{"positionExact":"1104,360"}},
-            {"label":"Bypass","paramName":"FILTER_BYPASS","paramId":8,"widget":"button","rawWidget":"btnBypass","placement":{"positionExact":"1188,360"}},
-            {"label":"Mix","paramName":"FILTER_MIX","paramId":36,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"991,38"}},
-            {"label":"Level","paramName":"FILTER_LEVEL","paramId":4,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1085,38"}},
-            {"label":"Balance","paramName":"FILTER_BAL","paramId":5,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,38"}},
-          ] }
-        ] },
-        { "name": "Modulation", "pageNum": 1, "fw": {"gtet":"8,01"}, "value": "14", "selectorParamName": "FILTER_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"315,30"}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":16,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"305,230"}},
-            {"label":"RANGE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"400,209"}},
-            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"397,230"}},
-            {"label":"Mod\nFrequency","paramName":"FILTER_MODFREQ","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"489,230"}},
-            {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"584,209"}},
-            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":17,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"581,230"}},
-            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"673,230"}},
-            {"label":"Tempo","paramName":"FILTER_TEMPO","paramId":35,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"765,230"}},
-            {"label":"Duty","paramName":"FILTER_LFODUTY","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"857,230"}},
-            {"label":"Quantize","paramName":"FILTER_QUANTIZE","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"949,230"}},
-            {"label":"Bypass\nMode","paramName":"FILTER_BYPASSMODE","paramId":6,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"1179,230"}},
-            {"label":"Scene\nIgnore","paramName":"FILTER_SCENEIGNORE","paramId":23,"widget":"button","rawWidget":"btnIgnoreScene","placement":{"positionExact":"1104,360"}},
-            {"label":"Bypass","paramName":"FILTER_BYPASS","paramId":8,"widget":"button","rawWidget":"btnBypass","placement":{"positionExact":"1188,360"}},
-            {"label":"Mix","paramName":"FILTER_MIX","paramId":36,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"991,38"}},
             {"label":"Level","paramName":"FILTER_LEVEL","paramId":4,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1085,38"}},
             {"label":"Balance","paramName":"FILTER_BAL","paramId":5,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1179,38"}},
           ] }
@@ -7651,8 +7797,8 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Drive",
     "family": "FUZZ",
     "variants": [
-      { "name": "Drive", "value": null, "pages": [
-        { "name": "Basic", "pageNum": 0, "value": "0,7", "selectorParamName": "FUZZ_TYPE", "rows": [
+      { "name": "0,7", "value": "0,7", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Filter","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
@@ -7670,7 +7816,171 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "1,70,71,75,82", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "1", "value": "1", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Sustain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
@@ -7690,103 +8000,124 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "10", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
           { "section": "parameters", "controls": [
-            {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Basic", "pageNum": 0, "value": "15,50,66,68,81", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Basic", "pageNum": 0, "value": "31,37,42,46,53,54,56", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Basic", "pageNum": 0, "value": "2,3,4,5,6,8,9,11,12,13,14,18,20,21,22,23,28,29,30,32,33,35,39,43,45,47,52,57,58,80", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Basic", "pageNum": 0, "value": "19,24,25,27,60,61,67", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
-            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Basic", "pageNum": 0, "value": "74,77,79", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
             {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
@@ -7801,7 +8132,737 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "16", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Advanced", "pageNum": 3, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] }
+      ] },
+      { "name": "2,4,5,9,11,12,13,18,20,21,22,29,30,32,35", "value": "2,4,5,9,11,12,13,18,20,21,22,29,30,32,35", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "3,6,8,14,23,28,33,39,43,45,47,52,57,58", "value": "3,6,8,14,23,28,33,39,43,45,47,52,57,58", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "10", "value": "10", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "15,50,66,68", "value": "15,50,66,68", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "16", "value": "16", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -7821,7 +8882,171 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "17", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "17", "value": "17", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -7846,7 +9071,354 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "26", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "19,24,25,60,61,67", "value": "19,24,25,60,61,67", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "26", "value": "26", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Voice","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
@@ -7865,7 +9437,506 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "34,38,41,44", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "27", "value": "27", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "31,37,42,46,53,54,56", "value": "31,37,42,46,53,54,56", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "34,38,41,44", "value": "34,38,41,44", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
@@ -7884,7 +9955,171 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "36", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "36", "value": "36", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -7910,7 +10145,141 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "40", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "40", "value": "40", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass Cut","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
@@ -7929,7 +10298,171 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "48", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "48", "value": "48", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Attack","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
@@ -7948,7 +10481,171 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "49,51", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "49,51", "value": "49,51", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
@@ -7966,7 +10663,171 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "55", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "55", "value": "55", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Cut","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
@@ -7984,7 +10845,171 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "59", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "59", "value": "59", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Treble","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
@@ -8002,7 +11027,171 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "62", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "62", "value": "62", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Presence","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
@@ -8020,7 +11209,106 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "63", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] }
+      ] },
+      { "name": "63", "value": "63", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Boost","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -8044,7 +11332,100 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "64", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] }
+      ] },
+      { "name": "64", "value": "64", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Overdrive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
           ] },
@@ -8061,7 +11442,171 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "65", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "65", "value": "65", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Spectrum","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
@@ -8080,7 +11625,171 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "69", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "69", "value": "69", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
@@ -8098,7 +11807,254 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "72,73", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] }
+      ] },
+      { "name": "70,71,75", "value": "70,71,75", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Sustain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONESWITCH","paramId":41,"widget":"toggle","rawWidget":"toggle","fw":{"gtet":"8,02"}},
+            {"label":"Wicker","paramName":"FUZZ_WICKER","paramId":40,"widget":"toggle","rawWidget":"toggle","fw":{"gtet":"8,02"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] }
+      ] },
+      { "name": "72,73", "value": "72,73", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Volume","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -8117,9 +12073,113 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "74", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
           { "section": "parameters", "controls": [
-            {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "74,79", "value": "74,79", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
             {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
@@ -8137,7 +12197,141 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "76", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "76", "value": "76", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
@@ -8157,7 +12351,235 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "78", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "77", "value": "77", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "78", "value": "78", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
@@ -8176,7 +12598,569 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "83,84", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "80", "value": "80", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "81", "value": "81", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "82", "value": "82", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Sustain","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":2,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONESWITCH","paramId":41,"widget":"toggle","rawWidget":"toggle","fw":{"gtet":"8,02"}},
+            {"label":"Wicker","paramName":"FUZZ_WICKER","paramId":40,"widget":"toggle","rawWidget":"toggle","fw":{"gtet":"8,02"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] }
+      ] },
+      { "name": "83,84", "value": "83,84", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE2","paramId":42,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -8198,7 +13182,111 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "85", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "85", "value": "85", "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":1,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -8218,7 +13306,111 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "value": "", "selectorParamName": "FUZZ_TYPE", "rows": [
+        { "name": "Tone", "pageNum": 1, "fw": {"lt":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Tone", "pageNum": 1, "fw": {"gtet":"2,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid Frequency","paramName":"FUZZ_MIDFREQ","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Mid","paramName":"FUZZ_HIMID","paramId":38,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":15,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"FUZZ_LOCUT","paramId":8,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_HICUT","paramId":9,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Graphic EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"100","paramName":"FUZZ_EQ1","paramId":22,"widget":"slider","rawWidget":"slider"},
+            {"label":"160","paramName":"FUZZ_EQ2","paramId":23,"widget":"slider","rawWidget":"slider"},
+            {"label":"250","paramName":"FUZZ_EQ3","paramId":24,"widget":"slider","rawWidget":"slider"},
+            {"label":"400","paramName":"FUZZ_EQ4","paramId":25,"widget":"slider","rawWidget":"slider"},
+            {"label":"640","paramName":"FUZZ_EQ5","paramId":26,"widget":"slider","rawWidget":"slider"},
+            {"label":"1000","paramName":"FUZZ_EQ6","paramId":27,"widget":"slider","rawWidget":"slider"},
+            {"label":"1600","paramName":"FUZZ_EQ7","paramId":28,"widget":"slider","rawWidget":"slider"},
+            {"label":"2500","paramName":"FUZZ_EQ8","paramId":29,"widget":"slider","rawWidget":"slider"},
+            {"label":"4000","paramName":"FUZZ_EQ9","paramId":30,"widget":"slider","rawWidget":"slider"},
+            {"label":"6400","paramName":"FUZZ_EQ10","paramId":31,"widget":"slider","rawWidget":"slider"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"8,2"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "Default", "value": null, "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Authentic layout will be provided in an upcoming editor release.","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel"},
           ] },
@@ -8310,230 +13502,6 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
-        ] },
-        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "value": "1,2,4,5,9,11,12,13,18,20,21,22,27,29,30,32,35,36", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
-            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"8,2"}, "value": "2,4,5,9,11,12,13,18,20,21,22,27,29,30,32,35,36,72,73,76,77,83,84,85", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Clip Type","paramName":"FUZZ_CLIPTYPE","paramId":10,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Clip Shape","paramName":"FUZZ_CLIPSHAPE","paramId":20,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
-            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
-          ] }
-        ] },
-        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"8,2"}, "value": "0,3,6,7,8,10,14,15,16,17,19,23,24,25,26,28,31,33,34,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,64,65,66,67,68", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
-            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
-            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
-            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Advanced", "pageNum": 3, "fw": {"lt":"10,01"}, "value": "0,1,3,6,7,8,10,14,15,16,17,19,23,24,25,26,28,31,33,34,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,64,65,66,67,68,70,71,74,75,78,79,80,81", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
-            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
-            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
-            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
-          ] }
-        ] },
-        { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"10,01"}, "value": "0,3,6,7,8,10,14,15,16,17,19,23,24,25,26,28,31,33,34,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,64,65,66,67,68,74,78,79,80,81", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
-            {"label":"Dry Level","paramName":"FUZZ_DRYGAIN","paramId":36,"widget":"knob","rawWidget":"knob"},
-            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
-            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene"},
-          ] }
-        ] },
-        { "name": "Advanced", "pageNum": 3, "value": "62", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Bass Response","paramName":"FUZZ_BASS","paramId":37,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
-            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Advanced", "pageNum": 3, "value": "63,69", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
-            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Advanced", "pageNum": 3, "value": "1,70,71,75,82", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Diode+\nType","paramName":"FUZZ_PDTYPE","paramId":32,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode+\nQuantity","paramName":"FUZZ_PDQTY","paramId":33,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode-\nType","paramName":"FUZZ_NDTYPE","paramId":34,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Diode-\nQuantity","paramName":"FUZZ_NDQTY","paramId":35,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bias","paramName":"FUZZ_BIAS","paramId":11,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Slew Rate","paramName":"FUZZ_SLEW","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bit Reduce","paramName":"FUZZ_BITREDUCE","paramId":16,"widget":"knob","rawWidget":"knob"},
-            {"label":"Sample Rate","paramName":"FUZZ_RESAMPLE","paramId":19,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"FUZZ_MIX","paramId":4,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"FUZZ_PAN","paramId":18,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"FUZZ_INPUTSELECT","paramId":17,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
         ] }
       ] }
     ]
@@ -8542,8 +13510,8 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "GateExpander",
     "family": "GATE",
     "variants": [
-      { "name": "Gate", "value": null, "pages": [
-        { "name": "Gate", "pageNum": 0, "fw": {"lt":"4,01"}, "value": "0", "selectorParamName": "GATE_TYPE", "rows": [
+      { "name": "0", "value": "0", "pages": [
+        { "name": "Gate", "pageNum": 0, "fw": {"lt":"4,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"GATE_THRESH","paramId":0,"widget":"knob","rawWidget":"knob"},
             {"label":"Ratio","paramName":"GATE_RATIO","paramId":4,"widget":"knob","rawWidget":"knob"},
@@ -8572,35 +13540,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"GATE_SCENEIGNORE","paramId":17,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Gate", "pageNum": 0, "fw": {"lt":"4,01"}, "value": "1,2", "selectorParamName": "GATE_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Threshold","paramName":"GATE_THRESH","paramId":0,"widget":"knob","rawWidget":"knob"},
-            {"label":"Attenuation","paramName":"GATE_RANGE","paramId":15,"widget":"knob","rawWidget":"knob"},
-            {"label":"Attack\nTime","paramName":"GATE_ATTACK","paramId":1,"widget":"knob","rawWidget":"knob"},
-            {"label":"Hold\nTime","paramName":"GATE_HOLD","paramId":2,"widget":"knob","rawWidget":"knob"},
-            {"label":"Release\nTime","paramName":"GATE_RELEASE","paramId":3,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Gain","paramName":"GATE_GAINMONITOR","paramId":13,"widget":"meter","rawWidget":"meterGainVert"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Low Cut","paramName":"GATE_LOWCUT","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"High Cut","paramName":"GATE_HICUT","paramId":7,"widget":"knob","rawWidget":"knob"},
-            {"label":"Sidechain Source","paramName":"GATE_KEY","paramId":5,"widget":"dropdown","rawWidget":"dropdown1"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Level","paramName":"GATE_LEVEL","paramId":9,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"GATE_PAN","paramId":10,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"GATE_BYPASSMODE","paramId":11,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"GATE_BYPASS","paramId":12,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"GATE_SCENEIGNORE","paramId":17,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "value": "0", "selectorParamName": "GATE_TYPE", "rows": [
+        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"GATE_THRESH","paramId":0,"widget":"knob","rawWidget":"knob"},
             {"label":"Ratio","paramName":"GATE_RATIO","paramId":4,"widget":"knob","rawWidget":"knob"},
@@ -8629,8 +13569,38 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GATE_BYPASS","paramId":12,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GATE_SCENEIGNORE","paramId":17,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ] }
+      ] },
+      { "name": "1,2", "value": "1,2", "pages": [
+        { "name": "Gate", "pageNum": 0, "fw": {"lt":"4,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Threshold","paramName":"GATE_THRESH","paramId":0,"widget":"knob","rawWidget":"knob"},
+            {"label":"Attenuation","paramName":"GATE_RANGE","paramId":15,"widget":"knob","rawWidget":"knob"},
+            {"label":"Attack\nTime","paramName":"GATE_ATTACK","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Hold\nTime","paramName":"GATE_HOLD","paramId":2,"widget":"knob","rawWidget":"knob"},
+            {"label":"Release\nTime","paramName":"GATE_RELEASE","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Gain","paramName":"GATE_GAINMONITOR","paramId":13,"widget":"meter","rawWidget":"meterGainVert"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"GATE_LOWCUT","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"GATE_HICUT","paramId":7,"widget":"knob","rawWidget":"knob"},
+            {"label":"Sidechain Source","paramName":"GATE_KEY","paramId":5,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"GATE_LEVEL","paramId":9,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"GATE_PAN","paramId":10,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"GATE_BYPASSMODE","paramId":11,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"GATE_BYPASS","paramId":12,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"GATE_SCENEIGNORE","paramId":17,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
         ] },
-        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "value": "1,2", "selectorParamName": "GATE_TYPE", "rows": [
+        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"GATE_THRESH","paramId":0,"widget":"knob","rawWidget":"knob"},
             {"label":"Attenuation","paramName":"GATE_RANGE","paramId":15,"widget":"knob","rawWidget":"knob"},
@@ -8658,8 +13628,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GATE_BYPASS","paramId":12,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GATE_SCENEIGNORE","paramId":17,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
-        ] },
-        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "value": "3", "selectorParamName": "GATE_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "3", "value": "3", "pages": [
+        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"GATE_THRESH","paramId":0,"widget":"knob","rawWidget":"knob"},
             {"label":"Ratio","paramName":"GATE_RATIO","paramId":4,"widget":"knob","rawWidget":"knob"},
@@ -9249,7 +14221,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Input1/Instr",
     "family": "INPUT",
     "variants": [
-      { "name": "", "value": null, "pages": [
+      { "name": "0", "value": "0", "pages": [
         { "name": "Gate", "pageNum": 0, "fw": {"lt":"4,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"INPUT_THRESH","paramId":0,"widget":"knob","rawWidget":"knob"},
@@ -9273,27 +14245,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"INPUT_BYPASS","paramId":6,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "value": "1", "selectorParamName": "INPUT_MODE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Mode","paramName":"INPUT_MODE","paramId":9,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
-            {"label":"Threshold","paramName":"INPUT_THRESH","paramId":0,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"Ratio","paramName":"INPUT_RATIO","paramId":1,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-            {"label":"Attack","paramName":"INPUT_ATTACK","paramId":3,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
-            {"label":"Release","paramName":"INPUT_RELEASE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"Gain","paramName":"INPUT_GAINMONITOR","paramId":8,"widget":"meter","rawWidget":"meterGainVert","placement":{"col":8}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Gate Type","paramName":"INPUT_TYPE","paramId":7,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Input1/Instr Impedance","paramName":"INPUT_Z","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Output Level","paramName":"INPUT_LEVEL","paramId":5,"widget":"knob","rawWidget":"knob"},
-            {"label":"Bypass","paramName":"INPUT_BYPASS","paramId":6,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "value": "0", "selectorParamName": "INPUT_MODE", "rows": [
+        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mode","paramName":"INPUT_MODE","paramId":9,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
             {"label":"Threshold","paramName":"INPUT_THRESH","paramId":0,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -9312,7 +14264,52 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "", "value": null, "pages": [
+      { "name": "1", "value": "1", "pages": [
+        { "name": "Gate", "pageNum": 0, "fw": {"lt":"4,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Threshold","paramName":"INPUT_THRESH","paramId":0,"widget":"knob","rawWidget":"knob"},
+            {"label":"Ratio","paramName":"INPUT_RATIO","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Attack","paramName":"INPUT_ATTACK","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Release","paramName":"INPUT_RELEASE","paramId":2,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Gain","paramName":"INPUT_GAINMONITOR","paramId":8,"widget":"meter","rawWidget":"meterGainVert"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Gate Type","paramName":"INPUT_TYPE","paramId":7,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Input1/Instr Impedance","paramName":"INPUT_Z","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Output Level","paramName":"INPUT_LEVEL","paramId":5,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass","paramName":"INPUT_BYPASS","paramId":6,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Mode","paramName":"INPUT_MODE","paramId":9,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Threshold","paramName":"INPUT_THRESH","paramId":0,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Ratio","paramName":"INPUT_RATIO","paramId":1,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Attack","paramName":"INPUT_ATTACK","paramId":3,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Release","paramName":"INPUT_RELEASE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Gain","paramName":"INPUT_GAINMONITOR","paramId":8,"widget":"meter","rawWidget":"meterGainVert","placement":{"col":8}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Gate Type","paramName":"INPUT_TYPE","paramId":7,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Input1/Instr Impedance","paramName":"INPUT_Z","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Output Level","paramName":"INPUT_LEVEL","paramId":5,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass","paramName":"INPUT_BYPASS","paramId":6,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "0", "value": "0", "pages": [
         { "name": "Gate", "pageNum": 0, "fw": {"lt":"4,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"INPUT_THRESH","paramId":0,"widget":"knob","rawWidget":"knob"},
@@ -9329,13 +14326,29 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"INPUT_BYPASS","paramId":6,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "value": "1", "selectorParamName": "INPUT_MODE", "rows": [
+        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mode","paramName":"INPUT_MODE","paramId":9,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
             {"label":"Threshold","paramName":"INPUT_THRESH","paramId":0,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"Ratio","paramName":"INPUT_RATIO","paramId":1,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-            {"label":"Attack","paramName":"INPUT_ATTACK","paramId":3,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
-            {"label":"Release","paramName":"INPUT_RELEASE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Release","paramName":"INPUT_RELEASE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Gain","paramName":"INPUT_GAINMONITOR","paramId":8,"widget":"meter","rawWidget":"meterGainVert","placement":{"col":8}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Gate Type","paramName":"INPUT_TYPE","paramId":7,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Output Level","paramName":"INPUT_LEVEL","paramId":5,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass","paramName":"INPUT_BYPASS","paramId":6,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "1", "value": "1", "pages": [
+        { "name": "Gate", "pageNum": 0, "fw": {"lt":"4,01"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Threshold","paramName":"INPUT_THRESH","paramId":0,"widget":"knob","rawWidget":"knob"},
+            {"label":"Ratio","paramName":"INPUT_RATIO","paramId":1,"widget":"knob","rawWidget":"knob"},
+            {"label":"Attack","paramName":"INPUT_ATTACK","paramId":3,"widget":"knob","rawWidget":"knob"},
+            {"label":"Release","paramName":"INPUT_RELEASE","paramId":2,"widget":"knob","rawWidget":"knob"},
             {"label":"Gain","paramName":"INPUT_GAINMONITOR","paramId":8,"widget":"meter","rawWidget":"meterGainVert","placement":{"col":8}},
           ] },
           { "section": "parameters", "controls": [
@@ -9346,11 +14359,13 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"INPUT_BYPASS","paramId":6,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "value": "0", "selectorParamName": "INPUT_MODE", "rows": [
+        { "name": "Gate", "pageNum": 0, "fw": {"gtet":"4,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mode","paramName":"INPUT_MODE","paramId":9,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
             {"label":"Threshold","paramName":"INPUT_THRESH","paramId":0,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"Release","paramName":"INPUT_RELEASE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Ratio","paramName":"INPUT_RATIO","paramId":1,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Attack","paramName":"INPUT_ATTACK","paramId":3,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Release","paramName":"INPUT_RELEASE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
             {"label":"Gain","paramName":"INPUT_GAINMONITOR","paramId":8,"widget":"meter","rawWidget":"meterGainVert","placement":{"col":8}},
           ] },
           { "section": "parameters", "controls": [
@@ -9400,8 +14415,8 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Looper",
     "family": "LOOPER",
     "variants": [
-      { "name": "Looper", "value": null, "pages": [
-        { "name": "Looper", "pageNum": 0, "value": "0", "selectorParamName": "LOOPER_DUB", "rows": [
+      { "name": "0", "value": "0", "pages": [
+        { "name": "Looper", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Record","paramName":"LOOPER_RECORD","paramId":8,"widget":"toggle","rawWidget":"toggle-looper-record"},
             {"label":"Play","paramName":"LOOPER_PLAY","paramId":9,"widget":"toggle","rawWidget":"toggle-looper-play"},
@@ -9434,7 +14449,24 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"LOOPER_BYPASS","paramId":4,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Looper", "pageNum": 0, "value": "1", "selectorParamName": "LOOPER_DUB", "rows": [
+        { "name": "Config", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Max. Loop Time","paramName":"LOOPER_MAXTIME","paramId":23,"widget":"knob","rawWidget":"knob","fw":{"gtet":"1,1"}},
+            {"label":"Crossfade","paramName":"LOOPER_XFADE","paramId":21,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Loop Quantize","paramName":"LOOPER_QUANTIZE","paramId":18,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Record\n2nd Press","paramName":"LOOPER_RECORDMODE","paramId":19,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"LOOPER_PAN","paramId":2,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass\nMode","paramName":"LOOPER_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"LOOPER_BYPASS","paramId":4,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "1", "value": "1", "pages": [
+        { "name": "Looper", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Record (Overdub)","paramName":"LOOPER_RECORD","paramId":8,"widget":"toggle","rawWidget":"toggle-looper-overdub"},
             {"label":"Play","paramName":"LOOPER_PLAY","paramId":9,"widget":"toggle","rawWidget":"toggle-looper-play"},
@@ -9881,8 +14913,8 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Delay",
     "family": "MULTITAP",
     "variants": [
-      { "name": "Delay", "value": null, "pages": [
-        { "name": "Time/FB", "pageNum": 0, "value": "0", "selectorParamName": "DELAY_TYPE", "rows": [
+      { "name": "0", "value": "0", "pages": [
+        { "name": "Time/FB", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -9908,8 +14940,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Time/FB", "pageNum": 0, "value": "1", "selectorParamName": "DELAY_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "1", "value": "1", "pages": [
+        { "name": "Time/FB", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -9940,8 +14974,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Time/FB", "pageNum": 0, "value": "2", "selectorParamName": "DELAY_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "2", "value": "2", "pages": [
+        { "name": "Time/FB", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -9969,8 +15005,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Time/FB", "pageNum": 0, "value": "3", "selectorParamName": "DELAY_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "3", "value": "3", "pages": [
+        { "name": "Time/FB", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time L","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo L","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -10386,8 +15424,8 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Phaser",
     "family": "PHASER",
     "variants": [
-      { "name": "Phaser", "value": null, "pages": [
-        { "name": "Phaser", "pageNum": 0, "fw": {"lt":"6,00"}, "value": "0,1", "selectorParamName": "PHASER_MODE", "rows": [
+      { "name": "0,1", "value": "0,1", "pages": [
+        { "name": "Phaser", "pageNum": 0, "fw": {"lt":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -10421,39 +15459,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Phaser", "pageNum": 0, "fw": {"lt":"6,00"}, "value": "2", "selectorParamName": "PHASER_MODE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Depth","paramName":"PHASER_DEPTH","paramId":5,"widget":"knob","rawWidget":"knob"},
-            {"label":"Feedback","paramName":"PHASER_FEEDBACK","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Order","paramName":"PHASER_ORDER","paramId":1,"widget":"dropdown","rawWidget":"dropdown1"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Sweep Direction","paramName":"PHASER_DIRECTION","paramId":20,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Filter Q","paramName":"PHASER_Q","paramId":21,"widget":"knob","rawWidget":"knob"},
-            {"label":"LFO Phase","paramName":"PHASER_LFOPHASE","paramId":9,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Tone","paramName":"PHASER_TONE","paramId":19,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"PHASER_MIX","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"PHASER_LEVEL","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"PHASER_PAN","paramId":13,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"PHASER_BYPASSMODE","paramId":14,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "More", "pageNum": 1, "fw": {"lt":"6,00"}, "value": "0,1", "selectorParamName": "PHASER_MODE", "rows": [
+        { "name": "More", "pageNum": 1, "fw": {"lt":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Type","paramName":"PHASER_VCR_CURVE","paramId":24,"widget":"dropdown","rawWidget":"dropdown1"},
             {"label":"Bias","paramName":"PHASER_BIAS","paramId":10,"widget":"knob","rawWidget":"knob"},
@@ -10475,7 +15481,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Phaser", "pageNum": 0, "fw": {"lt":"8,02"}, "value": "0,1", "selectorParamName": "PHASER_MODE", "rows": [
+        { "name": "Phaser", "pageNum": 0, "fw": {"lt":"8,02"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -10503,39 +15509,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] },
-        { "name": "Phaser", "pageNum": 0, "fw": {"lt":"8,02"}, "value": "2", "selectorParamName": "PHASER_MODE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Depth","paramName":"PHASER_DEPTH","paramId":5,"widget":"knob","rawWidget":"knob"},
-            {"label":"Feedback","paramName":"PHASER_FEEDBACK","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Order","paramName":"PHASER_ORDER","paramId":1,"widget":"dropdown","rawWidget":"dropdown1"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Sweep Direction","paramName":"PHASER_DIRECTION","paramId":20,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Filter Q","paramName":"PHASER_Q","paramId":21,"widget":"knob","rawWidget":"knob"},
-            {"label":"LFO Phase","paramName":"PHASER_LFOPHASE","paramId":9,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Tone","paramName":"PHASER_TONE","paramId":19,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"PHASER_MIX","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"PHASER_LEVEL","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"PHASER_PAN","paramId":13,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"PHASER_BYPASSMODE","paramId":14,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene"},
-          ] }
-        ] },
-        { "name": "LFO", "pageNum": 1, "fw": {"lt":"8,02"}, "value": "0,1", "selectorParamName": "PHASER_MODE", "rows": [
+        { "name": "LFO", "pageNum": 1, "fw": {"lt":"8,02"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Type","paramName":"PHASER_LFOTYPE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":0}},
             {"label":"Shape","paramName":"PHASER_LFOBETA","paramId":26,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -10560,7 +15534,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] },
-        { "name": "More", "pageNum": 2, "fw": {"lt":"8,02"}, "value": "0,1", "selectorParamName": "PHASER_MODE", "rows": [
+        { "name": "More", "pageNum": 2, "fw": {"lt":"8,02"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Type","paramName":"PHASER_VCR_CURVE","paramId":24,"widget":"dropdown","rawWidget":"dropdown1"},
             {"label":"Bias","paramName":"PHASER_BIAS","paramId":10,"widget":"knob","rawWidget":"knob"},
@@ -10582,7 +15556,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "fw": {"gtet":"8,02"}, "value": "0,1", "selectorParamName": "PHASER_MODE", "rows": [
+        { "name": "Basic", "pageNum": 0, "fw": {"gtet":"8,02"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -10605,59 +15579,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "fw": {"gtet":"8,02"}, "value": "2", "selectorParamName": "PHASER_MODE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Depth","paramName":"PHASER_DEPTH","paramId":5,"widget":"knob","rawWidget":"knob"},
-            {"label":"Feedback","paramName":"PHASER_FEEDBACK","paramId":6,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"PHASER_MIX","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"PHASER_LEVEL","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"PHASER_PAN","paramId":13,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"PHASER_BYPASSMODE","paramId":14,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene"},
-          ] }
-        ] },
-        { "name": "Expert", "pageNum": 1, "fw": {"gtet":"8,02"}, "value": "2", "selectorParamName": "PHASER_MODE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Depth","paramName":"PHASER_DEPTH","paramId":5,"widget":"knob","rawWidget":"knob"},
-            {"label":"Feedback","paramName":"PHASER_FEEDBACK","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Order","paramName":"PHASER_ORDER","paramId":1,"widget":"dropdown","rawWidget":"dropdown1"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Sweep Direction","paramName":"PHASER_DIRECTION","paramId":20,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Filter Q","paramName":"PHASER_Q","paramId":21,"widget":"knob","rawWidget":"knob"},
-            {"label":"LFO Phase","paramName":"PHASER_LFOPHASE","paramId":9,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Tone","paramName":"PHASER_TONE","paramId":19,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"PHASER_MIX","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"PHASER_LEVEL","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"PHASER_PAN","paramId":13,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"PHASER_BYPASSMODE","paramId":14,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene"},
-          ] }
-        ] },
-        { "name": "Expert 1", "pageNum": 1, "fw": {"gtet":"8,02"}, "value": "0,1", "selectorParamName": "PHASER_MODE", "rows": [
+        { "name": "Expert 1", "pageNum": 1, "fw": {"gtet":"8,02"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -10692,7 +15614,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] },
-        { "name": "Expert 2", "pageNum": 2, "fw": {"gtet":"8,02"}, "value": "0,1", "selectorParamName": "PHASER_MODE", "rows": [
+        { "name": "Expert 2", "pageNum": 2, "fw": {"gtet":"8,02"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Feedback Point","paramName":"PHASER_FBTAP","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"VCR","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"393,29"}},
@@ -10707,6 +15629,124 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
           { "section": "parameters", "controls": [
             {"label":"Low Cut","paramName":"PHASER_HPF","paramId":32,"widget":"knob","rawWidget":"knobCompact"},
             {"label":"High Cut","paramName":"PHASER_LPF","paramId":33,"widget":"knob","rawWidget":"knobCompact"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"PHASER_MIX","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"PHASER_LEVEL","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"PHASER_PAN","paramId":13,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"PHASER_BYPASSMODE","paramId":14,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "2", "value": "2", "pages": [
+        { "name": "Phaser", "pageNum": 0, "fw": {"lt":"6,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Depth","paramName":"PHASER_DEPTH","paramId":5,"widget":"knob","rawWidget":"knob"},
+            {"label":"Feedback","paramName":"PHASER_FEEDBACK","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Order","paramName":"PHASER_ORDER","paramId":1,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Sweep Direction","paramName":"PHASER_DIRECTION","paramId":20,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Filter Q","paramName":"PHASER_Q","paramId":21,"widget":"knob","rawWidget":"knob"},
+            {"label":"LFO Phase","paramName":"PHASER_LFOPHASE","paramId":9,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Tone","paramName":"PHASER_TONE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"PHASER_MIX","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"PHASER_LEVEL","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"PHASER_PAN","paramId":13,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"PHASER_BYPASSMODE","paramId":14,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Phaser", "pageNum": 0, "fw": {"lt":"8,02"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Depth","paramName":"PHASER_DEPTH","paramId":5,"widget":"knob","rawWidget":"knob"},
+            {"label":"Feedback","paramName":"PHASER_FEEDBACK","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Order","paramName":"PHASER_ORDER","paramId":1,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Sweep Direction","paramName":"PHASER_DIRECTION","paramId":20,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Filter Q","paramName":"PHASER_Q","paramId":21,"widget":"knob","rawWidget":"knob"},
+            {"label":"LFO Phase","paramName":"PHASER_LFOPHASE","paramId":9,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Tone","paramName":"PHASER_TONE","paramId":19,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"PHASER_MIX","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"PHASER_LEVEL","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"PHASER_PAN","paramId":13,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"PHASER_BYPASSMODE","paramId":14,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Basic", "pageNum": 0, "fw": {"gtet":"8,02"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Depth","paramName":"PHASER_DEPTH","paramId":5,"widget":"knob","rawWidget":"knob"},
+            {"label":"Feedback","paramName":"PHASER_FEEDBACK","paramId":6,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"PHASER_MIX","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"PHASER_LEVEL","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"PHASER_PAN","paramId":13,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"PHASER_BYPASSMODE","paramId":14,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Expert", "pageNum": 1, "fw": {"gtet":"8,02"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Rate","paramName":"PHASER_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tempo","paramName":"PHASER_TEMPO","paramId":4,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Depth","paramName":"PHASER_DEPTH","paramId":5,"widget":"knob","rawWidget":"knob"},
+            {"label":"Feedback","paramName":"PHASER_FEEDBACK","paramId":6,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Order","paramName":"PHASER_ORDER","paramId":1,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Sweep Direction","paramName":"PHASER_DIRECTION","paramId":20,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Filter Q","paramName":"PHASER_Q","paramId":21,"widget":"knob","rawWidget":"knob"},
+            {"label":"LFO Phase","paramName":"PHASER_LFOPHASE","paramId":9,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Tone","paramName":"PHASER_TONE","paramId":19,"widget":"knob","rawWidget":"knob"},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Mix","paramName":"PHASER_MIX","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -13402,8 +18442,8 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Reverb",
     "family": "REVERB",
     "variants": [
-      { "name": "Reverb GTET fw 6.01", "value": null, "fw": {"gtet":"6,01"}, "pages": [
-        { "name": "Basic", "pageNum": 0, "value": "0,5", "selectorParamName": "REVERB_BASETYPE", "rows": [
+      { "name": "0,5", "value": "0,5", "fw": {"gtet":"6,01"}, "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Size","paramName":"REVERB_SIZE","paramId":15,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -13439,7 +18479,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Advanced", "pageNum": 1, "value": "0,5", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Advanced", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
             {"label":"DIFFUSION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
             {"label":"Diffusion","paramName":"REVERB_INPDIFF","paramId":25,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -13468,7 +18508,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Ducker", "pageNum": 2, "value": "0,5", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Ducker", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
             {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
             {"label":"Threshold","paramName":"REVERB_THRESH","paramId":41,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -13494,7 +18534,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "EQ", "pageNum": 3, "value": "0,5", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "EQ", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
             {"label":"LOW","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
             {"label":"Low Cut\nFrequency","paramName":"REVERB_LOWCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0},"fw":{"lt":"8,02"}},
@@ -13538,8 +18578,47 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene"},
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Basic", "pageNum": 0, "value": "4", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        ] }
+      ] },
+      { "name": "1,2,3,6,7,8,9,10", "value": "1,2,3,6,7,8,9,10", "fw": {"gtet":"6,01"}, "pages": [
+        { "name": "Pitch Shift", "pageNum": 4, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Mix","paramName":"REVERB_PITCHMIX","paramId":55,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"VOICES","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,29"}},
+            {"label":"Voice 1\nShift","paramName":"REVERB_SHIFT1","paramId":56,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Voice 2\nShift","paramName":"REVERB_SHIFT2","paramId":57,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Voice Balance","paramName":"REVERB_PITCHBAL","paramId":63,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Splice Time","paramName":"REVERB_PITCHTIME","paramId":60,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Feedback","paramName":"REVERB_PITCHFDBK","paramId":58,"widget":"knob","rawWidget":"knob"},
+            {"label":"Direction","paramName":"REVERB_PITCHDIR","paramId":59,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Position","paramName":"REVERB_PITCHPOS","paramId":61,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Modulation","paramName":"REVERB_PITCHMOD","paramId":62,"widget":"knob","rawWidget":"knob"},
+            {"label":"Pitch High Cut","paramName":"REVERB_PITCHLPF","paramId":67,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"REVERB_KILLDRY","paramId":7,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"7,00"}},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene"},
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "4", "value": "4", "fw": {"gtet":"6,01"}, "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Size","paramName":"REVERB_SIZE","paramId":15,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -13582,7 +18661,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Advanced", "pageNum": 1, "value": "4", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Advanced", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
             {"label":"DIFFUSION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
             {"label":"Input Diffusion","paramName":"REVERB_INPDIFF","paramId":25,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -13607,7 +18686,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Duck + Mod", "pageNum": 2, "value": "4", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Duck + Mod", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
             {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
             {"label":"Threshold","paramName":"REVERB_THRESH","paramId":41,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -13637,7 +18716,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "EQ", "pageNum": 3, "value": "4", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "EQ", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
             {"label":"LOW","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
             {"label":"Low Cut\nFrequency","paramName":"REVERB_LOWCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0},"fw":{"lt":"8,02"}},
@@ -13682,7 +18761,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Pitch Shift", "pageNum": 4, "value": "4", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Pitch Shift", "pageNum": 4, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mix","paramName":"REVERB_PITCHMIX","paramId":55,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"VOICES","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,29"}},
@@ -13716,8 +18795,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene"},
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Basic", "pageNum": 0, "value": "", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        ] }
+      ] },
+      { "name": "Default", "value": null, "fw": {"gtet":"6,01"}, "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Size","paramName":"REVERB_SIZE","paramId":15,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -13756,7 +18837,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Advanced", "pageNum": 1, "value": "", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Advanced", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
             {"label":"DIFFUSION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
             {"label":"Input Diffusion","paramName":"REVERB_INPDIFF","paramId":25,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -13793,7 +18874,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Duck + Mod", "pageNum": 2, "value": "", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Duck + Mod", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
             {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
             {"label":"Threshold","paramName":"REVERB_THRESH","paramId":41,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -13823,7 +18904,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "EQ", "pageNum": 3, "value": "", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "EQ", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
             {"label":"LOW","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
             {"label":"Low Cut\nFrequency","paramName":"REVERB_LOWCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0},"fw":{"lt":"8,02"}},
@@ -13867,45 +18948,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene"},
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Pitch Shift", "pageNum": 4, "value": "1,2,3,6,7,8,9,10", "selectorParamName": "REVERB_BASETYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Mix","paramName":"REVERB_PITCHMIX","paramId":55,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
-            {"label":"VOICES","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,29"}},
-            {"label":"Voice 1\nShift","paramName":"REVERB_SHIFT1","paramId":56,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-            {"label":"Voice 2\nShift","paramName":"REVERB_SHIFT2","paramId":57,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
-            {"label":"Voice Balance","paramName":"REVERB_PITCHBAL","paramId":63,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"Splice Time","paramName":"REVERB_PITCHTIME","paramId":60,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Feedback","paramName":"REVERB_PITCHFDBK","paramId":58,"widget":"knob","rawWidget":"knob"},
-            {"label":"Direction","paramName":"REVERB_PITCHDIR","paramId":59,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Position","paramName":"REVERB_PITCHPOS","paramId":61,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Modulation","paramName":"REVERB_PITCHMOD","paramId":62,"widget":"knob","rawWidget":"knob"},
-            {"label":"Pitch High Cut","paramName":"REVERB_PITCHLPF","paramId":67,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
-            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Kill Dry","paramName":"REVERB_KILLDRY","paramId":7,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"7,00"}},
-            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene"},
-            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
-          ] }
         ] }
       ] },
-      { "name": "Reverb LT fw 6.01", "value": null, "fw": {"lt":"6,01"}, "pages": [
-        { "name": "Basic", "pageNum": 0, "value": "0,5", "selectorParamName": "REVERB_BASETYPE", "rows": [
+      { "name": "0,5", "value": "0,5", "fw": {"lt":"6,01"}, "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
             {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
@@ -13939,7 +18985,446 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "fw": {"lt":"6,00"}, "value": "", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Advanced", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Early Level","paramName":"REVERB_EARLYLEVEL","paramId":17,"widget":"knob","rawWidget":"knob"},
+            {"label":"Early Diffusion","paramName":"REVERB_EARLYDIFF","paramId":43,"widget":"knob","rawWidget":"knob"},
+            {"label":"Early Diff Time","paramName":"REVERB_EARLYDIFFTIME","paramId":44,"widget":"knob","rawWidget":"knob"},
+            {"label":"Early Decay","paramName":"REVERB_EARLYDECAY","paramId":45,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Mic Spacing","paramName":"REVERB_WIDTH","paramId":29,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Late Level","paramName":"REVERB_REVERBLEVEL","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":1}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":2}},
+            {"label":"Input Diffusion","paramName":"REVERB_INPDIFF","paramId":25,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Input Diff Time","paramName":"REVERB_INDIFFTIME","paramId":26,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":5}},
+            {"label":"Wall Diffusion","paramName":"REVERB_DIFFUSION","paramId":14,"widget":"knob","rawWidget":"knob","placement":{"col":6},"fw":{"lt":"6,00"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LOW","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
+            {"label":"Low Cut\nFrequency","paramName":"REVERB_LOWCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"391,29"}},
+            {"label":"Freq 1","paramName":"REVERB_FREQ1","paramId":30,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Q 1","paramName":"REVERB_Q1","paramId":32,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Gain 1","paramName":"REVERB_GAIN1","paramId":34,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"646,29"}},
+            {"label":"Freq 2","paramName":"REVERB_FREQ2","paramId":31,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Q 2","paramName":"REVERB_Q2","paramId":33,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Gain 2","paramName":"REVERB_GAIN2","paramId":35,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+            {"label":"HIGH","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"903,29"}},
+            {"label":"High Cut\nFrequency","paramName":"REVERB_HICUT","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":7}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut\nSlope","paramName":"REVERB_LOWSLOPE","paramId":53,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"col":0}},
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_eq","placement":{"positionExact":"390,190"}},
+            {"label":"High Cut\nSlope","paramName":"REVERB_HIGHSLOPE","paramId":54,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"col":7}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Modulation", "pageNum": 3, "fw": {"lt":"1,1"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Depth","paramName":"REVERB_DEPTH","paramId":21,"widget":"knob","rawWidget":"knob"},
+            {"label":"Rate","paramName":"REVERB_RATE","paramId":22,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"LFO Phase","paramName":"REVERB_LFOPHASE","paramId":50,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Mod+Ducker", "pageNum": 3, "fw": {"lt":"6,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+            {"label":"Depth","paramName":"REVERB_DEPTH","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Rate","paramName":"REVERB_RATE","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"LFO Phase","paramName":"REVERB_LFOPHASE","paramId":50,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+            {"label":"Threshold","paramName":"REVERB_THRESH","paramId":41,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Attenuation","paramName":"REVERB_ATTEN","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Release Time","paramName":"REVERB_RELEASE","paramId":42,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Ducker", "pageNum": 3, "fw": {"gtet":"6,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+            {"label":"Threshold","paramName":"REVERB_THRESH","paramId":41,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Attenuation","paramName":"REVERB_ATTEN","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Release Time","paramName":"REVERB_RELEASE","paramId":42,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Ducker", "pageNum": 4, "fw": {"lt":"1,1"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Threshold","paramName":"REVERB_THRESH","paramId":41,"widget":"knob","rawWidget":"knob"},
+            {"label":"Attenuation","paramName":"REVERB_ATTEN","paramId":40,"widget":"knob","rawWidget":"knob"},
+            {"label":"Release Time","paramName":"REVERB_RELEASE","paramId":42,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Spring", "pageNum": 4, "fw": {"lt":"6,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Number of Springs","paramName":"REVERB_NUMSPRINGS","paramId":27,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Spring Tone","paramName":"REVERB_TONE","paramId":28,"widget":"knob","rawWidget":"knob"},
+            {"label":"Spring Drive","paramName":"REVERB_DRIVE","paramId":36,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Boiiinnng!","paramName":"REVERB_DISPERSION","paramId":52,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Spring", "pageNum": 4, "fw": {"gtet":"6,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Tank Type","paramName":"REVERB_SPRINGTYPE","paramId":68,"widget":"dropdown","rawWidget":"dropdown1p5"},
+            {"label":"Number of Springs","paramName":"REVERB_NUMSPRINGS","paramId":27,"widget":"dropdown","rawWidget":"dropdown1","placement":{"offsetX":43}},
+            {"label":"Spring Tone","paramName":"REVERB_TONE","paramId":28,"widget":"knob","rawWidget":"knob"},
+            {"label":"Spring Drive","paramName":"REVERB_DRIVE","paramId":36,"widget":"knob","rawWidget":"knob"},
+            {"label":"Drip","paramName":"REVERB_DISPERSION","paramId":52,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Scattering","paramName":"REVERB_DIFFUSION","paramId":14,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Spring", "pageNum": 5, "fw": {"lt":"1,1"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Number of Springs","paramName":"REVERB_NUMSPRINGS","paramId":27,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Spring Tone","paramName":"REVERB_TONE","paramId":28,"widget":"knob","rawWidget":"knob"},
+            {"label":"Spring Drive","paramName":"REVERB_DRIVE","paramId":36,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Boiiinnng!","paramName":"REVERB_DISPERSION","paramId":52,"widget":"knob","rawWidget":"knob","fw":{"gtet":"12,00"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] }
+      ] },
+      { "name": "4", "value": "4", "fw": {"lt":"6,01"}, "pages": [
+        { "name": "Advanced", "pageNum": 1, "fw": {"gtet":"6,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Plate Diffusion","paramName":"REVERB_DIFFUSION","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Input Diffusion","paramName":"REVERB_INPDIFF","paramId":25,"widget":"knob","rawWidget":"knob"},
+            {"label":"Input Diff Time","paramName":"REVERB_INDIFFTIME","paramId":26,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dispersion","paramName":"REVERB_DISPERSION","paramId":52,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Pickup Spacing","paramName":"REVERB_WIDTH","paramId":29,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "EQ", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LOW","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
+            {"label":"Low Cut\nFrequency","paramName":"REVERB_LOWCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"391,29"}},
+            {"label":"Freq 1","paramName":"REVERB_FREQ1","paramId":30,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Q 1","paramName":"REVERB_Q1","paramId":32,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Gain 1","paramName":"REVERB_GAIN1","paramId":34,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"646,29"}},
+            {"label":"Freq 2","paramName":"REVERB_FREQ2","paramId":31,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Q 2","paramName":"REVERB_Q2","paramId":33,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Gain 2","paramName":"REVERB_GAIN2","paramId":35,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+            {"label":"HIGH","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"903,29"}},
+            {"label":"High Cut\nFrequency","paramName":"REVERB_HICUT","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":7}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut\nSlope","paramName":"REVERB_LOWSLOPE","paramId":53,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"col":0}},
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_eq","placement":{"positionExact":"390,190"}},
+            {"label":"High Cut\nSlope","paramName":"REVERB_HIGHSLOPE","paramId":54,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"col":7}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Modulation", "pageNum": 3, "fw": {"lt":"1,1"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Depth","paramName":"REVERB_DEPTH","paramId":21,"widget":"knob","rawWidget":"knob"},
+            {"label":"Rate","paramName":"REVERB_RATE","paramId":22,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"LFO Phase","paramName":"REVERB_LFOPHASE","paramId":50,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Mod+Ducker", "pageNum": 3, "fw": {"lt":"6,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+            {"label":"Depth","paramName":"REVERB_DEPTH","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Rate","paramName":"REVERB_RATE","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"LFO Phase","paramName":"REVERB_LFOPHASE","paramId":50,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+            {"label":"Threshold","paramName":"REVERB_THRESH","paramId":41,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Attenuation","paramName":"REVERB_ATTEN","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Release Time","paramName":"REVERB_RELEASE","paramId":42,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] },
+        { "name": "Ducker", "pageNum": 4, "fw": {"lt":"1,1"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Threshold","paramName":"REVERB_THRESH","paramId":41,"widget":"knob","rawWidget":"knob"},
+            {"label":"Attenuation","paramName":"REVERB_ATTEN","paramId":40,"widget":"knob","rawWidget":"knob"},
+            {"label":"Release Time","paramName":"REVERB_RELEASE","paramId":42,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Pitch Shift", "pageNum": 4, "fw": {"gtet":"6,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Mix","paramName":"REVERB_PITCHMIX","paramId":55,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Voice 1\nShift","paramName":"REVERB_SHIFT1","paramId":56,"widget":"knob","rawWidget":"knob"},
+            {"label":"Voice 2\nShift","paramName":"REVERB_SHIFT2","paramId":57,"widget":"knob","rawWidget":"knob"},
+            {"label":"Voice Balance","paramName":"REVERB_PITCHBAL","paramId":63,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Splice Time","paramName":"REVERB_PITCHTIME","paramId":60,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Feedback","paramName":"REVERB_PITCHFDBK","paramId":58,"widget":"knob","rawWidget":"knob"},
+            {"label":"Direction","paramName":"REVERB_PITCHDIR","paramId":59,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Modulation","paramName":"REVERB_PITCHMOD","paramId":62,"widget":"knob","rawWidget":"knob"},
+            {"label":"Pitch High Cut","paramName":"REVERB_PITCHLPF","paramId":67,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
+          ] }
+        ] }
+      ] },
+      { "name": "Default", "value": null, "fw": {"lt":"6,01"}, "pages": [
+        { "name": "Basic", "pageNum": 0, "fw": {"lt":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Quality","paramName":"REVERB_QUALITY","paramId":47,"widget":"dropdown","rawWidget":"dropdown1"},
             {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
@@ -13981,7 +19466,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Basic", "pageNum": 0, "fw": {"gtet":"6,00"}, "value": "", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Basic", "pageNum": 0, "fw": {"gtet":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Quality","paramName":"REVERB_QUALITY","paramId":47,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
             {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":1}},
@@ -14020,42 +19505,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Advanced", "pageNum": 1, "value": "0,5", "selectorParamName": "REVERB_BASETYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Early Level","paramName":"REVERB_EARLYLEVEL","paramId":17,"widget":"knob","rawWidget":"knob"},
-            {"label":"Early Diffusion","paramName":"REVERB_EARLYDIFF","paramId":43,"widget":"knob","rawWidget":"knob"},
-            {"label":"Early Diff Time","paramName":"REVERB_EARLYDIFFTIME","paramId":44,"widget":"knob","rawWidget":"knob"},
-            {"label":"Early Decay","paramName":"REVERB_EARLYDECAY","paramId":45,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Mic Spacing","paramName":"REVERB_WIDTH","paramId":29,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Late Level","paramName":"REVERB_REVERBLEVEL","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":1}},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":2}},
-            {"label":"Input Diffusion","paramName":"REVERB_INPDIFF","paramId":25,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
-            {"label":"Input Diff Time","paramName":"REVERB_INDIFFTIME","paramId":26,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":5}},
-            {"label":"Wall Diffusion","paramName":"REVERB_DIFFUSION","paramId":14,"widget":"knob","rawWidget":"knob","placement":{"col":6},"fw":{"lt":"6,00"}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
-            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Advanced", "pageNum": 1, "fw": {"lt":"6,00"}, "value": "", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Advanced", "pageNum": 1, "fw": {"lt":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Early Level","paramName":"REVERB_EARLYLEVEL","paramId":17,"widget":"knob","rawWidget":"knob"},
             {"label":"Early Diffusion","paramName":"REVERB_EARLYDIFF","paramId":43,"widget":"knob","rawWidget":"knob"},
@@ -14091,34 +19541,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Advanced", "pageNum": 1, "fw": {"gtet":"6,00"}, "value": "4", "selectorParamName": "REVERB_BASETYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Plate Diffusion","paramName":"REVERB_DIFFUSION","paramId":14,"widget":"knob","rawWidget":"knob"},
-            {"label":"Input Diffusion","paramName":"REVERB_INPDIFF","paramId":25,"widget":"knob","rawWidget":"knob"},
-            {"label":"Input Diff Time","paramName":"REVERB_INDIFFTIME","paramId":26,"widget":"knob","rawWidget":"knob"},
-            {"label":"Dispersion","paramName":"REVERB_DISPERSION","paramId":52,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Pickup Spacing","paramName":"REVERB_WIDTH","paramId":29,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
-            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Advanced", "pageNum": 1, "fw": {"gtet":"6,00"}, "value": "", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Advanced", "pageNum": 1, "fw": {"gtet":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Early Level","paramName":"REVERB_EARLYLEVEL","paramId":17,"widget":"knob","rawWidget":"knob"},
             {"label":"Early Diffusion","paramName":"REVERB_EARLYDIFF","paramId":43,"widget":"knob","rawWidget":"knob"},
@@ -14248,32 +19671,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Ducker", "pageNum": 3, "fw": {"gtet":"6,00"}, "value": "0,5", "selectorParamName": "REVERB_BASETYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
-            {"label":"Threshold","paramName":"REVERB_THRESH","paramId":41,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
-            {"label":"Attenuation","paramName":"REVERB_ATTEN","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"Release Time","paramName":"REVERB_RELEASE","paramId":42,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
-            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Mod+Ducker", "pageNum": 3, "fw": {"gtet":"6,00"}, "value": "", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Mod+Ducker", "pageNum": 3, "fw": {"gtet":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
             {"label":"Depth","paramName":"REVERB_DEPTH","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -14326,33 +19724,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Spring", "pageNum": 4, "fw": {"lt":"6,00"}, "value": "0,5", "selectorParamName": "REVERB_BASETYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Number of Springs","paramName":"REVERB_NUMSPRINGS","paramId":27,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Spring Tone","paramName":"REVERB_TONE","paramId":28,"widget":"knob","rawWidget":"knob"},
-            {"label":"Spring Drive","paramName":"REVERB_DRIVE","paramId":36,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Boiiinnng!","paramName":"REVERB_DISPERSION","paramId":52,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
-            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Pitch Shift", "pageNum": 4, "fw": {"lt":"6,00"}, "value": "", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Pitch Shift", "pageNum": 4, "fw": {"lt":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mix","paramName":"REVERB_PITCHMIX","paramId":55,"widget":"knob","rawWidget":"knob"},
             {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
@@ -14386,71 +19758,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Pitch Shift", "pageNum": 4, "fw": {"gtet":"6,00"}, "value": "4", "selectorParamName": "REVERB_BASETYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Mix","paramName":"REVERB_PITCHMIX","paramId":55,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Voice 1\nShift","paramName":"REVERB_SHIFT1","paramId":56,"widget":"knob","rawWidget":"knob"},
-            {"label":"Voice 2\nShift","paramName":"REVERB_SHIFT2","paramId":57,"widget":"knob","rawWidget":"knob"},
-            {"label":"Voice Balance","paramName":"REVERB_PITCHBAL","paramId":63,"widget":"knob","rawWidget":"knob"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Splice Time","paramName":"REVERB_PITCHTIME","paramId":60,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Feedback","paramName":"REVERB_PITCHFDBK","paramId":58,"widget":"knob","rawWidget":"knob"},
-            {"label":"Direction","paramName":"REVERB_PITCHDIR","paramId":59,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Modulation","paramName":"REVERB_PITCHMOD","paramId":62,"widget":"knob","rawWidget":"knob"},
-            {"label":"Pitch High Cut","paramName":"REVERB_PITCHLPF","paramId":67,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
-            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Spring", "pageNum": 4, "fw": {"gtet":"6,00"}, "value": "0,5", "selectorParamName": "REVERB_BASETYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Tank Type","paramName":"REVERB_SPRINGTYPE","paramId":68,"widget":"dropdown","rawWidget":"dropdown1p5"},
-            {"label":"Number of Springs","paramName":"REVERB_NUMSPRINGS","paramId":27,"widget":"dropdown","rawWidget":"dropdown1","placement":{"offsetX":43}},
-            {"label":"Spring Tone","paramName":"REVERB_TONE","paramId":28,"widget":"knob","rawWidget":"knob"},
-            {"label":"Spring Drive","paramName":"REVERB_DRIVE","paramId":36,"widget":"knob","rawWidget":"knob"},
-            {"label":"Drip","paramName":"REVERB_DISPERSION","paramId":52,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Scattering","paramName":"REVERB_DIFFUSION","paramId":14,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
-            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Pitch Shift", "pageNum": 4, "fw": {"gtet":"6,00"}, "value": "", "selectorParamName": "REVERB_BASETYPE", "rows": [
+        { "name": "Pitch Shift", "pageNum": 4, "fw": {"gtet":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mix","paramName":"REVERB_PITCHMIX","paramId":55,"widget":"knob","rawWidget":"knob"},
             {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
@@ -14475,32 +19783,6 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
             {"label":"Spread","paramName":"REVERB_SPREAD","paramId":39,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
-            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":5,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":6,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
-        { "name": "Spring", "pageNum": 5, "fw": {"lt":"1,1"}, "value": "0,5", "selectorParamName": "REVERB_BASETYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Number of Springs","paramName":"REVERB_NUMSPRINGS","paramId":27,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Spring Tone","paramName":"REVERB_TONE","paramId":28,"widget":"knob","rawWidget":"knob"},
-            {"label":"Spring Drive","paramName":"REVERB_DRIVE","paramId":36,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Boiiinnng!","paramName":"REVERB_DISPERSION","paramId":52,"widget":"knob","rawWidget":"knob","fw":{"gtet":"12,00"}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
-            {"label":"Mix","paramName":"REVERB_MIX","paramId":0,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
-            {"label":"Level","paramName":"REVERB_LEVEL","paramId":1,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Balance","paramName":"REVERB_PAN","paramId":2,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":51,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
@@ -14857,8 +20139,8 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Tremolo",
     "family": "TREMOLO",
     "variants": [
-      { "name": "Tremolo", "value": null, "pages": [
-        { "name": "Tremolo", "pageNum": 0, "fw": {"lt":"6,00"}, "value": "0,2,4", "selectorParamName": "TREMOLO_TYPE", "rows": [
+      { "name": "0,2,4", "value": "0,2,4", "pages": [
+        { "name": "Tremolo", "pageNum": 0, "fw": {"lt":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":5,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -14888,8 +20170,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"TREMOLO_BYPASS","paramId":14,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"TREMOLO_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
-        ] },
-        { "name": "Panner", "pageNum": 0, "fw": {"lt":"6,00"}, "value": "1", "selectorParamName": "TREMOLO_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "1", "value": "1", "pages": [
+        { "name": "Panner", "pageNum": 0, "fw": {"lt":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":5,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -14920,7 +20204,41 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"TREMOLO_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Tremolo", "pageNum": 0, "fw": {"lt":"6,00"}, "value": "3", "selectorParamName": "TREMOLO_TYPE", "rows": [
+        { "name": "Panner", "pageNum": 0, "fw": {"gtet":"6,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Rate","paramName":"TREMOLO_RATE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":5,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":2}},
+            {"label":"LFO Type","paramName":"TREMOLO_LFOTYPE","paramId":1,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":3}},
+            {"label":"LFO Duty Cycle","paramName":"TREMOLO_DUTY","paramId":4,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"LFO Phase","paramName":"TREMOLO_PHASE","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_trem","placement":{"col":6}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Width","paramName":"TREMOLO_WIDTH","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Ducking","paramName":"TREMOLO_DUCKING","paramId":21,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1},"fw":{"gtet":"8,02"}},
+            {"label":"Pan Center","paramName":"TREMOLO_CENTER","paramId":13,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":3}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":4}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":5}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":6}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":7}},
+            {"label":"Trigger Threshold","paramName":"TREMOLO_THRESH","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":8}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"TREMOLO_LEVEL","paramId":7,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"TREMOLO_PAN","paramId":8,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"TREMOLO_BYPASSMODE","paramId":9,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"TREMOLO_BYPASS","paramId":14,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"TREMOLO_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] }
+      ] },
+      { "name": "3", "value": "3", "pages": [
+        { "name": "Tremolo", "pageNum": 0, "fw": {"lt":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":2,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":5,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -14954,39 +20272,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"TREMOLO_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
           ] }
         ] },
-        { "name": "Panner", "pageNum": 0, "fw": {"gtet":"6,00"}, "value": "1", "selectorParamName": "TREMOLO_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Rate","paramName":"TREMOLO_RATE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
-            {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":5,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":2}},
-            {"label":"LFO Type","paramName":"TREMOLO_LFOTYPE","paramId":1,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":3}},
-            {"label":"LFO Duty Cycle","paramName":"TREMOLO_DUTY","paramId":4,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"LFO Phase","paramName":"TREMOLO_PHASE","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
-            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_trem","placement":{"col":6}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Width","paramName":"TREMOLO_WIDTH","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
-            {"label":"Ducking","paramName":"TREMOLO_DUCKING","paramId":21,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1},"fw":{"gtet":"8,02"}},
-            {"label":"Pan Center","paramName":"TREMOLO_CENTER","paramId":13,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":3}},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":4}},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":5}},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":6}},
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":7}},
-            {"label":"Trigger Threshold","paramName":"TREMOLO_THRESH","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":8}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Level","paramName":"TREMOLO_LEVEL","paramId":7,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"TREMOLO_PAN","paramId":8,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"TREMOLO_BYPASSMODE","paramId":9,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"TREMOLO_BYPASS","paramId":14,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"TREMOLO_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene"},
-          ] }
-        ] },
-        { "name": "Tremolo", "pageNum": 0, "fw": {"gtet":"6,00"}, "value": "3", "selectorParamName": "TREMOLO_TYPE", "rows": [
+        { "name": "Tremolo", "pageNum": 0, "fw": {"gtet":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":5,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -15019,8 +20305,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"TREMOLO_BYPASS","paramId":14,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"TREMOLO_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
-        ] },
-        { "name": "Tremolo", "pageNum": 0, "fw": {"gtet":"6,00"}, "value": "6", "selectorParamName": "TREMOLO_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "6", "value": "6", "pages": [
+        { "name": "Tremolo", "pageNum": 0, "fw": {"gtet":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":5,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -15046,8 +20334,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"TREMOLO_BYPASS","paramId":14,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"TREMOLO_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
-        ] },
-        { "name": "Tremolo", "pageNum": 0, "fw": {"gtet":"6,00"}, "value": "", "selectorParamName": "TREMOLO_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "Default", "value": null, "pages": [
+        { "name": "Tremolo", "pageNum": 0, "fw": {"gtet":"6,00"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":5,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -15325,30 +20615,7 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Wah",
     "family": "WAH",
     "variants": [
-      { "name": "Wah", "value": null, "pages": [
-        { "name": "Wah", "pageNum": 0, "value": "8", "selectorParamName": "WAH_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Control","paramName":"WAH_CONTROL","paramId":5,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
-            {"label":"Control\nTaper","paramName":"WAH_TAPER","paramId":11,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
-            {"label":"Frequency Min","paramName":"WAH_FSTART","paramId":1,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
-            {"label":"Frequency Max","paramName":"WAH_FSTOP","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"Resonance\nQ","paramName":"WAH_Q","paramId":3,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
-            {"label":"Low Cut Frequency","paramName":"WAH_HPF","paramId":14,"widget":"knob","rawWidget":"knob","placement":{"col":8}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Drive","paramName":"WAH_DRIVE","paramId":10,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Level","paramName":"WAH_LEVEL","paramId":6,"widget":"knob","rawWidget":"knob"},
-            {"label":"Balance","paramName":"WAH_PAN","paramId":7,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
-            {"label":"Bypass\nMode","paramName":"WAH_BYPASSMODE","paramId":8,"widget":"dropdown","rawWidget":"dropdown1Tight"},
-            {"label":"Bypass","paramName":"WAH_BYPASS","paramId":12,"widget":"button","rawWidget":"btnBypass"},
-            {"label":"Scene\nIgnore","paramName":"WAH_SCENEIGNORE","paramId":24,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"2,03"}},
-          ] }
-        ] },
+      { "name": "8", "value": "8", "pages": [
         { "name": "Wah", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Control","paramName":"WAH_CONTROL","paramId":5,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -15356,13 +20623,10 @@ export const FM9_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Frequency Min","paramName":"WAH_FSTART","paramId":1,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
             {"label":"Frequency Max","paramName":"WAH_FSTOP","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
             {"label":"Resonance\nQ","paramName":"WAH_Q","paramId":3,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
-            {"label":"Inductor Bias","paramName":"WAH_BIAS","paramId":13,"widget":"knob","rawWidget":"knob","placement":{"col":7}},
             {"label":"Low Cut Frequency","paramName":"WAH_HPF","paramId":14,"widget":"knob","rawWidget":"knob","placement":{"col":8}},
           ] },
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"WAH_DRIVE","paramId":10,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
-            {"label":"Fat","paramName":"WAH_MIX","paramId":9,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"Q\nTracking","paramName":"WAH_TRACK","paramId":4,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Level","paramName":"WAH_LEVEL","paramId":6,"widget":"knob","rawWidget":"knob"},

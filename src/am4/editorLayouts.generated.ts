@@ -19,8 +19,44 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Chorus",
     "family": "CHORUS",
     "variants": [
-      { "name": "Chorus LT 2.01", "value": null, "fw": {"lt":"2,01"}, "pages": [
-        { "name": "Config", "pageNum": 0, "value": "15", "selectorParamName": "CHORUS_TYPE", "rows": [
+      { "name": "0,2,4,9,17,18,19", "value": "0,2,4,9,17,18,19", "fw": {"lt":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Time","paramName":"CHORUS_DELAYTIME","paramId":16,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Tempo","paramName":"CHORUS_TEMPO","paramId":13,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "10,11,12", "value": "10,11,12", "fw": {"lt":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Mode","paramName":"CHORUS_MODE","paramId":27,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Stereo Spread","paramName":"CHORUS_SPREAD","paramId":26,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "15", "value": "15", "fw": {"lt":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Left\nDepth","paramName":"CHORUS_DEPTHL","paramId":28,"widget":"knob","rawWidget":"knob"},
             {"label":"Center\nDepth","paramName":"CHORUS_DEPTHC","paramId":29,"widget":"knob","rawWidget":"knob"},
@@ -38,8 +74,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Stereo Spread","paramName":"CHORUS_SPREAD","paramId":26,"widget":"knob","rawWidget":"knob"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "16", "selectorParamName": "CHORUS_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "16", "value": "16", "fw": {"lt":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate Left","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Rate Right","paramName":"CHORUS_RATE2","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -60,40 +98,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Stereo Spread","paramName":"CHORUS_SPREAD","paramId":26,"widget":"knob","rawWidget":"knob"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "10,11,12", "selectorParamName": "CHORUS_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Mode","paramName":"CHORUS_MODE","paramId":27,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
-            {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Stereo Spread","paramName":"CHORUS_SPREAD","paramId":26,"widget":"knob","rawWidget":"knob"},
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "0,2,4,9,17,18,19", "selectorParamName": "CHORUS_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob"},
-            {"label":"Time","paramName":"CHORUS_DELAYTIME","paramId":16,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Tempo","paramName":"CHORUS_TEMPO","paramId":13,"widget":"dropdown","rawWidget":"dropdown1"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "", "selectorParamName": "CHORUS_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "Default", "value": null, "fw": {"lt":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob"},
@@ -113,8 +121,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "Chorus GTET 2.01", "value": null, "fw": {"gtet":"2,01"}, "pages": [
-        { "name": "Config", "pageNum": 0, "value": "0,2,4,18,19,20,22,23,25", "selectorParamName": "CHORUS_TYPE", "rows": [
+      { "name": "0,2,4,18,19,20,22,23,25", "value": "0,2,4,18,19,20,22,23,25", "fw": {"gtet":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -131,15 +139,18 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "24", "selectorParamName": "CHORUS_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "1", "value": "1", "fw": {"gtet":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
-            {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob"},
-            {"label":"Low Cut","paramName":"CHORUS_LOWCUT","paramId":25,"widget":"knob","rawWidget":"knob"},
+            {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Time","paramName":"CHORUS_DELAYTIME","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
           ] },
           { "section": "parameters", "controls": [
             {"label":"Tempo","paramName":"CHORUS_TEMPO","paramId":13,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Mod Phase","paramName":"CHORUS_LFOPHASE","paramId":17,"widget":"knob","rawWidget":"knob"},
+            {"label":"Phase Reverse","paramName":"CHORUS_PHASEREV","paramId":20,"widget":"dropdown","rawWidget":"dropdown1"},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
@@ -148,25 +159,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "21", "selectorParamName": "CHORUS_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob"},
-            {"label":"EQ","paramName":"CHORUS_TREBLE","paramId":null,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Tempo","paramName":"CHORUS_TEMPO","paramId":13,"widget":"dropdown","rawWidget":"dropdown1"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "3,5,6,7,8,13,14", "selectorParamName": "CHORUS_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "3,5,6,7,8,13,14", "value": "3,5,6,7,8,13,14", "fw": {"gtet":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob"},
@@ -185,33 +181,18 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "1", "selectorParamName": "CHORUS_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
-            {"label":"Time","paramName":"CHORUS_DELAYTIME","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Tempo","paramName":"CHORUS_TEMPO","paramId":13,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Mod Phase","paramName":"CHORUS_LFOPHASE","paramId":17,"widget":"knob","rawWidget":"knob"},
-            {"label":"Phase Reverse","paramName":"CHORUS_PHASEREV","paramId":20,"widget":"dropdown","rawWidget":"dropdown1"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "26", "selectorParamName": "CHORUS_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "9,17", "value": "9,17", "fw": {"gtet":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Time","paramName":"CHORUS_DELAYTIME","paramId":16,"widget":"knob","rawWidget":"knob"},
           ] },
           { "section": "parameters", "controls": [
             {"label":"Tempo","paramName":"CHORUS_TEMPO","paramId":13,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
-            {"label":"Phase Reverse","paramName":"CHORUS_PHASEREV","paramId":20,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":2}},
+            {"label":"Width","paramName":"CHORUS_WIDTH","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
@@ -220,8 +201,48 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "16", "selectorParamName": "CHORUS_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "10,11,12", "value": "10,11,12", "fw": {"gtet":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dimension","paramName":"CHORUS_MODE","paramId":27,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Stereo Spread","paramName":"CHORUS_SPREAD","paramId":26,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "15", "value": "15", "fw": {"gtet":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Left\nDepth","paramName":"CHORUS_DEPTHL","paramId":28,"widget":"knob","rawWidget":"knob"},
+            {"label":"Center\nDepth","paramName":"CHORUS_DEPTHC","paramId":29,"widget":"knob","rawWidget":"knob"},
+            {"label":"Right\nDepth","paramName":"CHORUS_DEPTHR","paramId":30,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tempo","paramName":"CHORUS_TEMPO","paramId":13,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Stereo Spread","paramName":"CHORUS_SPREAD","paramId":26,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "16", "value": "16", "fw": {"gtet":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate Left","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Rate Right","paramName":"CHORUS_RATE2","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -242,15 +263,16 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Stereo Spread","paramName":"CHORUS_SPREAD","paramId":26,"widget":"knob","rawWidget":"knob"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "15", "selectorParamName": "CHORUS_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Left\nDepth","paramName":"CHORUS_DEPTHL","paramId":28,"widget":"knob","rawWidget":"knob"},
-            {"label":"Center\nDepth","paramName":"CHORUS_DEPTHC","paramId":29,"widget":"knob","rawWidget":"knob"},
-            {"label":"Right\nDepth","paramName":"CHORUS_DEPTHR","paramId":30,"widget":"knob","rawWidget":"knob"},
-          ] },
+        ] }
+      ] },
+      { "name": "21", "value": "21", "fw": {"gtet":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"EQ","paramName":"CHORUS_TREBLE","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
             {"label":"Tempo","paramName":"CHORUS_TEMPO","paramId":13,"widget":"dropdown","rawWidget":"dropdown1"},
           ] },
           { "section": "mixer", "controls": [
@@ -258,34 +280,38 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
           ] },
           { "section": "mixer", "controls": [
-            {"label":"Stereo Spread","paramName":"CHORUS_SPREAD","paramId":26,"widget":"knob","rawWidget":"knob"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "10,11,12", "selectorParamName": "CHORUS_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "24", "value": "24", "fw": {"gtet":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob"},
-            {"label":"Dimension","paramName":"CHORUS_MODE","paramId":27,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Low Cut","paramName":"CHORUS_LOWCUT","paramId":25,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Tempo","paramName":"CHORUS_TEMPO","paramId":13,"widget":"dropdown","rawWidget":"dropdown1"},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
             {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
           ] },
           { "section": "mixer", "controls": [
-            {"label":"Stereo Spread","paramName":"CHORUS_SPREAD","paramId":26,"widget":"knob","rawWidget":"knob"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "9,17", "selectorParamName": "CHORUS_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "26", "value": "26", "fw": {"gtet":"2,01"}, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Depth","paramName":"CHORUS_DEPTH","paramId":14,"widget":"knob","rawWidget":"knob"},
-            {"label":"Time","paramName":"CHORUS_DELAYTIME","paramId":16,"widget":"knob","rawWidget":"knob"},
           ] },
           { "section": "parameters", "controls": [
             {"label":"Tempo","paramName":"CHORUS_TEMPO","paramId":13,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
-            {"label":"Width","paramName":"CHORUS_WIDTH","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Phase Reverse","paramName":"CHORUS_PHASEREV","paramId":20,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":2}},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
@@ -727,8 +753,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Delay",
     "family": "DELAY",
     "variants": [
-      { "name": "Delay", "value": null, "pages": [
-        { "name": "Config", "pageNum": 0, "value": "0", "selectorParamName": "DELAY_TYPE", "rows": [
+      { "name": "0", "value": "0", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -748,7 +774,28 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Config", "pageNum": 0, "value": "1", "selectorParamName": "DELAY_TYPE", "rows": [
+        { "name": "Mod/EQ", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Modulation\nRate","paramName":"DELAY_RATE1","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Modulation\nDepth","paramName":"DELAY_DEPTH1","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Modulation Phase","paramName":"DELAY_LFO1PHASE","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut\nFrequency","paramName":"DELAY_LOCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"High Cut\nFrequency","paramName":"DELAY_HICUT","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "1", "value": "1", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -769,7 +816,28 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Config", "pageNum": 0, "value": "2", "selectorParamName": "DELAY_TYPE", "rows": [
+        { "name": "Mod/EQ", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Modulation\nRate","paramName":"DELAY_RATE1","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Modulation\nDepth","paramName":"DELAY_DEPTH1","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Modulation Phase","paramName":"DELAY_LFO1PHASE","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut\nFrequency","paramName":"DELAY_LOCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"High Cut\nFrequency","paramName":"DELAY_HICUT","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "2", "value": "2", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -789,7 +857,28 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Config", "pageNum": 0, "value": "3", "selectorParamName": "DELAY_TYPE", "rows": [
+        { "name": "Mod/EQ", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Modulation\nRate","paramName":"DELAY_RATE1","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Modulation\nDepth","paramName":"DELAY_DEPTH1","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Modulation Phase","paramName":"DELAY_LFO1PHASE","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut\nFrequency","paramName":"DELAY_LOCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"High Cut\nFrequency","paramName":"DELAY_HICUT","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "3", "value": "3", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time L","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo L","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -817,7 +906,28 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Config", "pageNum": 0, "value": "4", "selectorParamName": "DELAY_TYPE", "rows": [
+        { "name": "Mod/EQ", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Modulation\nRate","paramName":"DELAY_RATE1","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Modulation\nDepth","paramName":"DELAY_DEPTH1","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Modulation Phase","paramName":"DELAY_LFO1PHASE","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut\nFrequency","paramName":"DELAY_LOCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"High Cut\nFrequency","paramName":"DELAY_HICUT","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "4", "value": "4", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -839,7 +949,28 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Config", "pageNum": 0, "value": "5", "selectorParamName": "DELAY_TYPE", "rows": [
+        { "name": "Mod/EQ", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Modulation\nRate","paramName":"DELAY_RATE1","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Modulation\nDepth","paramName":"DELAY_DEPTH1","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Modulation Phase","paramName":"DELAY_LFO1PHASE","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut\nFrequency","paramName":"DELAY_LOCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"High Cut\nFrequency","paramName":"DELAY_HICUT","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "5", "value": "5", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -867,7 +998,50 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Config", "pageNum": 0, "value": "6", "selectorParamName": "DELAY_TYPE", "rows": [
+        { "name": "Mod/EQ", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Modulation\nRate","paramName":"DELAY_RATE1","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Modulation\nDepth","paramName":"DELAY_DEPTH1","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Modulation Phase","paramName":"DELAY_LFO1PHASE","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut\nFrequency","paramName":"DELAY_LOCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"High Cut\nFrequency","paramName":"DELAY_HICUT","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Sweep", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Sweep Rate","paramName":"DELAY_RATE3","paramId":56,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Sweep Tempo","paramName":"DELAY_LFO3TEMPO","paramId":59,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
+            {"label":"Sweep Resonance","paramName":"DELAY_Q","paramId":62,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Sweep Start Freq","paramName":"DELAY_FSTART","paramId":60,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Sweep Stop Freq","paramName":"DELAY_FSTOP","paramId":61,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Sweep Phase","paramName":"DELAY_LFO3PHASE","paramId":58,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Sweep Filter","paramName":"DELAY_SVFTYPE","paramId":89,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Sweep Shape","paramName":"DELAY_LFO3TYPE","paramId":57,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "6", "value": "6", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -892,8 +1066,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"High Cut","paramName":"DELAY_HICUT","paramId":21,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1059,150"}},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "7", "selectorParamName": "DELAY_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "7", "value": "7", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tempo","paramName":"DELAY_TEMPO","paramId":19,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
@@ -913,7 +1089,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Mod/EQ", "pageNum": 1, "value": "0,1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27", "selectorParamName": "DELAY_TYPE", "rows": [
+        { "name": "Mod/EQ", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Modulation\nRate","paramName":"DELAY_RATE1","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Modulation\nDepth","paramName":"DELAY_DEPTH1","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -931,19 +1107,18 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Sweep", "pageNum": 2, "value": "5", "selectorParamName": "DELAY_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27", "value": "8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27", "pages": [
+        { "name": "Mod/EQ", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
-            {"label":"Sweep Rate","paramName":"DELAY_RATE3","paramId":56,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
-            {"label":"Sweep Tempo","paramName":"DELAY_LFO3TEMPO","paramId":59,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
-            {"label":"Sweep Resonance","paramName":"DELAY_Q","paramId":62,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-            {"label":"Sweep Start Freq","paramName":"DELAY_FSTART","paramId":60,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
-            {"label":"Sweep Stop Freq","paramName":"DELAY_FSTOP","paramId":61,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"Sweep Phase","paramName":"DELAY_LFO3PHASE","paramId":58,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Modulation\nRate","paramName":"DELAY_RATE1","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Modulation\nDepth","paramName":"DELAY_DEPTH1","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Modulation Phase","paramName":"DELAY_LFO1PHASE","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
           ] },
           { "section": "parameters", "controls": [
-            {"label":"Sweep Filter","paramName":"DELAY_SVFTYPE","paramId":89,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
-            {"label":"Sweep Shape","paramName":"DELAY_LFO3TYPE","paramId":57,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
+            {"label":"Low Cut\nFrequency","paramName":"DELAY_LOCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"High Cut\nFrequency","paramName":"DELAY_HICUT","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
@@ -3561,8 +3736,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Filter",
     "family": "FILTER",
     "variants": [
-      { "name": "Filter", "value": null, "pages": [
-        { "name": "Config", "pageNum": 0, "value": "0", "selectorParamName": "FILTER_TYPE", "rows": [
+      { "name": "0", "value": "0", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
           ] },
@@ -3576,8 +3751,74 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ] }
+      ] },
+      { "name": "1,2,3,7", "value": "1,2,3,7", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Order","paramName":"FILTER_ORDER","paramId":14,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Q","paramName":"FILTER_Q","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Low Cut","paramName":"FILTER_LOWCUT","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"High Cut","paramName":"FILTER_HICUT","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
         ] },
-        { "name": "Config", "pageNum": 0, "value": "8", "selectorParamName": "FILTER_TYPE", "rows": [
+        { "name": "Modulation", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":22,"widget":"toggle","rawWidget":"toggle","placement":{"col":0}},
+            {"label":"RANGE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"253,200"}},
+            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Mod Freq","paramName":"FILTER_MODFREQ","paramId":26,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"473,200"}},
+            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":23,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":3}},
+            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Tempo","paramName":"FILTER_TEMPO","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "4,5,6,9,10,11", "value": "4,5,6,9,10,11", "pages": [
+        { "name": "Modulation", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":22,"widget":"toggle","rawWidget":"toggle","placement":{"col":0}},
+            {"label":"RANGE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"253,200"}},
+            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Mod Freq","paramName":"FILTER_MODFREQ","paramId":26,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"473,200"}},
+            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":23,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":3}},
+            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Tempo","paramName":"FILTER_TEMPO","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "8", "value": "8", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
           ] },
@@ -3595,7 +3836,49 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Config", "pageNum": 0, "value": "14", "selectorParamName": "FILTER_TYPE", "rows": [
+        { "name": "Modulation", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":22,"widget":"toggle","rawWidget":"toggle","placement":{"col":0}},
+            {"label":"RANGE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"253,200"}},
+            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Mod Freq","paramName":"FILTER_MODFREQ","paramId":26,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"473,200"}},
+            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":23,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":3}},
+            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Tempo","paramName":"FILTER_TEMPO","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "12,13", "value": "12,13", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Delay Time","paramName":"FILTER_COMBTIME","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Depth","paramName":"FILTER_FEEDBACK","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Low Cut","paramName":"FILTER_LOWCUT","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"High Cut","paramName":"FILTER_HICUT","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "14", "value": "14", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
           ] },
@@ -3613,15 +3896,19 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
-        { "name": "Config", "pageNum": 0, "value": "12,13", "selectorParamName": "FILTER_TYPE", "rows": [
+        { "name": "Modulation", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
           ] },
           { "section": "parameters", "controls": [
-            {"label":"Delay Time","paramName":"FILTER_COMBTIME","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"Depth","paramName":"FILTER_FEEDBACK","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-            {"label":"Low Cut","paramName":"FILTER_LOWCUT","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"High Cut","paramName":"FILTER_HICUT","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":22,"widget":"toggle","rawWidget":"toggle","placement":{"col":0}},
+            {"label":"RANGE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"253,200"}},
+            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Mod Freq","paramName":"FILTER_MODFREQ","paramId":26,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"473,200"}},
+            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":23,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":3}},
+            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Tempo","paramName":"FILTER_TEMPO","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
@@ -3629,8 +3916,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "15,17", "selectorParamName": "FILTER_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "15,17", "value": "15,17", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mode","paramName":"FILTER_EVFTYPE","paramId":29,"widget":"dropdown","rawWidget":"dropdown1"},
             {"label":"Resonance","paramName":"FILTER_EVFQ","paramId":30,"widget":"knob","rawWidget":"knob"},
@@ -3652,8 +3941,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Filter", "pageNum": 0, "value": "16", "selectorParamName": "FILTER_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "16", "value": "16", "pages": [
+        { "name": "Filter", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mode","paramName":"FILTER_EVFTYPE","paramId":29,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
             {"label":"Resonance","paramName":"FILTER_EVFQ","paramId":30,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -3675,26 +3966,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "1,2,3,7", "selectorParamName": "FILTER_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Order","paramName":"FILTER_ORDER","paramId":14,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
-            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"Q","paramName":"FILTER_Q","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-            {"label":"Low Cut","paramName":"FILTER_LOWCUT","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"High Cut","paramName":"FILTER_HICUT","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "", "selectorParamName": "FILTER_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "Default", "value": null, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
           ] },
@@ -3712,48 +3987,6 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Modulation", "pageNum": 1, "value": "1,2,3,4,5,6,7,8,9,10,11", "selectorParamName": "FILTER_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":22,"widget":"toggle","rawWidget":"toggle","placement":{"col":0}},
-            {"label":"RANGE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"253,200"}},
-            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"Mod Freq","paramName":"FILTER_MODFREQ","paramId":26,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-            {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"473,200"}},
-            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":23,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":3}},
-            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"Tempo","paramName":"FILTER_TEMPO","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Modulation", "pageNum": 1, "value": "14", "selectorParamName": "FILTER_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Enable","paramName":"FILTER_LFOENABLE","paramId":22,"widget":"toggle","rawWidget":"toggle","placement":{"col":0}},
-            {"label":"RANGE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"253,200"}},
-            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"Mod Freq","paramName":"FILTER_MODFREQ","paramId":26,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-            {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"473,200"}},
-            {"label":"Type","paramName":"FILTER_LFOTYPE","paramId":23,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":3}},
-            {"label":"Rate","paramName":"FILTER_LFOFREQ","paramId":24,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-            {"label":"Tempo","paramName":"FILTER_TEMPO","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
         ] }
       ] }
     ]
@@ -3762,8 +3995,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Flanger",
     "family": "FLANGER",
     "variants": [
-      { "name": "Flanger", "value": null, "pages": [
-        { "name": "Config", "pageNum": 0, "value": "0,2,7,8,9,10,11,12,15,18,19,20,21,24,30", "selectorParamName": "FLANGER_TYPE", "rows": [
+      { "name": "0,2,7,8,9,10,11,12,15,18,19,20,21,24,30", "value": "0,2,7,8,9,10,11,12,15,18,19,20,21,24,30", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Depth","paramName":"FLANGER_DEPTH","paramId":13,"widget":"knob","rawWidget":"knob"},
@@ -3782,8 +4015,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "1,3,5,16,22,23,25,26,28,29", "selectorParamName": "FLANGER_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "1,3,5,16,22,23,25,26,28,29", "value": "1,3,5,16,22,23,25,26,28,29", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Depth","paramName":"FLANGER_DEPTH","paramId":13,"widget":"knob","rawWidget":"knob"},
@@ -3802,8 +4037,47 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "14", "selectorParamName": "FLANGER_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "4,6,17,27", "value": "4,6,17,27", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Depth","paramName":"FLANGER_DEPTH","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"Feedback","paramName":"FLANGER_FEEDBACK","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Delay","paramName":"FLANGER_DRYDELAY","paramId":16,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Tempo","paramName":"FLANGER_TEMPO","paramId":12,"widget":"dropdown","rawWidget":"dropdown1"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "13,31", "value": "13,31", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Manual","paramName":"FLANGER_MANUAL","paramId":15,"widget":"knob","rawWidget":"knob"},
+            {"label":"Feedback","paramName":"FLANGER_FEEDBACK","paramId":14,"widget":"knob","rawWidget":"knob"},
+            {"label":"Dry Delay","paramName":"FLANGER_DRYDELAY","paramId":16,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "14", "value": "14", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Depth","paramName":"FLANGER_DEPTH","paramId":13,"widget":"knob","rawWidget":"knob"},
@@ -3813,39 +4087,6 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "parameters", "controls": [
             {"label":"Tempo","paramName":"FLANGER_TEMPO","paramId":12,"widget":"dropdown","rawWidget":"dropdown1"},
             {"label":"Smooth Steps","paramName":"FLANGER_LFOFILTER","paramId":19,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "4,6,17,27", "selectorParamName": "FLANGER_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Depth","paramName":"FLANGER_DEPTH","paramId":13,"widget":"knob","rawWidget":"knob"},
-            {"label":"Feedback","paramName":"FLANGER_FEEDBACK","paramId":14,"widget":"knob","rawWidget":"knob"},
-            {"label":"Dry Delay","paramName":"FLANGER_DRYDELAY","paramId":16,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Tempo","paramName":"FLANGER_TEMPO","paramId":12,"widget":"dropdown","rawWidget":"dropdown1"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "13,31", "selectorParamName": "FLANGER_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Manual","paramName":"FLANGER_MANUAL","paramId":15,"widget":"knob","rawWidget":"knob"},
-            {"label":"Feedback","paramName":"FLANGER_FEEDBACK","paramId":14,"widget":"knob","rawWidget":"knob"},
-            {"label":"Dry Delay","paramName":"FLANGER_DRYDELAY","paramId":16,"widget":"knob","rawWidget":"knob"},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
@@ -3888,8 +4129,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Drive",
     "family": "FUZZ",
     "variants": [
-      { "name": "Drive", "value": null, "pages": [
-        { "name": "Config", "pageNum": 0, "value": "0,7", "selectorParamName": "FUZZ_TYPE", "rows": [
+      { "name": "0,7", "value": "0,7", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Filter","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -3898,8 +4139,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "1", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "1", "value": "1", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Sustain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -3913,20 +4156,22 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "73", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "2,3,4,5,6,8,9,11,12,13,14,18,20,21,22,23,28,29,30,32,33,35,37,40,41,43,47,52,53,71", "value": "2,3,4,5,6,8,9,11,12,13,14,18,20,21,22,23,28,29,30,32,33,35,37,40,41,43,47,52,53,71", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
-            {"label":"Sustain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
-            {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"Tone","paramName":"FUZZ_TONESWITCH","paramId":48,"widget":"toggle","rawWidget":"toggle","placement":{"col":2}},
-            {"label":"Wicker","paramName":"FUZZ_WICKER","paramId":47,"widget":"toggle","rawWidget":"toggle","placement":{"col":3}},
-            {"label":"Volume","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "10", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "10", "value": "10", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -3935,8 +4180,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "15,46,72", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "15,46,72", "value": "15,46,72", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -3945,85 +4192,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "61", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
-            {"label":"High Cut","paramName":"FUZZ_MODESWITCH","paramId":46,"widget":"toggle","rawWidget":"toggle"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "31", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Mode","paramName":"FUZZ_MODESWITCH","paramId":46,"widget":"dropdown","rawWidget":"dropdown1"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "42,48,49,51", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "2,3,4,5,6,8,9,11,12,13,14,18,20,21,22,23,28,29,30,32,33,35,37,40,41,43,47,52,53,71", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "19,24,25,27,55,56,62", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
-            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":23,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "68,70", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
-            {"label":"Mid","paramName":"FUZZ_MID","paramId":21,"widget":"knob","rawWidget":"knob"},
-            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":23,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "66", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
-            {"label":"Mid","paramName":"FUZZ_MID","paramId":21,"widget":"knob","rawWidget":"knob"},
-            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":23,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "16", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "16", "value": "16", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
@@ -4034,8 +4206,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "17", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "17", "value": "17", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
@@ -4051,8 +4225,23 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "26", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "19,24,25,27,55,56,62", "value": "19,24,25,27,55,56,62", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":23,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "26", "value": "26", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Voice","paramName":"FUZZ_BASS","paramId":44,"widget":"knob","rawWidget":"knob"},
@@ -4062,8 +4251,23 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "34", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "31", "value": "31", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mode","paramName":"FUZZ_MODESWITCH","paramId":46,"widget":"dropdown","rawWidget":"dropdown1"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "34", "value": "34", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_BASS","paramId":44,"widget":"knob","rawWidget":"knob"},
@@ -4074,19 +4278,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "39", "selectorParamName": "FUZZ_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
-            {"label":"Bass","paramName":"FUZZ_BASS","paramId":44,"widget":"knob","rawWidget":"knob"},
-            {"label":"Treble","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "36", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "36", "value": "36", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Blend","paramName":"FUZZ_MIX","paramId":14,"widget":"knob","rawWidget":"knob"},
             {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
@@ -4107,8 +4302,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "38", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "38", "value": "38", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass Cut","paramName":"FUZZ_BASS","paramId":44,"widget":"knob","rawWidget":"knob"},
@@ -4118,8 +4315,35 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "44", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "39", "value": "39", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bass","paramName":"FUZZ_BASS","paramId":44,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "42,48,49,51", "value": "42,48,49,51", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "44", "value": "44", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Attack","paramName":"FUZZ_BASS","paramId":44,"widget":"knob","rawWidget":"knob"},
@@ -4129,8 +4353,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "45", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "45", "value": "45", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -4140,8 +4366,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "50", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "50", "value": "50", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Cut","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -4150,8 +4378,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "54", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "54", "value": "54", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Treble","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -4160,8 +4390,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "57", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "57", "value": "57", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Presence","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -4170,8 +4402,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "58", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "58", "value": "58", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Boost","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
@@ -4186,8 +4420,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "59", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "59", "value": "59", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Overdrive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
@@ -4195,8 +4431,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "60", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "60", "value": "60", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Spectrum","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -4206,8 +4444,23 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "63", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "61", "value": "61", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
+            {"label":"High Cut","paramName":"FUZZ_MODESWITCH","paramId":46,"widget":"toggle","rawWidget":"toggle"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "63", "value": "63", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
             {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":23,"widget":"knob","rawWidget":"knob"},
@@ -4216,8 +4469,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "64,65", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "64,65", "value": "64,65", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Volume","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
@@ -4227,8 +4482,24 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "67", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "66", "value": "66", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":21,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":23,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "67", "value": "67", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -4239,8 +4510,24 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "69", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "68,70", "value": "68,70", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
+            {"label":"Mid","paramName":"FUZZ_MID","paramId":21,"widget":"knob","rawWidget":"knob"},
+            {"label":"Treble","paramName":"FUZZ_TREBLE","paramId":23,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "69", "value": "69", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -4250,8 +4537,24 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "74,75", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "73", "value": "73", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Sustain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Tone","paramName":"FUZZ_TONE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Tone","paramName":"FUZZ_TONESWITCH","paramId":48,"widget":"toggle","rawWidget":"toggle","placement":{"col":2}},
+            {"label":"Wicker","paramName":"FUZZ_WICKER","paramId":47,"widget":"toggle","rawWidget":"toggle","placement":{"col":3}},
+            {"label":"Volume","paramName":"FUZZ_LEVEL","paramId":13,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "74,75", "value": "74,75", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE2","paramId":49,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
@@ -4267,8 +4570,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "76", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "76", "value": "76", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
@@ -4281,8 +4586,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "77", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "77", "value": "77", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
             {"label":"Low","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
@@ -4292,8 +4599,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "", "selectorParamName": "FUZZ_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "Default", "value": null, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Authentic layout will be provided in an upcoming editor release.","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel"},
           ] },
@@ -4313,8 +4622,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "GateExpander",
     "family": "GATE",
     "variants": [
-      { "name": "Gate", "value": null, "pages": [
-        { "name": "Config", "pageNum": 0, "value": "0", "selectorParamName": "GATE_TYPE", "rows": [
+      { "name": "0", "value": "0", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"GATE_THRESH","paramId":10,"widget":"knob","rawWidget":"knob"},
             {"label":"Ratio","paramName":"GATE_RATIO","paramId":14,"widget":"knob","rawWidget":"knob"},
@@ -4332,8 +4641,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "1,2", "selectorParamName": "GATE_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "1,2", "value": "1,2", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"GATE_THRESH","paramId":10,"widget":"knob","rawWidget":"knob"},
             {"label":"Attenuation","paramName":"GATE_RANGE","paramId":20,"widget":"knob","rawWidget":"knob"},
@@ -4351,8 +4662,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "3", "selectorParamName": "GATE_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "3", "value": "3", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"GATE_THRESH","paramId":10,"widget":"knob","rawWidget":"knob"},
             {"label":"Ratio","paramName":"GATE_RATIO","paramId":14,"widget":"knob","rawWidget":"knob"},
@@ -6299,8 +6612,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Phaser",
     "family": "PHASER",
     "variants": [
-      { "name": "Phaser", "value": null, "pages": [
-        { "name": "Config", "pageNum": 0, "value": "5,10", "selectorParamName": "PHASER_TYPE", "rows": [
+      { "name": "5,10", "value": "5,10", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"PHASER_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Depth","paramName":"PHASER_DEPTH","paramId":15,"widget":"knob","rawWidget":"knob"},
@@ -6316,8 +6629,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "7", "selectorParamName": "PHASER_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "7", "value": "7", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"PHASER_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Depth","paramName":"PHASER_DEPTH","paramId":15,"widget":"knob","rawWidget":"knob"},
@@ -6335,8 +6650,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "", "selectorParamName": "PHASER_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "Default", "value": null, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"PHASER_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Depth","paramName":"PHASER_DEPTH","paramId":15,"widget":"knob","rawWidget":"knob"},
@@ -7351,8 +7668,37 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Reverb",
     "family": "REVERB",
     "variants": [
-      { "name": "Reverb", "value": null, "pages": [
-        { "name": "Config", "pageNum": 0, "value": "15,16,17,51,66,67,68,69,77,78", "selectorParamName": "REVERB_TYPE", "rows": [
+      { "name": "9,10,11,27,28,40,71", "value": "9,10,11,27,28,40,71", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Pre-Delay","paramName":"REVERB_PREDELAY","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"PLATE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"360,4"}},
+            {"label":"Size","paramName":"REVERB_SIZE","paramId":15,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Dispersion","paramName":"REVERB_DISPERSION","paramId":52,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Pickup Spacing","paramName":"REVERB_WIDTH","paramId":29,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"REVERB TONE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"140,178"}},
+            {"label":"Low Cut","paramName":"REVERB_LOWCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"High Cut","paramName":"REVERB_HICUT","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Stack/Hold","paramName":"REVERB_HOLD","paramId":48,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":2}},
+            {"label":"Ducking","paramName":"REVERB_ATTEN","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Density","paramName":"REVERB_DENSITY","paramId":24,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":5}},
+            {"label":"Quality","paramName":"REVERB_QUALITY","paramId":47,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":6}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knob"},
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] }
+      ] },
+      { "name": "15,16,17,51,66,67,68,69,77,78", "value": "15,16,17,51,66,67,68,69,77,78", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Pre-Delay","paramName":"REVERB_PREDELAY","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -7376,8 +7722,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knob"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "54,55,56,57,58,59,60,61,62,70", "selectorParamName": "REVERB_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "54,55,56,57,58,59,60,61,62,70", "value": "54,55,56,57,58,59,60,61,62,70", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Shimmer Tone","paramName":"REVERB_PITCHLPF","paramId":67,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -7401,8 +7749,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knob"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "63,64,65,72", "selectorParamName": "REVERB_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "63,64,65,72", "value": "63,64,65,72", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Verb Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Verb Size","paramName":"REVERB_SIZE","paramId":15,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -7430,35 +7780,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knob"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "9,10,11,27,28,40,71", "selectorParamName": "REVERB_TYPE", "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
-            {"label":"Pre-Delay","paramName":"REVERB_PREDELAY","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"PLATE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"360,4"}},
-            {"label":"Size","paramName":"REVERB_SIZE","paramId":15,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
-            {"label":"Dispersion","paramName":"REVERB_DISPERSION","paramId":52,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
-            {"label":"Pickup Spacing","paramName":"REVERB_WIDTH","paramId":29,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"REVERB TONE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"140,178"}},
-            {"label":"Low Cut","paramName":"REVERB_LOWCUT","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
-            {"label":"High Cut","paramName":"REVERB_HICUT","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
-            {"label":"Stack/Hold","paramName":"REVERB_HOLD","paramId":48,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":2}},
-            {"label":"Ducking","paramName":"REVERB_ATTEN","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
-            {"label":"Density","paramName":"REVERB_DENSITY","paramId":24,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":5}},
-            {"label":"Quality","paramName":"REVERB_QUALITY","paramId":47,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":6}},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Mix","paramName":"BLOCK_MIX","paramId":null,"widget":"knob","rawWidget":"knob"},
-            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
-          ] },
-          { "section": "mixer", "controls": [
-            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":23,"widget":"knob","rawWidget":"knob"},
-            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
-          ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "", "selectorParamName": "REVERB_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "Default", "value": null, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
             {"label":"Pre-Delay","paramName":"REVERB_PREDELAY","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
@@ -7614,8 +7939,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Tremolo",
     "family": "TREMOLO",
     "variants": [
-      { "name": "Tremolo", "value": null, "pages": [
-        { "name": "Config", "pageNum": 0, "value": "1", "selectorParamName": "TREMOLO_TYPE", "rows": [
+      { "name": "1", "value": "1", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":15,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -7633,8 +7958,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "6", "selectorParamName": "TREMOLO_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "6", "value": "6", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":15,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -7650,8 +7977,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
-        ] },
-        { "name": "Config", "pageNum": 0, "value": "", "selectorParamName": "TREMOLO_TYPE", "rows": [
+        ] }
+      ] },
+      { "name": "Default", "value": null, "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
             {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":15,"widget":"dropdown","rawWidget":"dropdown1"},

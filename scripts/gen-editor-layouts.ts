@@ -280,6 +280,111 @@ function deriveFamily(editorName: string, ecsNode: XmlNode): string {
   return EDITORNAME_FAMILY_ALIAS[editorName] ?? editorName.toUpperCase().replace(/[^A-Z0-9]/g, '');
 }
 
+/**
+ * Type-selector splitter.
+ *
+ * Most effect blocks don't emit one EffectVariant per block type; instead a
+ * single value-less EffectVariant carries many `<Page>`s, each gated by a
+ * PAGE-level block-type selector (the editor's `parameterName` + `value` list,
+ * e.g. `FUZZ_TYPE="0,7"`). Copied verbatim, those pages collapse into one
+ * variant whose tabs are every type's pages flattened — the operator sees
+ * "Basic, Basic 2 … Basic 37" for Drive. This reconstructs the
+ * AM4-Compressor-style shape the editor really means: one variant per block
+ * type, with the selector folded up to the variant `value`. Block types that
+ * select an IDENTICAL set of pages are grouped into one variant (reproducing
+ * the editor's own `value="6,14"` groupings) so pages are not needlessly
+ * duplicated.
+ *
+ * Only value-less, SINGLE-selector variants are split. Multi-selector blocks
+ * (device Global EQ pages keyed by several `GLOBAL_EQ*_TYPE`; the AM4 inline
+ * amp keyed by `DISTORT_TYPE`/`DISTORT_EQTYPE`/`CABINET_MODE`) and the
+ * firmware-versioned amp/DISTORT family are left intact — their pages keep
+ * their per-page selector and the consumer resolves them at render time.
+ * Pages that differ only by a firmware gate are always kept (genuine fw
+ * revisions of the same tab), as are pages with no selector (they belong to
+ * every type).
+ */
+const DEFAULT_TYPE = Symbol('default-type');
+type TypeAssignment = number | typeof DEFAULT_TYPE;
+
+function splitVariantByPageSelectors(base: EditorLayoutVariant): EditorLayoutVariant[] {
+  if (base.value !== null) return [base]; // already a typed variant (AM4 Comp-style)
+  const pages = base.pages;
+  const selParams = new Set<string>();
+  for (const p of pages) if (p.selectorParamName) selParams.add(p.selectorParamName);
+  if (selParams.size !== 1) return [base]; // no selector, or multi-selector (Global / amp)
+  const selParam = [...selParams][0];
+
+  const concrete = new Set<number>();
+  let hasWildcard = false;
+  for (const p of pages) {
+    if (p.selectorParamName !== selParam || p.value === undefined) continue;
+    if (p.value === '') { hasWildcard = true; continue; }
+    for (const tok of p.value.split(',')) {
+      const n = Number(tok.trim());
+      if (Number.isFinite(n)) concrete.add(n);
+    }
+  }
+  if (concrete.size === 0 && !hasWildcard) return [base];
+
+  const assignments: TypeAssignment[] = [...concrete].sort((a, b) => a - b);
+  if (hasWildcard) assignments.push(DEFAULT_TYPE);
+
+  // Pick a type's pages by the editor's document-order first-match-wins rule:
+  // within one page slot (pageNum + name + fw signature) the first matching
+  // page wins; a selector-less page belongs to every type.
+  const pickIndices = (a: TypeAssignment): number[] => {
+    const picked: number[] = [];
+    const takenSlot = new Set<string>();
+    pages.forEach((p, idx) => {
+      let match: boolean;
+      if (p.selectorParamName !== selParam) match = true;
+      else if (p.value === undefined) match = true;
+      else if (p.value === '') match = a === DEFAULT_TYPE;
+      else match = typeof a === 'number' && p.value.split(',').map((t) => Number(t.trim())).includes(a);
+      if (!match) return;
+      const slot = `${p.pageNum ?? ''} ${p.name} ${p.fw ? JSON.stringify(p.fw) : ''}`;
+      if (takenSlot.has(slot)) return;
+      takenSlot.add(slot);
+      picked.push(idx);
+    });
+    return picked;
+  };
+
+  // Group type assignments by their picked-page signature.
+  const groups = new Map<string, { values: number[]; hasDefault: boolean; idxs: number[] }>();
+  const order: string[] = [];
+  for (const a of assignments) {
+    const idxs = pickIndices(a);
+    const sig = idxs.join(',');
+    let g = groups.get(sig);
+    if (!g) { g = { values: [], hasDefault: false, idxs }; groups.set(sig, g); order.push(sig); }
+    if (a === DEFAULT_TYPE) g.hasDefault = true;
+    else g.values.push(a);
+  }
+
+  const out: EditorLayoutVariant[] = [];
+  for (const sig of order) {
+    const g = groups.get(sig)!;
+    const outPages: EditorLayoutPage[] = g.idxs.map((idx) => {
+      // Drop the now-redundant page-level selector; keep fw / pageNum / rows.
+      const { value: _v, selectorParamName: _s, ...rest } = pages[idx];
+      return rest as EditorLayoutPage;
+    });
+    const values = [...g.values].sort((a, b) => a - b);
+    // A group that also catches the wildcard is the "any other type" fallback.
+    const isFallback = g.hasDefault;
+    const variant: EditorLayoutVariant = {
+      name: isFallback ? (values.length ? `${values.join(',')}+default` : 'Default') : values.join(','),
+      value: isFallback ? null : values.join(','),
+      pages: outPages,
+    };
+    if (base.fw) variant.fw = base.fw;
+    out.push(variant);
+  }
+  return out;
+}
+
 /** Parse a `__block_layout.xml` root into families -> block layout. */
 function parseBlockLayout(root: XmlNode, resolve: Resolver, skipAmp: boolean): Map<string, EditorBlockLayout> {
   const out = new Map<string, EditorBlockLayout>();
@@ -301,7 +406,7 @@ function parseBlockLayout(root: XmlNode, resolve: Resolver, skipAmp: boolean): M
       const fw = fwFrom(vn.attrs);
       if (fw) variant.fw = fw;
       variant.pages = pages;
-      variants.push(variant);
+      variants.push(...splitVariantByPageSelectors(variant));
     }
     if (!variants.length) continue;
     const existing = out.get(family);
@@ -375,26 +480,48 @@ interface DiscoveredDevice {
   configName: string;
 }
 
+/** Recursively collect every `__block_layout.xml` path under `dir`. */
+function findBlockLayouts(dir: string, out: string[] = []): string[] {
+  let entries: string[];
+  try {
+    entries = readdirSync(dir).sort();
+  } catch {
+    return out;
+  }
+  for (const name of entries) {
+    const p = join(dir, name);
+    let st;
+    try {
+      st = statSync(p);
+    } catch {
+      continue;
+    }
+    if (st.isDirectory()) findBlockLayouts(p, out);
+    else if (name === '__block_layout.xml') out.push(p);
+  }
+  return out;
+}
+
+/**
+ * Discover editor configs anywhere under `root`, matched by CONFIG/Device model
+ * id (never by directory name). The whole tree is walked so the root can be the
+ * shared RE archive that holds several editors at differing depths (e.g. FM3's
+ * genuine model-17 config lives in its own subtree, the others in another).
+ * Paths are sorted and de-duplicated by model, first-wins, so selection is
+ * deterministic and stable across runs.
+ */
 function discoverDevices(root: string): DiscoveredDevice[] {
   const found: DiscoveredDevice[] = [];
   const seen = new Set<string>();
-  for (const devDir of readdirSync(root)) {
-    const decompile = join(root, devDir, 'decompile');
-    if (!existsSync(decompile) || !statSync(decompile).isDirectory()) continue;
-    for (const sub of readdirSync(decompile)) {
-      if (!sub.startsWith('juce_xml')) continue;
-      const juceDir = join(decompile, sub);
-      const bl = join(juceDir, '__block_layout.xml');
-      if (!existsSync(bl)) continue;
-      const root2 = parseXml(readFileSync(bl, 'utf8'));
-      const dev = findAll(root2, 'Device')[0];
-      const config = findAll(root2, 'CONFIG')[0] ?? root2;
-      const model = dev?.attrs.model ?? '?';
-      const key = model;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      found.push({ model, juceDir, configName: config.attrs.name ?? '' });
-    }
+  for (const bl of findBlockLayouts(root).sort()) {
+    const juceDir = dirname(bl);
+    const root2 = parseXml(readFileSync(bl, 'utf8'));
+    const dev = findAll(root2, 'Device')[0];
+    const config = findAll(root2, 'CONFIG')[0] ?? root2;
+    const model = dev?.attrs.model ?? '?';
+    if (seen.has(model)) continue;
+    seen.add(model);
+    found.push({ model, juceDir, configName: config.attrs.name ?? '' });
   }
   return found;
 }

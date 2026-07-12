@@ -24,12 +24,21 @@ export {
   type Fm3EffectIdEntry,
   type Fm3EffectAddressing,
 } from './effectIds.js';
+export { FM3_LAYOUTS } from './layouts.generated.js';
 export {
-  FM3_LAYOUTS,
-  type Fm3BlockLayout,
-  type Fm3LayoutPage,
-  type Fm3LayoutControl,
-} from './layouts.generated.js';
+  normalizeWidget,
+  EDITOR_WIDGET_KINDS,
+  type DeviceEditorLayouts,
+  type EditorBlockLayout,
+  type EditorLayoutVariant,
+  type EditorLayoutPage,
+  type EditorLayoutRow,
+  type EditorLayoutControl,
+  type EditorControlPlacement,
+  type EditorCrossBlockRef,
+  type EditorWidgetKind,
+  type EditorFwRange,
+} from '../../editorLayouts.js';
 export {
   FM3_FC_EFFECT_ID,
   FM3_FC_SWITCHES,

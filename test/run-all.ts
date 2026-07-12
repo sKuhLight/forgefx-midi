@@ -71,6 +71,7 @@ import { runRecords, RECORDS_CASE_COUNT } from './cache/records.test.js';
 import { runAssign, ASSIGN_CASE_COUNT } from './cache/assign.test.js';
 import { runBuildProfile, BUILDPROFILE_CASE_COUNT } from './cache/buildprofile.test.js';
 import { runLiveWalk, LIVEWALK_CASE_COUNT } from './cache/livewalk.test.js';
+import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -149,6 +150,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/assign (${ASSIGN_CASE_COUNT} oracle cases)`, run: runAssign },
   { name: `cache/buildprofile (${BUILDPROFILE_CASE_COUNT} cases)`, run: runBuildProfile },
   { name: `cache/livewalk (${LIVEWALK_CASE_COUNT} cases)`, run: runLiveWalk },
+  { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
 ];
 
 let failures = 0;

@@ -20,12 +20,10 @@
  *   - Axe-Fx III : Axe-Edit III config (firmware ceiling 32.05)
  *   - FM9        : FM9-Edit config       (firmware ceiling 11.00)
  *   - AM4        : AM4-Edit (mac) config
- *   - FM3        : NO editor XML is available in the source tree (the FM3
- *                  slot in the archive is a duplicate of the AM4 config). FM3's
- *                  layout data is therefore MIGRATED, once, from the prior
- *                  genuine FM3-Edit extraction already shipped in the repo, and
- *                  re-emitted in the v2 shape. Regeneration is idempotent: if a
- *                  v2 FM3 file already exists it is re-serialised as-is.
+ *   - FM3        : FM3-Edit config       (firmware ceiling 12.00)
+ *                  Fallback: when no model-17 XML is present under the source
+ *                  root, FM3 is MIGRATED from the prior generated data and
+ *                  re-emitted in the v2 shape (idempotent re-serialisation).
  *
  * Amp layouts are firmware-versioned (`__amp_layout*.xml`). All historical
  * variants are kept under the DISTORT family; exactly one is `pinned` to the
@@ -541,6 +539,7 @@ async function migrateFm3(): Promise<DeviceEditorLayouts | null> {
 // --------------------------------------------------------------------------
 const MODEL_TO_DEVICE: Record<string, { key: string; label: string; ceiling: number }> = {
   '16': { key: 'axe-fx-iii', label: 'Axe-Fx III', ceiling: 32.05 },
+  '17': { key: 'fm3', label: 'FM3', ceiling: 12.0 },
   '18': { key: 'fm9', label: 'FM9', ceiling: 11.0 },
   '21': { key: 'am4', label: 'AM4', ceiling: 0 },
 };
@@ -595,6 +594,10 @@ async function main() {
       resolve = await gen3Resolver('../src/gen3/fm9/params.js', 'FM9_PARAMS');
       outFile = join(REPO, 'src', 'gen3', 'fm9', 'layouts.generated.ts');
       constName = 'FM9_LAYOUTS';
+    } else if (dev.key === 'fm3') {
+      resolve = await gen3Resolver('../src/gen3/fm3/params.js', 'FM3_PARAMS');
+      outFile = join(REPO, 'src', 'gen3', 'fm3', 'layouts.generated.ts');
+      constName = 'FM3_LAYOUTS';
     } else {
       resolve = await gen3Resolver('../src/gen3/axe-fx-iii/params.js', 'PARAMS');
       outFile = join(REPO, 'src', 'gen3', 'axe-fx-iii', 'layouts.generated.ts');
@@ -629,8 +632,9 @@ async function main() {
     targets.push({ file: outFile, constName, label: dev.label });
   }
 
-  // FM3: migrate prior genuine extraction (no XML source available).
-  const fm3 = await migrateFm3();
+  // FM3 fallback: migrate prior generated data when no model-17 XML was found.
+  const fm3FromXml = devices.some((d) => MODEL_TO_DEVICE[d.model]?.key === 'fm3');
+  const fm3 = fm3FromXml ? null : await migrateFm3();
   if (fm3) {
     const stats = countStats(fm3);
     const rate = stats.withParam ? ((stats.joined / stats.withParam) * 100).toFixed(1) : 'n/a';
@@ -645,7 +649,7 @@ async function main() {
         `controls=${stats.controls} paramCtrls=${stats.withParam} joined=${stats.joined} (${rate}%)`,
     );
     console.log(`  -> ${file}`);
-  } else {
+  } else if (!fm3FromXml) {
     console.warn('\nWARN: could not migrate FM3 (no existing FM3_LAYOUTS module found).');
   }
 

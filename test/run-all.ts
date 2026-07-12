@@ -70,6 +70,7 @@ import { runDevicesSmokeTests, DEVICES_SMOKE_CASE_COUNT } from './devices-smoke.
 import { runRecords, RECORDS_CASE_COUNT } from './cache/records.test.js';
 import { runAssign, ASSIGN_CASE_COUNT } from './cache/assign.test.js';
 import { runBuildProfile, BUILDPROFILE_CASE_COUNT } from './cache/buildprofile.test.js';
+import { runLiveWalk, LIVEWALK_CASE_COUNT } from './cache/livewalk.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -147,6 +148,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/records (${RECORDS_CASE_COUNT} cases)`, run: runRecords },
   { name: `cache/assign (${ASSIGN_CASE_COUNT} oracle cases)`, run: runAssign },
   { name: `cache/buildprofile (${BUILDPROFILE_CASE_COUNT} cases)`, run: runBuildProfile },
+  { name: `cache/livewalk (${LIVEWALK_CASE_COUNT} cases)`, run: runLiveWalk },
 ];
 
 let failures = 0;

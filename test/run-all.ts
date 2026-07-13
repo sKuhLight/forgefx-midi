@@ -8,6 +8,7 @@ import { runPackValueTests, runChecksumTests } from './shared/packvalue.test.js'
 import { runLineageTests } from './shared/lineage.test.js';
 import { runEffectIdTests, EFFECTID_CASE_COUNT } from './shared/effectid.test.js';
 import { runIdentifyTests, IDENTIFY_CASE_COUNT } from './shared/identify.test.js';
+import { runFirmwareTests, FIRMWARE_CASE_COUNT } from './shared/firmware.test.js';
 import { runAm4SetParamTests, AM4_GOLDEN_CASE_COUNT } from './am4/setparam.test.js';
 import { runAm4BlockLayoutTests, AM4_BLOCK_LAYOUT_CASE_COUNT } from './am4/blocklayout.test.js';
 import { runAm4DecodeTests, AM4_DECODE_CASE_COUNT } from './am4/decode.test.js';
@@ -87,6 +88,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: 'shared/lineage-load', run: runLineageTests },
   { name: `shared/effectid (${EFFECTID_CASE_COUNT} goldens)`, run: runEffectIdTests },
   { name: `shared/identify (${IDENTIFY_CASE_COUNT} goldens)`, run: runIdentifyTests },
+  { name: `shared/firmware (${FIRMWARE_CASE_COUNT} cases)`, run: runFirmwareTests },
   { name: `am4/setparam (${AM4_GOLDEN_CASE_COUNT} goldens)`, run: runAm4SetParamTests },
   { name: `am4/blocklayout (${AM4_BLOCK_LAYOUT_CASE_COUNT} cases)`, run: runAm4BlockLayoutTests },
   { name: `am4/decode (${AM4_DECODE_CASE_COUNT} cases)`, run: runAm4DecodeTests },

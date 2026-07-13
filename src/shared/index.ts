@@ -18,6 +18,13 @@ export {
   modelFromPortName,
 } from './identify.js';
 export type { DeviceModel } from './identify.js';
+export {
+  FN_FIRMWARE_VERSION,
+  buildFirmwareVersionQuery,
+  parseFirmwareVersionReply,
+  formatFirmwareVersion,
+} from './firmware.js';
+export type { FirmwareVersion } from './firmware.js';
 export { resolveEffectId, FRACTAL_MODEL_BYTES } from './effectId.js';
 export { encode14, decode14, packValue16, unpackValue16 } from './septet16.js';
 export { displayToWire, wireToDisplay, displayQuantum, withinDisplayQuantum } from './displayScale.js';

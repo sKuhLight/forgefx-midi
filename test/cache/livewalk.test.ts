@@ -44,7 +44,7 @@ import { assertFm3Equivalence } from './oracle.js';
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const FM3 = 0x11;
 
-export const LIVEWALK_CASE_COUNT = 12;
+export const LIVEWALK_CASE_COUNT = 14;
 
 // ===========================================================================
 // Test-only wire ENCODER (inverse of the liveWalk codec)
@@ -132,6 +132,13 @@ function definitionBlock(r: CacheRecord): Uint8Array {
 
 function definitionReply(r: CacheRecord, param: number, tag = 0x3a): Uint8Array {
   return replyFrame(VIEW_DEFINITION, param, tag, definitionBlock(r));
+}
+
+/** `definitionBlock` with an EXPLICIT scale (Cases 13/14 pin the scale-gate). */
+function definitionBlockScaled(r: CacheRecord, scale: number): Uint8Array {
+  const buf = definitionBlock(r);
+  new DataView(buf.buffer).setFloat32(16, scale, true);
+  return buf;
 }
 
 function labelReply(label: string, param: number, tag = 0x3a): Uint8Array {
@@ -524,4 +531,49 @@ export async function runLiveWalk(): Promise<void> {
     `  cache/livewalk: live build clears FM3 oracle (enum ${m.enum.exact}/${m.enum.total}, ` +
       `ranges ${m.ranges.pct.toFixed(2)}%, DELAY ${m.delayRoster.count}, cab ${m.cabIrs.factory1}/${m.cabIrs.factory2}/${m.cabIrs.legacy})`,
   );
+
+  // ---- Case 13: scaled (continuous) params get NO speculative 0x1f probes ----
+  // FORGEFX-32: a 0x1f label query against a param with no label list is
+  // out-of-contract and hard-freezes the FM3. A def with scale != 0 is
+  // continuous by contract — the walk must emit only its definition query.
+  {
+    // Integral bounds + small span: WOULD pass the old enum heuristic, but scale=2 marks it continuous.
+    const rec: CacheRecord = { kind: 'float', section: 94, offset: 0, id: 0, tc: 2, min: 0, max: 10, def: 5, step: 0, t1: 0, t2: 0 };
+    let labelQueries = 0;
+    const t: LiveTransport = {
+      request(q) {
+        const view = q[6]!;
+        const param = q[10]! | (q[11]! << 7);
+        if (view === VIEW_ENUM_LABEL) labelQueries += 1;
+        if (view === VIEW_DEFINITION && param === 0) return Promise.resolve(replyFrame(VIEW_DEFINITION, 0, 0x3a, definitionBlockScaled(rec, 2)));
+        return Promise.resolve(sentinelFrame(view, param));
+      },
+    };
+    const recs = await liveWalk(t, { model: FM3, blocks: [94], maxParamId: 0 });
+    if (labelQueries !== 0) fail(`scaled param got ${labelQueries} 0x1f probes (must be 0)`);
+    if (recs[0]?.kind === 'enum') fail('scaled param mis-classified as enum');
+  }
+  console.log('  cache/livewalk: scale!=0 (continuous) params are never 0x1f label-probed');
+
+  // ---- Case 14: speculative probes never open a list at a high absolute sub --
+  // The A440-style case: non-enum kind, scale 0, integral bounds far above 127
+  // (e.g. 430..450). A speculative 0x1f at sub 430 is exactly the FORGEFX-32
+  // freeze trigger — the walk must skip the probe (record stays non-enum).
+  {
+    const rec: CacheRecord = { kind: 'float', section: 95, offset: 0, id: 0, tc: 2, min: 430, max: 450, def: 440, step: 1, t1: 0, t2: 0 };
+    let labelQueries = 0;
+    const t: LiveTransport = {
+      request(q) {
+        const view = q[6]!;
+        const param = q[10]! | (q[11]! << 7);
+        if (view === VIEW_ENUM_LABEL) labelQueries += 1;
+        if (view === VIEW_DEFINITION && param === 0) return Promise.resolve(replyFrame(VIEW_DEFINITION, 0, 0x3a, definitionBlockScaled(rec, 0)));
+        return Promise.resolve(sentinelFrame(view, param));
+      },
+    };
+    const recs = await liveWalk(t, { model: FM3, blocks: [95], maxParamId: 0 });
+    if (labelQueries !== 0) fail(`high-min param got ${labelQueries} speculative 0x1f probes (must be 0)`);
+    if (recs.length !== 1 || recs[0]!.kind === 'enum') fail('high-min param record wrong');
+  }
+  console.log('  cache/livewalk: speculative label probes never start above sub 127 (A440 guard)');
 }

@@ -156,6 +156,8 @@ export type { Am4Firmware } from './firmware.js';
 // Data tables — cache + type-applicability + enums.
 export { CACHE_PARAMS } from './cacheParams.js';
 export type { CacheParamKey } from './cacheParams.js';
+// Cache-build inputs — seeds + param catalog for the `src/cache` engine.
+export { AM4_SEEDS, AM4_CACHE_PARAMS } from './cacheBuild.js';
 export {
   AMP_TYPES,
   DRIVE_TYPES,

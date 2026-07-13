@@ -232,24 +232,57 @@ function assignSections(
     }
   }
 
-  const asserted = assertSeeds ?? new Set(Object.keys(seeds));
-  for (const fam of asserted) {
-    const tag = seeds[fam];
-    const mine = pairScores.filter((p) => p[0] === fam).sort((a, b) => b[2] - a[2]);
-    if (mine.length === 0 || repOf(mine[0][1]) !== repOf(tag)) {
-      throw new Error(
-        `cache assign: seed disagreement for ${fam} (anchored to section ${tag}, ` +
-          `vote picked ${mine.length ? `${mine[0][1]} @ ${mine[0][2]}` : 'nothing'})`,
-      );
+  /** The section-group rep this family's vote most prefers (undefined if it scores nothing). */
+  const topRepOf = (fam: string): number | undefined => {
+    let best: [number, number] | undefined;
+    for (const p of pairScores) {
+      if (p[0] !== fam) continue;
+      if (!best || p[2] > best[1]) best = [p[1], p[2]];
     }
-  }
+    return best ? repOf(best[0]) : undefined;
+  };
+
+  // Seed coherence: does each *asserted* seed's cache-tag anchor also win that
+  // family's own vote? In the editor `.cache` byte space it does — the section
+  // tags ARE the effectDefinitions section ids the seeds anchor (fixture / bytes
+  // path). In the LIVE self-describe walk the "section" is the fn-0x01 block id,
+  // which bears no relation to the cache section tag, so no seed anchor wins.
+  // We choose the mapping strategy from this evidence, NOT from the record
+  // source, because a live-source walk of a cache-shaped fixture must still take
+  // the anchored path and stay byte-identical (livewalk Case 11/12, cache:check).
+  const asserted = [...(assertSeeds ?? new Set(Object.keys(seeds)))];
+  const seedCoherent = (fam: string): boolean => {
+    const top = topRepOf(fam);
+    return top !== undefined && bySec.has(seeds[fam]) && top === repOf(seeds[fam]);
+  };
+  const coherent = asserted.filter(seedCoherent).length;
+  const voteOnly = asserted.length > 0 && coherent === 0;
 
   const familyToTag = new Map<string, number>();
   const tagToFamily = new Map<number, string>();
-  for (const [fam, tag] of Object.entries(seeds)) {
-    familyToTag.set(fam, tag);
-    tagToFamily.set(tag, fam);
+
+  if (!voteOnly && coherent !== asserted.length) {
+    // Mixed: some anchors win their vote, some don't. That is a genuine
+    // disagreement (firmware drift or a port bug) within the cache-tag space,
+    // NOT a clean switch to the live block-id space — fail loudly, as before.
+    const fam = asserted.find((f) => !seedCoherent(f))!;
+    const mine = pairScores.filter((p) => p[0] === fam).sort((a, b) => b[2] - a[2]);
+    throw new Error(
+      `cache assign: seed disagreement for ${fam} (anchored to section ${seeds[fam]}, ` +
+        `vote picked ${mine.length ? `${mine[0][1]} @ ${mine[0][2]}` : 'nothing'})`,
+    );
   }
+
+  if (!voteOnly) {
+    // ANCHORED (cache-tag space): pre-map every seed to its section anchor;
+    // the vote fills the rest around them.
+    for (const [fam, tag] of Object.entries(seeds)) {
+      familyToTag.set(fam, tag);
+      tagToFamily.set(tag, fam);
+    }
+  }
+  // else VOTE-ONLY (live block-id space): no pre-mapping — the vote decides
+  // every family (seeds are enforced only as existence checks below).
 
   // Stable sort by descending score (ties keep pairScores insertion order).
   const ordered = pairScores
@@ -266,6 +299,21 @@ function assignSections(
     if (sc < floor && !exactCover) continue;
     familyToTag.set(fam, t);
     tagToFamily.set(t, fam);
+  }
+
+  if (voteOnly) {
+    // The seeds can't anchor a block-id space, but every seeded family denotes
+    // a core block that MUST exist on the device — so each must still resolve
+    // to some positively-scoring section. If the vote mapped none, a core block
+    // was lost (bad walk / catalog mismatch) and the profile is untrustworthy.
+    const missing = asserted.filter((f) => !familyToTag.has(f));
+    if (missing.length > 0) {
+      throw new Error(
+        `cache assign: live vote found no section for seeded famil${
+          missing.length === 1 ? 'y' : 'ies'
+        } ${missing.join(', ')} (each seeded family must match a block with positive score)`,
+      );
+    }
   }
 
   const unmappedFamilies = fams.filter((f) => !familyToTag.has(f));

@@ -195,7 +195,12 @@ export type LiveReply =
   | null;
 
 function integral(x: number): boolean {
-  return Math.abs(x - Math.round(x)) < 1e-6;
+  // STRICT equality, not a tolerance window (FORGEFX-32): system selectors answer definition
+  // queries with junk floats in the subnormal range (e.g. 3e-41), which a tolerance check
+  // rounds to "integral 0" — classifying garbage as an enum and triggering a lethal 0x1f
+  // label query. Real enum bounds are exact integers in the float32 payload, so exact
+  // comparison loses nothing. (The HW-proven prober used exact integrality all along.)
+  return Number.isFinite(x) && x === Math.round(x);
 }
 
 /** Numeric kind heuristic (3-way), mirroring the wire decode. */
@@ -297,6 +302,25 @@ export function decodeReply(frame: Uint8Array): LiveReply {
 /** The all-zero definition body a device returns for an empty/absent slot. */
 function isFillerDefinition(d: LiveDefinition): boolean {
   return d.id === 0 && d.tc === 0 && d.min === 0 && d.max === 0 && d.def === 0 && d.step === 0;
+}
+
+/** Largest plausible wire typecode — real catalogs top out ~3200; system-selector junk reads
+ *  in the tens of thousands. */
+const MAX_PLAUSIBLE_TC = 0x3fff;
+/** Anything with magnitude below this (but non-zero) is float32 subnormal junk, not a value a
+ *  parameter definition would carry. */
+const SUBNORMAL_FLOOR = 1e-37;
+
+/**
+ * NOT a real parameter definition (FORGEFX-32): system selectors (e.g. FM3 block 0) answer
+ * definition queries with junk — subnormal-range floats, implausible typecodes, non-finite
+ * fields. Treat those as ABSENT so the walk skips the block after its opening probes instead
+ * of recording garbage or, worse, label-probing it.
+ */
+function isGarbageDefinition(d: LiveDefinition): boolean {
+  if (d.tc > MAX_PLAUSIBLE_TC) return true;
+  const junk = (x: number): boolean => !Number.isFinite(x) || (x !== 0 && Math.abs(x) < SUBNORMAL_FLOOR);
+  return junk(d.min) || junk(d.max) || junk(d.def) || junk(d.step) || junk(d.scale);
 }
 
 /**
@@ -472,7 +496,7 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
       const dec = reply ? decodeReply(reply) : null;
       const def = dec && dec.view === 'definition' ? dec : null;
 
-      if (!def || isFillerDefinition(def)) {
+      if (!def || isFillerDefinition(def) || isGarbageDefinition(def)) {
         absentRun += 1;
         // Skip an empty block once its opening params are all absent.
         if (found === 0 && param + 1 >= probeDepth) break;

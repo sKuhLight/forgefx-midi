@@ -69,7 +69,7 @@ import { runAxeFxIIApplicabilityTests, AXEFX2_APPLICABILITY_CASE_COUNT } from '.
 import { runSharedDisplayScaleTests, SHARED_DISPLAYSCALE_CASE_COUNT } from './shared/displayscale.test.js';
 import { runDevicesSmokeTests, DEVICES_SMOKE_CASE_COUNT } from './devices-smoke.test.js';
 import { runRecords, RECORDS_CASE_COUNT } from './cache/records.test.js';
-import { runAssign, ASSIGN_CASE_COUNT } from './cache/assign.test.js';
+import { runAssign, runAssignLive, ASSIGN_CASE_COUNT, ASSIGN_LIVE_CASE_COUNT } from './cache/assign.test.js';
 import { runBuildProfile, BUILDPROFILE_CASE_COUNT } from './cache/buildprofile.test.js';
 import { runLiveWalk, LIVEWALK_CASE_COUNT } from './cache/livewalk.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
@@ -150,6 +150,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `devices/smoke (${DEVICES_SMOKE_CASE_COUNT} descriptors, from dist)`, run: runDevicesSmokeTests },
   { name: `cache/records (${RECORDS_CASE_COUNT} cases)`, run: runRecords },
   { name: `cache/assign (${ASSIGN_CASE_COUNT} oracle cases)`, run: runAssign },
+  { name: `cache/assign-live (${ASSIGN_LIVE_CASE_COUNT} cases)`, run: runAssignLive },
   { name: `cache/buildprofile (${BUILDPROFILE_CASE_COUNT} cases)`, run: runBuildProfile },
   { name: `cache/livewalk (${LIVEWALK_CASE_COUNT} cases)`, run: runLiveWalk },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },

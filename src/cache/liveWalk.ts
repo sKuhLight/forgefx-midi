@@ -303,9 +303,14 @@ function isFillerDefinition(d: LiveDefinition): boolean {
  * A definition COULD be an enum worth a 0x1f label walk when its bounds are
  * integral and the value count is within the cap — regardless of `step` (an
  * enum with a non-zero step is still an enum, decided by whether labels exist).
+ * Scaled controls (`scale != 0`) are NEVER label-walked: they are continuous by
+ * contract, and a 0x1f label query against a param with no label list is
+ * out-of-contract for the device — the FM3 hard-freezes on it (power-cycle
+ * recovery). Genuine step!=0 enums all report scale == 0.
  */
 function couldBeEnum(d: LiveDefinition, cap: number): boolean {
   if (d.kind === 'enum') return true;
+  if (d.scale !== 0) return false;
   if (!integral(d.min) || !integral(d.max)) return false;
   const span = Math.round(d.max - d.min + 1);
   return span >= 1 && span <= cap;
@@ -479,7 +484,12 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
 
       let labels: string[] = [];
       const lo = Math.round(def.min);
-      if (lo >= 0 && couldBeEnum(def, enumCap)) {
+      // SPECULATIVE probes (def not positively enum-kind) never open a list at a
+      // high absolute sub: every hardware-verified enum starts at a small ordinal,
+      // and an out-of-contract high-sub 0x1f (e.g. a 430..450 pitch range) is the
+      // FORGEFX-32 freeze trigger. Positively-classified enums keep the full range.
+      const speculative = def.kind !== 'enum';
+      if (lo >= 0 && (!speculative || lo <= 127) && couldBeEnum(def, enumCap)) {
         // The SUB ordinal is the parameter's RAW VALUE, not a list index:
         // values[i] lives at sub = min + i, so the walk covers exactly
         // min..max. Raw values below min can answer with a label, but they are

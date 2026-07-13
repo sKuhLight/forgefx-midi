@@ -44,7 +44,7 @@ import { assertFm3Equivalence } from './oracle.js';
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const FM3 = 0x11;
 
-export const LIVEWALK_CASE_COUNT = 14;
+export const LIVEWALK_CASE_COUNT = 15;
 
 // ===========================================================================
 // Test-only wire ENCODER (inverse of the liveWalk codec)
@@ -576,4 +576,41 @@ export async function runLiveWalk(): Promise<void> {
     if (recs.length !== 1 || recs[0]!.kind === 'enum') fail('high-min param record wrong');
   }
   console.log('  cache/livewalk: speculative label probes never start above sub 127 (A440 guard)');
+
+  // ---- Case 15: system-selector junk definitions are treated as absent ------
+  // GOLDEN, captured from a real FM3 (2026-07-13 walk probe, FORGEFX-32 third freeze):
+  // block 0 is a system selector that answers definition queries with junk — param 3's
+  // "definition" decodes to subnormal bounds (≈3e-41) with tc 21540, which the old
+  // tolerance-based integral() classified as a 1-value enum → 0x1f label query → the
+  // device wedged (power-cycle). The walk must treat all four as ABSENT: no records,
+  // no 0x1f, block skipped after the probe depth.
+  {
+    const BLOCK0_DEF_REPLIES: Record<number, string> = {
+      0: 'f0 00 01 74 11 01 1c 00 00 00 00 00 00 00 00 00 00 00 00 24 00 03 00 00 0e 50 38 00 00 75 03 40 00 07 28 1c 00 00 3a 41 60 00 03 54 00 00 00 00 00 70 00 01 6a 07 00 00 0e 50 10 01 1f 72 40 7f f7',
+      1: 'f0 00 01 74 11 01 1c 00 00 00 01 00 00 00 00 00 00 00 00 24 00 00 00 12 0e 28 43 7e 2f 70 48 16 00 41 44 01 70 10 38 60 0f 01 03 46 00 78 08 1c 30 07 40 41 63 0c 3c 13 7e 28 63 61 1f 72 40 30 f7',
+      2: 'f0 00 01 74 11 01 1c 00 00 00 02 00 00 00 00 00 00 00 00 24 00 0c 3c 13 7e 28 63 61 1f 72 46 1e 09 7f 14 00 00 00 00 02 4f 04 7f 4a 14 78 27 7c 5d 42 48 00 00 04 15 00 00 00 31 28 00 00 00 1b f7',
+      3: 'f0 00 01 74 11 01 1c 00 00 00 03 00 00 00 00 00 00 00 00 24 00 10 15 00 00 01 11 28 00 00 0a 0a 40 00 00 58 54 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 5f f7'
+    };
+    const parseHex = (s: string) => Uint8Array.from(s.split(' ').map((h) => parseInt(h, 16)));
+    let labelQueries = 0;
+    let defQueries = 0;
+    const t: LiveTransport = {
+      request(q) {
+        const view = q[6]!;
+        const param = q[10]! | (q[11]! << 7);
+        if (view === VIEW_ENUM_LABEL) { labelQueries += 1; return Promise.resolve(endOfRangeFrame(VIEW_ENUM_LABEL, param)); }
+        if (view === VIEW_DEFINITION) {
+          defQueries += 1;
+          const real = BLOCK0_DEF_REPLIES[param];
+          return Promise.resolve(real ? parseHex(real) : sentinelFrame(VIEW_DEFINITION, param));
+        }
+        return Promise.resolve(sentinelFrame(view, param));
+      }
+    };
+    const recs = await liveWalk(t, { model: FM3, blocks: [0], maxParamId: 127 });
+    if (labelQueries !== 0) fail(`block-0 junk defs got ${labelQueries} 0x1f probes (must be 0 — this froze the FM3)`);
+    if (recs.length !== 0) fail(`block-0 junk defs produced ${recs.length} records (must be 0)`);
+    if (defQueries > 8) fail(`block 0 not skipped early: ${defQueries} def queries (probe depth must cut it short)`);
+  }
+  console.log('  cache/livewalk: real FM3 block-0 junk definitions are absent — no records, no 0x1f, early skip');
 }

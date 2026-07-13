@@ -108,7 +108,7 @@ export async function runBuildProfile(): Promise<void> {
 // `bytes` arm exercises the real DataView walk. Groups records by section in
 // first-seen order (matching the fixture's section ordering).
 
-function encodeCache(records: readonly CacheRecord[]): Uint8Array {
+export function encodeCache(records: readonly CacheRecord[]): Uint8Array {
   const bytes: number[] = [];
   const u16 = (v: number) => bytes.push(v & 0xff, (v >>> 8) & 0xff);
   const u32 = (v: number) => bytes.push(v & 0xff, (v >>> 8) & 0xff, (v >>> 16) & 0xff, (v >>> 24) & 0xff);

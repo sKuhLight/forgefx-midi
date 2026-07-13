@@ -71,6 +71,7 @@ import { runDevicesSmokeTests, DEVICES_SMOKE_CASE_COUNT } from './devices-smoke.
 import { runRecords, RECORDS_CASE_COUNT } from './cache/records.test.js';
 import { runAssign, runAssignLive, ASSIGN_CASE_COUNT, ASSIGN_LIVE_CASE_COUNT } from './cache/assign.test.js';
 import { runBuildProfile, BUILDPROFILE_CASE_COUNT } from './cache/buildprofile.test.js';
+import { runAm4Cache, AM4_CACHE_CASE_COUNT } from './cache/am4-cache.test.js';
 import { runLiveWalk, LIVEWALK_CASE_COUNT } from './cache/livewalk.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
 
@@ -152,6 +153,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/assign (${ASSIGN_CASE_COUNT} oracle cases)`, run: runAssign },
   { name: `cache/assign-live (${ASSIGN_LIVE_CASE_COUNT} cases)`, run: runAssignLive },
   { name: `cache/buildprofile (${BUILDPROFILE_CASE_COUNT} cases)`, run: runBuildProfile },
+  { name: `cache/am4 (${AM4_CACHE_CASE_COUNT} cases)`, run: runAm4Cache },
   { name: `cache/livewalk (${LIVEWALK_CASE_COUNT} cases)`, run: runLiveWalk },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
 ];

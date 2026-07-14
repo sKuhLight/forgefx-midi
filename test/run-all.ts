@@ -74,6 +74,9 @@ import { runBuildProfile, BUILDPROFILE_CASE_COUNT } from './cache/buildprofile.t
 import { runAm4Cache, AM4_CACHE_CASE_COUNT } from './cache/am4-cache.test.js';
 import { runLiveWalk, LIVEWALK_CASE_COUNT } from './cache/livewalk.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
+import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
+import { runGen3AdapterTests, GEN3_ADAPTER_CASE_COUNT } from './convert/gen3-adapter.test.js';
+import { runShallowAdaptersTests, SHALLOW_ADAPTERS_CASE_COUNT } from './convert/adapters-shallow.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -156,6 +159,9 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/am4 (${AM4_CACHE_CASE_COUNT} cases)`, run: runAm4Cache },
   { name: `cache/livewalk (${LIVEWALK_CASE_COUNT} cases)`, run: runLiveWalk },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
+  { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },
+  { name: `convert/gen3-adapter (${GEN3_ADAPTER_CASE_COUNT} preset goldens)`, run: runGen3AdapterTests },
+  { name: `convert/adapters-shallow (${SHALLOW_ADAPTERS_CASE_COUNT} adapters)`, run: runShallowAdaptersTests },
 ];
 
 let failures = 0;

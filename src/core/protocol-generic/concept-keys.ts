@@ -60,7 +60,53 @@
  *   parallel this file's shape for enum-value cross-device routing.
  */
 
+/**
+ * The registry COLUMNS. There is one column per distinct param vocabulary,
+ * NOT one per device. The gen-3 family (Axe-Fx III / FM3 / FM9 / VP4) shares
+ * a single param vocabulary, so it is represented by ONE column
+ * (`axe-fx-iii`); the resolver normalizes the floor-unit model ids onto it
+ * (see `normalizeConceptPort`). This keeps the registry from duplicating
+ * every entry four times.
+ */
 export type DevicePortSlug = 'am4' | 'axe-fx-ii' | 'axe-fx-iii' | 'hydrasynth';
+
+/**
+ * Model-id → registry-column normalization. `fm3`, `fm9`, and `vp4` reuse the
+ * `axe-fx-iii` vocabulary column because they run the same gen-3 param codec
+ * with a different model byte (the local param NAMES are identical). Returns
+ * `undefined` for ids with no concept-key column (e.g. gen-1).
+ */
+const PORT_ALIASES: Readonly<Record<string, DevicePortSlug>> = Object.freeze({
+  'axe-fx-iii': 'axe-fx-iii',
+  fm3: 'axe-fx-iii',
+  fm9: 'axe-fx-iii',
+  vp4: 'axe-fx-iii',
+  'axe-fx-ii': 'axe-fx-ii',
+  am4: 'am4',
+  hydrasynth: 'hydrasynth',
+});
+
+/**
+ * Normalize a device id / port slug to its concept-key registry column.
+ * Case-insensitive. `undefined` when the device has no column.
+ */
+export function normalizeConceptPort(port: string): DevicePortSlug | undefined {
+  return PORT_ALIASES[port.trim().toLowerCase()];
+}
+
+/**
+ * Per-model param-name overrides, applied AFTER column normalization. Keyed by
+ * the RAW (un-normalized) model id, then by concept-key. Populate an entry here
+ * ONLY when a specific gen-3 floor unit genuinely spells a param differently
+ * from the Axe-Fx III (they share the vocabulary today, so this is empty). This
+ * is the override hook the normalization design calls for; it lets `fm3` /
+ * `fm9` / `vp4` diverge from the `axe-fx-iii` column one param at a time
+ * without forking the whole registry.
+ */
+const MODEL_PARAM_OVERRIDES: Readonly<Record<string, Readonly<Record<string, string>>>> =
+  Object.freeze({
+    // e.g. fm3: { 'amp.preamp_gain': 'someOtherName' }  ← none known
+  });
 
 /**
  * One concept-key entry. Maps the canonical cross-device concept-key
@@ -91,10 +137,13 @@ export interface ResolvedConceptKey {
  * omit their entry.
  *
  * Curated to cover the common tone-building vocabulary across Fractal
- * devices plus the major Hydrasynth synth concepts. ~40 entries.
+ * devices plus the major Hydrasynth synth concepts. Every Fractal-device
+ * local name below is verified to exist in that device's param table by
+ * `test/convert/concept-coverage.test.ts`; a device that lacks the param
+ * omits its column. Block portion = the converter block/family slug.
  */
 export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.freeze({
-  // ── Amp ─────────────────────────────────────────────────────────
+  // ── Amp (gen-3 DISTORT family) ──────────────────────────────────
   'amp.type': {
     'axe-fx-ii': 'effect_type',
     am4: 'type',
@@ -111,6 +160,11 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
     'axe-fx-ii': 'master_volume',
     am4: 'master',
     'axe-fx-iii': 'master',
+  },
+  'amp.master_trim': {
+    'axe-fx-ii': 'master_trim',
+    am4: 'master_vol_trim',
+    'axe-fx-iii': 'mvtrim',
   },
   'amp.output_level': {
     'axe-fx-ii': 'level',
@@ -137,8 +191,56 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
     am4: 'presence',
     'axe-fx-iii': 'presence',
   },
+  'amp.depth': {
+    'axe-fx-ii': 'depth',
+    am4: 'depth',
+    'axe-fx-iii': 'depth',
+  },
+  'amp.bright': {
+    'axe-fx-ii': 'bright',
+    am4: 'bright',
+    'axe-fx-iii': 'bright',
+  },
+  'amp.sag': {
+    'axe-fx-ii': 'supply_sag',
+    am4: 'supply_sag',
+    'axe-fx-iii': 'supplysag',
+  },
+  'amp.low_cut': {
+    'axe-fx-ii': 'preamp_low_cut',
+    am4: 'low_cut',
+    'axe-fx-iii': 'hpfreq',
+  },
+  'amp.high_cut': {
+    'axe-fx-ii': 'high_cut_freq',
+    am4: 'high_cut',
+    'axe-fx-iii': 'hicut',
+  },
+  'amp.input_trim': {
+    'axe-fx-ii': 'input_trim',
+    am4: 'input_trim',
+    'axe-fx-iii': 'trim',
+  },
 
-  // ── Drive ───────────────────────────────────────────────────────
+  // ── Cab (gen-3 CABINET family; AM4 has no cab block) ────────────
+  'cab.level': {
+    'axe-fx-ii': 'level',
+    'axe-fx-iii': 'level',
+  },
+  'cab.low_cut': {
+    'axe-fx-ii': 'low_cut',
+    'axe-fx-iii': 'locut',
+  },
+  'cab.high_cut': {
+    'axe-fx-ii': 'high_cut',
+    'axe-fx-iii': 'hicut',
+  },
+  'cab.air': {
+    'axe-fx-ii': 'air',
+    'axe-fx-iii': 'air',
+  },
+
+  // ── Drive (gen-3 FUZZ family) ───────────────────────────────────
   'drive.type': {
     'axe-fx-ii': 'effect_type',
     am4: 'type',
@@ -165,6 +267,36 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
     'axe-fx-ii': 'mix',
     am4: 'mix',
     'axe-fx-iii': 'mix',
+  },
+  'drive.low_cut': {
+    'axe-fx-ii': 'lo_cut',
+    am4: 'low_cut',
+    'axe-fx-iii': 'locut',
+  },
+  'drive.high_cut': {
+    'axe-fx-ii': 'hi_cut',
+    am4: 'high_cut',
+    'axe-fx-iii': 'hicut',
+  },
+  'drive.bass': {
+    'axe-fx-ii': 'bass',
+    am4: 'bass',
+    'axe-fx-iii': 'bass',
+  },
+  'drive.mid': {
+    'axe-fx-ii': 'middle',
+    am4: 'mid',
+    'axe-fx-iii': 'mid',
+  },
+  'drive.treble': {
+    'axe-fx-ii': 'treble',
+    am4: 'treble',
+    'axe-fx-iii': 'treble',
+  },
+  'drive.bias': {
+    'axe-fx-ii': 'bias',
+    am4: 'bias',
+    'axe-fx-iii': 'bias',
   },
 
   // ── Reverb ──────────────────────────────────────────────────────
@@ -193,6 +325,28 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
     am4: 'size',
     'axe-fx-iii': 'size',
   },
+  'reverb.low_cut': {
+    'axe-fx-ii': 'low_cut',
+    am4: 'low_cut',
+    'axe-fx-iii': 'lowcut',
+  },
+  'reverb.high_cut': {
+    'axe-fx-ii': 'high_cut',
+    am4: 'high_cut',
+    'axe-fx-iii': 'hicut',
+  },
+  'reverb.level': {
+    'axe-fx-ii': 'level',
+    'axe-fx-iii': 'level',
+  },
+  'reverb.depth': {
+    am4: 'depth',
+    'axe-fx-iii': 'depth',
+  },
+  'reverb.rate': {
+    am4: 'rate',
+    'axe-fx-iii': 'rate',
+  },
 
   // ── Delay ───────────────────────────────────────────────────────
   'delay.type': {
@@ -214,6 +368,34 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
     'axe-fx-ii': 'mix',
     am4: 'mix',
     'axe-fx-iii': 'mix',
+  },
+  'delay.low_cut': {
+    'axe-fx-ii': 'low_cut',
+    am4: 'low_cut',
+    'axe-fx-iii': 'locut',
+  },
+  'delay.high_cut': {
+    'axe-fx-ii': 'high_cut',
+    am4: 'high_cut',
+    'axe-fx-iii': 'hicut',
+  },
+  'delay.level': {
+    'axe-fx-ii': 'level',
+    am4: 'level',
+    'axe-fx-iii': 'level',
+  },
+  'delay.tempo': {
+    'axe-fx-ii': 'tempo',
+    am4: 'tempo',
+    'axe-fx-iii': 'tempo',
+  },
+  'delay.drive': {
+    'axe-fx-ii': 'drive',
+    'axe-fx-iii': 'drive',
+  },
+  'delay.ratio': {
+    'axe-fx-ii': 'ratio',
+    'axe-fx-iii': 'ratio',
   },
 
   // ── Chorus ──────────────────────────────────────────────────────
@@ -237,6 +419,142 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
     am4: 'mix',
     'axe-fx-iii': 'mix',
   },
+  'chorus.high_cut': {
+    'axe-fx-ii': 'high_cut',
+    am4: 'high_cut',
+    'axe-fx-iii': 'hicut',
+  },
+  'chorus.level': {
+    'axe-fx-ii': 'level',
+    am4: 'level',
+    'axe-fx-iii': 'level',
+  },
+  'chorus.width': {
+    'axe-fx-ii': 'width',
+    'axe-fx-iii': 'width',
+  },
+  'chorus.drive': {
+    'axe-fx-ii': 'drive',
+    am4: 'drive',
+    'axe-fx-iii': 'drive',
+  },
+
+  // ── Flanger ─────────────────────────────────────────────────────
+  'flanger.type': {
+    'axe-fx-ii': 'effect_type',
+    am4: 'type',
+    'axe-fx-iii': 'type',
+  },
+  'flanger.rate': {
+    'axe-fx-ii': 'rate',
+    am4: 'rate',
+    'axe-fx-iii': 'rate',
+  },
+  'flanger.depth': {
+    'axe-fx-ii': 'depth',
+    am4: 'depth',
+    'axe-fx-iii': 'depth',
+  },
+  'flanger.feedback': {
+    'axe-fx-ii': 'feedback',
+    am4: 'feedback',
+    'axe-fx-iii': 'feedback',
+  },
+  'flanger.mix': {
+    'axe-fx-ii': 'mix',
+    am4: 'mix',
+    'axe-fx-iii': 'mix',
+  },
+  'flanger.drive': {
+    'axe-fx-ii': 'drive',
+    am4: 'drive',
+    'axe-fx-iii': 'drive',
+  },
+
+  // ── Phaser ──────────────────────────────────────────────────────
+  'phaser.type': {
+    'axe-fx-ii': 'effect_type',
+    am4: 'type',
+    'axe-fx-iii': 'type',
+  },
+  'phaser.rate': {
+    'axe-fx-ii': 'rate',
+    am4: 'rate',
+    'axe-fx-iii': 'rate',
+  },
+  'phaser.depth': {
+    'axe-fx-ii': 'depth',
+    am4: 'depth',
+    'axe-fx-iii': 'depth',
+  },
+  'phaser.feedback': {
+    'axe-fx-ii': 'feedback',
+    am4: 'feedback',
+    'axe-fx-iii': 'feedback',
+  },
+  'phaser.mix': {
+    'axe-fx-ii': 'mix',
+    am4: 'mix',
+    'axe-fx-iii': 'mix',
+  },
+  'phaser.tone': {
+    'axe-fx-ii': 'tone',
+    am4: 'tone',
+    'axe-fx-iii': 'tone',
+  },
+
+  // ── Rotary (gen-3 ROTARY family) ────────────────────────────────
+  'rotary.rate': {
+    'axe-fx-ii': 'rate',
+    am4: 'rate',
+    'axe-fx-iii': 'rate',
+  },
+  'rotary.mix': {
+    'axe-fx-ii': 'mix',
+    am4: 'mix',
+    'axe-fx-iii': 'mix',
+  },
+  'rotary.drive': {
+    'axe-fx-ii': 'drive',
+    am4: 'drive',
+    'axe-fx-iii': 'drive',
+  },
+  'rotary.level': {
+    'axe-fx-ii': 'level',
+    am4: 'level',
+    'axe-fx-iii': 'level',
+  },
+
+  // ── Tremolo (II Pan/Trem, gen-3 TREMOLO family) ─────────────────
+  'tremolo.type': {
+    'axe-fx-ii': 'effect_type',
+    am4: 'type',
+    'axe-fx-iii': 'type',
+  },
+  'tremolo.rate': {
+    'axe-fx-ii': 'rate',
+    am4: 'rate',
+    'axe-fx-iii': 'rate',
+  },
+  'tremolo.depth': {
+    'axe-fx-ii': 'depth',
+    am4: 'depth',
+    'axe-fx-iii': 'depth',
+  },
+  'tremolo.duty': {
+    'axe-fx-ii': 'duty',
+    am4: 'duty',
+    'axe-fx-iii': 'duty',
+  },
+  'tremolo.mix': {
+    'axe-fx-ii': 'mix',
+    am4: 'mix',
+    'axe-fx-iii': 'mix',
+  },
+  'tremolo.level': {
+    'axe-fx-ii': 'level',
+    'axe-fx-iii': 'level',
+  },
 
   // ── Wah ─────────────────────────────────────────────────────────
   'wah.type': {
@@ -249,8 +567,33 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
     am4: 'mix',
     'axe-fx-iii': 'level',
   },
+  'wah.freq_min': {
+    'axe-fx-ii': 'freq_min',
+    am4: 'minimum_frequency',
+    'axe-fx-iii': 'fstart',
+  },
+  'wah.freq_max': {
+    'axe-fx-ii': 'freq_max',
+    am4: 'maximum_frequency',
+    'axe-fx-iii': 'fstop',
+  },
+  'wah.q': {
+    'axe-fx-ii': 'resonance',
+    am4: 'q_resonance',
+    'axe-fx-iii': 'q',
+  },
+  'wah.drive': {
+    'axe-fx-ii': 'drive',
+    am4: 'drive',
+    'axe-fx-iii': 'drive',
+  },
+  'wah.level': {
+    'axe-fx-ii': 'level',
+    am4: 'level',
+    'axe-fx-iii': 'level',
+  },
 
-  // ── Pitch ───────────────────────────────────────────────────────
+  // ── Pitch (AM4 has no pitch block) ──────────────────────────────
   'pitch.type': {
     'axe-fx-ii': 'effect_type',
     'axe-fx-iii': 'type',
@@ -258,6 +601,10 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
   'pitch.mix': {
     'axe-fx-ii': 'mix',
     'axe-fx-iii': 'mix',
+  },
+  'pitch.level': {
+    'axe-fx-ii': 'level',
+    'axe-fx-iii': 'level',
   },
 
   // ── Filter ──────────────────────────────────────────────────────
@@ -268,7 +615,7 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
   },
   'filter.cutoff': {
     'axe-fx-ii': 'frequency',
-    am4: 'freq',
+    am4: 'frequency',
     'axe-fx-iii': 'freq',
     hydrasynth: 'cutoff',
   },
@@ -277,6 +624,20 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
     am4: 'q',
     'axe-fx-iii': 'q',
     hydrasynth: 'res',
+  },
+  'filter.gain': {
+    'axe-fx-ii': 'gain',
+    am4: 'gain',
+    'axe-fx-iii': 'gain',
+  },
+  'filter.level': {
+    'axe-fx-ii': 'level',
+    am4: 'level',
+    'axe-fx-iii': 'level',
+  },
+  'filter.mix': {
+    am4: 'mix',
+    'axe-fx-iii': 'mix',
   },
 
   // ── Compressor ──────────────────────────────────────────────────
@@ -297,13 +658,124 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
   },
   'compressor.attack': {
     'axe-fx-ii': 'attack',
-    am4: 'attack',
+    am4: 'attack_time',
     'axe-fx-iii': 'attack',
   },
   'compressor.release': {
     'axe-fx-ii': 'release',
+    am4: 'release_time',
+    'axe-fx-iii': 'release',
+  },
+  'compressor.level': {
+    'axe-fx-ii': 'level',
+    am4: 'level',
+    'axe-fx-iii': 'level',
+  },
+  'compressor.mix': {
+    'axe-fx-ii': 'mix',
+    am4: 'mix',
+    'axe-fx-iii': 'mix',
+  },
+  'compressor.knee': {
+    'axe-fx-ii': 'knee',
+    'axe-fx-iii': 'knee',
+  },
+
+  // ── Gate (II Gate/Expander, gen-3 GATE family) ──────────────────
+  'gate.type': {
+    am4: 'type',
+    'axe-fx-iii': 'type',
+  },
+  'gate.threshold': {
+    'axe-fx-ii': 'threshold',
+    am4: 'threshold',
+    'axe-fx-iii': 'thresh',
+  },
+  'gate.release': {
+    'axe-fx-ii': 'release',
     am4: 'release',
     'axe-fx-iii': 'release',
+  },
+  'gate.attack': {
+    'axe-fx-ii': 'attack',
+    am4: 'attack',
+    'axe-fx-iii': 'attack',
+  },
+  'gate.hold': {
+    'axe-fx-ii': 'hold',
+    am4: 'hold',
+    'axe-fx-iii': 'hold',
+  },
+  'gate.ratio': {
+    'axe-fx-ii': 'ratio',
+    am4: 'ratio',
+    'axe-fx-iii': 'ratio',
+  },
+
+  // ── Vol/Pan (gen-3 VOLUME family) ───────────────────────────────
+  'volpan.level': {
+    'axe-fx-ii': 'level',
+    am4: 'level',
+    'axe-fx-iii': 'level',
+  },
+  'volpan.pan': {
+    'axe-fx-ii': 'balance',
+    am4: 'balance',
+    'axe-fx-iii': 'bal',
+  },
+
+  // ── Enhancer ────────────────────────────────────────────────────
+  'enhancer.width': {
+    'axe-fx-ii': 'width',
+    am4: 'width',
+    'axe-fx-iii': 'width',
+  },
+  'enhancer.depth': {
+    'axe-fx-ii': 'depth',
+    am4: 'depth',
+    'axe-fx-iii': 'depth',
+  },
+  'enhancer.level': {
+    'axe-fx-ii': 'level',
+    am4: 'level',
+    'axe-fx-iii': 'level',
+  },
+  'enhancer.low_cut': {
+    'axe-fx-ii': 'low_cut',
+    am4: 'low_cut',
+    'axe-fx-iii': 'lowcut',
+  },
+  'enhancer.high_cut': {
+    'axe-fx-ii': 'high_cut',
+    am4: 'high_cut',
+    'axe-fx-iii': 'hicut',
+  },
+
+  // ── Graphic EQ (II graphiceq, gen-3 GEQ family) ─────────────────
+  'geq.type': {
+    'axe-fx-ii': 'effect_type',
+    am4: 'type',
+    'axe-fx-iii': 'type',
+  },
+  'geq.level': {
+    'axe-fx-ii': 'level',
+    am4: 'level',
+    'axe-fx-iii': 'level',
+  },
+  'geq.mix': {
+    'axe-fx-ii': 'mix',
+    am4: 'mix',
+    'axe-fx-iii': 'mix',
+  },
+
+  // ── Parametric EQ (II parametriceq, gen-3 PEQ family) ───────────
+  'peq.level': {
+    'axe-fx-ii': 'level',
+    'axe-fx-iii': 'level',
+  },
+  // gen-3 PEQ has no plain `mix` (it exposes `globalmix`); AM4 only.
+  'peq.mix': {
+    am4: 'mix',
   },
 
   // ── Hydrasynth-specific synth concepts ──────────────────────────
@@ -346,12 +818,20 @@ export function resolveConceptKey(
   port: string,
   conceptKey: string,
 ): ResolvedConceptKey | undefined {
-  const portKey = port.trim().toLowerCase();
+  const rawPort = port.trim().toLowerCase();
   const keyLower = conceptKey.trim().toLowerCase();
   if (!keyLower.includes('.')) return undefined;
   const map = CONCEPT_KEYS[keyLower];
   if (map === undefined) return undefined;
-  const localName = (map as Record<string, string | undefined>)[portKey];
+  // Per-model override wins (raw model id, un-normalized) so a floor unit can
+  // diverge from the shared gen-3 column one param at a time.
+  const override = MODEL_PARAM_OVERRIDES[rawPort]?.[keyLower];
+  const column = normalizeConceptPort(rawPort);
+  const localName =
+    override ??
+    (column === undefined
+      ? undefined
+      : (map as Record<string, string | undefined>)[column]);
   if (localName === undefined) return undefined;
   const dotIdx = keyLower.indexOf('.');
   const block = keyLower.slice(0, dotIdx);
@@ -400,10 +880,14 @@ export function resolveConceptKeyForBlock(
 export function listConceptKeysForDevice(
   port: string,
 ): readonly { conceptKey: string; localName: string }[] {
-  const portKey = port.trim().toLowerCase();
+  const rawPort = port.trim().toLowerCase();
+  const column = normalizeConceptPort(rawPort);
+  if (column === undefined) return [];
+  const overrides = MODEL_PARAM_OVERRIDES[rawPort];
   const out: { conceptKey: string; localName: string }[] = [];
   for (const [conceptKey, map] of Object.entries(CONCEPT_KEYS)) {
-    const localName = (map as Record<string, string | undefined>)[portKey];
+    const localName =
+      overrides?.[conceptKey] ?? (map as Record<string, string | undefined>)[column];
     if (localName !== undefined) {
       out.push({ conceptKey, localName });
     }

@@ -103,3 +103,54 @@ values for, so it is the only place P0a produces per-param values; other gen-3
 blocks carry type identity + per-scene channel/bypass state (`liftedFrom:
 'partial-decode'`). Generic per-block param VALUE decode is deferred (no in-repo
 value-scale ground truth — see `devices/gen3/presetBody.ts`).
+
+## Lineage index & concept-key coverage (P0b)
+
+Two cross-device lookup layers sit alongside the taxonomy.
+
+### Concept-key registry (`core/protocol-generic/concept-keys.ts`)
+
+Canonical `<block>.<concept>` keys map ONE cross-device word to each device's
+local param name (e.g. `amp.preamp_gain` → II `input_drive` / AM4 `gain` / gen-3
+`drive`). P0b grew the registry from ~40 to **128 keys** across amp, cab, drive,
+compressor, gate, delay, reverb, chorus, flanger, phaser, rotary, tremolo, wah,
+pitch, filter, vol/pan, enhancer, graphic-EQ and parametric-EQ (plus the
+untouched Hydrasynth synth concepts).
+
+The gen-3 floor units share ONE vocabulary column: `normalizeConceptPort()`
+folds `fm3` / `fm9` / `vp4` onto the `axe-fx-iii` column, so each resolves 121
+keys without the registry duplicating an entry per model. A per-model override
+hook (`MODEL_PARAM_OVERRIDES`) lets a floor unit diverge one param at a time
+(currently empty — the vocabularies are identical). Resolvable-key counts:
+axe-fx-iii / fm3 / fm9 / vp4 = **121**, axe-fx-ii = **117**, am4 = **108**,
+hydrasynth = 8, gen-1 = 0.
+
+Every Fractal-device local name is verified to EXIST in that device's real param
+table by `test/convert/concept-coverage.test.ts` — the authoritative sources are
+gen-3 `PARAMS_BY_FAMILY` (family-prefix-stripped), gen-2 `KNOWN_PARAMS`, and AM4
+`KNOWN_PARAMS` (`am4/params.ts`, the table `buildBlocks()` iterates). A typo or a
+column that names a param the device lacks fails the build.
+
+### Lineage index (`convert/lineageIndex.ts`)
+
+`buildLineageIndex()` (memoized) folds every device's model-lineage source into
+ONE table keyed by `(family, normalized-name)`: AM4 lineage JSON (structured
+`basedOn`), Axe-Fx II lineage (`axefx2Name` + `wireIndex` + `basedOn`), FM3
+rosters (inline `{value, name, manufacturer, basedOn}`), and the FM9 + III read
+rosters (ordinal→name only — they inherit FM3 lineage by name-identity). A model
+hosted on several devices under the same name collapses to ONE record with a
+`device → nativeValue` map. Current size: **951 records** (amp 475, reverb 165,
+drive 102, cab 45; per device fm3 612 / am4 543 / iii 515 / fm9 500 / ii 352).
+
+`matchModel(source, targetDevice)` ranks target candidates through a fixed
+confidence ladder:
+
+| confidence | rule |
+|---|---|
+| `exact` | identical normalized name on the target device |
+| `lineage` | same real gear — `basedOn` manufacturer+model identity, or a manufacturer + model-in-primary-text bridge for roster-only records |
+| `fuzzy` | name/token/manufacturer overlap, ranked by a numeric `score` |
+| `fallback` | the family's lowest-ordinal target model (only when nothing else matched AND the family has target data) |
+
+Families with no roster/lineage data for the target (or unknown families) return
+`[]`, and the P2 engine emits an unresolved-type event.

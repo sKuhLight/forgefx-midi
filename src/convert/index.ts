@@ -15,4 +15,5 @@
 export * from './families.js';
 export * from './ir.js';
 export { conceptKeyForLocal, conceptPortFor } from './conceptLookup.js';
+export * from './lineageIndex.js';
 export * from './adapters/index.js';

@@ -77,6 +77,8 @@ import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayout
 import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
 import { runGen3AdapterTests, GEN3_ADAPTER_CASE_COUNT } from './convert/gen3-adapter.test.js';
 import { runShallowAdaptersTests, SHALLOW_ADAPTERS_CASE_COUNT } from './convert/adapters-shallow.test.js';
+import { runConceptCoverageTests, CONCEPT_COVERAGE_CASE_COUNT } from './convert/concept-coverage.test.js';
+import { runLineageIndexTests, LINEAGE_INDEX_CASE_COUNT } from './convert/lineage-index.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -162,6 +164,8 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },
   { name: `convert/gen3-adapter (${GEN3_ADAPTER_CASE_COUNT} preset goldens)`, run: runGen3AdapterTests },
   { name: `convert/adapters-shallow (${SHALLOW_ADAPTERS_CASE_COUNT} adapters)`, run: runShallowAdaptersTests },
+  { name: `convert/concept-coverage (${CONCEPT_COVERAGE_CASE_COUNT} cases)`, run: runConceptCoverageTests },
+  { name: `convert/lineage-index (${LINEAGE_INDEX_CASE_COUNT} cases)`, run: runLineageIndexTests },
 ];
 
 let failures = 0;

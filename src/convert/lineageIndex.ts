@@ -357,6 +357,36 @@ export function resetLineageIndexCache(): void {
   CACHED = undefined;
 }
 
+// ── Roster membership ────────────────────────────────────────────────
+
+/**
+ * Whether a device's roster data can confirm a model.
+ *   - `present` — the target's roster data carries the (normalized) name.
+ *   - `absent`  — the target HAS roster data for the family, name not in it.
+ *   - `unknown` — no roster data for (family, device); nothing to check.
+ */
+export type ModelPresence = 'present' | 'absent' | 'unknown';
+
+/**
+ * Cheap per-family roster-membership check, used by the P2 engine's
+ * shared-roster short-circuit: on a same-roster device pair types pass through
+ * verbatim UNLESS the target's (reduced) roster verifiably lacks the model.
+ * Backed by the same folded index `matchModel` uses (FM3/FM9 generated
+ * rosters, III read rosters, AM4 / Axe-Fx II lineage names).
+ */
+export function modelOnDevice(
+  family: ConverterFamily,
+  typeName: string,
+  device: ConverterDeviceId,
+): ModelPresence {
+  const famRecords = buildLineageIndex().byFamily.get(family);
+  if (!famRecords || famRecords.length === 0) return 'unknown';
+  const targetRecords = famRecords.filter((r) => r.deviceValues.has(device));
+  if (targetRecords.length === 0) return 'unknown';
+  const n = normName(typeName);
+  return targetRecords.some((r) => normName(r.nativeName) === n) ? 'present' : 'absent';
+}
+
 // ── Matching ─────────────────────────────────────────────────────────
 
 /** A basedOn identity key for lineage matching, or `undefined` if too thin. */

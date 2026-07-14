@@ -19,7 +19,11 @@ scaling params, laying out routing — is explicitly NOT in P0a.
 | `src/convert/families.ts` | family vocabulary, per-device native→family maps, presence sets, topology |
 | `src/convert/ir.ts` | the IR types (`ConverterPreset`, `ConverterBlock`, `ConverterParam`, `ConverterRouting`) |
 | `src/convert/conceptLookup.ts` | reverse concept-key lookup (device-local param name → concept key) |
+| `src/convert/lineageIndex.ts` | unified model-lineage index + `matchModel` (P0b) |
 | `src/convert/adapters/{gen3,am4,vp4,gen2}.ts` | per-device lift adapters |
+| `src/convert/engine.ts` | the P2 conversion engine (`convertPreset`) |
+| `src/convert/events.ts` | conversion-event schema + `severityOf` (UI contract) |
+| `src/convert/targetRanges.ts` | target-device param range resolution for validation |
 
 Import via the `./convert` subpath export (`fractal-midi/convert`).
 
@@ -154,3 +158,106 @@ confidence ladder:
 
 Families with no roster/lineage data for the target (or unknown families) return
 `[]`, and the P2 engine emits an unresolved-type event.
+
+## Conversion engine (P2)
+
+`convert/engine.ts` lowers a lifted `ConverterPreset` onto a chosen target
+device, best-effort, and reports every lossy/approximate decision as an event.
+The engine is **pure and deterministic**: same input → same output, the source
+preset is never mutated, and there is no `Date`/`Math.random`.
+
+### Public API
+
+```ts
+function convertPreset(
+  source: ConverterPreset,
+  targetDevice: ConverterDeviceId,
+  opts?: ConvertOptions,
+): ConversionResult;
+
+interface ConvertOptions {
+  maxBlocks?: number;            // extra cap on top of device capacity
+  keepUnresolvedTypes?: boolean; // default true — keep block w/ undefined type
+}
+interface ConversionResult { target: ConverterPreset; events: ConversionEvent[] }
+```
+
+Supporting exports: `FAMILY_PRIORITY` (capacity/overflow ordering),
+`deviceSceneCount` / `deviceChannelCount` (`families.ts`), `resolveTargetRange`
+(`targetRanges.ts`), and the whole event schema + `severityOf` (`events.ts`).
+
+### Pipeline (in order)
+
+0. **source-partial** — when `source.decodeDepth !== 'full'`, prepend a blanket
+   caveat event.
+1. **Family presence + instancing** — drop blocks whose family the target lacks
+   (`block-dropped`/`family-missing`). For single-per-family targets (AM4) keep
+   the FIRST instance per family in signal order, drop the rest
+   (`instance-limit`).
+2. **Capacity** — device capacity = `rows*cols` (grid) / `slots` (slots/chain),
+   further limited by `opts.maxBlocks`. Overflow blocks are dropped LOWEST-
+   priority first (`FAMILY_PRIORITY`, then source signal order) with
+   `capacity-exceeded`.
+3. **Type mapping** — **shared-roster short-circuit first**: when source and
+   target share one block/type roster (`sharesTypeRoster` in `families.ts` —
+   the gen-3 trio + VP4 fold onto one `gen3` slug, mirroring
+   `normalizeConceptPort`), types transfer **verbatim** (`typeName` +
+   `typeValue` unchanged, ZERO type events). Exception: the target's reduced
+   roster verifiably lacks the model (`modelOnDevice(...) === 'absent'`,
+   checked against the FM3/FM9 generated rosters + III read rosters via the
+   lineage index) → that block falls through to the normal path. With no
+   roster data to check (`'unknown'`, e.g. VP4), the shared codec is trusted.
+   Normal path: for each block with a `typeName`, `matchModel(...)`; best
+   candidate → `type-substituted` (emitted even for `exact`, so the UI has
+   full provenance — severity follows confidence). No candidates (or no source
+   type) → `type-unresolved`; the block is KEPT with `typeName` cleared
+   (default) so the fake-grid can offer a picker, or removed
+   (`block-unplaced`) when `keepUnresolvedTypes: false`.
+4. **Param mapping** — when source and target share ONE concept-key vocabulary
+   column (the gen-3 trio+VP4, or the same device), params pass through
+   **verbatim, no events** (lossless). Otherwise, per param: resolve its
+   `conceptKey` to the target's local name (`resolveConceptKey`); no concept →
+   `param-dropped`/`no-concept-mapping`; concept not on target →
+   `param-dropped`/`target-lacks-param`; else range-validate against
+   `resolveTargetRange` — clamp + `param-clamped`, or `param-unverified` when no
+   range data exists.
+5. **Routing / placement** — grid→grid upsize (target dims ≥ source dims) keeps
+   the source layout verbatim (lossless). grid→smaller-grid re-lays the source
+   series chains row by row (longest chain first, so the main signal path lands
+   in row 0 intact) — `routing-simplified`. grid→chain/slots flattens the main
+   chain into slots — `routing-simplified`. chain/slots→grid lays a single row
+   (no event — expansion). Anything with no free cell/slot → `block-unplaced`
+   (removed). Shunts are routing-only and are NOT synthesized on the target.
+6. **Scene + channel collapse** — `source.sceneCount > deviceSceneCount(target)`
+   truncates scenes → `scene-collapsed`; per block,
+   `channels.count > deviceChannelCount(target)` clamps → `channel-collapsed`.
+7. **Result IR** — a valid target `ConverterPreset`. `sourceDevice` stays the
+   ORIGINAL source (provenance); `meta.convertedFrom` / `meta.convertedTo`
+   record the conversion.
+
+### Event catalog (the UI contract — `convert/events.ts`)
+
+`ConversionEvent` is a discriminated union on `kind`. `severityOf(event)` maps
+each to `info` | `warn` | `loss` in one place.
+
+| kind | payload (beyond `kind`) | severity |
+|---|---|---|
+| `source-partial` | `decodeDepth`, `detail` | warn |
+| `block-dropped` | `blockKey`, `family`, `reason: family-missing\|capacity-exceeded\|instance-limit` | loss |
+| `block-unplaced` | `blockKey`, `family`, `reason` | loss |
+| `type-substituted` | `blockKey`, `family`, `sourceTypeName`, `targetTypeName`, `confidence`, `score?` | `exact`/`lineage` → info; `fuzzy`/`fallback` → warn |
+| `type-unresolved` | `blockKey`, `family`, `sourceTypeName` | warn |
+| `param-clamped` | `blockKey`, `nativeName`, `conceptKey?`, `sourceValue`, `targetValue`, `targetMin?`, `targetMax?` | warn |
+| `param-dropped` | `blockKey`, `nativeName`, `reason: no-concept-mapping\|target-lacks-param` | loss |
+| `param-unverified` | `blockKey`, `nativeName`, `value` | info |
+| `routing-simplified` | `detail`, `affectedBlockKeys` | warn |
+| `scene-collapsed` | `sourceScenes`, `targetScenes` | loss |
+| `channel-collapsed` | `blockKey`, `sourceChannels`, `targetChannels` | loss |
+
+### Target range data (`convert/targetRanges.ts`)
+
+Range validation uses only real, name-keyed data: AM4 display ranges from the
+`KNOWN_PARAMS` registry, and the gen-3 amp tone knobs' device-true 0..10 display
+range (the body decoder's scale — the amp knobs are the params the gen-3/AM4
+adapters actually lift). Everything else returns `undefined`, and the engine
+emits `param-unverified` rather than guessing a range.

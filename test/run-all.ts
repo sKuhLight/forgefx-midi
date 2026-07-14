@@ -79,6 +79,7 @@ import { runGen3AdapterTests, GEN3_ADAPTER_CASE_COUNT } from './convert/gen3-ada
 import { runShallowAdaptersTests, SHALLOW_ADAPTERS_CASE_COUNT } from './convert/adapters-shallow.test.js';
 import { runConceptCoverageTests, CONCEPT_COVERAGE_CASE_COUNT } from './convert/concept-coverage.test.js';
 import { runLineageIndexTests, LINEAGE_INDEX_CASE_COUNT } from './convert/lineage-index.test.js';
+import { runEngineTests, ENGINE_CASE_COUNT } from './convert/engine.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -166,6 +167,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `convert/adapters-shallow (${SHALLOW_ADAPTERS_CASE_COUNT} adapters)`, run: runShallowAdaptersTests },
   { name: `convert/concept-coverage (${CONCEPT_COVERAGE_CASE_COUNT} cases)`, run: runConceptCoverageTests },
   { name: `convert/lineage-index (${LINEAGE_INDEX_CASE_COUNT} cases)`, run: runLineageIndexTests },
+  { name: `convert/engine (${ENGINE_CASE_COUNT} conversion cases)`, run: runEngineTests },
 ];
 
 let failures = 0;

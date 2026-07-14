@@ -130,6 +130,14 @@ export interface ConverterPresetMeta {
   modelByte?: number;
   /** Free-form notes about lift limitations (skeleton reasons, etc.). */
   notes?: string[];
+  /**
+   * Set by the P2 conversion engine on a converted preset: the device this
+   * preset was converted FROM (mirrors the ORIGINAL `sourceDevice`, which the
+   * engine deliberately leaves unchanged for provenance).
+   */
+  convertedFrom?: ConverterDeviceId;
+  /** Set by the P2 conversion engine: the device this preset was converted TO. */
+  convertedTo?: ConverterDeviceId;
   [key: string]: unknown;
 }
 

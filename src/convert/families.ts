@@ -463,3 +463,78 @@ export function deviceTopology(device: ConverterDeviceId): ConverterTopology {
       return { kind: 'chain', slots: 4 };
   }
 }
+
+// ── Shared type-roster identity ──────────────────────────────────────
+//
+// The gen-3 trio (III / FM9 / FM3) and the VP4 run the same gen-3 effect
+// codec: block/type ordinals AND display names are one shared vocabulary
+// (mirroring how `normalizeConceptPort` folds these model ids onto the one
+// `axe-fx-iii` concept-key column). When source and target share the roster,
+// the P2 engine passes types through VERBATIM instead of re-matching them —
+// except where the target's reduced roster genuinely lacks a specific model.
+
+/** Device → type-roster slug. Devices with the same slug share one block/type vocabulary. */
+export const TYPE_ROSTER_SLUGS: Readonly<Record<ConverterDeviceId, string>> = Object.freeze({
+  'axe-fx-iii': 'gen3',
+  fm9: 'gen3',
+  fm3: 'gen3',
+  vp4: 'gen3',
+  am4: 'am4',
+  'axe-fx-ii': 'axe-fx-ii',
+  'axe-fx-gen1': 'axe-fx-gen1',
+});
+
+/** True when `a` and `b` share one block/type roster (types transfer verbatim). */
+export function sharesTypeRoster(a: ConverterDeviceId, b: ConverterDeviceId): boolean {
+  return TYPE_ROSTER_SLUGS[a] === TYPE_ROSTER_SLUGS[b];
+}
+
+// ── Scene / channel capacity per device ──────────────────────────────
+//
+// These two constants drive the P2 engine's scene- and channel-collapse
+// steps. They are device FACTS (how many scenes a preset carries; how many
+// per-block channels the device exposes), kept here as named exports so the
+// ForgeFX/Axis layers reference one source of truth rather than re-deriving.
+
+/**
+ * How many scenes a device's preset carries.
+ *   - gen-3 (III / FM9 / FM3) + Axe-Fx II: 8 scenes.
+ *   - AM4 + VP4: 4 scenes.
+ *   - gen-1 (Standard/Ultra): no scene system — a single implicit scene.
+ */
+export function deviceSceneCount(device: ConverterDeviceId): number {
+  switch (device) {
+    case 'axe-fx-iii':
+    case 'fm9':
+    case 'fm3':
+    case 'axe-fx-ii':
+      return 8;
+    case 'am4':
+    case 'vp4':
+      return 4;
+    case 'axe-fx-gen1':
+      return 1;
+  }
+}
+
+/**
+ * How many channels a single block exposes on a device (per-block preset
+ * variations, NOT scenes).
+ *   - gen-3 + AM4 + VP4: 4 channels (A/B/C/D).
+ *   - Axe-Fx II: 2 channels (X/Y).
+ *   - gen-1: no per-block channels (a single implicit channel).
+ */
+export function deviceChannelCount(device: ConverterDeviceId): number {
+  switch (device) {
+    case 'axe-fx-iii':
+    case 'fm9':
+    case 'fm3':
+    case 'am4':
+    case 'vp4':
+      return 4;
+    case 'axe-fx-ii':
+      return 2;
+    case 'axe-fx-gen1':
+      return 1;
+  }
+}

@@ -474,6 +474,103 @@ function overlayBlock(
   }
 }
 
+// ── catalog/defaults-driven block builder (FORGEFXMID-40) ────────────────────
+//
+// The alternative to template-clone: build a block record from AUTHORITATIVE
+// geometry + every cataloged param slot filled with its catalog `defaultRaw`
+// (from the live self-describe walk, imported FORGEFXMID-39), uncataloged slots
+// left 0, ready for the same type + IR overlay as a cloned template. This is the
+// path that would synthesize families ABSENT from every fixture (Vol/Pan, PEQ, …)
+// WITHOUT a donor preset — IF their body geometry were known.
+//
+// ── GEOMETRY (the hard constraint) ──────────────────────────────────────────
+// A block record is (23 header words + cols*rows param words)*2 bytes, where
+// cols = header word15 (per-channel param count) and rows = header word16
+// (channel count). `walkBlocks` reads both to size the record and advance the
+// chain, so BOTH must be exact or the whole chain misparses. The ONLY authoritative
+// source for word15xword16 is a real decoded body (a fixture). We therefore have
+// geometry EXACTLY for the families a fixture places — the 25 in
+// FM3_BLOCK_TEMPLATES — and it is byte-derived from them here (so the builder and
+// the clone agree on size for every templated family).
+//
+// The 10 families NO fixture places (PEQ 54, Formant 98, Vol/Pan 102, Mixer 126,
+// Synth 130, Megatap 138, Ten-Tap 158, Resonator 162, Looper 166, Multiplexer 191)
+// have NO trustworthy geometry: rows (word16) has no catalog/defs source at all
+// (it is 1/2/4 with no derivable rule — Send/Return=1, RingMod=2, rest=4), and cols
+// is ambiguous even where a source exists (Vol/Pan: FM9/Axe3 body=12, FM3 defs=14,
+// FM3 catalog stride=15). Per the FORGEFXMID-40 rigor rule we do NOT guess them —
+// they carry no FM3_BLOCK_GEOMETRY entry and remain unsynthesizable until a rig
+// capture pins their word15xword16 (e.g. a block-definition sub=0x01 geometry
+// probe, or an FM3 preset that places each block). See the task report.
+//
+// eid→family is taken from EFFECT_BASES / the catalog familyByEffectId, NOT from
+// the cols→name `blockColsMap` (whose Vol/Pan@10 / PEQ@26 entries are the OLD
+// Input/Output cols mislabel — cols 10 is Input(37), cols 26 is Output(42)).
+
+/** Fixture-confirmed per-family body geometry (word15 cols × word16 rows), keyed
+ *  by BASE grid effect id — derived from the harvested templates so a catalog-built
+ *  block is byte-size-identical to the clone. Present ONLY for the 25 families a
+ *  fixture places; the 10 untemplated families are intentionally absent (geometry
+ *  unavailable — see the module note above). */
+export const FM3_BLOCK_GEOMETRY: Readonly<Record<number, { cols: number; rows: number }>> =
+  Object.fromEntries(
+    Object.entries(FM3_BLOCK_TEMPLATES).map(([b, t]) => [Number(b), { cols: t.cols, rows: t.rows }]),
+  );
+
+export interface CatalogBlockRecord {
+  bytes: Uint8Array;
+  cols: number;
+  rows: number;
+}
+
+/**
+ * Build a fresh block record for base grid effect id `base` from the catalog:
+ * geometry from FM3_BLOCK_GEOMETRY, every cataloged param slot filled with its
+ * `defaultRaw` across all channels, uncataloged slots 0, header words 15/16 set.
+ * Returns null when no authoritative geometry exists for `base` (the untemplated
+ * families — never fabricated). Type + IR params are overlaid afterwards exactly
+ * as for a cloned template (`overlayBlock`); the caller writes the eid signature.
+ *
+ * Params are written with `writeBlockParam` (the proven read/write primitive), so
+ * a record placed at `offset` with its signature at `offset-12` reads its defaults
+ * back byte-exact through `readBlockParams` (see preset-synth-catalog.test.ts).
+ */
+export function buildCatalogBlock(
+  base: number,
+  layout: Gen3BodyLayout,
+  tables: Gen3BlockParamTables,
+): CatalogBlockRecord | null {
+  const g = FM3_BLOCK_GEOMETRY[base];
+  if (!g) return null;
+  const recSize = (BLOCK_HEADER_WORDS + g.cols * g.rows) * 2;
+  // Scratch buffer with a HEADER_PRELUDE_GAP-byte prefix so writeBlockParam's
+  // `header = blockOffset - gap` lands the param region inside the record.
+  const buf = new Uint8Array(HEADER_PRELUDE_GAP + recSize);
+  const blockOffset = HEADER_PRELUDE_GAP;
+  // header word15 = cols, word16 = rows (record-relative bytes 30 / 32).
+  buf[blockOffset + 30] = g.cols & 0xff;
+  buf[blockOffset + 31] = (g.cols >> 8) & 0xff;
+  buf[blockOffset + 32] = g.rows & 0xff;
+  buf[blockOffset + 33] = (g.rows >> 8) & 0xff;
+
+  const family = tables.familyByEffectId[String(base)];
+  const catalog = family ? (tables.paramsByFamily[family] ?? []) : [];
+  const ranges = (family ? tables.ranges[family] : undefined) ?? {};
+  const channels = family === layout.ampFamily ? layout.ampChannels : 1;
+  for (const p of catalog) {
+    const dr = (ranges[p.paramId] as { defaultRaw?: number } | undefined)?.defaultRaw;
+    if (dr == null) continue;
+    for (let ch = 0; ch < channels; ch++) {
+      try {
+        writeBlockParam(buf, blockOffset - HEADER_PRELUDE_GAP, layout, p.paramId, ch, dr);
+      } catch {
+        // param slot beyond this record's geometry — skip (uncataloged/out-of-range)
+      }
+    }
+  }
+  return { bytes: buf.subarray(blockOffset, blockOffset + recSize), cols: g.cols, rows: g.rows };
+}
+
 /** Default scaffold from the generated tables (used when no dump is supplied). */
 export function defaultScaffold(): { prelude: Uint8Array; trailing: Uint8Array } {
   return {

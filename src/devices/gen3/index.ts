@@ -101,3 +101,6 @@ export type {
   AuthorIrResult,
   BlockAnchor,
 } from './presetAuthorIr.js';
+
+export { validateGen3Preset } from './presetValidate.js';
+export type { Gen3ValidationResult } from './presetValidate.js';

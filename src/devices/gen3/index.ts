@@ -89,6 +89,7 @@ export type { RawWritableParam } from './blockParams.js';
 
 export {
   authorGen3PresetFromIR,
+  authorGen3PresetFromIRFull,
   reconcileBlockAnchors,
 } from './presetAuthorIr.js';
 export type {
@@ -99,8 +100,26 @@ export type {
   AuthoredBlockRecord,
   AuthoredSkip,
   AuthorIrResult,
+  AuthorIrFullResult,
   BlockAnchor,
 } from './presetAuthorIr.js';
+
+export {
+  buildGen3Body,
+  writeSceneNames,
+  synthGrid,
+  defaultScaffold,
+  defaultScaffoldSyx,
+} from './presetSynth.js';
+export type {
+  SynthPreset,
+  SynthBlock,
+  SynthParam,
+  SynthGridCell,
+  SynthPlacedBlock,
+  SynthSkip,
+  SynthBodyResult,
+} from './presetSynth.js';
 
 export { validateGen3Preset } from './presetValidate.js';
 export type { Gen3ValidationResult } from './presetValidate.js';

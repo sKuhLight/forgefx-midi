@@ -60,6 +60,12 @@ import {
   type Gen3BodyLayout,
   type Gen3BlockParamTables,
 } from './blockParams.js';
+import {
+  buildGen3Body,
+  type SynthPreset,
+  type SynthPlacedBlock,
+  type SynthSkip,
+} from './presetSynth.js';
 import { resolveFamily } from '../../convert/families.js';
 
 /** FM3 gap (bytes) between the param-region header signature (effectId + zeros,
@@ -450,4 +456,86 @@ export function authorGen3PresetFromIR(
   const syx = serializePresetDump(reframeRawPatch(parsed, newRaw));
 
   return { syx, written, skipped, nameWritten, anchorsReconciled: true };
+}
+
+// ── full-body synthesis (the faithful alternative to edit-in-place) ─────────
+
+/** Body offset of the first real block (constant across FM3 presets). */
+const SYNTH_CHAIN_START = 0x120e;
+const SYNTH_BLOCK_HEADER_WORDS = 23;
+
+export interface AuthorIrFullResult {
+  /** The re-encoded device-valid `.syx` bytes (FILE-level valid; NOT hw-proven). */
+  syx: Uint8Array;
+  /** Blocks synthesized into the chain (template clone + overlay). */
+  blocks: SynthPlacedBlock[];
+  /** IR blocks/params/types that had no template/rule and were skipped. */
+  skipped: SynthSkip[];
+  /** The preset name written into the raw_patch header (absent if none). */
+  nameWritten?: string;
+}
+
+/**
+ * SYNTHESIZE a full FM3 preset `.syx` from a converted IR by CLONING a clean
+ * FM3 scaffold and replacing its scene names, grid, and entire block chain —
+ * the faithful alternative to `authorGen3PresetFromIR` (edit-in-place).
+ *
+ * Pipeline: parse the scaffold dump → decode its raw patch → carry its prelude
+ * [0x000..0x120E] + trailing region → `buildGen3Body` assembles a fresh chain
+ * of per-family template clones overlaid with the IR's type + params → write
+ * the preset name into the raw-patch header → recompress (`reencodeRawPatch`,
+ * which tolerates a body of ANY length) → re-frame (`reframeRawPatch`) →
+ * serialize.
+ *
+ * @param scaffoldDumpBytes a clean FM3 `.syx` whose prelude + trailing are carried.
+ * @param ir                the converted preset IR (a `ConverterPreset` is structurally accepted).
+ * @param modelId           SysEx model byte; MUST be MODEL_FM3 (0x11).
+ */
+export function authorGen3PresetFromIRFull(
+  scaffoldDumpBytes: Uint8Array,
+  ir: SynthPreset,
+  modelId: number = MODEL_FM3,
+): AuthorIrFullResult {
+  if (modelId !== MODEL_FM3) {
+    throw new Error(
+      `authorGen3PresetFromIRFull: FM3 (0x11) only — got 0x${modelId.toString(16)}. ` +
+        `FM9/III/AM4/VP4 synthesis is intentionally unimplemented (uncalibrated write model).`,
+    );
+  }
+  const parsed = parsePresetDump(scaffoldDumpBytes, 0, modelId);
+  const decodedRaw = decodeRawPatch(parsed.chunkPayloads);
+  const { rawPatch, body: scaffoldBody, decompSize } = decodedRaw;
+
+  // Slice the scaffold's carried regions: prelude [0..0x120E] and the trailing
+  // region after its last block.
+  const scaffoldDecoded = decodeGen3Body(scaffoldBody, modelId);
+  const scaffoldBlocks = scaffoldDecoded.blocks ?? [];
+  if (scaffoldBlocks.length === 0) throw new Error('authorGen3PresetFromIRFull: scaffold decodes to no blocks');
+  const firstOff = scaffoldBlocks[0].offset;
+  if (firstOff !== SYNTH_CHAIN_START) {
+    throw new Error(
+      `authorGen3PresetFromIRFull: scaffold first block at 0x${firstOff.toString(16)}, expected 0x120e`,
+    );
+  }
+  const lastBlock = scaffoldBlocks[scaffoldBlocks.length - 1];
+  const lastEnd = lastBlock.offset + (SYNTH_BLOCK_HEADER_WORDS + lastBlock.cols * lastBlock.rows) * 2;
+  const prelude = scaffoldBody.slice(0, SYNTH_CHAIN_START);
+  const trailing = scaffoldBody.slice(lastEnd, decompSize);
+
+  const { body: newBody, placed, skipped } = buildGen3Body(ir, { prelude, trailing }, modelId);
+
+  // Write the preset name into the uncompressed raw-patch header (survives reencode).
+  let namedRaw = rawPatch;
+  let nameWritten: string | undefined;
+  if (ir.name != null) {
+    namedRaw = rawPatch.slice();
+    const nameBytes = new TextEncoder().encode(ir.name).subarray(0, 31);
+    namedRaw.fill(0, 0x08, 0x28);
+    namedRaw.set(nameBytes, 0x08);
+    nameWritten = ir.name;
+  }
+
+  const newRaw = reencodeRawPatch(namedRaw, newBody);
+  const syx = serializePresetDump(reframeRawPatch(parsed, newRaw));
+  return { syx, blocks: placed, skipped, nameWritten };
 }

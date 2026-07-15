@@ -53,6 +53,7 @@ import { runFm3MetersTests, FM3_METERS_CASE_COUNT } from './gen3/fm3/meters.test
 import { runFm3BlockParamsTests, FM3_BLOCKPARAMS_CASE_COUNT } from './gen3/fm3/blockparams.test.js';
 import { runPresetAuthorIrTests, PRESET_AUTHOR_IR_CASE_COUNT } from './gen3/fm3/preset-author-ir.test.js';
 import { runPresetSynthIrTests, PRESET_SYNTH_IR_CASE_COUNT } from './gen3/fm3/preset-synth-ir.test.js';
+import { runDefaultRawRoundTripTests, DEFAULT_RAW_ROUNDTRIP_CASE_COUNT } from './gen3/default-raw-roundtrip.test.js';
 import { runCrossBlockParamsTests, CROSS_BLOCKPARAMS_CASE_COUNT } from './gen3/modern-family/blockparams-cross.test.js';
 import { runFm3TelemetryTests, FM3_TELEMETRY_CASE_COUNT } from './gen3/fm3/telemetry.test.js';
 import { runGen3RosterTests, FM3_ROSTER_CASE_COUNT } from './gen3/fm3/roster.test.js';
@@ -145,6 +146,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `fm3/preset-author-ir (${PRESET_AUTHOR_IR_CASE_COUNT} offline round-trip)`, run: runPresetAuthorIrTests },
   { name: `fm3/preset-synth-ir (${PRESET_SYNTH_IR_CASE_COUNT} full-body synthesis round-trip)`, run: runPresetSynthIrTests },
   { name: `modern-family/blockparams-cross (${CROSS_BLOCKPARAMS_CASE_COUNT} cross-device preset goldens)`, run: runCrossBlockParamsTests },
+  { name: `gen3/default-raw-roundtrip (${DEFAULT_RAW_ROUNDTRIP_CASE_COUNT} models: FM3/FM9/III)`, run: runDefaultRawRoundTripTests },
   { name: `fm3/telemetry (${FM3_TELEMETRY_CASE_COUNT} live-FM3 frame goldens)`, run: runFm3TelemetryTests },
   { name: `gen3/roster (${FM3_ROSTER_CASE_COUNT} projection goldens)`, run: runGen3RosterTests },
   { name: `gen3/preset-validate (${PRESET_VALIDATE_CASE_COUNT} cases)`, run: runPresetValidateTests },

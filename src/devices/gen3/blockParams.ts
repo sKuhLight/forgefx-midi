@@ -358,6 +358,102 @@ export function readBlockParamsForModel(body: Uint8Array, placedEids: ReadonlySe
   return readBlockParams(body, placedEids, tables, layout);
 }
 
+// ── inverse (write) model ──────────────────────────────────────────────
+//
+// The WRITE model is the exact inverse of the READ model above: the same
+// `header` (from `findBlockHeader`, replicating `findHeader`), the same
+// `paramArrayBase`/`ampChannelStride` layout, and the same 0..65534 value
+// scale. Writing a raw u16 at `paramByteOffset(...)` and re-reading it through
+// `readBlockParams` returns the same raw — that read-after-write identity is the
+// correctness contract the round-trip test enforces (test/gen3/fm3/
+// preset-author-ir.test.ts). It does NOT prove device acceptance — a HARDWARE
+// load test is still required.
+
+/** Locate a block header the same way `readBlockParams` does (effectId u16 LE +
+ *  >=8 zero bytes, at/after the floor). Exported so the IR authoring path
+ *  (`presetAuthorIr.ts`) resolves the SAME param-array anchor the reader uses. */
+export function findBlockHeader(body: Uint8Array, eid: number, floor: number): number | null {
+  return findHeader(body, eid, floor);
+}
+
+/** Byte offset, inside the decompressed body, of param `paramId` for a block
+ *  whose header is at `header` — the exact location `readBlockParams` READS, so
+ *  a u16 poke here is read-after-write consistent. `channel` is the amp
+ *  per-channel index (0-3); pass 0 for non-amp blocks (the reader only reads
+ *  channel A / the single array for them). */
+export function paramByteOffset(
+  header: number,
+  layout: Gen3BodyLayout,
+  paramId: number,
+  channel = 0,
+): number {
+  return header + layout.paramArrayBase + 2 * paramId + channel * layout.ampChannelStride;
+}
+
+/** Poke a param's raw u16 LE at its `readBlockParams` offset. `raw` is the
+ *  0..65534-model value (or an enum/type ordinal). Throws if the offset would
+ *  fall outside the body (guards a mis-located header). */
+export function writeBlockParam(
+  body: Uint8Array,
+  header: number,
+  layout: Gen3BodyLayout,
+  paramId: number,
+  channel: number,
+  raw: number,
+): void {
+  const off = paramByteOffset(header, layout, paramId, channel);
+  if (off < 0 || off + 1 >= body.length) {
+    throw new Error(`writeBlockParam: offset 0x${off.toString(16)} out of body range (len ${body.length})`);
+  }
+  const v = raw & 0xffff;
+  body[off] = v & 0xff;
+  body[off + 1] = (v >> 8) & 0xff;
+}
+
+/** Value → raw u16 for the 0..65534 device model, the inverse of `decodeOne`.
+ *  Priority: (1) the IR's normalized 0..1 (raw = round(normalized*65534)); else
+ *  (2) a display range (min/max, optional log taper) inverted; else (3) the
+ *  value treated as an already-raw ordinal/int. NOTE: `readBlockParams` decodes
+ *  continuous params LINEARLY (`displayMin + raw/65534*range`) regardless of a
+ *  log taper, so a log-inverted raw only round-trips back to its display value
+ *  through a log-aware reader — through `readBlockParams` it reads linearly.
+ *  Prefer `normalized` for exact round-trips. */
+export interface RawWritableParam {
+  normalized?: number;
+  value?: number;
+  min?: number;
+  max?: number;
+  log?: boolean;
+}
+export function valueToRaw(param: RawWritableParam): number {
+  const clamp = (r: number): number => Math.max(0, Math.min(VALUE_MODEL_MAX, Math.round(r)));
+  if (param.normalized != null && Number.isFinite(param.normalized)) {
+    return clamp(param.normalized * VALUE_MODEL_MAX);
+  }
+  const v = param.value;
+  if (v == null || !Number.isFinite(v)) {
+    throw new Error('valueToRaw: param has neither a finite `normalized` nor `value`');
+  }
+  const { min, max, log } = param;
+  if (min != null && max != null && max !== min) {
+    let norm: number;
+    if (log && min > 0 && max > 0) {
+      norm = Math.log(v / min) / Math.log(max / min);
+    } else {
+      norm = (v - min) / (max - min);
+    }
+    return clamp(norm * VALUE_MODEL_MAX);
+  }
+  return clamp(v);
+}
+
+/** The single TYPE/model selector paramId for a catalog family, or null when the
+ *  family has no single type selector (Cab = 4 IR slots, Synth = 3 voices).
+ *  Exported so the authoring path can reconcile the two block anchors. */
+export function typeParamForFamily(tables: Gen3BlockParamTables, family: string): number | null {
+  return typeParamFor(tables, family);
+}
+
 /** Compact, search-oriented projection: per family slug, the distinct TYPE/model names in use. */
 export function modelsFromBlocks(blocks: readonly DecodedBlock[]): Record<string, string[]> {
   const out: Record<string, Set<string>> = {};

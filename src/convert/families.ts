@@ -440,8 +440,9 @@ export type ConverterTopology =
   | { readonly kind: 'chain'; readonly slots: number }
   | { readonly kind: 'unknown' };
 
-/** Count of AM4 block families (its single-instance slots), excluding "none". */
-const AM4_SLOT_COUNT = Object.keys(BLOCK_TYPE_VALUES).filter((k) => k !== 'none').length;
+/** AM4 physical chain length: four ordered effect slots (IN/OUT are fixed and not user slots). This is
+ *  the device's real capacity — NOT the size of its block-type palette (which is much larger). */
+const AM4_SLOT_COUNT = 4;
 
 /** The capacity model for a device. */
 export function deviceTopology(device: ConverterDeviceId): ConverterTopology {

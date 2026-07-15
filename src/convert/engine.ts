@@ -35,7 +35,7 @@ import type {
   ConverterGridCell,
 } from './ir.js';
 import { matchModel, modelOnDevice, type LineageMatch } from './lineageIndex.js';
-import { resolveTargetRange } from './targetRanges.js';
+import { resolveTargetRange, resolveTargetEnumOptions, targetParamId, targetParamIdByName } from './targetRanges.js';
 import {
   resolveConceptKey,
   normalizeConceptPort,
@@ -132,6 +132,13 @@ function sameVocabulary(a: ConverterDeviceId, b: ConverterDeviceId): boolean {
   return pa !== undefined && pa === pb;
 }
 
+/** Devices whose amp block carries an INTEGRATED cab (no standalone cab slot). On these, a source cab
+ *  folds into the amp block rather than being dropped as unavailable. AM4's amp bundles the cab (its
+ *  integrated cab lives at the amp's block-type base + 4). */
+function ampIntegratesCab(device: ConverterDeviceId): boolean {
+  return device === 'am4';
+}
+
 // ── Engine ───────────────────────────────────────────────────────────
 
 /**
@@ -165,6 +172,22 @@ export function convertPreset(
     .map(cloneBlock);
 
   // ── 1. Family presence + target instancing ────────────────────────
+  // Integrated-cab devices (AM4): the amp block bundles the cab, so a source cab is NOT missing — it
+  // folds into the amp block (recorded as block-merged, an info event, not a loss). Only when there is
+  // no amp to host it does the cab fall through to the family-missing drop below.
+  if (ampIntegratesCab(targetDevice)) {
+    const host = blocks.find((b) => b.family === 'amp');
+    if (host) {
+      blocks = blocks.filter((b) => {
+        if (b.family === 'cab') {
+          events.push({ kind: 'block-merged', blockKey: b.key, family: 'cab', intoFamily: 'amp', intoBlockKey: host.key });
+          return false;
+        }
+        return true;
+      });
+    }
+  }
+
   const presence = familyPresence(targetDevice);
   blocks = blocks.filter((b) => {
     if (!presence.has(b.family)) {
@@ -188,9 +211,17 @@ export function convertPreset(
   }
 
   // ── 2. Capacity ───────────────────────────────────────────────────
-  const deviceCapacity =
-    topo.kind === 'grid' ? topo.rows * topo.cols : topo.kind === 'slots' ? topo.slots : topo.kind === 'chain' ? topo.slots : Number.MAX_SAFE_INTEGER;
-  const capacity = Math.min(deviceCapacity, opts.maxBlocks ?? Number.MAX_SAFE_INTEGER);
+  // A grid has a hard cell budget, so blocks beyond it are a genuine loss and get dropped here.
+  // Slot/chain devices (AM4, VP4) are filled interactively in the editor: EVERY convertible block is
+  // kept as a tray candidate and the user picks which of the few fixed slots to use — so we do NOT
+  // pre-drop them to the slot count (that would silently choose for the user and report wanted
+  // candidates as losses). An explicit opts.maxBlocks preview cap is still honored for any target.
+  const isFixedSlots = topo.kind === 'slots' || topo.kind === 'chain';
+  const deviceCapacity = topo.kind === 'grid' ? topo.rows * topo.cols : Number.MAX_SAFE_INTEGER;
+  const capacity = Math.min(
+    isFixedSlots ? Number.MAX_SAFE_INTEGER : deviceCapacity,
+    opts.maxBlocks ?? Number.MAX_SAFE_INTEGER,
+  );
   if (blocks.length > capacity) {
     // Rank by (priority asc, signal-order asc); keep the top `capacity`.
     const ranked = [...blocks].sort((a, b) => {
@@ -277,9 +308,16 @@ export function convertPreset(
         }
         const tgtName = resolved.localName;
         const range = resolveTargetRange(targetDevice, b.family, tgtName);
+        const enumOptions = resolveTargetEnumOptions(targetDevice, b.family, tgtName);
         if (range === undefined) {
           events.push({ kind: 'param-unverified', blockKey: b.key, nativeName: tgtName, value: p.value });
-          mapped.push({ nativeName: tgtName, conceptKey: p.conceptKey, value: p.value, displayValue: p.displayValue });
+          mapped.push({
+            nativeName: tgtName,
+            conceptKey: p.conceptKey,
+            value: p.value,
+            displayValue: p.displayValue,
+            ...(enumOptions ? { enumOptions } : {}),
+          });
           continue;
         }
         const clamped = Math.min(range.max, Math.max(range.min, p.value));
@@ -300,14 +338,56 @@ export function convertPreset(
           nativeName: tgtName,
           conceptKey: p.conceptKey,
           value: clamped,
+          min: range.min,
+          max: range.max,
+          ...(range.unit !== undefined ? { unit: range.unit } : {}),
+          ...(range.log ? { log: true } : {}),
           ...(normalized !== undefined ? { normalized } : {}),
           displayValue: String(clamped),
+          ...(enumOptions ? { enumOptions } : {}),
         });
       }
       b.params = mapped;
     }
   }
   // (lossless path keeps every param verbatim — nothing to do.)
+
+  // ── 4b. Target paramId re-addressing ──────────────────────────────
+  // A param's `paramId` is a DEVICE ADDRESS, and gen-3 paramIds are device-
+  // specific (the same concept sits at a different id on FM3 / FM9 / III). Both
+  // the lossless pass-through (which carries the SOURCE id verbatim) and the
+  // mapped path (which produces params with NO id) must end with the id being
+  // the TARGET's, so the authoring encoder can write the param directly by id
+  // for EVERY source — not just when source == target.
+  //
+  // Same-device conversions already carry the target's own id verbatim, so they
+  // are left untouched (this keeps the FM3→FM3 result byte-identical). For every
+  // cross-device conversion, re-resolve each param to the target device's own id
+  // and DROP the id for params the target does not expose — the author then skips
+  // those honestly rather than poking a foreign address (`conceptKey`,
+  // `normalized`, `value`, `nativeName`, `sharedName` are all left intact).
+  //
+  // Two resolution paths, concept-key FIRST then NAME-JOIN fallback:
+  //   1. `targetParamId` — invert the param's cross-device CONCEPT key to the
+  //      target's own id (curated, covers the common tone knobs; also handles
+  //      enum/type selectors correctly).
+  //   2. `targetParamIdByName` — for a param the concept registry does NOT cover,
+  //      EXACT-match its shared catalog symbol (e.g. `PEQ_GAIN1`) against the
+  //      target's own family table. gen-3 devices share the param NAME space, so
+  //      this widens coverage from the ~few dozen concept knobs to the full set
+  //      of CONTINUOUS params — while refusing ambiguous names, enum/type
+  //      selectors, and synthetic ids (never guessing a foreign ordinal).
+  if (source.sourceDevice !== targetDevice) {
+    for (const b of blocks) {
+      for (const p of b.params) {
+        const tid =
+          targetParamId(targetDevice, b.family, p.conceptKey) ??
+          targetParamIdByName(targetDevice, b.family, p.sharedName);
+        if (tid != null) p.paramId = tid;
+        else if (p.paramId !== undefined) delete p.paramId;
+      }
+    }
+  }
 
   // ── 5. Routing / placement ────────────────────────────────────────
   const placed = placeBlocks(source, blocks, targetDevice, topo, idxOf, events);
@@ -431,32 +511,27 @@ function placeBlocks(
     return { blocks: placedBlocks, gridCells, seriesChains };
   }
 
-  // ── Target chain / slots: a single serial line ──
-  const slots = topo.kind === 'chain' ? topo.slots : topo.kind === 'slots' ? topo.slots : ordered.length;
-  const kept: ConverterBlock[] = [];
-  const unplaced: string[] = [];
-  ordered.forEach((b, i) => {
-    if (i < slots) {
-      b.position = { slot: i };
-      kept.push(b);
-    } else {
-      unplaced.push(b.key);
-    }
-  });
-  emitUnplaced(unplaced, byKey, events, `target has only ${slots} slots`);
+  // ── Target chain / slots: the user assigns blocks to the fixed slots in the editor ──
+  // Slot/chain devices (AM4, VP4) expose a small, fixed number of ordered slots. Rather than
+  // auto-pick which converted blocks win those slots, we leave every survivor UNPLACED (position
+  // null) so it lands in the editor's tray, and the user chooses which slots to fill and in what
+  // order. Slot capacity is therefore enforced interactively — overflow is NOT a loss here, so no
+  // block-unplaced events are emitted for it (that would misreport wanted candidates as losses).
+  const slots = topo.kind === 'chain' || topo.kind === 'slots' ? topo.slots : ordered.length;
+  for (const b of ordered) b.position = undefined; // unplaced → the editor's tray (user assigns the slots)
 
-  if (sourceGrid && srcTopo.kind === 'grid' && kept.length > 0) {
+  if (sourceGrid && srcTopo.kind === 'grid' && ordered.length > 0) {
     events.push({
       kind: 'routing-simplified',
       detail:
         topo.kind === 'chain'
-          ? `grid flattened to a ${slots}-slot serial chain`
-          : `grid flattened to single-instance slots`,
-      affectedBlockKeys: kept.map((b) => b.key),
+          ? `grid re-mapped to a ${slots}-slot serial chain — choose which blocks to place`
+          : `grid re-mapped to ${slots} single-instance slots — choose which blocks to place`,
+      affectedBlockKeys: ordered.map((b) => b.key),
     });
   }
 
-  return { blocks: kept, seriesChains: kept.length > 0 ? [kept.map((b) => b.key)] : [] };
+  return { blocks: ordered, seriesChains: [] };
 }
 
 /**

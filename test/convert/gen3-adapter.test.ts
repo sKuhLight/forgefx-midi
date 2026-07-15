@@ -12,6 +12,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { decodeGen3PresetDump } from '../../src/devices/gen3/presetBody.js';
 import { liftGen3Preset } from '../../src/convert/adapters/gen3.js';
+import { convertPreset } from '../../src/convert/engine.js';
 import { isConverterFamily, type Gen3DeviceId } from '../../src/convert/families.js';
 import type { ConverterBlock, ConverterGridPosition } from '../../src/convert/ir.js';
 
@@ -117,4 +118,41 @@ export function runGen3AdapterTests(): void {
   assert(bass?.conceptKey === 'amp.bass', `preset-42 amp bass conceptKey ${bass?.conceptKey}`);
   assert((amp!.channels?.count ?? 0) >= 1, 'preset-42 amp has no channel state');
   assert(Array.isArray(amp!.bypassPerScene) && amp!.bypassPerScene!.length === 8, 'preset-42 amp bypass-per-scene');
+
+  // Full-fidelity param carry (paramId + normalized), across NON-AMP blocks too
+  // — the fix that lets same-generation authoring write param VALUES, not just
+  // structure. Assert every lifted param on a non-amp calibrated block carries a
+  // finite paramId and a 0..1 `normalized`, and that the amp does as well.
+  const nonAmp = st.blocks.filter((b) => b.family !== 'amp' && b.params.length > 0);
+  assert(nonAmp.length >= 2, `preset-42 expected >=2 non-amp blocks with params, got ${nonAmp.length}`);
+  for (const b of [amp!, ...nonAmp]) {
+    for (const p of b.params) {
+      assert(Number.isInteger(p.paramId), `preset-42 ${b.key} param ${p.nativeName} missing integer paramId`);
+      assert(
+        typeof p.normalized === 'number' && p.normalized! >= 0 && p.normalized! <= 1,
+        `preset-42 ${b.key} param ${p.nativeName} normalized out of 0..1 (${p.normalized})`,
+      );
+    }
+  }
+  // A concrete non-amp block carries real params (e.g. reverb time / delay).
+  const reverb = st.blocks.find((b) => b.family === 'reverb');
+  assert(reverb !== undefined && reverb.params.length > 0, 'preset-42 reverb block has no params');
+
+  // Same-generation convert (fm3 → fm3) preserves paramId + normalized VERBATIM
+  // (shared roster / vocabulary → lossless pass-through). This is the invariant
+  // the FM3 authoring encoder relies on to write params by id.
+  const { target, events } = convertPreset(st, 'fm3');
+  assert(
+    !events.some((e) => e.kind === 'param-dropped' || e.kind === 'param-clamped'),
+    'preset-42 fm3->fm3 must not drop/clamp params (lossless same-generation pass-through)',
+  );
+  for (const sb of st.blocks) {
+    const tb = target.blocks.find((b) => b.key === sb.key);
+    if (!tb) continue;
+    assert(tb.params.length === sb.params.length, `fm3->fm3 ${sb.key} param count changed`);
+    for (let i = 0; i < sb.params.length; i++) {
+      assert(tb.params[i].paramId === sb.params[i].paramId, `fm3->fm3 ${sb.key} param ${i} paramId changed`);
+      assert(tb.params[i].normalized === sb.params[i].normalized, `fm3->fm3 ${sb.key} param ${i} normalized changed`);
+    }
+  }
 }

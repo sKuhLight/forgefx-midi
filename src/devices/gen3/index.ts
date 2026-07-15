@@ -78,3 +78,26 @@ export type {
   DecodedBlock,
   DecodedBlockParam,
 } from './blockParams.js';
+export {
+  findBlockHeader,
+  paramByteOffset,
+  writeBlockParam,
+  valueToRaw,
+  typeParamForFamily,
+} from './blockParams.js';
+export type { RawWritableParam } from './blockParams.js';
+
+export {
+  authorGen3PresetFromIR,
+  reconcileBlockAnchors,
+} from './presetAuthorIr.js';
+export type {
+  IrAuthorParam,
+  IrAuthorBlock,
+  IrAuthorPreset,
+  AuthoredParamRecord,
+  AuthoredBlockRecord,
+  AuthoredSkip,
+  AuthorIrResult,
+  BlockAnchor,
+} from './presetAuthorIr.js';

@@ -20,4 +20,4 @@ export * from './lineageIndex.js';
 export * from './adapters/index.js';
 export * from './events.js';
 export * from './engine.js';
-export { resolveTargetRange, type TargetRange } from './targetRanges.js';
+export { resolveTargetRange, resolveTargetEnumOptions, type TargetRange } from './targetRanges.js';

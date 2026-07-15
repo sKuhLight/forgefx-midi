@@ -127,6 +127,22 @@ export interface ChannelCollapsedEvent {
   targetChannels: number;
 }
 
+/**
+ * A block was folded INTO another block on the target instead of occupying its own slot — the target
+ * bundles the two functions into one block. Today's case: devices whose amp has an integrated cab
+ * (AM4) — a source's separate cab block merges into the amp. NOT a loss: the function survives inside
+ * the host block (though host-specific params may be limited by what the target decode exposes).
+ */
+export interface BlockMergedEvent {
+  kind: 'block-merged';
+  blockKey: string;
+  family: ConverterFamily;
+  /** The family of the host block it folded into (e.g. 'amp' for an integrated cab). */
+  intoFamily: ConverterFamily;
+  /** The host block's key, when a specific source instance hosts it. */
+  intoBlockKey?: string;
+}
+
 /** Blanket caveat: the SOURCE preset was only partially decoded. */
 export interface SourcePartialEvent {
   kind: 'source-partial';
@@ -144,6 +160,7 @@ export type ConversionEvent =
   | ParamUnverifiedEvent
   | RoutingSimplifiedEvent
   | BlockUnplacedEvent
+  | BlockMergedEvent
   | SceneCollapsedEvent
   | ChannelCollapsedEvent
   | SourcePartialEvent;
@@ -178,6 +195,7 @@ export function severityOf(event: ConversionEvent): ConversionSeverity {
     case 'source-partial':
       return 'warn';
     case 'param-unverified':
+    case 'block-merged':
       return 'info';
   }
 }

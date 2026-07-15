@@ -30,8 +30,34 @@ export type ConverterLiftSource = 'full-decode' | 'partial-decode';
 
 /** One parameter carried on a block. */
 export interface ConverterParam {
+  /**
+   * The device param ADDRESS (the codec `readBlockParams` paramId), when known.
+   *
+   * On a LIFTED (un-converted) preset this is the SOURCE device's id, straight
+   * from the decode. On a CONVERTED preset it is always the TARGET device's id:
+   * gen-3 paramIds are device-specific (the same param name has a different id
+   * on FM3 / FM9 / III), so the conversion engine re-resolves each param's id to
+   * the target device via its `conceptKey` (`targetRanges.targetParamId`) — the
+   * carried source id is only left as-is when source and target are the SAME
+   * device. A converted param whose concept the target does not expose carries
+   * NO id (the author skips it rather than poke a foreign/absent address). The
+   * upshot: on a converted preset this id is a valid address for the TARGET, so
+   * the authoring encoder can always write the param directly by id.
+   */
+  paramId?: number;
   /** The device-native param name, verbatim (e.g. `gain`, `master_volume`). */
   nativeName: string;
+  /**
+   * The FULL, un-stripped param symbol from the source device's catalog — the
+   * form gen-3 devices SHARE across their catalogs (e.g. `DISTORT_DRIVE`,
+   * `PEQ_GAIN1`). `nativeName` strips the `<FAMILY>_` prefix and lower-cases for
+   * the concept-key join; this keeps the exact catalog key so a cross-device
+   * conversion can NAME-JOIN a param that has no concept key onto the target's
+   * own paramId (`targetRanges.targetParamIdByName`). Present only on gen-3
+   * lifts (the shared-vocabulary family); absent for AM4 / gen-1 / gen-2, whose
+   * catalogs do not share this symbol space.
+   */
+  sharedName?: string;
   /**
    * The cross-device concept key this param resolves to (e.g.
    * `amp.preamp_gain`), when the concept-key registry knows it. Absent for
@@ -44,6 +70,22 @@ export interface ConverterParam {
   normalized?: number;
   /** Human-facing display string (e.g. `"5.1"`, `"USA MK IIC+"`), when known. */
   displayValue?: string;
+  /**
+   * Target-device display range, attached by the P2 engine when a real range
+   * table covers this param (see `targetRanges.ts`). Absent for
+   * `param-unverified` params — the editor then renders a coarse knob.
+   */
+  min?: number;
+  max?: number;
+  /** Short display-unit symbol (e.g. `dB`, `Hz`), when the range table names one. */
+  unit?: string;
+  /** Logarithmic taper (frequency / time knobs) — interpolate geometrically. */
+  log?: boolean;
+  /**
+   * Ordered enum option labels (index = ordinal), attached when the target
+   * param is a cleanly-labelled enum. Present → the editor renders a dropdown.
+   */
+  enumOptions?: readonly string[];
 }
 
 /** A grid coordinate position (grid-shaped devices). */

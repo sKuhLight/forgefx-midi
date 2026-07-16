@@ -106,10 +106,17 @@ export type {
 
 export {
   buildGen3Body,
+  buildCatalogBlock,
   writeSceneNames,
   synthGrid,
+  assignGridEffectIds,
+  assignFm3GridEffectIds,
+  hasSynthModel,
   defaultScaffold,
   defaultScaffoldSyx,
+  FM3_BLOCK_GEOMETRY,
+  FM9_BLOCK_GEOMETRY,
+  AXE3_BLOCK_GEOMETRY,
 } from './presetSynth.js';
 export type {
   SynthPreset,
@@ -119,6 +126,8 @@ export type {
   SynthPlacedBlock,
   SynthSkip,
   SynthBodyResult,
+  Gen3BlockTemplate,
+  CatalogBlockRecord,
 } from './presetSynth.js';
 
 export { validateGen3Preset } from './presetValidate.js';

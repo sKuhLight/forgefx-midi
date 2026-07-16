@@ -42,6 +42,7 @@ import { parsePresetDump, serializePresetDump } from './presetDump.js';
 import { decodeRawPatch, reencodeRawPatch } from './presetHuffman.js';
 import {
   decodeGen3Body,
+  decodeGen3PresetDump,
   getProfile,
   typeFieldByteOffset,
   EFFECT_BASES,
@@ -62,6 +63,7 @@ import {
 } from './blockParams.js';
 import {
   buildGen3Body,
+  hasSynthModel,
   type SynthPreset,
   type SynthPlacedBlock,
   type SynthSkip,
@@ -460,9 +462,66 @@ export function authorGen3PresetFromIR(
 
 // ── full-body synthesis (the faithful alternative to edit-in-place) ─────────
 
-/** Body offset of the first real block (constant across FM3 presets). */
-const SYNTH_CHAIN_START = 0x120e;
 const SYNTH_BLOCK_HEADER_WORDS = 23;
+/** eid signature (findBlockHeader anchor) sits this far below a walk header. */
+const SYNTH_HEADER_PRELUDE_GAP = 12;
+
+/**
+ * Slice a scaffold body into its carried regions: prelude [0..firstEffectBlock]
+ * and trailing [lastEffectBlockEnd..decompSize]. Located by a CHAIN WALK (from the
+ * two-consecutive-25×1-modifier chain start), keying each record by the grid
+ * effect id in its signature (12 bytes below the walk header) — robust where
+ * `decodeGen3Body` under-counts the walk block list (FM9/III, FORGEFXMID-41) and
+ * where a family's header lacks the 8-zero findBlockHeader signature (Axe-Fx III
+ * Output). The chain start (= prelude length) is thereby per-device (FM3 0x120e,
+ * FM9 0x1eb6, III 0x141e for the bundled scaffolds).
+ */
+function sliceScaffoldRegions(
+  body: Uint8Array,
+  decompSize: number,
+  gridBases: ReadonlySet<number>,
+): { prelude: Uint8Array; trailing: Uint8Array } {
+  const u16 = (o: number): number => (body[o]! | (body[o + 1]! << 8)) & 0xffff;
+  const eidBaseOf = (eid: number): number | null => {
+    if (eid in EFFECT_BASES) return eid;
+    for (const baseStr of Object.keys(EFFECT_BASES)) {
+      const base = Number(baseStr);
+      if (eid > base && eid <= base + 3) return base;
+    }
+    return null;
+  };
+  // chain start = first of two consecutive 25×1 modifier records.
+  const modSize = (SYNTH_BLOCK_HEADER_WORDS + 25) * 2;
+  let chainStart = -1;
+  for (let off = 0x200; off < body.length - 70; off += 2) {
+    if (u16(off + 30) !== 25 || u16(off + 32) !== 1) continue;
+    const next = off + modSize;
+    if (next + 34 <= body.length && u16(next + 30) === 25 && u16(next + 32) === 1) { chainStart = off; break; }
+  }
+  if (chainStart < 0) throw new Error('authorGen3PresetFromIRFull: scaffold block-chain start not found');
+
+  let firstEffect = -1;
+  let lastEffectEnd = -1;
+  let pos = chainStart;
+  while (pos + SYNTH_BLOCK_HEADER_WORDS * 2 + 2 <= body.length) {
+    const cols = u16(pos + 30);
+    const rows = u16(pos + 32);
+    if (cols === 0 || rows === 0 || cols > 500 || rows > 8) break;
+    const size = (SYNTH_BLOCK_HEADER_WORDS + cols * rows) * 2;
+    if (!(cols === 25 && rows === 1)) {
+      const base = eidBaseOf(u16(pos - SYNTH_HEADER_PRELUDE_GAP));
+      if (base != null && gridBases.has(base)) {
+        if (firstEffect < 0) firstEffect = pos;
+        lastEffectEnd = pos + size;
+      }
+    }
+    pos += size;
+  }
+  if (firstEffect < 0 || lastEffectEnd < 0) {
+    throw new Error('authorGen3PresetFromIRFull: scaffold chain has no grid-placed effect blocks');
+  }
+  return { prelude: body.slice(0, firstEffect), trailing: body.slice(lastEffectEnd, decompSize) };
+}
 
 export interface AuthorIrFullResult {
   /** The re-encoded device-valid `.syx` bytes (FILE-level valid; NOT hw-proven). */
@@ -476,51 +535,56 @@ export interface AuthorIrFullResult {
 }
 
 /**
- * SYNTHESIZE a full FM3 preset `.syx` from a converted IR by CLONING a clean
- * FM3 scaffold and replacing its scene names, grid, and entire block chain —
- * the faithful alternative to `authorGen3PresetFromIR` (edit-in-place).
+ * SYNTHESIZE a full gen-3 preset `.syx` from a converted IR by CLONING a clean
+ * scaffold and replacing its scene names, grid, and entire block chain — the
+ * faithful alternative to `authorGen3PresetFromIR` (edit-in-place). Supports
+ * FM3 (0x11, live-hardware calibrated), FM9 (0x12) and Axe-Fx III (0x10)
+ * (community-beta, harvested from the single "Devs Gift Of Tone" preset each).
  *
  * Pipeline: parse the scaffold dump → decode its raw patch → carry its prelude
- * [0x000..0x120E] + trailing region → `buildGen3Body` assembles a fresh chain
- * of per-family template clones overlaid with the IR's type + params → write
+ * [0x000..firstEffectBlock] + trailing region → `buildGen3Body` assembles a fresh
+ * chain of per-family template clones overlaid with the IR's type + params → write
  * the preset name into the raw-patch header → recompress (`reencodeRawPatch`,
  * which tolerates a body of ANY length) → re-frame (`reframeRawPatch`) →
  * serialize.
  *
- * @param scaffoldDumpBytes a clean FM3 `.syx` whose prelude + trailing are carried.
+ * @param scaffoldDumpBytes a clean `.syx` (of `modelId`) whose prelude + trailing are carried.
  * @param ir                the converted preset IR (a `ConverterPreset` is structurally accepted).
- * @param modelId           SysEx model byte; MUST be MODEL_FM3 (0x11).
+ * @param modelId           SysEx model byte; 0x10 (III) / 0x11 (FM3) / 0x12 (FM9).
  */
 export function authorGen3PresetFromIRFull(
   scaffoldDumpBytes: Uint8Array,
   ir: SynthPreset,
   modelId: number = MODEL_FM3,
 ): AuthorIrFullResult {
-  if (modelId !== MODEL_FM3) {
+  if (!hasSynthModel(modelId)) {
     throw new Error(
-      `authorGen3PresetFromIRFull: FM3 (0x11) only — got 0x${modelId.toString(16)}. ` +
-        `FM9/III/AM4/VP4 synthesis is intentionally unimplemented (uncalibrated write model).`,
+      `authorGen3PresetFromIRFull: unsupported model 0x${modelId.toString(16)} ` +
+        `(supported: 0x10 Axe-Fx III, 0x11 FM3, 0x12 FM9). AM4/VP4 have no harvested templates.`,
     );
   }
   const parsed = parsePresetDump(scaffoldDumpBytes, 0, modelId);
   const decodedRaw = decodeRawPatch(parsed.chunkPayloads);
   const { rawPatch, body: scaffoldBody, decompSize } = decodedRaw;
 
-  // Slice the scaffold's carried regions: prelude [0..0x120E] and the trailing
-  // region after its last block.
-  const scaffoldDecoded = decodeGen3Body(scaffoldBody, modelId);
-  const scaffoldBlocks = scaffoldDecoded.blocks ?? [];
-  if (scaffoldBlocks.length === 0) throw new Error('authorGen3PresetFromIRFull: scaffold decodes to no blocks');
-  const firstOff = scaffoldBlocks[0].offset;
-  if (firstOff !== SYNTH_CHAIN_START) {
-    throw new Error(
-      `authorGen3PresetFromIRFull: scaffold first block at 0x${firstOff.toString(16)}, expected 0x120e`,
-    );
+  // Slice the scaffold's carried prelude + trailing via a robust chain walk keyed
+  // on the scaffold's OWN grid effect ids (decodeGen3Body's block list under-counts
+  // on FM9/III, so it cannot be trusted for the region boundaries).
+  const scaffoldDecoded = decodeGen3PresetDump(scaffoldDumpBytes, modelId);
+  const gridBases = new Set<number>();
+  for (const c of scaffoldDecoded.grid ?? []) {
+    if (c.is_shunt || c.effect_id <= 0 || c.effect_id > 1000) continue;
+    // resolve to a base eid (a family occupies base..base+3)
+    let base: number | null = c.effect_id in EFFECT_BASES ? c.effect_id : null;
+    if (base == null) {
+      for (const baseStr of Object.keys(EFFECT_BASES)) {
+        const bb = Number(baseStr);
+        if (c.effect_id > bb && c.effect_id <= bb + 3) { base = bb; break; }
+      }
+    }
+    if (base != null) gridBases.add(base);
   }
-  const lastBlock = scaffoldBlocks[scaffoldBlocks.length - 1];
-  const lastEnd = lastBlock.offset + (SYNTH_BLOCK_HEADER_WORDS + lastBlock.cols * lastBlock.rows) * 2;
-  const prelude = scaffoldBody.slice(0, SYNTH_CHAIN_START);
-  const trailing = scaffoldBody.slice(lastEnd, decompSize);
+  const { prelude, trailing } = sliceScaffoldRegions(scaffoldBody, decompSize, gridBases);
 
   const { body: newBody, placed, skipped } = buildGen3Body(ir, { prelude, trailing }, modelId);
 

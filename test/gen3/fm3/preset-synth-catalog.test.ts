@@ -46,7 +46,7 @@ export function runPresetSynthCatalogTests(): void {
   // (3) untemplated families carry no geometry and refuse to build.
   for (const base of UNTEMPLATED) {
     if (FM3_BLOCK_GEOMETRY[base] != null) fail(`untemplated family ${EFFECT_BASES[base]}(${base}) unexpectedly has geometry`);
-    if (buildCatalogBlock(base, layout, tables) != null) fail(`buildCatalogBlock fabricated a record for untemplated ${EFFECT_BASES[base]}(${base})`);
+    if (buildCatalogBlock(base, FM3_BLOCK_GEOMETRY, layout, tables) != null) fail(`buildCatalogBlock fabricated a record for untemplated ${EFFECT_BASES[base]}(${base})`);
   }
 
   let built = 0;
@@ -54,7 +54,7 @@ export function runPresetSynthCatalogTests(): void {
   for (const baseStr of Object.keys(FM3_BLOCK_GEOMETRY)) {
     const base = Number(baseStr);
     const g = FM3_BLOCK_GEOMETRY[base];
-    const rec = buildCatalogBlock(base, layout, tables);
+    const rec = buildCatalogBlock(base, FM3_BLOCK_GEOMETRY, layout, tables);
     if (!rec) fail(`geometry family ${EFFECT_BASES[base]}(${base}) built null`);
     built++;
 

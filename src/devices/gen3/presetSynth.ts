@@ -33,6 +33,8 @@ import {
   typeFieldByteOffset,
   EFFECT_BASES,
   MODEL_FM3,
+  MODEL_FM9,
+  MODEL_AXE_FX_III,
   type DeviceProfile,
   type Gen3Block,
 } from './presetBody.js';
@@ -50,12 +52,31 @@ import {
   FM3_SCAFFOLD_SYX,
   type Fm3BlockTemplate,
 } from './fm3/blockTemplates.generated.js';
+import {
+  FM9_BLOCK_TEMPLATES,
+  FM9_SCAFFOLD_CHAIN_START,
+  FM9_SCAFFOLD_PRELUDE,
+  FM9_SCAFFOLD_TRAILING,
+  FM9_SCAFFOLD_SYX,
+} from './fm9/blockTemplates.generated.js';
+import {
+  AXE3_BLOCK_TEMPLATES,
+  AXE3_SCAFFOLD_CHAIN_START,
+  AXE3_SCAFFOLD_PRELUDE,
+  AXE3_SCAFFOLD_TRAILING,
+  AXE3_SCAFFOLD_SYX,
+} from './axe-fx-iii/blockTemplates.generated.js';
 import { resolveFamily } from '../../convert/families.js';
 
 // ── layout constants (verified in presetBody.ts) ──────────────────────────
 const BLOCK_HEADER_WORDS = 23;
-/** The first real block is ALWAYS at this body offset (fixtures: 10/10). */
-const CHAIN_START = 0x120e;
+/** FM3's first real block body offset (constant across its 10 fixtures). FM9/III
+ *  derive their chain start from the scaffold prelude length (per-device). */
+const FM3_CHAIN_START = 0x120e;
+
+/** Structural block-template shape shared by FM3/FM9/Axe-Fx III generated tables
+ *  (Fm3BlockTemplate / Fm9BlockTemplate / Axe3BlockTemplate are all this shape). */
+export type Gen3BlockTemplate = Fm3BlockTemplate;
 /** Scene-name region: 8 x 32-byte ASCII at body 0x004. */
 const SCENE_NAME_BASE = 0x004;
 const SCENE_NAME_SLOT = 32;
@@ -207,7 +228,70 @@ interface Resolved {
   rows: number;
   /** The clone source, when this block is built by cloning a real record. Absent
    *  when the block is built from catalog geometry + defaults (buildCatalogBlock). */
-  template?: Fm3BlockTemplate;
+  template?: Gen3BlockTemplate;
+}
+
+// ── per-model synthesis bundle (templates + geometry + scaffold) ────────────
+//
+// FM3 (0x11) is live-hardware calibrated with 25 template families + 3 harvested
+// geometry extras (10 diverse fixtures). FM9 (0x12) + Axe-Fx III (0x10) are
+// harvested from the single community "Devs Gift Of Tone" preset each carries, so
+// they template exactly the 9 families that preset places (Input/Output/PEQ/Amp/
+// Cab/Delay/Wah/Vol-Pan/Drive). Their geometry table is derived from the templates
+// (byte-exact), with NO extras — every other family stays skipped+reported until a
+// rig capture places it (identical discipline to the untemplated FM3 families).
+
+interface Gen3SynthModel {
+  templates: Readonly<Record<number, Gen3BlockTemplate>>;
+  geometry: Readonly<Record<number, { cols: number; rows: number }>>;
+  chainStart: number;
+  scaffoldPrelude: readonly number[];
+  scaffoldTrailing: readonly number[];
+  scaffoldSyx: readonly number[];
+}
+
+/** Verified per-model synthesis bundle; throws for uncalibrated models (VP4/AM4).
+ *  Lazily assembled so the module-level geometry consts are defined first. */
+function getSynthModel(modelId: number): Gen3SynthModel {
+  switch (modelId) {
+    case MODEL_FM3:
+      return {
+        templates: FM3_BLOCK_TEMPLATES,
+        geometry: FM3_BLOCK_GEOMETRY,
+        chainStart: FM3_CHAIN_START,
+        scaffoldPrelude: FM3_SCAFFOLD_PRELUDE,
+        scaffoldTrailing: FM3_SCAFFOLD_TRAILING,
+        scaffoldSyx: FM3_SCAFFOLD_SYX,
+      };
+    case MODEL_FM9:
+      return {
+        templates: FM9_BLOCK_TEMPLATES,
+        geometry: FM9_BLOCK_GEOMETRY,
+        chainStart: FM9_SCAFFOLD_CHAIN_START,
+        scaffoldPrelude: FM9_SCAFFOLD_PRELUDE,
+        scaffoldTrailing: FM9_SCAFFOLD_TRAILING,
+        scaffoldSyx: FM9_SCAFFOLD_SYX,
+      };
+    case MODEL_AXE_FX_III:
+      return {
+        templates: AXE3_BLOCK_TEMPLATES,
+        geometry: AXE3_BLOCK_GEOMETRY,
+        chainStart: AXE3_SCAFFOLD_CHAIN_START,
+        scaffoldPrelude: AXE3_SCAFFOLD_PRELUDE,
+        scaffoldTrailing: AXE3_SCAFFOLD_TRAILING,
+        scaffoldSyx: AXE3_SCAFFOLD_SYX,
+      };
+    default:
+      throw new Error(
+        `gen-3 preset synthesis is not calibrated for model 0x${modelId.toString(16)} ` +
+          `(supported: 0x10 Axe-Fx III, 0x11 FM3, 0x12 FM9). VP4/AM4 have no harvested templates.`,
+      );
+  }
+}
+
+/** True when full-body synthesis has a calibrated bundle for this model. */
+export function hasSynthModel(modelId: number): boolean {
+  return modelId === MODEL_FM3 || modelId === MODEL_FM9 || modelId === MODEL_AXE_FX_III;
 }
 
 /** Base grid effect id for an eid (instances 1..4 occupy base..base+3). */
@@ -235,17 +319,19 @@ function eidLabel(eid: number): string {
  *  blocks are dropped + reported. Object key order is numeric-ascending, so the
  *  LOWEST eid for a family wins as its base (base..base+3 are the four instances).
  *  Cached. */
-let _familyToBaseEid: Map<string, number> | null = null;
-function familyToBaseEid(): Map<string, number> {
-  if (_familyToBaseEid) return _familyToBaseEid;
+const _familyToBaseEid = new Map<number, Map<string, number>>();
+function familyToBaseEid(modelId: number): Map<string, number> {
+  const cached = _familyToBaseEid.get(modelId);
+  if (cached) return cached;
+  const { templates, geometry } = getSynthModel(modelId);
   const m = new Map<string, number>();
   for (const [eidStr, label] of Object.entries(EFFECT_BASES)) {
     const eid = Number(eidStr);
-    if (!(eid in FM3_BLOCK_TEMPLATES) && !(eid in FM3_BLOCK_GEOMETRY)) continue;
+    if (!(eid in templates) && !(eid in geometry)) continue;
     const fam = resolveFamily(label);
     if (fam && !m.has(fam)) m.set(fam, eid);
   }
-  _familyToBaseEid = m;
+  _familyToBaseEid.set(modelId, m);
   return m;
 }
 
@@ -269,15 +355,15 @@ function familyToBaseEid(): Map<string, number> {
  * geometry) get NO eid — they are dropped + reported by `resolveBlocks` at synthesis
  * (the single skip authority), never guessed.
  */
-export function assignFm3GridEffectIds(ir: SynthPreset): SynthPreset {
+export function assignGridEffectIds(ir: SynthPreset, modelId: number): SynthPreset {
   const cells = ir.routing?.gridCells ?? [];
   const blocks = ir.blocks ?? [];
   if (blocks.length === 0) return ir;
-  // Already FM3-addressed (any placed cell carries an effect id) → leave verbatim
-  // (same-device source grid, or a prior assignFm3GridEffectIds pass — idempotent).
+  // Already addressed (any placed cell carries an effect id) → leave verbatim
+  // (same-device source grid, or a prior assignGridEffectIds pass — idempotent).
   if (cells.some((c) => c.effectId != null && c.effectId > 0 && c.blockKey != null)) return ir;
 
-  const famToBase = familyToBaseEid();
+  const famToBase = familyToBaseEid(modelId);
   const blockByKey = new Map<string, SynthBlock>();
   for (const b of blocks) blockByKey.set(b.key, b);
 
@@ -326,6 +412,11 @@ export function assignFm3GridEffectIds(ir: SynthPreset): SynthPreset {
   return { ...ir, routing: { ...(ir.routing ?? {}), gridCells: newCells } };
 }
 
+/** Thin FM3 alias for `assignGridEffectIds` — preserved for existing callers. */
+export function assignFm3GridEffectIds(ir: SynthPreset): SynthPreset {
+  return assignGridEffectIds(ir, MODEL_FM3);
+}
+
 /**
  * Resolve each IR block to a template + grid eid, in canonical (grid signal)
  * order; unresolvable blocks are recorded as skips. Blocks are matched to grid
@@ -334,7 +425,8 @@ export function assignFm3GridEffectIds(ir: SynthPreset): SynthPreset {
  * is how the grid + `readBlockParams` identify a block — so Input (eid 37) picks
  * the cols-10 record and Output (eid 42) the cols-26 record, unambiguously.
  */
-function resolveBlocks(ir: SynthPreset, skipped: SynthSkip[]): Resolved[] {
+function resolveBlocks(ir: SynthPreset, modelId: number, skipped: SynthSkip[]): Resolved[] {
+  const { templates, geometry } = getSynthModel(modelId);
   const cells = ir.routing?.gridCells ?? [];
   const resolved: Resolved[] = [];
   const placedCells = cells
@@ -353,16 +445,16 @@ function resolveBlocks(ir: SynthPreset, skipped: SynthSkip[]): Resolved[] {
     const block = blockByKey.get(key);
     if (block == null) continue; // no IR block carries this cell
     const base = eidBase(eid);
-    const template = base != null ? FM3_BLOCK_TEMPLATES[base] : undefined;
-    const geometry = base != null ? FM3_BLOCK_GEOMETRY[base] : undefined;
+    const template = base != null ? templates[base] : undefined;
+    const geom = base != null ? geometry[base] : undefined;
     if (template) {
       // Preferred: clone a real record (preserves header words 18-22 + uncataloged slots).
       usedKeys.add(key);
       resolved.push({ block, displayName: template.displayName, eid, cols: template.cols, rows: template.rows, template });
-    } else if (base != null && geometry) {
+    } else if (base != null && geom) {
       // No template but authoritative geometry: build from catalog + defaults.
       usedKeys.add(key);
-      resolved.push({ block, displayName: EFFECT_BASES[base] ?? eidLabel(eid), eid, cols: geometry.cols, rows: geometry.rows });
+      resolved.push({ block, displayName: EFFECT_BASES[base] ?? eidLabel(eid), eid, cols: geom.cols, rows: geom.rows });
     } else {
       skipped.push({ key, displayName: eidLabel(eid), family: block.family, reason: `no template or geometry for ${eidLabel(eid)}` });
       continue;
@@ -388,52 +480,61 @@ function resolvedSize(r: Resolved): number {
 }
 
 /**
- * Assemble the full decompressed FM3 body: carried prelude (scene names + grid
- * overwritten) + a fresh block chain (template clones with type + params +
- * eid signatures) + carried trailing. Returns the body and a placement report.
+ * Assemble the full decompressed gen-3 body for `modelId` (0x10/0x11/0x12):
+ * carried prelude (scene names + grid overwritten) + a fresh block chain
+ * (template clones with type + params + eid signatures) + carried trailing.
+ * Returns the body and a placement report. The chain begins at the prelude
+ * length (per-device: FM3 0x120e, FM9/III derived from their scaffold).
  */
 export function buildGen3Body(
   ir: SynthPreset,
   scaffold: { prelude: Uint8Array; trailing: Uint8Array },
   modelId: number,
 ): SynthBodyResult {
-  if (modelId !== MODEL_FM3) {
-    throw new Error(`buildGen3Body: FM3 (0x11) only — got 0x${modelId.toString(16)}`);
-  }
+  const model = getSynthModel(modelId); // throws for uncalibrated models
   const profile = getProfile(modelId);
   const { tables, layout } = gen3BlockParamModel(modelId);
   const skipped: SynthSkip[] = [];
 
-  if (scaffold.prelude.length !== CHAIN_START) {
-    throw new Error(`buildGen3Body: scaffold prelude must be ${CHAIN_START} bytes, got ${scaffold.prelude.length}`);
+  // The chain begins exactly where the prelude ends. The default scaffold's
+  // prelude length equals the model's chain start; a caller-supplied scaffold
+  // pins its own (the grid + scene-name writes are at fixed low offsets, so any
+  // prelude that spans them works). Guard against an obviously-too-short prelude.
+  const chainStart = scaffold.prelude.length;
+  const gridTableBytes = profile.gridCols * profile.gridRows * 2 * 2;
+  if (chainStart < GRID_BASE + gridTableBytes) {
+    throw new Error(
+      `buildGen3Body: scaffold prelude ${chainStart} bytes too short for a ${profile.name} grid ` +
+        `(need >= ${GRID_BASE + gridTableBytes}); expected ~${model.chainStart}`,
+    );
   }
 
-  // Ensure FM3 effect ids on the grid cells (idempotent — a no-op when the IR was
-  // already addressed at conversion time via assignFm3GridEffectIds; assigns for a
+  // Ensure grid effect ids on the cells (idempotent — a no-op when the IR was
+  // already addressed at conversion time via assignGridEffectIds; assigns for a
   // raw cross-device IR). resolveBlocks reports any block that never lands.
-  const normIr = assignFm3GridEffectIds(ir);
-  const resolved = resolveBlocks(normIr, skipped);
+  const normIr = assignGridEffectIds(ir, modelId);
+  const resolved = resolveBlocks(normIr, modelId, skipped);
   const chainLen = resolved.reduce((n, r) => n + resolvedSize(r), 0);
 
-  const body = new Uint8Array(CHAIN_START + chainLen + scaffold.trailing.length);
+  const body = new Uint8Array(chainStart + chainLen + scaffold.trailing.length);
   body.set(scaffold.prelude, 0);
 
   // Overwrite scene names + grid inside the carried prelude.
   writeSceneNames(body, normIr.sceneNames);
   synthGrid(body, normIr.routing?.gridCells, profile);
 
-  // Place each block's record back-to-back from CHAIN_START: a clone of a real
+  // Place each block's record back-to-back from chainStart: a clone of a real
   // record where a template exists (fidelity), else a fresh catalog-geometry
   // record (geometry + every cataloged slot filled with its defaultRaw).
   const placed: SynthPlacedBlock[] = [];
   const placedResolved: Resolved[] = []; // parallel to `placed`, for the overlay pass
-  let offset = CHAIN_START;
+  let offset = chainStart;
   for (const r of resolved) {
     let recBytes: Uint8Array;
     if (r.template) {
       recBytes = r.template.bytes as unknown as Uint8Array;
     } else {
-      const built = buildCatalogBlock(eidBase(r.eid) ?? r.eid, layout, tables);
+      const built = buildCatalogBlock(eidBase(r.eid) ?? r.eid, model.geometry, layout, tables);
       // resolveBlocks only admits template-less blocks that HAVE geometry, so
       // buildCatalogBlock cannot be null here; guard defensively.
       if (!built) {
@@ -595,6 +696,48 @@ export const FM3_BLOCK_GEOMETRY: Readonly<Record<number, { cols: number; rows: n
   130: { cols: 42, rows: 4 }, // Synth (eid>127: no defaultRaw)
 };
 
+/**
+ * Per-family body geometry for FM9 (0x12) + Axe-Fx III (0x10), keyed by BASE grid
+ * effect id — derived straight from the harvested templates (word15×word16 of the
+ * real record byte slice), so a catalog-built block is byte-size-identical to the
+ * clone. Both devices' geometry comes from the single community "Devs Gift Of
+ * Tone" preset each carries (test/gen3/{fm9,axe-fx-iii}/fixtures/devs-gift-of-tone
+ * .syx), which places the SAME 9 families:
+ *
+ *   base : FM9 cols×rows / III cols×rows   (family; catalog stride note)
+ *   37 Input   :  9×4 /  9×4   (INPUT;   catalog stride 10 — body cols is authoritative)
+ *   42 Output  : 26×4 / 26×4   (OUTPUT;  matches catalog stride 26)
+ *   54 PEQ     : 33×4 / 33×4   (PEQ;     matches catalog stride 33)
+ *   58 Amp     : 145×4 / 140×4 (DISTORT; = the calibrated ampChannelStride 0x122/0x118,
+ *                               independent confirmation; catalog stride 147/142)
+ *   62 Cab     : 85×4 / 85×4   (CABINET; catalog stride 106 — body cols authoritative)
+ *   70 Delay   : 87×4 / 84×4   (DELAY;   catalog stride 90/89 — body cols authoritative)
+ *   94 Wah     : 25×4 / 25×4   (WAH;     matches catalog stride 25)
+ *  102 Vol/Pan : 12×4 / 12×4   (VOLUME;  catalog stride 15 — body cols authoritative)
+ *  118 Drive   : 40×4 / 40×4   (FUZZ;    catalog stride 43/44 — body cols authoritative)
+ *
+ * The cols<catalog-stride families are NOT a mis-read: Output/PEQ/Wah match the
+ * catalog exactly and the amp cols equals the independently-calibrated per-channel
+ * ampChannelStride, both pinning the read offset. The excess catalog paramIds are
+ * simply not physical body slots on this firmware. Because geometry is taken from
+ * the template byte slice (not the catalog), the record byte size is exact.
+ *
+ * Families NO available FM9/III preset places (everything except the 9 above —
+ * Comp, GEQ, Reverb, MultiTap, Chorus, Flanger, Rotary, Phaser, Formant, Tremolo,
+ * Pitch, Filter, Enhancer, Mixer, Synth, Megatap, Gate, RingMod, MultiComp,
+ * Ten-Tap, Resonator, Looper, Plex Delay, Send, Return, Multiplexer) carry NO
+ * geometry and stay skipped+reported until a rig capture places each — never
+ * fabricated (the FORGEFXMID-40 rigor rule). */
+export const FM9_BLOCK_GEOMETRY: Readonly<Record<number, { cols: number; rows: number }>> =
+  Object.fromEntries(
+    Object.entries(FM9_BLOCK_TEMPLATES).map(([b, t]) => [Number(b), { cols: t.cols, rows: t.rows }]),
+  );
+
+export const AXE3_BLOCK_GEOMETRY: Readonly<Record<number, { cols: number; rows: number }>> =
+  Object.fromEntries(
+    Object.entries(AXE3_BLOCK_TEMPLATES).map(([b, t]) => [Number(b), { cols: t.cols, rows: t.rows }]),
+  );
+
 export interface CatalogBlockRecord {
   bytes: Uint8Array;
   cols: number;
@@ -603,11 +746,12 @@ export interface CatalogBlockRecord {
 
 /**
  * Build a fresh block record for base grid effect id `base` from the catalog:
- * geometry from FM3_BLOCK_GEOMETRY, every cataloged param slot filled with its
- * `defaultRaw` across all channels, uncataloged slots 0, header words 15/16 set.
- * Returns null when no authoritative geometry exists for `base` (the untemplated
- * families — never fabricated). Type + IR params are overlaid afterwards exactly
- * as for a cloned template (`overlayBlock`); the caller writes the eid signature.
+ * geometry from `geometry` (the per-model geometry table), every cataloged param
+ * slot filled with its `defaultRaw` across all channels, uncataloged slots 0,
+ * header words 15/16 set. Returns null when no authoritative geometry exists for
+ * `base` (the untemplated families — never fabricated). Type + IR params are
+ * overlaid afterwards exactly as for a cloned template (`overlayBlock`); the
+ * caller writes the eid signature.
  *
  * Params are written with `writeBlockParam` (the proven read/write primitive), so
  * a record placed at `offset` with its signature at `offset-12` reads its defaults
@@ -615,10 +759,11 @@ export interface CatalogBlockRecord {
  */
 export function buildCatalogBlock(
   base: number,
+  geometry: Readonly<Record<number, { cols: number; rows: number }>>,
   layout: Gen3BodyLayout,
   tables: Gen3BlockParamTables,
 ): CatalogBlockRecord | null {
-  const g = FM3_BLOCK_GEOMETRY[base];
+  const g = geometry[base];
   if (!g) return null;
   const recSize = (BLOCK_HEADER_WORDS + g.cols * g.rows) * 2;
   // Scratch buffer with a HEADER_PRELUDE_GAP-byte prefix so writeBlockParam's
@@ -649,20 +794,23 @@ export function buildCatalogBlock(
   return { bytes: buf.subarray(blockOffset, blockOffset + recSize), cols: g.cols, rows: g.rows };
 }
 
-/** Default scaffold from the generated tables (used when no dump is supplied). */
-export function defaultScaffold(): { prelude: Uint8Array; trailing: Uint8Array } {
+/** Default scaffold (prelude + trailing) from the generated tables for `modelId`
+ *  (used when no dump is supplied); defaults to FM3. */
+export function defaultScaffold(modelId: number = MODEL_FM3): { prelude: Uint8Array; trailing: Uint8Array } {
+  const model = getSynthModel(modelId);
   return {
-    prelude: Uint8Array.from(FM3_SCAFFOLD_PRELUDE),
-    trailing: Uint8Array.from(FM3_SCAFFOLD_TRAILING),
+    prelude: Uint8Array.from(model.scaffoldPrelude),
+    trailing: Uint8Array.from(model.scaffoldTrailing),
   };
 }
 
 /**
- * The full bundled default scaffold `.syx` dump bytes (a clean FM3 preset).
- * Pass to `authorGen3PresetFromIRFull` to synthesize a preset with NO
- * caller-supplied base — its raw-patch header + SysEx framing are carried,
- * while its scene names, grid and entire block chain are replaced from the IR.
+ * The full bundled default scaffold `.syx` dump bytes (a clean preset) for
+ * `modelId` (0x10/0x11/0x12; defaults to FM3). Pass to
+ * `authorGen3PresetFromIRFull` to synthesize a preset with NO caller-supplied
+ * base — its raw-patch header + SysEx framing are carried, while its scene names,
+ * grid and entire block chain are replaced from the IR.
  */
-export function defaultScaffoldSyx(): Uint8Array {
-  return Uint8Array.from(FM3_SCAFFOLD_SYX);
+export function defaultScaffoldSyx(modelId: number = MODEL_FM3): Uint8Array {
+  return Uint8Array.from(getSynthModel(modelId).scaffoldSyx);
 }

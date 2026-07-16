@@ -344,7 +344,20 @@ function couldBeEnum(d: LiveDefinition, cap: number): boolean {
 }
 
 /** Build one `CacheRecord` from a decoded definition (+ any 0x1f labels). */
-function buildRecord(block: number, param: number, d: LiveDefinition, labels: readonly string[]): CacheRecord {
+/** Plausible physical-unit token (rejects model/type NAMES that ride a discrete
+ * param's value string, e.g. 'INPUT 2' — those contain a space or digits). */
+const UNIT_RE = /^[A-Za-z%°µΩ/]{1,8}$/;
+
+/** Parse the device's formatted value string (view 0x00) → its unit token, or
+ * undefined. '440.0 Hz'→'Hz', '0.00 ct'→'ct', '100.0 %'→'%', 'ACTIVE'→undefined. */
+export function parseUnit(display: string): string | undefined {
+  const m = display.trim().match(/^[+-]?\d[\d.]*(?:[eE][+-]?\d+)?\s*(.*)$/);
+  if (!m) return undefined; // no leading number = a label, not a valued param
+  const tail = m[1]!.trim();
+  return tail && UNIT_RE.test(tail) ? tail : undefined;
+}
+
+function buildRecord(block: number, param: number, d: LiveDefinition, labels: readonly string[], unit?: string): CacheRecord {
   const enumKind = labels.length > 0 || d.kind === 'enum';
   if (enumKind) {
     let count = Math.round(d.max - d.min + 1);
@@ -359,6 +372,7 @@ function buildRecord(block: number, param: number, d: LiveDefinition, labels: re
       max: d.max,
       def: d.def,
       step: d.step,
+      ...(unit ? { unit } : {}),
       count,
       values: [...labels],
       x: 0,
@@ -375,6 +389,7 @@ function buildRecord(block: number, param: number, d: LiveDefinition, labels: re
     max: d.max,
     def: d.def,
     step: d.step,
+    ...(unit ? { unit } : {}),
     t1: 0,
     t2: 0,
   };
@@ -411,8 +426,15 @@ export interface LiveWalkOptions {
   model: number;
   /** Explicit block addresses to sweep; defaults to `0..maxBlock`. */
   blocks?: number[];
-  /** Highest block address swept when `blocks` is omitted (default 127). */
+  /** Highest block address swept when `blocks` is omitted (default 160 — the block
+   * byte splits lo/hi so effectId>=128 blocks are reachable). */
   maxBlock?: number;
+  /**
+   * Read the device's formatted value (self-describe view 0x00) for each found
+   * param and record its device-true `unit` (default true). Read-only; adds one
+   * query per param. Set false to skip (e.g. a faster minimal walk).
+   */
+  readValues?: boolean;
   /**
    * Highest PARAM id swept per block (default 16383 = the full 14-bit range).
    * The reachable id range can be capped here.
@@ -481,6 +503,8 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
   const absentRunLimit = opts.paramAbsentRunLimit ?? 256;
   const probeDepth = opts.blockProbeDepth ?? 4;
   const enumCap = opts.enumCountCap ?? 1024;
+  // read view 0x00 per found param to capture the device-true unit (default on).
+  const readValues = opts.readValues ?? true;
   const { signal, sleep, onProgress } = opts;
 
   const records: CacheRecord[] = [];
@@ -538,7 +562,19 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
         }
         enumLabels += labels.length;
       }
-      records.push(buildRecord(block, param, def, labels));
+      // UNIT: read the device's own formatted value (view 0x00) and parse the unit
+      // token. Read-only, one extra query per found param; skipped when the caller
+      // opts out or for enum/label params whose value carries no unit.
+      let unit: string | undefined;
+      if (readValues && labels.length === 0) {
+        throwIfAborted(signal);
+        await pace(opts.interQueryMs ?? 0, signal, sleep);
+        const vr = await transport.request(buildQuery(model, VIEW_VALUE, block, param, 0));
+        queries += 1;
+        const vd = vr ? decodeReply(vr) : null;
+        if (vd && vd.view === 'value') unit = parseUnit(vd.value);
+      }
+      records.push(buildRecord(block, param, def, labels, unit));
     }
 
     onProgress?.({ phase: 'block-done', block, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries });

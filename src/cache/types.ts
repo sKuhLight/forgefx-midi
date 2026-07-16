@@ -22,6 +22,14 @@ export interface RecordBase {
   max: number;
   def: number;
   step: number;
+  /**
+   * Device-true unit token parsed from the self-describe formatted value
+   * (view 0x00), e.g. 'Hz' | 'ms' | 'dB' | '%' | 'ct'. Present only when the
+   * live walk read values (`readValues`) and the display carried a plausible
+   * unit; absent for enum/label params and for byte-source (`.cache`) walks.
+   * This is device-true, unlike the AM4-name-overlay `unit` on the catalogs.
+   */
+  unit?: string;
 }
 
 export interface EnumRecord extends RecordBase {

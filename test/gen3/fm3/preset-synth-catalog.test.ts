@@ -11,8 +11,10 @@
  *   2. placing the record at an offset with its eid signature and decoding through
  *      `readBlockParams` returns each cataloged param's `defaultRaw` byte-exact
  *      (the write→read contract the synthesizer relies on), across all amp channels;
- *   3. the 10 untemplated families (no fixture) carry NO geometry — `buildCatalogBlock`
- *      returns null (never fabricated), matching the FORGEFXMID-40 rigor rule.
+ *   3. PEQ(54)/Vol/Pan(102)/Synth(130) — harvested from FM3 presets beyond the 10
+ *      clone fixtures — now carry geometry and build (Synth's slots fill 0: eid>127,
+ *      no defaultRaw); the 7 families still in no preset carry NO geometry and
+ *      `buildCatalogBlock` returns null (never fabricated) per the rigor rule.
  *
  * NOT a device-acceptance test; it validates the codec's own build/read model.
  */
@@ -32,8 +34,10 @@ function fail(msg: string): never {
   throw new Error(`[fm3/preset-synth-catalog] ${msg}`);
 }
 
-/** The 10 families no fixture places — must have no geometry (rigor rule). */
-const UNTEMPLATED = [54, 98, 102, 126, 130, 138, 158, 162, 166, 191];
+/** Families in NO available FM3 preset — must have no geometry (rigor rule).
+ *  PEQ(54)/Vol/Pan(102)/Synth(130) are NOT here: they were harvested from presets
+ *  beyond the clone fixtures and now build. */
+const UNTEMPLATED = [98, 126, 138, 158, 162, 166, 191];
 
 export function runPresetSynthCatalogTests(): void {
   const { tables, layout } = gen3BlockParamModel(MODEL_FM3);

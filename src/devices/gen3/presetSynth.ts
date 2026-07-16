@@ -197,11 +197,17 @@ function writeEidSignature(body: Uint8Array, offset: number, eid: number): void 
 
 interface Resolved {
   block: SynthBlock;
-  /** Walk display name (from the template) — used for the type-location lookup. */
+  /** Display name used for the type-location lookup (template name for a cloned
+   *  block; the EFFECT_BASES family name for a catalog-geometry-built block). */
   displayName: string;
   /** The block's actual grid effect id (written as the record signature). */
   eid: number;
-  template: Fm3BlockTemplate;
+  /** Record geometry (word15 cols × word16 rows). */
+  cols: number;
+  rows: number;
+  /** The clone source, when this block is built by cloning a real record. Absent
+   *  when the block is built from catalog geometry + defaults (buildCatalogBlock). */
+  template?: Fm3BlockTemplate;
 }
 
 /** Base grid effect id for an eid (instances 1..4 occupy base..base+3). */
@@ -222,18 +228,20 @@ function eidLabel(eid: number): string {
 
 /** Converter family slug → FM3 BASE grid effect id, inverted from `EFFECT_BASES`
  *  (the authoritative grid-eid → block table) via `resolveFamily`, RESTRICTED to
- *  eids with a harvested template so a cross-device block only ever lands on a
- *  real FM3 grid slot backed by a clone source. A family whose FM3 grid eid has
- *  no template (e.g. Vol/Pan @102, PEQ @54) is intentionally absent → its blocks
- *  are dropped + reported. Object key order is numeric-ascending, so the LOWEST
- *  eid for a family wins as its base (base..base+3 are the four instances). Cached. */
+ *  eids the synthesizer can BUILD — those with a harvested clone template OR an
+ *  authoritative geometry entry (FM3_BLOCK_GEOMETRY). So a cross-device block only
+ *  lands on a real FM3 grid slot it can synthesize (clone or catalog-build). A
+ *  family with neither (e.g. Formant @98, Mixer @126) is intentionally absent → its
+ *  blocks are dropped + reported. Object key order is numeric-ascending, so the
+ *  LOWEST eid for a family wins as its base (base..base+3 are the four instances).
+ *  Cached. */
 let _familyToBaseEid: Map<string, number> | null = null;
 function familyToBaseEid(): Map<string, number> {
   if (_familyToBaseEid) return _familyToBaseEid;
   const m = new Map<string, number>();
   for (const [eidStr, label] of Object.entries(EFFECT_BASES)) {
     const eid = Number(eidStr);
-    if (!(eid in FM3_BLOCK_TEMPLATES)) continue;
+    if (!(eid in FM3_BLOCK_TEMPLATES) && !(eid in FM3_BLOCK_GEOMETRY)) continue;
     const fam = resolveFamily(label);
     if (fam && !m.has(fam)) m.set(fam, eid);
   }
@@ -284,7 +292,7 @@ function ensureFm3GridEffectIds(ir: SynthPreset, skipped: SynthSkip[]): SynthPre
     if (!block) continue;
     const base = block.family != null ? famToBase.get(block.family) : undefined;
     if (base == null) {
-      skipped.push({ key, family: block.family, displayName: block.family ?? key, reason: `no harvested template for ${block.family ?? key}` });
+      skipped.push({ key, family: block.family, displayName: block.family ?? key, reason: `no template or geometry for ${block.family ?? key}` });
       continue;
     }
     const inst = instanceByBase.get(base) ?? 0;
@@ -337,14 +345,26 @@ function resolveBlocks(ir: SynthPreset, skipped: SynthSkip[]): Resolved[] {
     if (block == null) continue; // no IR block carries this cell
     const base = eidBase(eid);
     const template = base != null ? FM3_BLOCK_TEMPLATES[base] : undefined;
-    if (!template) {
-      skipped.push({ key, displayName: eidLabel(eid), family: block.family, reason: `no harvested template for ${eidLabel(eid)}` });
+    const geometry = base != null ? FM3_BLOCK_GEOMETRY[base] : undefined;
+    if (template) {
+      // Preferred: clone a real record (preserves header words 18-22 + uncataloged slots).
+      usedKeys.add(key);
+      resolved.push({ block, displayName: template.displayName, eid, cols: template.cols, rows: template.rows, template });
+    } else if (base != null && geometry) {
+      // No template but authoritative geometry: build from catalog + defaults.
+      usedKeys.add(key);
+      resolved.push({ block, displayName: EFFECT_BASES[base] ?? eidLabel(eid), eid, cols: geometry.cols, rows: geometry.rows });
+    } else {
+      skipped.push({ key, displayName: eidLabel(eid), family: block.family, reason: `no template or geometry for ${eidLabel(eid)}` });
       continue;
     }
-    usedKeys.add(key);
-    resolved.push({ block, displayName: template.displayName, eid, template });
   }
   return resolved;
+}
+
+/** Record byte size for a resolved block (23-word header + cols*rows param words). */
+function resolvedSize(r: Resolved): number {
+  return r.template ? r.template.bytes.length : (BLOCK_HEADER_WORDS + r.cols * r.rows) * 2;
 }
 
 /**
@@ -372,7 +392,7 @@ export function buildGen3Body(
   // block's family so the chain + grid synthesize (FM3-native IRs pass through).
   const normIr = ensureFm3GridEffectIds(ir, skipped);
   const resolved = resolveBlocks(normIr, skipped);
-  const chainLen = resolved.reduce((n, r) => n + r.template.bytes.length, 0);
+  const chainLen = resolved.reduce((n, r) => n + resolvedSize(r), 0);
 
   const body = new Uint8Array(CHAIN_START + chainLen + scaffold.trailing.length);
   body.set(scaffold.prelude, 0);
@@ -381,31 +401,46 @@ export function buildGen3Body(
   writeSceneNames(body, normIr.sceneNames);
   synthGrid(body, normIr.routing?.gridCells, profile);
 
-  // Place template clones back-to-back from CHAIN_START.
+  // Place each block's record back-to-back from CHAIN_START: a clone of a real
+  // record where a template exists (fidelity), else a fresh catalog-geometry
+  // record (geometry + every cataloged slot filled with its defaultRaw).
   const placed: SynthPlacedBlock[] = [];
+  const placedResolved: Resolved[] = []; // parallel to `placed`, for the overlay pass
   let offset = CHAIN_START;
   for (const r of resolved) {
-    body.set(r.template.bytes, offset);
+    let recBytes: Uint8Array;
+    if (r.template) {
+      recBytes = r.template.bytes as unknown as Uint8Array;
+    } else {
+      const built = buildCatalogBlock(eidBase(r.eid) ?? r.eid, layout, tables);
+      // resolveBlocks only admits template-less blocks that HAVE geometry, so
+      // buildCatalogBlock cannot be null here; guard defensively.
+      if (!built) {
+        skipped.push({ key: r.block.key, displayName: r.displayName, reason: `catalog build failed (no geometry) for ${eidLabel(r.eid)}` });
+        continue;
+      }
+      recBytes = built.bytes;
+    }
+    body.set(recBytes, offset);
     placed.push({
       key: r.block.key,
       displayName: r.displayName,
       eid: r.eid,
-      cols: r.template.cols,
-      rows: r.template.rows,
+      cols: r.cols,
+      rows: r.rows,
       offset,
-      templateFrom: r.template.sourceFixture,
+      templateFrom: r.template ? r.template.sourceFixture : 'catalog-geometry',
       params: [],
     });
-    offset += r.template.bytes.length;
+    placedResolved.push(r);
+    offset += recBytes.length;
   }
   const chainEnd = offset;
   body.set(scaffold.trailing, chainEnd);
 
-  // Overlay type + params.
-  for (let i = 0; i < resolved.length; i++) {
-    const r = resolved[i];
-    const p = placed[i];
-    overlayBlock(body, r, p, profile, layout, tables, skipped);
+  // Overlay type + params (placed[] and placedResolved[] are aligned 1:1).
+  for (let i = 0; i < placed.length; i++) {
+    overlayBlock(body, placedResolved[i], placed[i], profile, layout, tables, skipped);
   }
 
   // Anchor every block with its eid signature (final pass: block N's signature
@@ -428,8 +463,8 @@ function overlayBlock(
   // A Gen3Block-like view of the placed block for typeFieldByteOffset.
   const view: Gen3Block = {
     block: displayName,
-    cols: r.template.cols,
-    rows: r.template.rows,
+    cols: r.cols,
+    rows: r.rows,
     offset: p.offset,
     params_offset: p.offset + BLOCK_HEADER_WORDS * 2,
   };
@@ -479,43 +514,65 @@ function overlayBlock(
 // The alternative to template-clone: build a block record from AUTHORITATIVE
 // geometry + every cataloged param slot filled with its catalog `defaultRaw`
 // (from the live self-describe walk, imported FORGEFXMID-39), uncataloged slots
-// left 0, ready for the same type + IR overlay as a cloned template. This is the
-// path that would synthesize families ABSENT from every fixture (Vol/Pan, PEQ, …)
-// WITHOUT a donor preset — IF their body geometry were known.
+// left 0, ready for the same type + IR overlay as a cloned template. This
+// synthesizes families ABSENT from every clone fixture (Vol/Pan, PEQ, Synth)
+// WITHOUT a donor preset, and is wired into buildGen3Body as the no-template
+// fallback (clone stays the preferred fidelity path).
 //
 // ── GEOMETRY (the hard constraint) ──────────────────────────────────────────
 // A block record is (23 header words + cols*rows param words)*2 bytes, where
 // cols = header word15 (per-channel param count) and rows = header word16
 // (channel count). `walkBlocks` reads both to size the record and advance the
 // chain, so BOTH must be exact or the whole chain misparses. The ONLY authoritative
-// source for word15xword16 is a real decoded body (a fixture). We therefore have
-// geometry EXACTLY for the families a fixture places — the 25 in
-// FM3_BLOCK_TEMPLATES — and it is byte-derived from them here (so the builder and
-// the clone agree on size for every templated family).
+// source for word15xword16 is a real decoded body. FM3_BLOCK_GEOMETRY therefore
+// carries only geometry read from real FM3 preset bodies: the 25 clone-fixture
+// families (byte-derived from the templates) plus three read from FM3 presets
+// beyond the 10 fixtures (PEQ 54, Vol/Pan 102, Synth 130 — via a RAW chain walk of
+// word15/word16 + the offset-12 eid signature), each cross-checked to reproduce
+// the 25-family ground truth first.
 //
-// The 10 families NO fixture places (PEQ 54, Formant 98, Vol/Pan 102, Mixer 126,
-// Synth 130, Megatap 138, Ten-Tap 158, Resonator 162, Looper 166, Multiplexer 191)
-// have NO trustworthy geometry: rows (word16) has no catalog/defs source at all
-// (it is 1/2/4 with no derivable rule — Send/Return=1, RingMod=2, rest=4), and cols
-// is ambiguous even where a source exists (Vol/Pan: FM9/Axe3 body=12, FM3 defs=14,
-// FM3 catalog stride=15). Per the FORGEFXMID-40 rigor rule we do NOT guess them —
-// they carry no FM3_BLOCK_GEOMETRY entry and remain unsynthesizable until a rig
-// capture pins their word15xword16 (e.g. a block-definition sub=0x01 geometry
-// probe, or an FM3 preset that places each block). See the task report.
+// Families NO available preset places (Formant 98, Mixer 126, Megatap 138,
+// Ten-Tap 158, Resonator 162, Looper 166, Multiplexer 191) have NO authoritative
+// geometry — per the FORGEFXMID-40 rigor rule they are NOT guessed (no
+// FM3_BLOCK_GEOMETRY entry) and stay skipped+reported until a rig capture places
+// each of them.
 //
 // eid→family is taken from EFFECT_BASES / the catalog familyByEffectId, NOT from
 // the cols→name `blockColsMap` (whose Vol/Pan@10 / PEQ@26 entries are the OLD
 // Input/Output cols mislabel — cols 10 is Input(37), cols 26 is Output(42)).
 
-/** Fixture-confirmed per-family body geometry (word15 cols × word16 rows), keyed
- *  by BASE grid effect id — derived from the harvested templates so a catalog-built
- *  block is byte-size-identical to the clone. Present ONLY for the 25 families a
- *  fixture places; the 10 untemplated families are intentionally absent (geometry
- *  unavailable — see the module note above). */
-export const FM3_BLOCK_GEOMETRY: Readonly<Record<number, { cols: number; rows: number }>> =
-  Object.fromEntries(
+/** Per-family body geometry (word15 cols × word16 rows), keyed by BASE grid effect
+ *  id, from real decoded FM3 preset bodies (RAW chain walk: word15/word16 at the
+ *  record, TRUE eid from the offset-12 signature — NOT the mislabeled blockColsMap
+ *  name). The 25 template families are derived from the harvested templates (so a
+ *  catalog-built block is byte-size-identical to the clone); the extra three are
+ *  read from FM3 presets beyond the 10 fixtures, each cross-checked to reproduce the
+ *  25-family ground truth first (FORGEFXMID-40).
+ *
+ * HARVESTED-EXTRA (base eid : cols×rows : source presets):
+ *   - PEQ       54 : 33×4  fixtures/preset-79 + preset418{max,nomod,src}; catalog stride 33
+ *                          + FM3 defs 33 all agree, rows 4 from the real body.
+ *   - Vol/Pan  102 : 15×4  preset-55 (a 14×4 variant appears in preset-96/tones — a
+ *                          firmware/param-count difference); 15 matches the catalog
+ *                          param count (VOLUME 15 params, paramId 0..14), so a
+ *                          catalog-filled block needs cols 15. rows 4 from the body.
+ *   - Synth    130 : 42×4  preset418{max,nomod,src}; catalog stride 42 agrees, rows 4
+ *                          from the body. NB eid>127 → the 7-bit self-describe walk
+ *                          never reached it, so SYNTH params carry NO defaultRaw and
+ *                          its cataloged slots fill 0 (mapped IR params overwrite).
+ *
+ * Families STILL absent from every available preset (no authoritative geometry →
+ * intentionally NOT here, never guessed): Formant 98, Mixer 126, Megatap 138,
+ * Ten-Tap 158, Resonator 162, Looper 166, Multiplexer 191. They need a rig capture
+ * (a preset that places each) to finish. */
+export const FM3_BLOCK_GEOMETRY: Readonly<Record<number, { cols: number; rows: number }>> = {
+  ...Object.fromEntries(
     Object.entries(FM3_BLOCK_TEMPLATES).map(([b, t]) => [Number(b), { cols: t.cols, rows: t.rows }]),
-  );
+  ),
+  54: { cols: 33, rows: 4 }, // PEQ
+  102: { cols: 15, rows: 4 }, // Vol/Pan
+  130: { cols: 42, rows: 4 }, // Synth (eid>127: no defaultRaw)
+};
 
 export interface CatalogBlockRecord {
   bytes: Uint8Array;

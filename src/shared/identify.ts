@@ -12,6 +12,9 @@
  * header-shaped reply, fall back to `modelFromPortName` for silent USB-MIDI
  * units — e.g. an Axe-Fx III on Windows, which exposes no serial node and may
  * not answer the broadcast).
+ *
+ * The wildcard 0x7F is also what capture tooling sends first; keep it the
+ * single source of truth here rather than duplicating the byte downstream.
  */
 import { fractalChecksum } from './checksum.js';
 

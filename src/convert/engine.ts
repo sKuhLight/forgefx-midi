@@ -589,18 +589,30 @@ function layoutToGrid(
   return { seriesChains, unplaced };
 }
 
-/** Build minimal grid cells from placed blocks (shunts are not synthesized). */
+/** Build grid cells from placed blocks, WITH series connectivity. Blocks were
+ *  re-placed contiguously per row (`layoutToGrid`: col = index within the row), so
+ *  each block past column 0 is fed from the SAME row of the previous column (the
+ *  block placed before it in its row); column-0 blocks start the chain from the
+ *  grid input (route_flag 0). route_flag is the device bitmask (parseGrid: bit r =
+ *  fed from row r of the previous column), i.e. fromRows.reduce((m,r)=>m|(1<<r),0).
+ *  This makes an unedited auto-conversion CONNECTED (a series per row) instead of a
+ *  bare disconnected chain. NB rows are independent series from the input; parallel
+ *  branches are NOT merged at the output here (a flattened re-placement) — the user
+ *  can wire that in the editor, which the edited-IR export path carries verbatim. */
 function buildGridCells(blocks: ConverterBlock[]): ConverterGridCell[] {
   const cells: ConverterGridCell[] = [];
   for (const b of blocks) {
     const pos = b.position;
     if (pos && 'row' in pos) {
+      const fromRows = pos.col > 0 ? [pos.row] : [];
       cells.push({
         row: pos.row,
         col: pos.col,
         name: b.typeName ?? b.key,
         blockKey: b.key,
         isShunt: false,
+        routeFlag: fromRows.reduce((m, r) => m | (1 << r), 0),
+        fromRows: fromRows.length ? fromRows : undefined,
       });
     }
   }

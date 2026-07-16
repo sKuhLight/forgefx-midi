@@ -301,6 +301,9 @@ function ensureFm3GridEffectIds(ir: SynthPreset, skipped: SynthSkip[]): SynthPre
   }
 
   const placedFromCells = new Set<string>();
+  // `...c` PRESERVES each cell's routeFlag/fromRows (the drawn connections) while
+  // filling the FM3 effect id; shunt/pass-through cells (blockKey null, e.g. an
+  // effect_id > 1023) fall through the else and are carried verbatim.
   const newCells: SynthGridCell[] = cells.map((c) => {
     if (c.blockKey != null && eidByKey.has(c.blockKey)) {
       placedFromCells.add(c.blockKey);

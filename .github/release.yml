@@ -1,0 +1,17 @@
+# GitHub auto-generated release notes config (used by release.yml's generate_release_notes).
+# PRs are grouped by their release:* label; bot/stack-sync + release:none PRs are hidden.
+changelog:
+  exclude:
+    labels:
+      - release:none
+      - bot/stack-sync
+  categories:
+    - title: Breaking
+      labels:
+        - release:major
+    - title: Features
+      labels:
+        - release:minor
+    - title: Fixes & changes
+      labels:
+        - "*"

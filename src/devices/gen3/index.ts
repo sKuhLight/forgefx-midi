@@ -78,3 +78,57 @@ export type {
   DecodedBlock,
   DecodedBlockParam,
 } from './blockParams.js';
+export {
+  findBlockHeader,
+  paramByteOffset,
+  writeBlockParam,
+  valueToRaw,
+  typeParamForFamily,
+} from './blockParams.js';
+export type { RawWritableParam } from './blockParams.js';
+
+export {
+  authorGen3PresetFromIR,
+  authorGen3PresetFromIRFull,
+  reconcileBlockAnchors,
+} from './presetAuthorIr.js';
+export type {
+  IrAuthorParam,
+  IrAuthorBlock,
+  IrAuthorPreset,
+  AuthoredParamRecord,
+  AuthoredBlockRecord,
+  AuthoredSkip,
+  AuthorIrResult,
+  AuthorIrFullResult,
+  BlockAnchor,
+} from './presetAuthorIr.js';
+
+export {
+  buildGen3Body,
+  buildCatalogBlock,
+  writeSceneNames,
+  synthGrid,
+  assignGridEffectIds,
+  assignFm3GridEffectIds,
+  hasSynthModel,
+  defaultScaffold,
+  defaultScaffoldSyx,
+  FM3_BLOCK_GEOMETRY,
+  FM9_BLOCK_GEOMETRY,
+  AXE3_BLOCK_GEOMETRY,
+} from './presetSynth.js';
+export type {
+  SynthPreset,
+  SynthBlock,
+  SynthParam,
+  SynthGridCell,
+  SynthPlacedBlock,
+  SynthSkip,
+  SynthBodyResult,
+  Gen3BlockTemplate,
+  CatalogBlockRecord,
+} from './presetSynth.js';
+
+export { validateGen3Preset } from './presetValidate.js';
+export type { Gen3ValidationResult } from './presetValidate.js';

@@ -22,6 +22,7 @@ const ENTRIES = [
   'src/index.ts',
   'src/cache/index.ts',
   'src/shared/index.ts',
+  'src/convert/index.ts',
   'src/core/index.ts',
   'src/am4/index.ts',
   'src/gen1/index.ts',

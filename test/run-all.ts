@@ -51,9 +51,17 @@ import { runModernFamilyTests, MODERN_FAMILY_CASE_COUNT } from './gen3/modern-fa
 import { runBoundCodecTests, BOUNDCODEC_CASE_COUNT } from './gen3/modern-family/boundcodec.test.js';
 import { runFm3MetersTests, FM3_METERS_CASE_COUNT } from './gen3/fm3/meters.test.js';
 import { runFm3BlockParamsTests, FM3_BLOCKPARAMS_CASE_COUNT } from './gen3/fm3/blockparams.test.js';
+import { runPresetAuthorIrTests, PRESET_AUTHOR_IR_CASE_COUNT } from './gen3/fm3/preset-author-ir.test.js';
+import { runPresetSynthIrTests, PRESET_SYNTH_IR_CASE_COUNT } from './gen3/fm3/preset-synth-ir.test.js';
+import { runDefaultRawRoundTripTests, DEFAULT_RAW_ROUNDTRIP_CASE_COUNT } from './gen3/default-raw-roundtrip.test.js';
+import { runPresetSynthCatalogTests, PRESET_SYNTH_CATALOG_CASE_COUNT } from './gen3/fm3/preset-synth-catalog.test.js';
+import { runGen3SynthNonFm3Tests, GEN3_SYNTH_NONFM3_CASE_COUNT } from './gen3/gen3-synth-nonfm3.test.js';
+import { runRoutingRoundTripTests, ROUTING_ROUNDTRIP_CASE_COUNT } from './gen3/fm3/routing-roundtrip.test.js';
+import { runConvertGridEidTests, CONVERT_GRID_EID_CASE_COUNT } from './convert/grid-eid.test.js';
 import { runCrossBlockParamsTests, CROSS_BLOCKPARAMS_CASE_COUNT } from './gen3/modern-family/blockparams-cross.test.js';
 import { runFm3TelemetryTests, FM3_TELEMETRY_CASE_COUNT } from './gen3/fm3/telemetry.test.js';
 import { runGen3RosterTests, FM3_ROSTER_CASE_COUNT } from './gen3/fm3/roster.test.js';
+import { runPresetValidateTests, PRESET_VALIDATE_CASE_COUNT } from './gen3/preset-validate.test.js';
 import { runFm9MetersTests, FM9_METERS_CASE_COUNT } from './gen3/fm9/meters.test.js';
 import { runFm9FootControllerTests, FM9_FOOTCONTROLLER_CASE_COUNT } from './gen3/fm9/footcontroller.test.js';
 import { runFm9ModifierTests, FM9_MODIFIER_CASE_COUNT } from './gen3/fm9/modifiers.test.js';
@@ -74,6 +82,13 @@ import { runBuildProfile, BUILDPROFILE_CASE_COUNT } from './cache/buildprofile.t
 import { runAm4Cache, AM4_CACHE_CASE_COUNT } from './cache/am4-cache.test.js';
 import { runLiveWalk, LIVEWALK_CASE_COUNT } from './cache/livewalk.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
+import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
+import { runGen3AdapterTests, GEN3_ADAPTER_CASE_COUNT } from './convert/gen3-adapter.test.js';
+import { runShallowAdaptersTests, SHALLOW_ADAPTERS_CASE_COUNT } from './convert/adapters-shallow.test.js';
+import { runConceptCoverageTests, CONCEPT_COVERAGE_CASE_COUNT } from './convert/concept-coverage.test.js';
+import { runLineageIndexTests, LINEAGE_INDEX_CASE_COUNT } from './convert/lineage-index.test.js';
+import { runEngineTests, ENGINE_CASE_COUNT } from './convert/engine.test.js';
+import { runTargetRangesTests, TARGET_RANGES_CASE_COUNT } from './convert/target-ranges.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -132,9 +147,16 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `modern-family/boundcodec (${BOUNDCODEC_CASE_COUNT} model bytes, full surface)`, run: runBoundCodecTests },
   { name: `fm3/meters (${FM3_METERS_CASE_COUNT} cases)`, run: runFm3MetersTests },
   { name: `fm3/blockparams (${FM3_BLOCKPARAMS_CASE_COUNT} live-FM3 preset goldens)`, run: runFm3BlockParamsTests },
+  { name: `fm3/preset-author-ir (${PRESET_AUTHOR_IR_CASE_COUNT} offline round-trip)`, run: runPresetAuthorIrTests },
+  { name: `fm3/preset-synth-ir (${PRESET_SYNTH_IR_CASE_COUNT} full-body synthesis round-trip)`, run: runPresetSynthIrTests },
+  { name: `fm3/preset-synth-catalog (${PRESET_SYNTH_CATALOG_CASE_COUNT} geometry families, catalog/defaults build)`, run: runPresetSynthCatalogTests },
+  { name: `gen3-synth-nonfm3 (${GEN3_SYNTH_NONFM3_CASE_COUNT} devices: FM9 + Axe-Fx III full-body synthesis round-trip)`, run: runGen3SynthNonFm3Tests },
+  { name: `fm3/routing-roundtrip (${ROUTING_ROUNDTRIP_CASE_COUNT} grid route-flag cases)`, run: runRoutingRoundTripTests },
   { name: `modern-family/blockparams-cross (${CROSS_BLOCKPARAMS_CASE_COUNT} cross-device preset goldens)`, run: runCrossBlockParamsTests },
+  { name: `gen3/default-raw-roundtrip (${DEFAULT_RAW_ROUNDTRIP_CASE_COUNT} models: FM3/FM9/III)`, run: runDefaultRawRoundTripTests },
   { name: `fm3/telemetry (${FM3_TELEMETRY_CASE_COUNT} live-FM3 frame goldens)`, run: runFm3TelemetryTests },
   { name: `gen3/roster (${FM3_ROSTER_CASE_COUNT} projection goldens)`, run: runGen3RosterTests },
+  { name: `gen3/preset-validate (${PRESET_VALIDATE_CASE_COUNT} cases)`, run: runPresetValidateTests },
   { name: `fm9/meters (${FM9_METERS_CASE_COUNT} cases)`, run: runFm9MetersTests },
   { name: `fm9/footcontroller (${FM9_FOOTCONTROLLER_CASE_COUNT} cases)`, run: runFm9FootControllerTests },
   { name: `fm9/modifiers (${FM9_MODIFIER_CASE_COUNT} cases)`, run: runFm9ModifierTests },
@@ -156,6 +178,14 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/am4 (${AM4_CACHE_CASE_COUNT} cases)`, run: runAm4Cache },
   { name: `cache/livewalk (${LIVEWALK_CASE_COUNT} cases)`, run: runLiveWalk },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
+  { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },
+  { name: `convert/gen3-adapter (${GEN3_ADAPTER_CASE_COUNT} preset goldens)`, run: runGen3AdapterTests },
+  { name: `convert/adapters-shallow (${SHALLOW_ADAPTERS_CASE_COUNT} adapters)`, run: runShallowAdaptersTests },
+  { name: `convert/concept-coverage (${CONCEPT_COVERAGE_CASE_COUNT} cases)`, run: runConceptCoverageTests },
+  { name: `convert/lineage-index (${LINEAGE_INDEX_CASE_COUNT} cases)`, run: runLineageIndexTests },
+  { name: `convert/engine (${ENGINE_CASE_COUNT} conversion cases)`, run: runEngineTests },
+  { name: `convert/grid-eid (${CONVERT_GRID_EID_CASE_COUNT} cross-device fm3 eid-assignment)`, run: runConvertGridEidTests },
+  { name: `convert/target-ranges (${TARGET_RANGES_CASE_COUNT} cases)`, run: runTargetRangesTests },
 ];
 
 let failures = 0;

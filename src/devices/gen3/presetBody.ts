@@ -662,6 +662,14 @@ export interface Gen3DecodedPreset extends Gen3PresetBody {
   /** True when the stored CRC matches the recomputed CRC (device-validity gate). */
   crc_valid: boolean;
   decompressed_size: number;
+  /**
+   * The raw DECOMPRESSED patch body (`decodeRawPatch(...).body`). Carried so
+   * downstream consumers (the converter's gen-3 lift) can run the generic
+   * per-block param extraction (`readBlockParams`) over the SAME bytes this
+   * decode produced, without re-parsing the dump. Not part of the structured
+   * snapshot — a byte image for value extraction only.
+   */
+  decompressed_body: Uint8Array;
 }
 
 /** Preset name lives in the uncompressed raw_patch header at 0x08..0x28. */
@@ -686,6 +694,7 @@ export function decodeGen3PresetDump(bytes: Uint8Array, expectedModelId?: number
     preset_name: rawPatchName(decoded.rawPatch),
     crc_valid: decoded.crcValid,
     decompressed_size: decoded.decompSize,
+    decompressed_body: decoded.body,
     ...body,
   };
 }

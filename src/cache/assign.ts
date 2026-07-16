@@ -411,6 +411,7 @@ export function buildDeviceCache(
         entry.enumCount = r.count;
         eo[String(pid)] = cleanLabels(r.values);
       }
+      if (r.unit) entry.unit = r.unit; // device-true unit from the live-walk (view 0x00)
       rg[pid] = entry;
     }
     if (Object.keys(eo).length > 0) enumOverrides[fam] = eo;

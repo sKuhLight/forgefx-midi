@@ -1,6 +1,6 @@
 {
   "name": "forgefx-midi",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Fractal Audio device codec + catalogs for ForgeFX (gen1, Axe-Fx II, gen3 FM3/FM9/Axe-Fx III/VP4, AM4)",
   "license": "Apache-2.0",
   "type": "module",

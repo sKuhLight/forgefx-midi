@@ -88,6 +88,10 @@ export interface RangeDef {
   step: number;
   typecode: number;
   enumCount?: number;
+  /** Device-true unit token from the live-walk (view 0x00), e.g. 'Hz'|'ms'|'dB'.
+   * Present only when the walk read values; absent for byte-source/`.cache` walks
+   * and enum params. Consumers should prefer this over the AM4-name-overlay unit. */
+  unit?: string;
 }
 
 /** Per-family cache section tag + fn=0x1F channel-block wire stride. */

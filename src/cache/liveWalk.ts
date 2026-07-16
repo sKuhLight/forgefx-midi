@@ -112,7 +112,10 @@ const TAG_SENTINELS = new Set([0x01, 0x03]);
 function buildQuery(model: number, view: number, block: number, param: number, sub: number): Uint8Array {
   const body = new Array<number>(15).fill(0);
   body[0] = view & 0x7f;
-  body[2] = block & 0x7f;
+  body[2] = block & 0x7f; // BLOCK_LO
+  body[3] = (block >> 7) & 0x7f; // BLOCK_HI — reaches effectId>=128 (Synth 130-133,
+  //                                Mixer 128/129). HW-verified FM3 fw12.00 2026-07-16;
+  //                                symmetric to the param (body[5]) / sub (body[7]) splits.
   body[4] = param & 0x7f; // PARAM_LO
   body[5] = (param >> 7) & 0x7f; // PARAM_HI
   body[6] = sub & 0x7f; // SUB_LO
@@ -469,7 +472,10 @@ async function pace(ms: number, signal: AbortSignal | undefined, sleep?: (ms: nu
  */
 export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions): Promise<CacheRecord[]> {
   const model = opts.model;
-  const maxBlock = opts.maxBlock ?? 127;
+  // 160 (not 127): the block byte now splits lo/hi (body[2]/[3]) so effectId>=128
+  // blocks are reachable. Empty high blocks are skipped after `blockProbeDepth`
+  // params (see the found===0 break below), so the extra range is nearly free.
+  const maxBlock = opts.maxBlock ?? 160;
   const blocks = opts.blocks ?? Array.from({ length: maxBlock + 1 }, (_, i) => i);
   const maxParamId = opts.maxParamId ?? 16383;
   const absentRunLimit = opts.paramAbsentRunLimit ?? 256;

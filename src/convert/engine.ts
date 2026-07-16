@@ -41,6 +41,7 @@ import {
   normalizeConceptPort,
 } from '../core/protocol-generic/concept-keys.js';
 import type { ConversionEvent } from './events.js';
+import { assignFm3GridEffectIds, type SynthPreset } from '../devices/gen3/presetSynth.js';
 
 // ── Public API ───────────────────────────────────────────────────────
 
@@ -434,6 +435,16 @@ export function convertPreset(
     decodeDepth: source.decodeDepth,
     meta,
   };
+
+  // FM3 targets: assign the FM3 grid effect ids NOW (idempotent — same assignment the
+  // synthesizer uses) so BOTH the /preset/convert response the Axis UI edits AND the
+  // export IR carry distinct, stable per-cell eids. The Axis grid editor keys cells by
+  // effectId; leaving cross-device cells unassigned collapsed every cell onto one block
+  // (FORGEFXMID-43). Same-device (FM3→FM3) cells already carry source eids → untouched.
+  if (targetDevice === 'fm3') {
+    const addressed = assignFm3GridEffectIds(target as unknown as SynthPreset) as unknown as ConverterPreset;
+    return { target: addressed, events };
+  }
 
   return { target, events };
 }

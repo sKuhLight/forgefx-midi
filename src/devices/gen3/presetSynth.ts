@@ -250,22 +250,31 @@ function familyToBaseEid(): Map<string, number> {
 }
 
 /**
- * Normalize a converted IR so its grid cells carry FM3 grid EFFECT IDS.
+ * Assign FM3 grid EFFECT IDS to a converted IR's grid cells — the authoritative
+ * addressing every consumer keys on (the Axis grid editor's effectId→blockKey map
+ * AND codec synthesis). Idempotent + safe to call at CONVERSION time so the
+ * `/preset/convert` response the UI edits AND the export IR both carry distinct,
+ * stable eids (rather than deferring assignment to synthesis, which left the
+ * cross-device UI grid with every cell's effectId undefined → all cells collapsing
+ * onto one block — FORGEFXMID-43).
  *
  * A same-device (FM3→FM3) IR already carries FM3 effect ids on its cells and is
- * returned untouched. A CROSS-DEVICE conversion (FM9 / Axe-Fx III → FM3) carries
- * cells with `blockKey` but NO `effectId` — the conversion engine strips the
- * source device's grid ids (they are not valid FM3 ids), leaving the FM3 layout
- * to us. This assigns each block an FM3 base eid from its FAMILY (with base+1..3
- * for repeated families, in grid signal order), fills the existing cells'
- * `effectId`, and appends a cell for any block that had none. Families FM3 has no
- * grid block for are dropped + reported (`no harvested template`).
+ * returned untouched (its SOURCE grid layout is authoritative — never clobbered).
+ * A CROSS-DEVICE conversion (FM9 / Axe-Fx III → FM3) carries cells with `blockKey`
+ * but NO `effectId`; this assigns each block an FM3 base eid from its FAMILY (with
+ * base+1..3 for repeated families, in grid signal order — the exact assignment the
+ * synthesizer expects, so the authored body is byte-identical), fills the existing
+ * cells' `effectId` (preserving routeFlag/fromRows), and appends a cell for any
+ * block that had none. Blocks whose FM3 family has no grid block (no template AND no
+ * geometry) get NO eid — they are dropped + reported by `resolveBlocks` at synthesis
+ * (the single skip authority), never guessed.
  */
-function ensureFm3GridEffectIds(ir: SynthPreset, skipped: SynthSkip[]): SynthPreset {
+export function assignFm3GridEffectIds(ir: SynthPreset): SynthPreset {
   const cells = ir.routing?.gridCells ?? [];
   const blocks = ir.blocks ?? [];
   if (blocks.length === 0) return ir;
-  // Already FM3-addressed (any placed cell carries an effect id) → leave verbatim.
+  // Already FM3-addressed (any placed cell carries an effect id) → leave verbatim
+  // (same-device source grid, or a prior assignFm3GridEffectIds pass — idempotent).
   if (cells.some((c) => c.effectId != null && c.effectId > 0 && c.blockKey != null)) return ir;
 
   const famToBase = familyToBaseEid();
@@ -291,10 +300,7 @@ function ensureFm3GridEffectIds(ir: SynthPreset, skipped: SynthSkip[]): SynthPre
     const block = blockByKey.get(key);
     if (!block) continue;
     const base = block.family != null ? famToBase.get(block.family) : undefined;
-    if (base == null) {
-      skipped.push({ key, family: block.family, displayName: block.family ?? key, reason: `no template or geometry for ${block.family ?? key}` });
-      continue;
-    }
+    if (base == null) continue; // un-buildable family → no eid; resolveBlocks reports the drop
     const inst = instanceByBase.get(base) ?? 0;
     instanceByBase.set(base, inst + 1);
     eidByKey.set(key, base + Math.min(inst, 3)); // instances 1..4 → base..base+3
@@ -362,6 +368,17 @@ function resolveBlocks(ir: SynthPreset, skipped: SynthSkip[]): Resolved[] {
       continue;
     }
   }
+  // Report every IR block that never landed — one whose FM3 family has no grid block
+  // (no template AND no geometry), so `assignFm3GridEffectIds` gave it no eid and no
+  // placed cell reached it here. This is the single skip authority (the assignment step
+  // no longer reports), so the export fidelity/"K families have no FM3 template" count
+  // stays accurate whether eids were assigned at conversion or synthesis time.
+  const placedKeys = new Set(resolved.map((r) => r.block.key));
+  const reportedKeys = new Set(skipped.map((s) => s.key).filter((k): k is string => k != null));
+  for (const b of ir.blocks ?? []) {
+    if (b.family == null || placedKeys.has(b.key) || reportedKeys.has(b.key)) continue;
+    skipped.push({ key: b.key, family: b.family, displayName: b.family, reason: `no template or geometry for ${b.family}` });
+  }
   return resolved;
 }
 
@@ -391,9 +408,10 @@ export function buildGen3Body(
     throw new Error(`buildGen3Body: scaffold prelude must be ${CHAIN_START} bytes, got ${scaffold.prelude.length}`);
   }
 
-  // Cross-device IRs carry cells without FM3 effect ids — assign them from each
-  // block's family so the chain + grid synthesize (FM3-native IRs pass through).
-  const normIr = ensureFm3GridEffectIds(ir, skipped);
+  // Ensure FM3 effect ids on the grid cells (idempotent — a no-op when the IR was
+  // already addressed at conversion time via assignFm3GridEffectIds; assigns for a
+  // raw cross-device IR). resolveBlocks reports any block that never lands.
+  const normIr = assignFm3GridEffectIds(ir);
   const resolved = resolveBlocks(normIr, skipped);
   const chainLen = resolved.reduce((n, r) => n + resolvedSize(r), 0);
 

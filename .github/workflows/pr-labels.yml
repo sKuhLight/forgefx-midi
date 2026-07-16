@@ -1,0 +1,53 @@
+name: pr-labels
+
+# Advisory (NOT a required check): guards the release:* label a PR carries. Fails only when
+# more than one release:* label is present (release-on-main refuses to guess the bump), and
+# prints the effective release classification to the run summary so the merger sees it.
+on:
+  pull_request:
+    types: [opened, reopened, labeled, unlabeled, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  release-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check release:* labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUM: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          RELEASE_LABELS="$(gh api "repos/${REPO}/pulls/${PR_NUM}" --jq '.labels[].name' | grep -E '^release:' || true)"
+          # Precedence: release:hold / release:none always win over a co-present bump label
+          # (the documented opt-out); only then do we fail on more than one bump label.
+          if echo "$RELEASE_LABELS" | grep -qx 'release:hold'; then
+            echo "Effective release classification: **release:hold**" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          if echo "$RELEASE_LABELS" | grep -qx 'release:none'; then
+            echo "Effective release classification: **release:none**" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          BUMP_LABELS="$(echo "$RELEASE_LABELS" | grep -E '^release:(patch|minor|major)$' || true)"
+          COUNT="$(echo "$BUMP_LABELS" | grep -c . || true)"
+          if [ "$COUNT" -gt 1 ]; then
+            echo "More than one release:* label: $BUMP_LABELS" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          if [ "$COUNT" -eq 1 ]; then
+            echo "Effective release classification: **${BUMP_LABELS}**" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          # No release label → mirror release-on-main's docs/ci-only auto-none classification.
+          FILES="$(gh api "repos/${REPO}/pulls/${PR_NUM}/files" --paginate --jq '.[].filename')"
+          NON_TRIVIAL="$(echo "$FILES" | grep -vE '^(docs/|\.github/)|\.md$' || true)"
+          if [ -z "$NON_TRIVIAL" ]; then
+            echo "Effective release classification: **docs-only: none**" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Effective release classification: **default: patch**" >> "$GITHUB_STEP_SUMMARY"
+          fi

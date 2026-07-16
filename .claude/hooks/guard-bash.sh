@@ -36,4 +36,12 @@ if printf '%s' "$cmd" | grep -Eq '(>>?)[[:space:]]*[^|&>]*'"$prot"; then
   block "redirect onto a generated file - edit the generator and re-run the export/build"
 fi
 
+# git commit directly on master (PR-only branch ruleset since 2026-07-16 - work on a feature branch)
+if printf '%s' "$cmd" | grep -Eq '(^|[;&|[:space:]])git([[:space:]]+-C[[:space:]]+[^[:space:]]+)?[[:space:]]+commit'; then
+  branch="$(git -C "${CLAUDE_PROJECT_DIR:-.}" branch --show-current 2>/dev/null || true)"
+  if [ "$branch" = "master" ]; then
+    block "master is PR-only (branch ruleset since 2026-07-16); work on a feature branch"
+  fi
+fi
+
 exit 0

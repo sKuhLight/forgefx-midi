@@ -55,6 +55,9 @@ The old manual mechanism still works as the recovery path:
   is the source of truth; `release.yml` injects that version before building.
 - **Emergency stop:** set the repo Actions variable **`RELEASE_AUTOMATION_ENABLED=false`** to
   halt `release-on-main` (and every downstream auto-gate). Unset/any-other value = enabled.
+- **Where did my release go?** Any failed automated stage opens or updates a single
+  `release-failure` issue titled with the chainId (`forgefx-midi@vX.Y.Z`) — that issue is the
+  failure notification; check it first when a release seems missing.
 
 ## Downstream pinning
 

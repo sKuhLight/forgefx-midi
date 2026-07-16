@@ -71,13 +71,16 @@ export const FM3_CONFIG: FractalModernConfig = {
   preset_count: 512,
   preset_location_format: /^(?:\d{1,4})$/,
   // Preset switching: the fn=0x01 sub=0x27 SysEx switch is FM3-hardware-
-  // confirmed (live 475→100, 2026-06-10; field-test restore, 2026-06-12). The
-  // PC+Bank path is hardware-FALSIFIED on FM3 with 'standard' encoding: fw
-  // 12.00 IGNORES CC32 (a PC switch to preset 438 landed on 54 = 438 mod 128,
-  // field test 2026-06-12), i.e. the FM3 reads the bank from CC0 like the FM9.
-  // 'msb' kept correct for any residual PC use (e.g. send_program_change docs).
+  // confirmed (live 475→100, 2026-06-10; field-test restore, 2026-06-12) and
+  // stays the default path. The PC+Bank encoding on FM3 fw 12.00 was pinned
+  // down by CaptureRig v2 (2026-07-16, dev unit): recall = (PC << 7) | CC0, so
+  // CC0 = low 7 bits, PC = high 7 bits, CC32 ignored. The old 'msb' (bank in
+  // CC0) was an inference from the 'standard' 438→54 falsification and is the
+  // MIRROR of the truth — it mislands presets >=128 (384 → 3). Use 'pc-high'
+  // for any PC-based FM3 recall. (Whether the sysex path also needs revisiting
+  // for >=128 — one CaptureRig run saw it not move — is FORGEFXMID-49 follow-up.)
   switch_preset_via: 'sysex',
-  bank_select: 'msb',
+  bank_select: 'pc-high',
   support_tier: 'community-beta',
   verification:
     'Model byte 0x11 byte-confirmed via tysonlt/AxeFxControl AND an FM3-Edit loopMIDI capture ' +

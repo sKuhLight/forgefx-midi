@@ -46,6 +46,11 @@ const MODEL_NAMES: Record<number, string> = {
  *  type id. (fm3_syx_decoder BLOCK_HEADER_WORDS) */
 const BLOCK_HEADER_WORDS = 23;
 
+/** A chain record's grid-effect-id SIGNATURE (the anchor the raw walk stays
+ *  byte-aligned on, and the key `sliceScaffoldRegions`/`presetSynth` read) sits
+ *  this many BYTES below the record's walk header. */
+const HEADER_SIGNATURE_GAP = 12;
+
 // Type-location rule: where a block's effect-type id lives.
 //   ['header', n] -> header word n (shared across channels at that word)
 //   ['param', n]  -> per-channel param-array word n (repeats at +cols stride)
@@ -250,6 +255,24 @@ export function effectName(eid: number): string | undefined {
   return undefined;
 }
 
+/**
+ * Resolve a gen-3 effect ID to its block FAMILY name only (e.g. 58 → "Amp",
+ * 119 → "Drive", 55 → "PEQ") — the base label all four instances share. This is
+ * the canonical eid→family mechanism `walkBlocks` keys the block chain on via the
+ * offset-12 header signature (the same anchor `sliceScaffoldRegions` uses), which
+ * is authoritative where the cols→name map is lossy (cols collisions + dropped
+ * families, FORGEFXMID-41). Returns undefined for an id that is not a grid effect.
+ */
+export function effectFamily(eid: number): string | undefined {
+  if (eid in EFFECT_BASES) return EFFECT_BASES[eid];
+  for (const [baseStr, name] of Object.entries(EFFECT_BASES)) {
+    const base = Number(baseStr);
+    const d = eid - base;
+    if (d > 0 && d <= 3) return name;
+  }
+  return undefined;
+}
+
 const MODIFIER_SOURCE_NAMES: Record<number, string> = {
   1: 'LFO 1A', 2: 'LFO 1B', 3: 'LFO 2A', 4: 'LFO 2B', 5: 'ADSR 1', 6: 'ADSR 2',
   7: 'Sequencer', 8: 'Envelope Follower', 9: 'Pitch Follower', 10: 'Pedal 1',
@@ -375,39 +398,37 @@ function findBlockChainStart(data: Uint8Array): number {
   return -1;
 }
 
-// cols=37 disambiguation: MultiComp / Filter / Comp (reference _classify_cols37)
-function classifyCols37(data: Uint8Array, paramsStart: number): string {
-  if (u16(data, paramsStart) >= 32767) return 'MultiComp';
-  if (u16(data, paramsStart + 4 * 2) >= 100) return 'Filter';
-  return 'Comp';
-}
-// cols=33 disambiguation: Flanger vs a system block (reference _classify_cols33)
-function classifyCols33(data: Uint8Array, pos: number): string | undefined {
-  return u16(data, pos + 17 * 2) <= 28 ? 'Flanger' : undefined;
-}
-
-function walkBlocks(data: Uint8Array, chainStart: number, profile: DeviceProfile): Gen3Block[] {
-  const { blockColsMap, typeLocations } = profile;
+function walkBlocks(
+  data: Uint8Array,
+  chainStart: number,
+  profile: DeviceProfile,
+  placedEids: ReadonlySet<number>,
+): Gen3Block[] {
+  const { typeLocations } = profile;
   const results: Gen3Block[] = [];
   let pos = chainStart;
   while (pos + BLOCK_HEADER_WORDS * 2 + 2 <= data.length) {
-    const cols = u16(data, pos + 30); // header word 15
+    const cols = u16(data, pos + 30); // header word 15 — record stride + per-channel geometry
     const rows = u16(data, pos + 32); // header word 16
     if (cols === 0 || rows === 0 || cols > 500 || rows > 8) break;
     const size = (BLOCK_HEADER_WORDS + cols * rows) * 2;
     if (cols === 25 && rows === 1) { pos += size; continue; } // modifier slot
 
-    let blockName = blockColsMap[cols];
-    if (!blockName) { pos += size; continue; }
+    // IDENTIFY the block by its grid-effect-id SIGNATURE — the u16 twelve bytes
+    // below the walk header (the anchor `sliceScaffoldRegions` keys on) — mapped
+    // to a family via EFFECT_BASES, and gated to effects the grid actually
+    // PLACES. cols is NOT the identity: it collides (Input↔Vol/Pan @10,
+    // Output↔PEQ @26) and its map drops placed families (cols-33 PEQ, cols-15
+    // Vol/Pan), under-counting the chain (FORGEFXMID-41). The `placedEids` gate
+    // rejects trailing/system records whose signature byte happens to alias a
+    // real effect id but that the grid does not place. cols still drives `size`
+    // above and the per-channel stride below.
+    const sigEid = pos >= HEADER_SIGNATURE_GAP ? u16(data, pos - HEADER_SIGNATURE_GAP) : 0;
+    if (!placedEids.has(sigEid)) { pos += size; continue; }
+    const blockName = effectFamily(sigEid);
+    if (!blockName) { pos += size; continue; } // signature is not a grid effect id
 
     const paramsStart = pos + BLOCK_HEADER_WORDS * 2;
-
-    if (blockName === 'Comp' && cols === 37 && rows === 4) blockName = classifyCols37(data, paramsStart);
-    if (blockName === 'Flanger' && cols === 33 && rows === 4) {
-      const c = classifyCols33(data, pos);
-      if (c === undefined) { pos += size; continue; }
-      blockName = c;
-    }
 
     const block: Gen3Block = { block: blockName, cols, rows, offset: pos, params_offset: paramsStart };
 
@@ -624,7 +645,14 @@ export function decodeGen3Body(body: Uint8Array, modelId: number): Gen3PresetBod
 
   const chainStart = findBlockChainStart(body);
   if (chainStart >= 0) {
-    out.blocks = walkBlocks(body, chainStart, profile);
+    // Gate the chain walk to the effect ids the grid places — the block chain
+    // holds a record per placed block (keyed by its offset-12 grid-eid
+    // signature), plus trailing/system records whose signature can alias a real
+    // effect id. Only grid-placed ids are real blocks (FORGEFXMID-41).
+    const placedEids = new Set<number>(
+      (out.grid ?? []).filter((c) => !c.is_shunt && c.effect_id > 0).map((c) => c.effect_id),
+    );
+    out.blocks = walkBlocks(body, chainStart, profile, placedEids);
     const amp = out.blocks.find((b) => b.block === 'Amp');
     if (amp?.channels) out.amp1 = amp.channels;
   }

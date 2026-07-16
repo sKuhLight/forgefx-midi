@@ -50,7 +50,7 @@ const SYNTHETIC_PARAM_ID_FLOOR = 0xff00;
 const MAX_CHAINS = 256;
 
 /** Converter gen-3 device id → SysEx model byte (for `readBlockParams` calibration). */
-const MODEL_BY_DEVICE: Readonly<Record<Gen3DeviceId, number>> = {
+export const MODEL_BY_DEVICE: Readonly<Record<Gen3DeviceId, number>> = {
   'axe-fx-iii': 0x10,
   fm3: 0x11,
   fm9: 0x12,

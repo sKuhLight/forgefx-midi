@@ -41,7 +41,9 @@ import {
   normalizeConceptPort,
 } from '../core/protocol-generic/concept-keys.js';
 import type { ConversionEvent } from './events.js';
-import { assignFm3GridEffectIds, type SynthPreset } from '../devices/gen3/presetSynth.js';
+import { assignGridEffectIds, hasSynthModel, type SynthPreset } from '../devices/gen3/presetSynth.js';
+import { MODEL_BY_DEVICE } from './adapters/gen3.js';
+import { GEN3_DEVICE_IDS, type Gen3DeviceId } from './families.js';
 
 // ── Public API ───────────────────────────────────────────────────────
 
@@ -436,13 +438,15 @@ export function convertPreset(
     meta,
   };
 
-  // FM3 targets: assign the FM3 grid effect ids NOW (idempotent — same assignment the
-  // synthesizer uses) so BOTH the /preset/convert response the Axis UI edits AND the
-  // export IR carry distinct, stable per-cell eids. The Axis grid editor keys cells by
-  // effectId; leaving cross-device cells unassigned collapsed every cell onto one block
-  // (FORGEFXMID-43). Same-device (FM3→FM3) cells already carry source eids → untouched.
-  if (targetDevice === 'fm3') {
-    const addressed = assignFm3GridEffectIds(target as unknown as SynthPreset) as unknown as ConverterPreset;
+  // gen-3 targets (FM3/FM9/Axe-Fx III): assign the target device's grid effect ids NOW
+  // (idempotent — same assignment the synthesizer uses) so BOTH the /preset/convert response
+  // the Axis UI edits AND the export IR carry distinct, stable per-cell eids. The Axis grid
+  // editor keys cells by effectId; leaving cross-device cells unassigned collapsed every cell
+  // onto one block (FORGEFXMID-43). Same-device cells already carry source eids → untouched.
+  // Only devices with a calibrated synthesis model qualify (AM4/VP4 have none — left as-is).
+  if ((GEN3_DEVICE_IDS as readonly string[]).includes(targetDevice) && hasSynthModel(MODEL_BY_DEVICE[targetDevice as Gen3DeviceId])) {
+    const modelId = MODEL_BY_DEVICE[targetDevice as Gen3DeviceId];
+    const addressed = assignGridEffectIds(target as unknown as SynthPreset, modelId) as unknown as ConverterPreset;
     return { target: addressed, events };
   }
 

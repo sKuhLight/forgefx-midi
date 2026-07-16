@@ -1519,16 +1519,21 @@ export function xorChecksum32Words(words: readonly number[]): number {
  *     IGNORES CC32. With the standard encoding, any preset above 127 (bank
  *     >0) lands in bank 0 because the bank sits in CC32, which gets dropped.
  *     So the bank must go in CC0; CC32 is sent as 0 (ignored).
- *     Note the FM3's default switch_preset path is the SysEx-native
- *     sub=0x27 switch (FM3-hardware-confirmed), not PC — see
- *     buildSwitchPresetSysEx.
+ *   - `'pc-high'` (FM3 fw 12.00, hardware-confirmed via CaptureRig v2 on the
+ *     dev unit 2026-07-16): recall = (PC << 7) | CC0 — CC0 = low 7 bits, PC =
+ *     high 7 bits (bank), CC32 ignored. This is the MIRROR of 'msb' (which the
+ *     FM3 config previously used as an untested inference); on FM3 'msb'
+ *     mislands any preset >=128 (e.g. 384 → 3). FM3's live switch_preset still
+ *     defaults to the SysEx-native sub=0x27 path (buildSwitchPresetSysEx,
+ *     separately hardware-confirmed); 'pc-high' is the correct encoding for any
+ *     PC-based FM3 recall (send_program_change docs / PC callers).
  *
  * This is a per-device read divergence with no single universal encoding
  * (a CC0-only reader and a (CC0<<7)|CC32 reader cannot both be satisfied for
  * bank>0), so the mode is selected per device via the codec config. AM4 and
  * Axe-Fx II switch presets over SysEx, not PC+bank, and are unaffected.
  */
-export type Gen3BankSelectMode = 'standard' | 'msb';
+export type Gen3BankSelectMode = 'standard' | 'msb' | 'pc-high';
 
 export function buildSwitchPresetPC(
   presetNumber: number,
@@ -1544,6 +1549,17 @@ export function buildSwitchPresetPC(
     throw new Error(`buildSwitchPresetPC: channel ${channel} out of range (1..16).`);
   }
   const ch0 = (channel - 1) & 0x0f;
+  if (bankSelect === 'pc-high') {
+    // FM3 fw 12.00 (CaptureRig v2, 2026-07-16, dev unit over /dev/ttyACM0): preset recall
+    // = (PC << 7) | CC0 — CC0 carries the LOW 7 bits, Program Change the HIGH 7 bits, CC32
+    // ignored. Self-consistent across probes: CC0=0/PC=3→384, CC0=3/PC=5→643, CC0=3/PC=7→899.
+    // This is the OPPOSITE of 'msb' (bank in CC0); 'msb' mislands FM3 presets >=128.
+    return [
+      0xb0 | ch0, 0x00, presetNumber & 0x7f, // CC 0 = low 7 bits
+      0xb0 | ch0, 0x20, 0, // CC 32 = ignored on FM3 (sent as 0)
+      0xc0 | ch0, (presetNumber >> 7) & 0x7f, // Program Change = high 7 bits
+    ];
+  }
   const bank = Math.floor(presetNumber / 128);
   const pc = presetNumber % 128;
   const [bankMsb, bankLsb] =

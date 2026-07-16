@@ -99,6 +99,14 @@ const cases: Case[] = [
   // (bankSelect 'msb') threads the mode through to the builder.
   { label: 'codec(0x10).buildSwitchPresetPC(412) — III standard', built: createModernFractalCodec(0x10).buildSwitchPresetPC(412), expected: 'b00000b02003c01c' },
   { label: 'codec(0x12,msb).buildSwitchPresetPC(412) — FM9 MSB', built: createModernFractalCodec(0x12, { bankSelect: 'msb' }).buildSwitchPresetPC(412), expected: 'b00003b02000c01c' },
+  // 'pc-high' (FM3 fw 12.00, CaptureRig v2 2026-07-16): recall = (PC<<7)|CC0,
+  // CC0 = low 7 bits, PC = high 7 bits, CC32 ignored. Self-consistent probes:
+  // 384 → CC0=0/PC=3, 643 → CC0=3/PC=5, 899 → CC0=3/PC=7. Mirror of 'msb'.
+  { label: 'buildSwitchPresetPC(384, 1, "pc-high") FM3 — CC0=0 PC=3', built: buildSwitchPresetPC(384, 1, 'pc-high'), expected: 'b00000b02000c003' },
+  { label: 'buildSwitchPresetPC(643, 1, "pc-high") FM3 — CC0=3 PC=5', built: buildSwitchPresetPC(643, 1, 'pc-high'), expected: 'b00003b02000c005' },
+  { label: 'buildSwitchPresetPC(899, 1, "pc-high") FM3 — CC0=3 PC=7', built: buildSwitchPresetPC(899, 1, 'pc-high'), expected: 'b00003b02000c007' },
+  { label: 'buildSwitchPresetPC(412, 1, "pc-high") — mirror of msb', built: buildSwitchPresetPC(412, 1, 'pc-high'), expected: 'b0001cb02000c003' },
+  { label: 'codec(0x11,pc-high).buildSwitchPresetPC(384) — FM3 default mode', built: createModernFractalCodec(0x11, { bankSelect: 'pc-high' }).buildSwitchPresetPC(384), expected: 'b00000b02000c003' },
 
   // SWITCH PRESET via SysEx (fn=0x01 sub=0x27). Byte-exact vs the FM3-Edit
   // capture live-confirmed on FM3 fw 12.00 hardware (BoodieTraps 2026-06-10,

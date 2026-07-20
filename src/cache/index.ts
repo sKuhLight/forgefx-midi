@@ -16,12 +16,15 @@ export {
   buildEnumQuery,
   decodeReply,
   decodeSeptetStream,
+  parseDisplayValue,
+  classifyTaper,
   VIEW_DEFINITION,
   VIEW_ENUM_LABEL,
   VIEW_VALUE,
 } from './liveWalk.js';
 export type {
   LiveTransport,
+  LiveWalkWriteHooks,
   LiveWalkOptions,
   LiveWalkProgress,
   LiveReply,
@@ -32,6 +35,7 @@ export type {
   RecordBase,
   EnumRecord,
   FloatRecord,
+  FloatTaper,
   CacheRecord,
   CacheWalk,
   DeviceParam,

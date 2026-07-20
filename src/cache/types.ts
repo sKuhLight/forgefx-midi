@@ -40,10 +40,36 @@ export interface EnumRecord extends RecordBase {
   wireIds?: number[];
 }
 
+/**
+ * Knob-taper classification recovered by a FULL-mode live walk (a normalized
+ * SET sweep read back through the device's own formatted-value view, then
+ * curve-fit). Port of CaptureRig v2's `classify_taper` (fas-re).
+ *   - `shape` — 'linear'/'log'/'custom' are the reliable fits; 'flat' means the
+ *     display never moved (block not instantiated / param inert — carries NO
+ *     taper info) and 'unknown' means too few numeric samples. Both are
+ *     `reliable: false`.
+ *   - `err` — the winning fit's max relative error (null when unknown).
+ *   - `points` — the swept `[normalized 0..1, display value]` samples that
+ *     survived numeric parsing (drives the analytic-inverse restore + the
+ *     'custom' taperPoints on the derived RangeDef).
+ */
+export interface FloatTaper {
+  shape: 'linear' | 'log' | 'flat' | 'custom' | 'unknown';
+  err: number | null;
+  reliable: boolean;
+  points: ReadonlyArray<readonly [number, number]>;
+}
+
 export interface FloatRecord extends RecordBase {
   kind: 'float';
   t1: number;
   t2: number;
+  /**
+   * Knob taper from a FULL-mode live-walk sweep. Present only for float params
+   * swept in `mode: 'full'`; absent for read-only / byte-source (`.cache`)
+   * walks. Only a `reliable` taper is threaded into the derived `RangeDef`.
+   */
+  taper?: FloatTaper;
 }
 
 export type CacheRecord = EnumRecord | FloatRecord;
@@ -92,6 +118,16 @@ export interface RangeDef {
    * Present only when the walk read values; absent for byte-source/`.cache` walks
    * and enum params. Consumers should prefer this over the AM4-name-overlay unit. */
   unit?: string;
+  /** Device-true value taper from a FULL-mode live-walk sweep (reliable fits
+   * only): 'linear'|'log' emitted bare, 'custom' also carries `taperPoints`.
+   * ('flat' is in the union for schema uniformity with the shipped catalogs but
+   * is never emitted here — a flat sweep is unreliable.) Absent when no reliable
+   * taper was captured (read-only walks, byte-source walks, unreliable sweeps).
+   * Same naming/shape as the generated catalog range fields. */
+  taper?: 'linear' | 'log' | 'flat' | 'custom';
+  /** Sample points `[normalized 0..1, display value]` for a 'custom' taper only,
+   * mirroring the generated catalog `taperPoints`. */
+  taperPoints?: ReadonlyArray<readonly [number, number]>;
 }
 
 /** Per-family cache section tag + fn=0x1F channel-block wire stride. */

@@ -85,8 +85,9 @@
  * byte-sourced table records.
  */
 import { fractalChecksum } from '../shared/checksum.js';
+import { buildSetParameterContinuous } from '../gen3/axe-fx-iii/setParam.js';
 import type { RecordSource } from './buildProfile.js';
-import type { CacheRecord, EnumRecord, FloatRecord } from './types.js';
+import type { CacheRecord, EnumRecord, FloatRecord, FloatTaper } from './types.js';
 
 // ---------------------------------------------------------------------------
 // Frame constants
@@ -357,7 +358,101 @@ export function parseUnit(display: string): string | undefined {
   return tail && UNIT_RE.test(tail) ? tail : undefined;
 }
 
-function buildRecord(block: number, param: number, d: LiveDefinition, labels: readonly string[], unit?: string): CacheRecord {
+/**
+ * Extract the leading numeric value from a device formatted-value string (view
+ * 0x00), or `null` for a pure label. '200.00 Hz'→200, '-3.0 dB'→-3, 'ON'→null.
+ * Port of CaptureRig v2's `parse_display` (value half). Full-mode taper sweeps
+ * classify on these numbers; a non-numeric display makes that sample inert.
+ */
+export function parseDisplayValue(display: string): number | null {
+  const m = display.trim().match(/^[+-]?\d[\d.]*(?:[eE][+-]?\d+)?/);
+  if (!m) return null;
+  const v = Number(m[0]);
+  return Number.isFinite(v) ? v : null;
+}
+
+/** Round to 5 decimals — CaptureRig v2's `round(err, 5)` for the fit error. */
+function round5(x: number): number {
+  return Math.round(x * 1e5) / 1e5;
+}
+
+/**
+ * Classify a normalized→display sweep into a knob taper. Faithful port of
+ * CaptureRig v2's `classify_taper` (fas-re): fewer than 3 numeric points →
+ * 'unknown' (unreliable); no movement (span ≤ 1e-9 or span/scale < 1e-4) →
+ * 'flat' (unreliable — the block is not instantiated / the param is inert, so
+ * the sweep carries no taper info); otherwise fit linear (`lo + span·n`) vs log
+ * (`lo·(hi/lo)^n`, only when both endpoints > 0) by max relative error — log
+ * wins if `log_err < lin_err && log_err < 0.02`, else linear if `lin_err <
+ * 0.02`, else 'custom' (reliable, with the sample points).
+ */
+export function classifyTaper(samples: ReadonlyArray<readonly [number, number | null]>): FloatTaper {
+  const pts: Array<readonly [number, number]> = [];
+  for (const [n, v] of samples) if (v !== null) pts.push([n, v]);
+  if (pts.length < 3) return { shape: 'unknown', err: null, reliable: false, points: pts };
+  const vals = pts.map(([, v]) => v);
+  const vspan = Math.max(...vals) - Math.min(...vals);
+  let vscale = Math.max(...vals.map((v) => Math.abs(v)));
+  if (!vscale) vscale = 1.0;
+  if (vspan <= 1e-9 || vspan / vscale < 1e-4) {
+    // no movement -> block not active / param inert -> no taper info
+    return { shape: 'flat', err: 0.0, reliable: false, points: pts };
+  }
+  const lo = pts[0]![1];
+  const hi = pts[pts.length - 1]![1];
+  const span = hi - lo;
+  const rel = (a: number, b: number): number => {
+    const d = Math.max(Math.abs(a), Math.abs(b), 1e-9);
+    return Math.abs(a - b) / d;
+  };
+  let linErr = 0;
+  for (const [n, v] of pts) linErr = Math.max(linErr, rel(v, lo + span * n));
+  let logErr: number | null = null;
+  if (lo > 0 && hi > 0) {
+    logErr = 0;
+    for (const [n, v] of pts) logErr = Math.max(logErr, rel(v, lo * Math.pow(hi / lo, n)));
+  }
+  if (logErr !== null && logErr < linErr && logErr < 0.02) {
+    return { shape: 'log', err: round5(logErr), reliable: true, points: pts };
+  }
+  if (linErr < 0.02) {
+    return { shape: 'linear', err: round5(linErr), reliable: true, points: pts };
+  }
+  return { shape: 'custom', err: round5(Math.min(linErr, logErr ?? linErr)), reliable: true, points: pts };
+}
+
+/**
+ * The normalized position that reproduces display `target` using a classified
+ * taper — analytic inverse for log/linear, piecewise-linear interpolation over
+ * the samples for custom/degenerate. Port of CaptureRig v2's `_invert`.
+ */
+function invertTaper(
+  points: ReadonlyArray<readonly [number, number]>,
+  target: number | null,
+  shape: FloatTaper['shape'],
+): number | null {
+  if (target === null || points.length < 2) return null;
+  const lo = points[0]![1];
+  const hi = points[points.length - 1]![1];
+  if (shape === 'log' && lo > 0 && hi > 0 && target > 0 && hi !== lo) {
+    return Math.log(target / lo) / Math.log(hi / lo);
+  }
+  if (shape === 'linear' && hi !== lo) {
+    return (target - lo) / (hi - lo);
+  }
+  for (let i = 0; i + 1 < points.length; i++) {
+    const [na, va] = points[i]!;
+    const [nb, vb] = points[i + 1]!;
+    if ((va - target) * (vb - target) <= 0 && va !== vb) {
+      return na + (nb - na) * (target - va) / (vb - va);
+    }
+  }
+  let best = points[0]!;
+  for (const p of points) if (Math.abs(p[1] - target) < Math.abs(best[1] - target)) best = p;
+  return best[0];
+}
+
+function buildRecord(block: number, param: number, d: LiveDefinition, labels: readonly string[], unit?: string, taper?: FloatTaper): CacheRecord {
   const enumKind = labels.length > 0 || d.kind === 'enum';
   if (enumKind) {
     let count = Math.round(d.max - d.min + 1);
@@ -392,6 +487,7 @@ function buildRecord(block: number, param: number, d: LiveDefinition, labels: re
     ...(unit ? { unit } : {}),
     t1: 0,
     t2: 0,
+    ...(taper ? { taper } : {}),
   };
   return rec;
 }
@@ -409,21 +505,70 @@ export interface LiveTransport {
   request(query: Uint8Array): Promise<Uint8Array | null>;
 }
 
+/**
+ * Host-provided WRITE side for a FULL-mode walk (`mode: 'full'`). The codec
+ * stays transport-pure: it BUILDS the gen-3 continuous-SET frame with its own
+ * encoder (`buildSetParameterContinuous`) and hands the finished bytes to
+ * `send`; the host owns the wire. `reloadPreset` re-selects the current preset
+ * to reload it from flash — the non-destructive safety net run after every
+ * block whose params were swept, mirroring CaptureRig v2's per-block reload.
+ * Ignored entirely in read-only mode.
+ */
+export interface LiveWalkWriteHooks {
+  /** Send one raw SysEx frame (a codec-built continuous-SET) to the device. */
+  send(frame: Uint8Array): Promise<void>;
+  /** Reload the current preset from flash, discarding the sweep's writes. */
+  reloadPreset(): Promise<void>;
+}
+
 /** Progress event, shaped for a future SSE surface. */
 export interface LiveWalkProgress {
-  phase: 'block-start' | 'block-done' | 'done';
+  /**
+   * `block-start`/`block-done`/`done` fire for every walk; `param-sweep` fires
+   * once per completed FULL-mode taper sweep (never in read-only mode — an
+   * additive value existing read-only consumers never observe).
+   */
+  phase: 'block-start' | 'block-done' | 'done' | 'param-sweep';
   /** Current block address (undefined on `done`). */
   block?: number;
+  /** Param id being swept (present only on `param-sweep`). */
+  param?: number;
   blockIndex: number;
   blockCount: number;
   records: number;
   enumLabels: number;
   queries: number;
+  /** Cumulative FULL-mode taper sweeps completed (present in full mode). */
+  tapers?: number;
 }
 
 export interface LiveWalkOptions {
   /** Device model byte (FM3 0x11, FM9 0x12, Axe-Fx III 0x10). */
   model: number;
+  /**
+   * Walk mode (default `'read-only'`). `'read-only'` never writes and is
+   * byte-identical to the original walk. `'full'` additionally sweeps every
+   * continuous float param with a normalized CONTINUOUS-SET, reads the display
+   * back to recover the knob taper (linear/log/custom), records it on the
+   * `FloatRecord`, then RESTORES the original value (non-destructive). Full mode
+   * REQUIRES `write` hooks — the walk throws at start when they are absent.
+   */
+  mode?: 'read-only' | 'full';
+  /**
+   * Host WRITE hooks — REQUIRED for `mode: 'full'` (the walk throws at start
+   * when absent). Ignored entirely in read-only mode.
+   */
+  write?: LiveWalkWriteHooks;
+  /**
+   * Normalized sample count per taper sweep (default 9, matching CaptureRig v2):
+   * n = i/(points-1) for i in 0..points-1. Full mode only.
+   */
+  taperPoints?: number;
+  /**
+   * Settle pause (ms) between a sweep SET and the display read-back, floored at
+   * 20ms (CaptureRig v2's ≥20ms pacing). Routed through `sleep`. Full mode only.
+   */
+  sweepSettleMs?: number;
   /** Explicit block addresses to sweep; defaults to `0..maxBlock`. */
   blocks?: number[];
   /** Highest block address swept when `blocks` is omitted (default 160 — the block
@@ -485,6 +630,81 @@ async function pace(ms: number, signal: AbortSignal | undefined, sleep?: (ms: nu
   }
 }
 
+// ---------------------------------------------------------------------------
+// Full-mode taper sweep (write + restore) — port of CaptureRig v2's Gen3Profile
+// ---------------------------------------------------------------------------
+
+/** CaptureRig v2's ≥20ms floor between a sweep SET and the display read-back. */
+const MIN_SWEEP_SETTLE_MS = 20;
+
+/** Default normalized sample count per sweep (CaptureRig v2 default). */
+const DEFAULT_TAPER_POINTS = 9;
+
+/** Read the device's formatted-value string (view 0x00), or `null`. */
+async function readDisplay(transport: LiveTransport, model: number, block: number, param: number): Promise<string | null> {
+  const vr = await transport.request(buildQuery(model, VIEW_VALUE, block, param, 0));
+  const vd = vr ? decodeReply(vr) : null;
+  return vd && vd.view === 'value' ? vd.value : null;
+}
+
+interface SweepContext {
+  transport: LiveTransport;
+  write: LiveWalkWriteHooks;
+  model: number;
+  points: number;
+  settleMs: number;
+  signal?: AbortSignal;
+  sleep?: (ms: number) => Promise<void>;
+}
+
+/**
+ * Sweep one continuous float param: read the current display, drive normalized
+ * 0..1 via CONTINUOUS-SET reading the display back at each step, classify the
+ * taper, then RESTORE the original value through the classified curve's analytic
+ * inverse. Faithful port of CaptureRig v2's `_sweep_taper`/`_restore`. Returns
+ * the classified taper; ALWAYS attempts the restore (the codec builds every
+ * SET with `buildSetParameterContinuous` and sends it via the host `write`
+ * hook). `reads` counts the display queries issued (folded into `queries`).
+ */
+async function sweepTaper(ctx: SweepContext, block: number, param: number): Promise<{ taper: FloatTaper; reads: number }> {
+  const { transport, write, model, points, settleMs, signal, sleep } = ctx;
+  const settle = Math.max(settleMs, MIN_SWEEP_SETTLE_MS);
+  let reads = 0;
+
+  const origDisplay = await readDisplay(transport, model, block, param);
+  reads += 1;
+  const origVal = origDisplay === null ? null : parseDisplayValue(origDisplay);
+
+  const samples: Array<readonly [number, number | null]> = [];
+  const denom = points > 1 ? points - 1 : 1;
+  for (let i = 0; i < points; i++) {
+    throwIfAborted(signal);
+    const n = i / denom;
+    await write.send(Uint8Array.from(buildSetParameterContinuous(block, param, n, model)));
+    await pace(settle, signal, sleep);
+    const disp = await readDisplay(transport, model, block, param);
+    reads += 1;
+    samples.push([round5(n), disp === null ? null : parseDisplayValue(disp)] as const);
+  }
+
+  const taper = classifyTaper(samples);
+
+  // Restore via the classified curve's analytic inverse (precise even for
+  // wide-range log params); the per-block preset reload is the safety net.
+  const n0 = invertTaper(taper.points, origVal, taper.shape);
+  if (n0 !== null) {
+    throwIfAborted(signal);
+    await write.send(Uint8Array.from(buildSetParameterContinuous(block, param, Math.max(0, Math.min(1, n0)), model)));
+    await pace(settle, signal, sleep);
+    // Read back so the restore mirrors the hardware round-trip (result unused in
+    // the record; a bad restore is caught by the per-block preset reload).
+    await readDisplay(transport, model, block, param);
+    reads += 1;
+  }
+
+  return { taper, reads };
+}
+
 /**
  * Sweep a device's self-describe map into `CacheRecord[]` deep-equivalent to the
  * `.cache` byte-walker's output (minus the unreachable special table records).
@@ -507,17 +727,34 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
   const readValues = opts.readValues ?? true;
   const { signal, sleep, onProgress } = opts;
 
+  // FULL mode: opt-in taper sweep. Requires host write hooks — fail fast at the
+  // walk start (before any wire traffic) when they are missing.
+  const mode = opts.mode ?? 'read-only';
+  const full = mode === 'full';
+  if (full && !opts.write) {
+    throw new Error(
+      "liveWalk: mode 'full' requires write hooks (opts.write.{send,reloadPreset}); pass them or use mode 'read-only'",
+    );
+  }
+  const taperPoints = opts.taperPoints ?? DEFAULT_TAPER_POINTS;
+  const sweepSettleMs = opts.sweepSettleMs ?? MIN_SWEEP_SETTLE_MS;
+  const sweepCtx: SweepContext | undefined = full
+    ? { transport, write: opts.write!, model, points: taperPoints, settleMs: sweepSettleMs, signal, sleep }
+    : undefined;
+
   const records: CacheRecord[] = [];
   let queries = 0;
   let enumLabels = 0;
+  let tapers = 0;
 
   for (let bi = 0; bi < blocks.length; bi++) {
     const block = blocks[bi]!;
     throwIfAborted(signal);
-    onProgress?.({ phase: 'block-start', block, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries });
+    onProgress?.({ phase: 'block-start', block, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries, ...(full ? { tapers } : {}) });
 
     let absentRun = 0;
     let found = 0;
+    let sweptInBlock = false;
     for (let param = 0; param <= maxParamId; param++) {
       throwIfAborted(signal);
       await pace(opts.interQueryMs ?? 0, signal, sleep);
@@ -574,14 +811,39 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
         const vd = vr ? decodeReply(vr) : null;
         if (vd && vd.view === 'value') unit = parseUnit(vd.value);
       }
-      records.push(buildRecord(block, param, def, labels, unit));
+
+      // FULL mode: sweep the taper of a CONTINUOUS FLOAT param only — never an
+      // enum (a label list was found) nor an int/inert param (kind!=float or
+      // max==min). Mirrors CaptureRig v2's `d["kind"]=="float" and max!=min`
+      // (the label walk already claimed any enum). The sweep writes + restores;
+      // its taper rides the FloatRecord and is threaded into the RangeDef.
+      let taper: FloatTaper | undefined;
+      if (sweepCtx && labels.length === 0 && def.kind === 'float' && def.max !== def.min) {
+        await pace(opts.interQueryMs ?? 0, signal, sleep);
+        const swept = await sweepTaper(sweepCtx, block, param);
+        taper = swept.taper;
+        queries += swept.reads;
+        tapers += 1;
+        sweptInBlock = true;
+        onProgress?.({ phase: 'param-sweep', block, param, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries, tapers });
+      }
+
+      records.push(buildRecord(block, param, def, labels, unit, taper));
     }
 
-    onProgress?.({ phase: 'block-done', block, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries });
+    // FULL-mode safety net: reload the preset from flash after every block whose
+    // params were swept, so an interrupt can never leave unsaved sweep edits
+    // behind (CaptureRig v2's per-block `reload_preset`).
+    if (sweepCtx && sweptInBlock) {
+      throwIfAborted(signal);
+      await sweepCtx.write.reloadPreset();
+    }
+
+    onProgress?.({ phase: 'block-done', block, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries, ...(full ? { tapers } : {}) });
     await pace(opts.blockPauseMs ?? 0, signal, sleep);
   }
 
-  onProgress?.({ phase: 'done', blockIndex: blocks.length, blockCount: blocks.length, records: records.length, enumLabels, queries });
+  onProgress?.({ phase: 'done', blockIndex: blocks.length, blockCount: blocks.length, records: records.length, enumLabels, queries, ...(full ? { tapers } : {}) });
   return records;
 }
 

@@ -16970,6 +16970,10 @@
           "LEGACY",
           "DYNA-CAB"
         ],
+        "32": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "42": [
           "STEREO",
           "LEFT",
@@ -17436,6 +17440,14 @@
           "MUTE FX OUT",
           "MUTE OUT"
         ],
+        "14": [
+          "OFF",
+          "ON"
+        ],
+        "15": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "16": [
           "NONE",
           "RIGHT",
@@ -17551,6 +17563,10 @@
           "PEAK",
           "RMS+PEAK",
           "HALF-WAVE"
+        ],
+        "9": [
+          "ENGAGED",
+          "BYPASSED"
         ],
         "10": [
           "BLOCK L+R",
@@ -18026,6 +18042,10 @@
         "13": [
           "THRU",
           "MUTE"
+        ],
+        "14": [
+          "ENGAGED",
+          "BYPASSED"
         ]
       },
       "DELAY": {
@@ -18157,6 +18177,14 @@
           "MUTE OUT",
           "MUTE FX IN",
           "MUTE IN"
+        ],
+        "21": [
+          "OFF",
+          "ON"
+        ],
+        "22": [
+          "ENGAGED",
+          "BYPASSED"
         ],
         "24": [
           "SINE",
@@ -18672,6 +18700,10 @@
           "OFF",
           "ON"
         ],
+        "86": [
+          "OFF",
+          "ON"
+        ],
         "87": [
           "LOWPASS",
           "BANDPASS",
@@ -19047,6 +19079,10 @@
         "23": [
           "THRU",
           "MUTE"
+        ],
+        "28": [
+          "OFF",
+          "ON"
         ],
         "30": [
           "NORMAL",
@@ -19562,6 +19598,10 @@
         ]
       },
       "ENHANCER": {
+        "5": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "6": [
           "Modern",
           "Classic",
@@ -19613,6 +19653,10 @@
         "7": [
           "2nd",
           "4th"
+        ],
+        "8": [
+          "ENGAGED",
+          "BYPASSED"
         ],
         "11": [
           "NONE",
@@ -19907,6 +19951,14 @@
           "MUTE FX OUT",
           "MUTE OUT"
         ],
+        "15": [
+          "OFF",
+          "ON"
+        ],
+        "16": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "17": [
           "NONE",
           "RIGHT",
@@ -20018,10 +20070,18 @@
           "UHH",
           "ERR"
         ],
+        "8": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "9": [
           "THRU",
           "MUTE FX OUT",
           "MUTE OUT"
+        ],
+        "10": [
+          "OFF",
+          "ON"
         ],
         "11": [
           "OFF",
@@ -20121,6 +20181,10 @@
         "5": [
           "THRU",
           "MUTE"
+        ],
+        "7": [
+          "ENGAGED",
+          "BYPASSED"
         ],
         "10": [
           "LV TUBE",
@@ -20280,6 +20344,10 @@
           "7 Band Pedal",
           "7 Band Bass Pedal"
         ],
+        "18": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "19": [
           "OFF",
           "ON"
@@ -20312,7 +20380,8 @@
         ],
         "37": [
           "STANDARD",
-          "ULTRA-RES"
+          "ULTRA-RES",
+          "FULL-RES"
         ],
         "38": [
           "MIC ONLY",
@@ -20479,6 +20548,16 @@
           "CHAN 15",
           "CHAN 16",
           "OMNI"
+        ],
+        "74": [
+          "CONTINUOUS",
+          "MOMENTARY",
+          "LATCHING"
+        ],
+        "75": [
+          "CONTINUOUS",
+          "MOMENTARY",
+          "LATCHING"
         ],
         "80": [
           "CC #1",
@@ -23143,9 +23222,18 @@
           "INPUT 3",
           "INPUT 4"
         ],
+        "127": [
+          "NONE",
+          "AUTO-TRIM",
+          "MINIMUM-PHASE"
+        ],
         "129": [
           "CONVENTIONAL",
           "REVERSE FILTER"
+        ],
+        "130": [
+          "AUTHENTIC",
+          "IDEAL"
         ],
         "132": [
           "1/2 -> OUT1, 3/4 -> OUT2",
@@ -24074,6 +24162,10 @@
           "22K",
           "22K+CAP"
         ],
+        "6": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "7": [
           "CLASSIC",
           "INTELLIGENT",
@@ -24190,6 +24282,14 @@
           "MUTE FX IN",
           "MUTE IN"
         ],
+        "21": [
+          "OFF",
+          "ON"
+        ],
+        "22": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "23": [
           "L+R",
           "LEFT",
@@ -24222,6 +24322,10 @@
         "33": [
           "OFF",
           "ON"
+        ],
+        "34": [
+          "OFF",
+          "ON"
         ]
       },
       "MIXER": {
@@ -24232,6 +24336,10 @@
         "15": [
           "THRU",
           "MUTE"
+        ],
+        "16": [
+          "ENGAGED",
+          "BYPASSED"
         ]
       },
       "MOD": {
@@ -25026,6 +25134,14 @@
           "MUTE FX IN",
           "MUTE IN"
         ],
+        "35": [
+          "OFF",
+          "ON"
+        ],
+        "37": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "68": [
           "SINE",
           "TRIANGLE",
@@ -25199,6 +25315,16 @@
         "115": [
           "OFF",
           "ON"
+        ],
+        "120": [
+          "OFF",
+          "ON"
+        ]
+      },
+      "OUTPUT": {
+        "15": [
+          "ENGAGED",
+          "BYPASSED"
         ]
       },
       "PEQ": {
@@ -25235,6 +25361,14 @@
         "22": [
           "THRU",
           "MUTE"
+        ],
+        "23": [
+          "OFF",
+          "ON"
+        ],
+        "24": [
+          "ENGAGED",
+          "BYPASSED"
         ],
         "25": [
           "OFF",
@@ -25402,6 +25536,14 @@
           "THRU",
           "MUTE FX OUT",
           "MUTE OUT"
+        ],
+        "15": [
+          "OFF",
+          "ON"
+        ],
+        "16": [
+          "ENGAGED",
+          "BYPASSED"
         ],
         "17": [
           "NORMAL",
@@ -25747,6 +25889,14 @@
           "MUTE OUT",
           "MUTE FX IN",
           "MUTE IN"
+        ],
+        "42": [
+          "OFF",
+          "ON"
+        ],
+        "44": [
+          "ENGAGED",
+          "BYPASSED"
         ],
         "46": [
           "LINEAR",
@@ -26452,6 +26602,10 @@
           "JUST"
         ],
         "111": [
+          "OFF",
+          "ON"
+        ],
+        "112": [
           "OFF",
           "ON"
         ]
@@ -27689,6 +27843,14 @@
           "MUTE FX IN",
           "MUTE IN"
         ],
+        "17": [
+          "OFF",
+          "ON"
+        ],
+        "22": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "43": [
           "ECONOMY",
           "NORMAL",
@@ -27816,6 +27978,10 @@
         "67": [
           "INPUT",
           "OUTPUT"
+        ],
+        "68": [
+          "OFF",
+          "ON"
         ]
       },
       "RINGMOD": {
@@ -27929,6 +28095,14 @@
           "MUTE FX OUT",
           "MUTE OUT"
         ],
+        "9": [
+          "OFF",
+          "ON"
+        ],
+        "11": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "19": [
           "L+R",
           "LEFT",
@@ -27992,6 +28166,14 @@
           "THRU",
           "MUTE FX OUT",
           "MUTE OUT"
+        ],
+        "27": [
+          "OFF",
+          "ON"
+        ],
+        "28": [
+          "ENGAGED",
+          "BYPASSED"
         ],
         "29": [
           "SINE",
@@ -28463,6 +28645,10 @@
           "THRU",
           "MUTE"
         ],
+        "14": [
+          "ENGAGED",
+          "BYPASSED"
+        ],
         "16": [
           "6 dB/oct",
           "12 dB/oct",
@@ -28498,6 +28684,14 @@
           "THRU",
           "MUTE FX OUT",
           "MUTE OUT"
+        ],
+        "17": [
+          "OFF",
+          "ON"
+        ],
+        "18": [
+          "ENGAGED",
+          "BYPASSED"
         ]
       },
       "VOLUME": {
@@ -28509,6 +28703,10 @@
           "LOG 10A",
           "LOG 5A",
           "S-TAPER"
+        ],
+        "3": [
+          "ENGAGED",
+          "BYPASSED"
         ],
         "7": [
           "THRU",
@@ -28547,6 +28745,10 @@
           "LOG 15A",
           "LOG 10A",
           "LOG 5A"
+        ],
+        "12": [
+          "ENGAGED",
+          "BYPASSED"
         ],
         "15": [
           "OFF",
@@ -28679,7 +28881,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "13": {
           "kind": "float",
@@ -28688,7 +28891,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "14": {
           "kind": "float",
@@ -28697,7 +28901,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "15": {
           "kind": "float",
@@ -28706,7 +28911,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "16": {
           "kind": "float",
@@ -28751,7 +28957,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "21": {
           "kind": "float",
@@ -28760,7 +28967,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "22": {
           "kind": "float",
@@ -28769,7 +28977,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "23": {
           "kind": "float",
@@ -28778,7 +28987,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "24": {
           "kind": "enum",
@@ -28836,7 +29046,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "30": {
           "kind": "enum",
@@ -28874,7 +29085,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "34": {
           "kind": "float",
@@ -28883,7 +29095,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "35": {
           "kind": "float",
@@ -29012,7 +29225,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "49": {
           "kind": "float",
@@ -29021,7 +29235,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "50": {
           "kind": "float",
@@ -29030,7 +29245,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "51": {
           "kind": "float",
@@ -29039,7 +29255,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "52": {
           "kind": "float",
@@ -29093,7 +29310,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "58": {
           "kind": "float",
@@ -29102,7 +29320,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "59": {
           "kind": "float",
@@ -29209,7 +29428,34 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0.375,
+              1024
+            ],
+            [
+              0.5,
+              1024
+            ],
+            [
+              0.625,
+              1024
+            ],
+            [
+              0.75,
+              512
+            ],
+            [
+              0.875,
+              512
+            ],
+            [
+              1,
+              256
+            ]
+          ]
         },
         "71": {
           "kind": "enum",
@@ -29219,7 +29465,34 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0.375,
+              1024
+            ],
+            [
+              0.5,
+              1024
+            ],
+            [
+              0.625,
+              1024
+            ],
+            [
+              0.75,
+              512
+            ],
+            [
+              0.875,
+              512
+            ],
+            [
+              1,
+              256
+            ]
+          ]
         },
         "72": {
           "kind": "enum",
@@ -29229,7 +29502,34 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0.375,
+              1024
+            ],
+            [
+              0.5,
+              1024
+            ],
+            [
+              0.625,
+              1024
+            ],
+            [
+              0.75,
+              512
+            ],
+            [
+              0.875,
+              512
+            ],
+            [
+              1,
+              256
+            ]
+          ]
         },
         "73": {
           "kind": "enum",
@@ -29239,7 +29539,34 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0.375,
+              1024
+            ],
+            [
+              0.5,
+              1024
+            ],
+            [
+              0.625,
+              1024
+            ],
+            [
+              0.75,
+              512
+            ],
+            [
+              0.875,
+              512
+            ],
+            [
+              1,
+              256
+            ]
+          ]
         },
         "74": {
           "kind": "enum",
@@ -29249,7 +29576,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              6
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              12
+            ],
+            [
+              0.625,
+              12
+            ],
+            [
+              0.75,
+              18
+            ],
+            [
+              0.875,
+              18
+            ],
+            [
+              1,
+              24
+            ]
+          ]
         },
         "75": {
           "kind": "enum",
@@ -29259,7 +29626,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              6
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              12
+            ],
+            [
+              0.625,
+              12
+            ],
+            [
+              0.75,
+              18
+            ],
+            [
+              0.875,
+              18
+            ],
+            [
+              1,
+              24
+            ]
+          ]
         },
         "76": {
           "kind": "enum",
@@ -29269,7 +29676,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              6
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              12
+            ],
+            [
+              0.625,
+              12
+            ],
+            [
+              0.75,
+              18
+            ],
+            [
+              0.875,
+              18
+            ],
+            [
+              1,
+              24
+            ]
+          ]
         },
         "77": {
           "kind": "enum",
@@ -29279,7 +29726,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              6
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              12
+            ],
+            [
+              0.625,
+              12
+            ],
+            [
+              0.75,
+              18
+            ],
+            [
+              0.875,
+              18
+            ],
+            [
+              1,
+              24
+            ]
+          ]
         },
         "78": {
           "kind": "enum",
@@ -29289,7 +29776,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              6
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              12
+            ],
+            [
+              0.625,
+              12
+            ],
+            [
+              0.75,
+              18
+            ],
+            [
+              0.875,
+              18
+            ],
+            [
+              1,
+              24
+            ]
+          ]
         },
         "79": {
           "kind": "enum",
@@ -29299,7 +29826,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              6
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              12
+            ],
+            [
+              0.625,
+              12
+            ],
+            [
+              0.75,
+              18
+            ],
+            [
+              0.875,
+              18
+            ],
+            [
+              1,
+              24
+            ]
+          ]
         },
         "80": {
           "kind": "enum",
@@ -29309,7 +29876,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              6
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              12
+            ],
+            [
+              0.625,
+              12
+            ],
+            [
+              0.75,
+              18
+            ],
+            [
+              0.875,
+              18
+            ],
+            [
+              1,
+              24
+            ]
+          ]
         },
         "81": {
           "kind": "enum",
@@ -29319,7 +29926,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              6
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              12
+            ],
+            [
+              0.625,
+              12
+            ],
+            [
+              0.75,
+              18
+            ],
+            [
+              0.875,
+              18
+            ],
+            [
+              1,
+              24
+            ]
+          ]
         },
         "82": {
           "kind": "enum",
@@ -29329,7 +29976,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              6
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              12
+            ],
+            [
+              0.625,
+              12
+            ],
+            [
+              0.75,
+              18
+            ],
+            [
+              0.875,
+              18
+            ],
+            [
+              1,
+              24
+            ]
+          ]
         },
         "83": {
           "kind": "enum",
@@ -29339,7 +30026,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 4,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              6
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              12
+            ],
+            [
+              0.625,
+              12
+            ],
+            [
+              0.75,
+              18
+            ],
+            [
+              0.875,
+              18
+            ],
+            [
+              1,
+              24
+            ]
+          ]
         },
         "84": {
           "kind": "enum",
@@ -29359,7 +30086,26 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 45,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0.375,
+              1
+            ],
+            [
+              0.625,
+              2
+            ],
+            [
+              0.75,
+              4
+            ],
+            [
+              0.875,
+              4
+            ]
+          ]
         },
         "86": {
           "kind": "enum",
@@ -29369,7 +30115,34 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 45,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              1
+            ],
+            [
+              0.25,
+              1
+            ],
+            [
+              0.375,
+              1
+            ],
+            [
+              0.625,
+              2
+            ],
+            [
+              0.75,
+              4
+            ],
+            [
+              0.875,
+              4
+            ]
+          ]
         },
         "87": {
           "kind": "enum",
@@ -29379,7 +30152,34 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 45,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              1
+            ],
+            [
+              0.25,
+              1
+            ],
+            [
+              0.375,
+              1
+            ],
+            [
+              0.625,
+              2
+            ],
+            [
+              0.75,
+              4
+            ],
+            [
+              0.875,
+              4
+            ]
+          ]
         },
         "88": {
           "kind": "enum",
@@ -29389,7 +30189,34 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 45,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              1
+            ],
+            [
+              0.25,
+              1
+            ],
+            [
+              0.375,
+              1
+            ],
+            [
+              0.625,
+              2
+            ],
+            [
+              0.75,
+              4
+            ],
+            [
+              0.875,
+              4
+            ]
+          ]
         },
         "89": {
           "kind": "enum",
@@ -29438,7 +30265,38 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0.125,
+              1.25
+            ],
+            [
+              0.25,
+              2.5
+            ],
+            [
+              0.375,
+              3.75
+            ],
+            [
+              0.5,
+              5
+            ],
+            [
+              0.625,
+              6.25
+            ],
+            [
+              0.75,
+              7.5
+            ],
+            [
+              0.875,
+              8.75
+            ]
+          ]
         },
         "94": {
           "kind": "float",
@@ -29447,7 +30305,38 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0.125,
+              1.25
+            ],
+            [
+              0.25,
+              2.5
+            ],
+            [
+              0.375,
+              3.75
+            ],
+            [
+              0.5,
+              5
+            ],
+            [
+              0.625,
+              6.25
+            ],
+            [
+              0.75,
+              7.5
+            ],
+            [
+              0.875,
+              8.75
+            ]
+          ]
         },
         "95": {
           "kind": "float",
@@ -29456,7 +30345,38 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0.125,
+              1.25
+            ],
+            [
+              0.25,
+              2.5
+            ],
+            [
+              0.375,
+              3.75
+            ],
+            [
+              0.5,
+              5
+            ],
+            [
+              0.625,
+              6.25
+            ],
+            [
+              0.75,
+              7.5
+            ],
+            [
+              0.875,
+              8.75
+            ]
+          ]
         },
         "96": {
           "kind": "float",
@@ -29465,7 +30385,38 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0.125,
+              1.25
+            ],
+            [
+              0.25,
+              2.5
+            ],
+            [
+              0.375,
+              3.75
+            ],
+            [
+              0.5,
+              5
+            ],
+            [
+              0.625,
+              6.25
+            ],
+            [
+              0.75,
+              7.5
+            ],
+            [
+              0.875,
+              8.75
+            ]
+          ]
         },
         "97": {
           "kind": "float",
@@ -29510,7 +30461,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "102": {
           "kind": "float",
@@ -29519,7 +30471,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "103": {
           "kind": "float",
@@ -29528,7 +30481,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "104": {
           "kind": "float",
@@ -29537,7 +30491,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "105": {
           "kind": "enum",
@@ -29568,7 +30523,46 @@
           "scale": 2,
           "step": 0,
           "typecode": 16,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              2
+            ],
+            [
+              0.125,
+              2
+            ],
+            [
+              0.25,
+              2
+            ],
+            [
+              0.375,
+              4
+            ],
+            [
+              0.5,
+              4
+            ],
+            [
+              0.625,
+              4
+            ],
+            [
+              0.75,
+              6
+            ],
+            [
+              0.875,
+              6
+            ],
+            [
+              1,
+              8
+            ]
+          ]
         },
         "2": {
           "kind": "float",
@@ -29670,7 +30664,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "13": {
           "kind": "enum",
@@ -29744,7 +30739,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "21": {
           "kind": "float",
@@ -29837,7 +30833,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 65534
+          "defaultRaw": 65534,
+          "taper": "linear"
         },
         "31": {
           "kind": "float",
@@ -29846,7 +30843,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 65534
+          "defaultRaw": 65534,
+          "taper": "linear"
         }
       },
       "COMP": {
@@ -29866,7 +30864,42 @@
           "scale": 1,
           "step": 0.01,
           "typecode": 67,
-          "defaultRaw": 3449
+          "defaultRaw": 3449,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              1
+            ],
+            [
+              0.125,
+              1.454
+            ],
+            [
+              0.25,
+              2.115
+            ],
+            [
+              0.375,
+              3.075
+            ],
+            [
+              0.5,
+              4.472
+            ],
+            [
+              0.625,
+              6.504
+            ],
+            [
+              0.75,
+              9.458
+            ],
+            [
+              0.875,
+              13.753
+            ]
+          ]
         },
         "2": {
           "kind": "float",
@@ -29979,7 +31012,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "14": {
           "kind": "enum",
@@ -30017,7 +31051,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "18": {
           "kind": "float",
@@ -30026,7 +31061,8 @@
           "scale": 10,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "19": {
           "kind": "enum",
@@ -30072,7 +31108,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "24": {
           "kind": "float",
@@ -30132,7 +31169,8 @@
           "scale": 1,
           "step": 0.01,
           "typecode": 67,
-          "defaultRaw": 21845
+          "defaultRaw": 21845,
+          "taper": "log"
         },
         "31": {
           "kind": "float",
@@ -30150,7 +31188,8 @@
           "scale": 10,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "33": {
           "kind": "float",
@@ -30178,7 +31217,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "36": {
           "kind": "float",
@@ -30187,7 +31227,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 15532
+          "defaultRaw": 15532,
+          "taper": "linear"
         }
       },
       "CONTROLLERS": {
@@ -30485,7 +31526,8 @@
           "scale": 1,
           "step": 0.01,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "32": {
           "kind": "float",
@@ -30532,7 +31574,46 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "defaultRaw": 13107
+          "defaultRaw": 13107,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              2
+            ],
+            [
+              0.125,
+              5
+            ],
+            [
+              0.25,
+              9
+            ],
+            [
+              0.375,
+              13
+            ],
+            [
+              0.5,
+              17
+            ],
+            [
+              0.625,
+              20
+            ],
+            [
+              0.75,
+              24
+            ],
+            [
+              0.875,
+              28
+            ],
+            [
+              1,
+              32
+            ]
+          ]
         },
         "37": {
           "kind": "enum",
@@ -31772,7 +32853,8 @@
           "displayMax": 800,
           "scale": 1,
           "step": 0,
-          "typecode": 65
+          "typecode": 65,
+          "defaultRaw": 5174
         },
         "1": {
           "kind": "enum",
@@ -31781,7 +32863,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 2
+          "enumCount": 2,
+          "defaultRaw": 0
         },
         "2": {
           "kind": "float",
@@ -31789,7 +32872,8 @@
           "displayMax": 0,
           "scale": 1,
           "step": 0.1,
-          "typecode": 354
+          "typecode": 354,
+          "defaultRaw": 65534
         },
         "3": {
           "kind": "float",
@@ -31797,7 +32881,8 @@
           "displayMax": 0,
           "scale": 1,
           "step": 0.1,
-          "typecode": 354
+          "typecode": 354,
+          "defaultRaw": 65534
         },
         "4": {
           "kind": "float",
@@ -31805,7 +32890,8 @@
           "displayMax": 0,
           "scale": 1,
           "step": 0.1,
-          "typecode": 354
+          "typecode": 354,
+          "defaultRaw": 65534
         },
         "5": {
           "kind": "float",
@@ -31813,7 +32899,8 @@
           "displayMax": 0,
           "scale": 1,
           "step": 0.1,
-          "typecode": 354
+          "typecode": 354,
+          "defaultRaw": 65534
         },
         "6": {
           "kind": "float",
@@ -31821,7 +32908,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "7": {
           "kind": "float",
@@ -31829,7 +32918,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "8": {
           "kind": "float",
@@ -31837,7 +32928,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 65534,
+          "taper": "linear"
         },
         "9": {
           "kind": "float",
@@ -31845,7 +32938,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 65534,
+          "taper": "linear"
         },
         "10": {
           "kind": "float",
@@ -31853,7 +32948,8 @@
           "displayMax": 50,
           "scale": 50,
           "step": 0,
-          "typecode": 0
+          "typecode": 0,
+          "defaultRaw": 65534
         },
         "11": {
           "kind": "float",
@@ -31861,7 +32957,8 @@
           "displayMax": 20,
           "scale": 1,
           "step": 0.1,
-          "typecode": 385
+          "typecode": 385,
+          "defaultRaw": 52427
         },
         "12": {
           "kind": "float",
@@ -31869,7 +32966,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 145
+          "typecode": 145,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "13": {
           "kind": "enum",
@@ -31878,7 +32977,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 176,
-          "enumCount": 2
+          "enumCount": 2,
+          "defaultRaw": 0
         },
         "14": {
           "kind": "float",
@@ -31886,7 +32986,8 @@
           "displayMax": 1,
           "scale": 1,
           "step": 0,
-          "typecode": 224
+          "typecode": 224,
+          "defaultRaw": 0
         }
       },
       "DELAY": {
@@ -31962,7 +33063,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "8": {
           "kind": "float",
@@ -32044,7 +33146,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "17": {
           "kind": "float",
@@ -32071,7 +33174,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "20": {
           "kind": "enum",
@@ -32211,7 +33315,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "35": {
           "kind": "float",
@@ -32220,7 +33325,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 65534
+          "defaultRaw": 65534,
+          "taper": "linear"
         },
         "36": {
           "kind": "float",
@@ -32437,7 +33543,8 @@
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 993
+          "defaultRaw": 993,
+          "taper": "linear"
         },
         "59": {
           "kind": "float",
@@ -32446,7 +33553,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "60": {
           "kind": "float",
@@ -32482,7 +33590,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "64": {
           "kind": "float",
@@ -32491,7 +33600,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "65": {
           "kind": "float",
@@ -32528,7 +33638,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 21845
+          "defaultRaw": 21845,
+          "taper": "log"
         },
         "69": {
           "kind": "float",
@@ -32736,7 +33847,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "2": {
           "kind": "float",
@@ -32745,7 +33857,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "3": {
           "kind": "float",
@@ -32754,7 +33867,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "4": {
           "kind": "float",
@@ -32763,7 +33877,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "5": {
           "kind": "float",
@@ -32772,7 +33887,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "6": {
           "kind": "float",
@@ -32873,7 +33989,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "17": {
           "kind": "float",
@@ -32882,7 +33999,8 @@
           "scale": 1,
           "step": 0.002,
           "typecode": 51,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "18": {
           "kind": "enum",
@@ -32901,7 +34019,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 6553
+          "defaultRaw": 6553,
+          "taper": "linear"
         },
         "20": {
           "kind": "float",
@@ -32910,7 +34029,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "21": {
           "kind": "float",
@@ -32928,7 +34048,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "23": {
           "kind": "enum",
@@ -32947,7 +34068,8 @@
           "scale": 100,
           "step": 0.0001,
           "typecode": 50,
-          "defaultRaw": 22937
+          "defaultRaw": 22937,
+          "taper": "linear"
         },
         "25": {
           "kind": "float",
@@ -32956,7 +34078,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 65534
+          "defaultRaw": 65534,
+          "taper": "log"
         },
         "26": {
           "kind": "float",
@@ -32974,7 +34097,8 @@
           "scale": 0.41666666,
           "step": 0.024,
           "typecode": 50,
-          "defaultRaw": 1365
+          "defaultRaw": 1365,
+          "taper": "linear"
         },
         "28": {
           "kind": "float",
@@ -33029,7 +34153,8 @@
           "scale": 1,
           "step": 0.001,
           "typecode": 51,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "34": {
           "kind": "enum",
@@ -33076,7 +34201,8 @@
           "scale": 1,
           "step": 0.001,
           "typecode": 51,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "39": {
           "kind": "enum",
@@ -33105,7 +34231,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "log"
         },
         "42": {
           "kind": "float",
@@ -33114,7 +34241,8 @@
           "scale": 1,
           "step": 0.002,
           "typecode": 51,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "43": {
           "kind": "float",
@@ -33132,7 +34260,8 @@
           "scale": 0.41666666,
           "step": 0.024,
           "typecode": 50,
-          "defaultRaw": 1365
+          "defaultRaw": 1365,
+          "taper": "linear"
         },
         "45": {
           "kind": "enum",
@@ -33151,7 +34280,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 6494
+          "defaultRaw": 6494,
+          "taper": "log"
         },
         "47": {
           "kind": "float",
@@ -33160,7 +34290,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 5958
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "48": {
           "kind": "float",
@@ -33169,7 +34300,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 55704
+          "defaultRaw": 55704,
+          "taper": "linear"
         },
         "49": {
           "kind": "enum",
@@ -33188,7 +34320,8 @@
           "scale": 2,
           "step": 0.001,
           "typecode": 51,
-          "defaultRaw": 13107
+          "defaultRaw": 13107,
+          "taper": "linear"
         },
         "51": {
           "kind": "float",
@@ -33197,7 +34330,8 @@
           "scale": 1,
           "step": 0.001,
           "typecode": 67,
-          "defaultRaw": 21845
+          "defaultRaw": 21845,
+          "taper": "log"
         },
         "52": {
           "kind": "float",
@@ -33206,7 +34340,8 @@
           "scale": 1,
           "step": 0.001,
           "typecode": 66,
-          "defaultRaw": 5958
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "53": {
           "kind": "float",
@@ -33215,7 +34350,8 @@
           "scale": 1,
           "step": 0.001,
           "typecode": 67,
-          "defaultRaw": 8605
+          "defaultRaw": 8605,
+          "taper": "log"
         },
         "54": {
           "kind": "enum",
@@ -33234,7 +34370,8 @@
           "scale": 12,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "56": {
           "kind": "float",
@@ -33243,7 +34380,8 @@
           "scale": 12,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "57": {
           "kind": "float",
@@ -33252,7 +34390,8 @@
           "scale": 12,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "58": {
           "kind": "float",
@@ -33261,7 +34400,8 @@
           "scale": 12,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "59": {
           "kind": "float",
@@ -33270,7 +34410,8 @@
           "scale": 12,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "60": {
           "kind": "float",
@@ -33279,7 +34420,8 @@
           "scale": 12,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "61": {
           "kind": "float",
@@ -33288,7 +34430,8 @@
           "scale": 12,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "62": {
           "kind": "float",
@@ -33297,7 +34440,8 @@
           "scale": 12,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "63": {
           "kind": "float",
@@ -33371,7 +34515,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "71": {
           "kind": "float",
@@ -33380,7 +34525,8 @@
           "scale": 1,
           "step": 0.001,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "72": {
           "kind": "float",
@@ -33407,7 +34553,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "75": {
           "kind": "float",
@@ -33416,7 +34563,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "76": {
           "kind": "float",
@@ -33434,7 +34582,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "log"
         },
         "78": {
           "kind": "enum",
@@ -33453,7 +34602,22 @@
           "scale": 31.623,
           "step": 0.000316,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              -10
+            ],
+            [
+              0.625,
+              2.5
+            ],
+            [
+              0.875,
+              7.5
+            ]
+          ]
         },
         "80": {
           "kind": "float",
@@ -33535,7 +34699,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 13107
+          "defaultRaw": 13107,
+          "taper": "linear"
         },
         "89": {
           "kind": "float",
@@ -33600,7 +34765,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "96": {
           "kind": "enum",
@@ -33628,7 +34794,8 @@
           "scale": 1,
           "step": 0.002,
           "typecode": 51,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "99": {
           "kind": "float",
@@ -33637,7 +34804,8 @@
           "scale": 10,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "100": {
           "kind": "float",
@@ -33646,7 +34814,8 @@
           "scale": 10,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 19515
+          "defaultRaw": 19515,
+          "taper": "log"
         },
         "101": {
           "kind": "float",
@@ -33693,7 +34862,8 @@
           "scale": 1,
           "step": 0.01,
           "typecode": 51,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "106": {
           "kind": "float",
@@ -33768,7 +34938,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "114": {
           "kind": "float",
@@ -33786,7 +34957,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 6553
+          "defaultRaw": 6553,
+          "taper": "linear"
         },
         "116": {
           "kind": "float",
@@ -33897,7 +35069,8 @@
           "scale": 1,
           "step": 0.001,
           "typecode": 67,
-          "defaultRaw": 21845
+          "defaultRaw": 21845,
+          "taper": "log"
         },
         "128": {
           "kind": "enum",
@@ -33930,7 +35103,8 @@
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
-          "typecode": 50
+          "typecode": 50,
+          "taper": "linear"
         },
         "132": {
           "kind": "float",
@@ -33946,7 +35120,8 @@
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
-          "typecode": 50
+          "typecode": 50,
+          "taper": "linear"
         },
         "134": {
           "kind": "enum",
@@ -33981,7 +35156,8 @@
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
-          "typecode": 50
+          "typecode": 50,
+          "taper": "linear"
         },
         "138": {
           "kind": "enum",
@@ -33998,7 +35174,8 @@
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
-          "typecode": 50
+          "typecode": 50,
+          "taper": "linear"
         },
         "140": {
           "kind": "enum",
@@ -34220,7 +35397,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "9": {
           "kind": "float",
@@ -34229,7 +35407,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 65534
+          "defaultRaw": 65534,
+          "taper": "linear"
         },
         "10": {
           "kind": "float",
@@ -34238,7 +35417,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "11": {
           "kind": "enum",
@@ -34347,7 +35527,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "3": {
           "kind": "float",
@@ -34374,7 +35555,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "6": {
           "kind": "enum",
@@ -34412,7 +35594,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "10": {
           "kind": "float",
@@ -34421,7 +35604,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 65534
+          "defaultRaw": 65534,
+          "taper": "linear"
         },
         "11": {
           "kind": "enum",
@@ -34562,7 +35746,8 @@
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 17246
+          "defaultRaw": 17246,
+          "taper": "linear"
         },
         "26": {
           "kind": "float",
@@ -34589,7 +35774,8 @@
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 3121
+          "defaultRaw": 3121,
+          "taper": "linear"
         },
         "29": {
           "kind": "float",
@@ -34616,7 +35802,8 @@
           "scale": 5,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "32": {
           "kind": "enum",
@@ -34643,7 +35830,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "35": {
           "kind": "enum",
@@ -34720,7 +35908,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "6": {
           "kind": "float",
@@ -34794,7 +35983,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "14": {
           "kind": "enum",
@@ -34860,7 +36050,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 984
+          "defaultRaw": 984,
+          "taper": "linear"
         },
         "21": {
           "kind": "float",
@@ -34917,7 +36108,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "27": {
           "kind": "enum",
@@ -34964,7 +36156,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 649
+          "defaultRaw": 649,
+          "taper": "log"
         },
         "32": {
           "kind": "enum",
@@ -35015,7 +36208,8 @@
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 7282
+          "defaultRaw": 7282,
+          "taper": "linear"
         },
         "4": {
           "kind": "float",
@@ -35051,7 +36245,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "8": {
           "kind": "float",
@@ -35110,7 +36305,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "2": {
           "kind": "float",
@@ -35119,7 +36315,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "3": {
           "kind": "float",
@@ -35128,7 +36325,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "4": {
           "kind": "float",
@@ -35156,7 +36354,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 2648
+          "defaultRaw": 2648,
+          "taper": "linear"
         },
         "7": {
           "kind": "float",
@@ -35202,7 +36401,8 @@
           "scale": 1,
           "step": 0.002,
           "typecode": 51,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "12": {
           "kind": "float",
@@ -35211,7 +36411,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "13": {
           "kind": "float",
@@ -35220,7 +36421,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "14": {
           "kind": "float",
@@ -35238,7 +36440,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "16": {
           "kind": "float",
@@ -35266,7 +36469,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "19": {
           "kind": "float",
@@ -35284,7 +36488,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "21": {
           "kind": "enum",
@@ -35303,7 +36508,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "23": {
           "kind": "float",
@@ -35312,7 +36518,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "24": {
           "kind": "float",
@@ -35321,7 +36528,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "25": {
           "kind": "float",
@@ -35330,7 +36538,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "26": {
           "kind": "float",
@@ -35339,7 +36548,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "27": {
           "kind": "float",
@@ -35348,7 +36558,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "28": {
           "kind": "float",
@@ -35357,7 +36568,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "29": {
           "kind": "float",
@@ -35366,7 +36578,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "30": {
           "kind": "float",
@@ -35375,7 +36588,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "31": {
           "kind": "float",
@@ -35384,7 +36598,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "32": {
           "kind": "enum",
@@ -35440,7 +36655,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "38": {
           "kind": "float",
@@ -35449,7 +36665,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "39": {
           "kind": "enum",
@@ -35488,7 +36705,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "43": {
           "kind": "enum",
@@ -35669,7 +36887,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "1": {
           "kind": "float",
@@ -35678,7 +36897,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "2": {
           "kind": "float",
@@ -35687,7 +36907,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "3": {
           "kind": "float",
@@ -35696,7 +36917,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "4": {
           "kind": "float",
@@ -35705,7 +36927,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "5": {
           "kind": "float",
@@ -35714,7 +36937,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "6": {
           "kind": "float",
@@ -35723,7 +36947,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "7": {
           "kind": "float",
@@ -35732,7 +36957,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "8": {
           "kind": "float",
@@ -35741,7 +36967,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "9": {
           "kind": "float",
@@ -35750,7 +36977,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "10": {
           "kind": "float",
@@ -35776,7 +37004,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "13": {
           "kind": "enum",
@@ -35804,7 +37033,30 @@
           "step": 0,
           "typecode": 16,
           "enumCount": 18,
-          "defaultRaw": 4
+          "defaultRaw": 4,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              10
+            ],
+            [
+              0.125,
+              7
+            ],
+            [
+              0.25,
+              10
+            ],
+            [
+              0.375,
+              7
+            ],
+            [
+              0.75,
+              10
+            ]
+          ]
         },
         "16": {
           "kind": "float",
@@ -35813,7 +37065,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 66,
-          "defaultRaw": 5958
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "17": {
           "kind": "float",
@@ -35982,7 +37235,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "16": {
           "kind": "float",
@@ -35991,7 +37245,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "17": {
           "kind": "float",
@@ -36000,7 +37255,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "18": {
           "kind": "float",
@@ -36009,7 +37265,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "19": {
           "kind": "float",
@@ -36018,7 +37275,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "20": {
           "kind": "float",
@@ -36027,7 +37285,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "21": {
           "kind": "float",
@@ -36036,7 +37295,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "22": {
           "kind": "float",
@@ -36045,7 +37305,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "23": {
           "kind": "float",
@@ -36054,7 +37315,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "24": {
           "kind": "float",
@@ -36063,7 +37325,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "25": {
           "kind": "float",
@@ -36072,7 +37335,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 98,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "26": {
           "kind": "float",
@@ -36081,7 +37345,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "27": {
           "kind": "float",
@@ -36090,7 +37355,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "28": {
           "kind": "float",
@@ -36099,7 +37365,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "29": {
           "kind": "float",
@@ -36108,7 +37375,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "30": {
           "kind": "float",
@@ -36117,7 +37385,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "31": {
           "kind": "float",
@@ -36126,7 +37395,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "32": {
           "kind": "float",
@@ -36135,7 +37405,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "33": {
           "kind": "float",
@@ -36144,7 +37415,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "34": {
           "kind": "float",
@@ -36153,7 +37425,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "35": {
           "kind": "float",
@@ -36162,7 +37435,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "36": {
           "kind": "float",
@@ -36171,7 +37445,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 98,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "37": {
           "kind": "enum",
@@ -36366,7 +37641,47 @@
           "step": 0,
           "typecode": 16,
           "enumCount": 2,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dBV",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              4
+            ],
+            [
+              0.125,
+              4
+            ],
+            [
+              0.25,
+              4
+            ],
+            [
+              0.375,
+              4
+            ],
+            [
+              0.5,
+              4
+            ],
+            [
+              0.625,
+              4
+            ],
+            [
+              0.75,
+              4
+            ],
+            [
+              0.875,
+              4
+            ],
+            [
+              1,
+              -10
+            ]
+          ]
         },
         "57": {
           "kind": "enum",
@@ -36376,7 +37691,47 @@
           "step": 0,
           "typecode": 16,
           "enumCount": 2,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dBV",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              4
+            ],
+            [
+              0.125,
+              4
+            ],
+            [
+              0.25,
+              4
+            ],
+            [
+              0.375,
+              4
+            ],
+            [
+              0.5,
+              4
+            ],
+            [
+              0.625,
+              4
+            ],
+            [
+              0.75,
+              4
+            ],
+            [
+              0.875,
+              4
+            ],
+            [
+              1,
+              -10
+            ]
+          ]
         },
         "58": {
           "kind": "enum",
@@ -36456,7 +37811,47 @@
           "step": 0,
           "typecode": 16,
           "enumCount": 8,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "SECONDS",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              0.25
+            ],
+            [
+              0.125,
+              0.25
+            ],
+            [
+              0.25,
+              0.5
+            ],
+            [
+              0.375,
+              0.75
+            ],
+            [
+              0.5,
+              1
+            ],
+            [
+              0.625,
+              1.25
+            ],
+            [
+              0.75,
+              1.5
+            ],
+            [
+              0.875,
+              1.75
+            ],
+            [
+              1,
+              2
+            ]
+          ]
         },
         "67": {
           "kind": "float",
@@ -36703,7 +38098,38 @@
           "step": 0,
           "typecode": 16,
           "enumCount": 6,
-          "defaultRaw": 5
+          "defaultRaw": 5,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0.25,
+              16
+            ],
+            [
+              0.375,
+              16
+            ],
+            [
+              0.5,
+              32
+            ],
+            [
+              0.625,
+              64
+            ],
+            [
+              0.75,
+              64
+            ],
+            [
+              0.875,
+              128
+            ],
+            [
+              1,
+              256
+            ]
+          ]
         },
         "100": {
           "kind": "enum",
@@ -36821,7 +38247,47 @@
           "step": 0,
           "typecode": 16,
           "enumCount": 2,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "Hz",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              50
+            ],
+            [
+              0.125,
+              50
+            ],
+            [
+              0.25,
+              50
+            ],
+            [
+              0.375,
+              50
+            ],
+            [
+              0.5,
+              50
+            ],
+            [
+              0.625,
+              50
+            ],
+            [
+              0.75,
+              50
+            ],
+            [
+              0.875,
+              50
+            ],
+            [
+              1,
+              60
+            ]
+          ]
         },
         "113": {
           "kind": "enum",
@@ -36869,7 +38335,42 @@
           "scale": 1,
           "step": 0,
           "typecode": 32,
-          "defaultRaw": 16287
+          "defaultRaw": 16287,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0.125,
+              127
+            ],
+            [
+              0.25,
+              255
+            ],
+            [
+              0.375,
+              383
+            ],
+            [
+              0.5,
+              511
+            ],
+            [
+              0.625,
+              639
+            ],
+            [
+              0.75,
+              767
+            ],
+            [
+              0.875,
+              895
+            ],
+            [
+              1,
+              1023
+            ]
+          ]
         },
         "119": {
           "kind": "float",
@@ -38217,7 +39718,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 66,
-          "defaultRaw": 6898
+          "defaultRaw": 6898,
+          "taper": "log"
         },
         "2": {
           "kind": "float",
@@ -38670,7 +40172,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 65534
         },
         "1": {
           "kind": "float",
@@ -38678,7 +40181,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 65534
         },
         "2": {
           "kind": "float",
@@ -38686,7 +40190,8 @@
           "displayMax": 4000,
           "scale": 1000,
           "step": 0.001,
-          "typecode": 1072
+          "typecode": 1072,
+          "defaultRaw": 32759
         },
         "3": {
           "kind": "float",
@@ -38694,7 +40199,47 @@
           "displayMax": 128,
           "scale": 1,
           "step": 0,
-          "typecode": 16
+          "typecode": 16,
+          "defaultRaw": 15996,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              1
+            ],
+            [
+              0.125,
+              16
+            ],
+            [
+              0.25,
+              32
+            ],
+            [
+              0.375,
+              48
+            ],
+            [
+              0.5,
+              64
+            ],
+            [
+              0.625,
+              80
+            ],
+            [
+              0.75,
+              96
+            ],
+            [
+              0.875,
+              112
+            ],
+            [
+              1,
+              128
+            ]
+          ]
         },
         "4": {
           "kind": "float",
@@ -38702,7 +40247,8 @@
           "displayMax": 1000,
           "scale": 1000,
           "step": 0.001,
-          "typecode": 1072
+          "typecode": 1072,
+          "defaultRaw": 3277
         },
         "5": {
           "kind": "enum",
@@ -38711,7 +40257,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 4
+          "enumCount": 4,
+          "defaultRaw": 0
         },
         "6": {
           "kind": "float",
@@ -38719,7 +40266,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 32767
         },
         "7": {
           "kind": "enum",
@@ -38728,7 +40276,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 7
+          "enumCount": 7,
+          "defaultRaw": 0
         },
         "8": {
           "kind": "float",
@@ -38736,7 +40285,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 6553
         },
         "9": {
           "kind": "enum",
@@ -38745,7 +40295,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 7
+          "enumCount": 7,
+          "defaultRaw": 0
         },
         "10": {
           "kind": "float",
@@ -38753,7 +40304,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 32767
         },
         "11": {
           "kind": "float",
@@ -38761,7 +40313,8 @@
           "displayMax": 100,
           "scale": 200,
           "step": 0.0005,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 5243
         },
         "12": {
           "kind": "float",
@@ -38769,7 +40322,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 0
         },
         "13": {
           "kind": "float",
@@ -38777,7 +40331,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 32436
         },
         "14": {
           "kind": "float",
@@ -38785,7 +40340,8 @@
           "displayMax": 0,
           "scale": 1,
           "step": 0.1,
-          "typecode": 305
+          "typecode": 305,
+          "defaultRaw": 0
         },
         "15": {
           "kind": "float",
@@ -38793,7 +40349,8 @@
           "displayMax": 10000,
           "scale": 1000,
           "step": 0,
-          "typecode": 1091
+          "typecode": 1091,
+          "defaultRaw": 6494
         },
         "16": {
           "kind": "float",
@@ -38801,7 +40358,8 @@
           "displayMax": 1000,
           "scale": 1000,
           "step": 0,
-          "typecode": 1091
+          "typecode": 1091,
+          "defaultRaw": 0
         },
         "17": {
           "kind": "float",
@@ -38809,7 +40367,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1393
+          "typecode": 1393,
+          "defaultRaw": 13107
         },
         "18": {
           "kind": "float",
@@ -38817,7 +40376,8 @@
           "displayMax": 20,
           "scale": 1,
           "step": 0.1,
-          "typecode": 385
+          "typecode": 385,
+          "defaultRaw": 52427
         },
         "19": {
           "kind": "float",
@@ -38825,7 +40385,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 145
+          "typecode": 145,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "20": {
           "kind": "enum",
@@ -38834,7 +40396,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 192,
-          "enumCount": 5
+          "enumCount": 5,
+          "defaultRaw": 0
         },
         "21": {
           "kind": "float",
@@ -38842,7 +40405,8 @@
           "displayMax": 1,
           "scale": 1,
           "step": 0,
-          "typecode": 208
+          "typecode": 208,
+          "defaultRaw": 0
         },
         "22": {
           "kind": "float",
@@ -38850,7 +40414,8 @@
           "displayMax": 1,
           "scale": 1,
           "step": 0,
-          "typecode": 224
+          "typecode": 224,
+          "defaultRaw": 0
         },
         "23": {
           "kind": "enum",
@@ -38859,7 +40424,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 3
+          "enumCount": 3,
+          "defaultRaw": 0
         },
         "24": {
           "kind": "float",
@@ -38867,7 +40433,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 0
         },
         "25": {
           "kind": "float",
@@ -38875,7 +40442,47 @@
           "displayMax": 32,
           "scale": 1,
           "step": 0,
-          "typecode": 16
+          "typecode": 16,
+          "defaultRaw": 65534,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              1
+            ],
+            [
+              0.125,
+              4
+            ],
+            [
+              0.25,
+              8
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              16
+            ],
+            [
+              0.625,
+              20
+            ],
+            [
+              0.75,
+              24
+            ],
+            [
+              0.875,
+              28
+            ],
+            [
+              1,
+              32
+            ]
+          ]
         },
         "26": {
           "kind": "float",
@@ -38883,7 +40490,8 @@
           "displayMax": 2000,
           "scale": 1,
           "step": 0,
-          "typecode": 578
+          "typecode": 578,
+          "defaultRaw": 0
         },
         "27": {
           "kind": "float",
@@ -38891,7 +40499,8 @@
           "displayMax": 20000,
           "scale": 1,
           "step": 0,
-          "typecode": 578
+          "typecode": 578,
+          "defaultRaw": 65534
         },
         "28": {
           "kind": "enum",
@@ -38900,7 +40509,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 22
+          "enumCount": 22,
+          "defaultRaw": 0
         },
         "29": {
           "kind": "float",
@@ -38908,7 +40518,8 @@
           "displayMax": 200,
           "scale": 100,
           "step": 0.002,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 49150
         },
         "30": {
           "kind": "float",
@@ -38916,7 +40527,8 @@
           "displayMax": 100,
           "scale": 200,
           "step": 0.0005,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 0
         },
         "31": {
           "kind": "float",
@@ -38924,7 +40536,8 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 579
+          "typecode": 579,
+          "defaultRaw": 0
         },
         "32": {
           "kind": "float",
@@ -38932,7 +40545,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 0
         },
         "33": {
           "kind": "enum",
@@ -38941,7 +40555,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 2
+          "enumCount": 2,
+          "defaultRaw": 0
         },
         "34": {
           "kind": "float",
@@ -38949,7 +40564,8 @@
           "displayMax": 1,
           "scale": 1,
           "step": 0,
-          "typecode": 208
+          "typecode": 208,
+          "defaultRaw": 0
         }
       },
       "MIXER": {
@@ -39014,7 +40630,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "7": {
           "kind": "float",
@@ -39023,7 +40640,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "8": {
           "kind": "float",
@@ -39032,7 +40650,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "9": {
           "kind": "float",
@@ -39041,7 +40660,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "10": {
           "kind": "float",
@@ -39050,7 +40670,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "11": {
           "kind": "float",
@@ -39059,7 +40680,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "12": {
           "kind": "float",
@@ -39077,7 +40699,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "14": {
           "kind": "enum",
@@ -39115,7 +40738,9 @@
           "scale": 1,
           "step": 0.1,
           "typecode": 49,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "unit": "SAMPLES",
+          "taper": "linear"
         },
         "18": {
           "kind": "float",
@@ -39124,7 +40749,9 @@
           "scale": 1,
           "step": 0.1,
           "typecode": 49,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "unit": "SAMPLES",
+          "taper": "linear"
         },
         "19": {
           "kind": "float",
@@ -39133,7 +40760,9 @@
           "scale": 1,
           "step": 0.1,
           "typecode": 49,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "unit": "SAMPLES",
+          "taper": "linear"
         },
         "20": {
           "kind": "float",
@@ -39142,7 +40771,9 @@
           "scale": 1,
           "step": 0.1,
           "typecode": 49,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "unit": "SAMPLES",
+          "taper": "linear"
         },
         "21": {
           "kind": "float",
@@ -39151,7 +40782,9 @@
           "scale": 1,
           "step": 0.1,
           "typecode": 49,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "unit": "SAMPLES",
+          "taper": "linear"
         },
         "22": {
           "kind": "float",
@@ -39160,7 +40793,9 @@
           "scale": 1,
           "step": 0.1,
           "typecode": 49,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "unit": "SAMPLES",
+          "taper": "linear"
         }
       },
       "MOD": {
@@ -39288,7 +40923,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 5958
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "14": {
           "kind": "float",
@@ -39930,7 +41566,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 16384
+          "defaultRaw": 16384,
+          "taper": "linear"
         },
         "18": {
           "kind": "float",
@@ -39939,7 +41576,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 49150
+          "defaultRaw": 49150,
+          "taper": "linear"
         },
         "19": {
           "kind": "float",
@@ -39948,7 +41586,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "20": {
           "kind": "float",
@@ -39957,7 +41596,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 65534
+          "defaultRaw": 65534,
+          "taper": "linear"
         },
         "21": {
           "kind": "float",
@@ -40078,7 +41718,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "34": {
           "kind": "enum",
@@ -40178,7 +41819,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 15747
+          "defaultRaw": 15747,
+          "taper": "log"
         },
         "45": {
           "kind": "float",
@@ -40187,7 +41829,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "log"
         },
         "46": {
           "kind": "float",
@@ -40259,7 +41902,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "log"
         },
         "54": {
           "kind": "float",
@@ -40268,7 +41912,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "log"
         },
         "55": {
           "kind": "float",
@@ -40277,7 +41922,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "log"
         },
         "56": {
           "kind": "float",
@@ -40286,7 +41932,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "log"
         },
         "57": {
           "kind": "float",
@@ -40304,7 +41951,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 21845
+          "defaultRaw": 21845,
+          "taper": "log"
         },
         "59": {
           "kind": "float",
@@ -40367,7 +42015,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "66": {
           "kind": "float",
@@ -40568,7 +42217,8 @@
           "scale": 1,
           "step": 0.1,
           "typecode": 51,
-          "defaultRaw": 14352
+          "defaultRaw": 14352,
+          "taper": "linear"
         },
         "88": {
           "kind": "float",
@@ -40577,7 +42227,8 @@
           "scale": 1,
           "step": 0.1,
           "typecode": 51,
-          "defaultRaw": 14385
+          "defaultRaw": 14385,
+          "taper": "linear"
         },
         "89": {
           "kind": "float",
@@ -40586,7 +42237,8 @@
           "scale": 1,
           "step": 0.1,
           "typecode": 51,
-          "defaultRaw": 14417
+          "defaultRaw": 14417,
+          "taper": "linear"
         },
         "90": {
           "kind": "float",
@@ -40595,7 +42247,8 @@
           "scale": 1,
           "step": 0.1,
           "typecode": 51,
-          "defaultRaw": 14450
+          "defaultRaw": 14450,
+          "taper": "linear"
         },
         "91": {
           "kind": "float",
@@ -40759,7 +42412,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4572
+          "defaultRaw": 4572,
+          "taper": "log"
         },
         "109": {
           "kind": "float",
@@ -40778,7 +42432,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 6,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              12
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              18
+            ],
+            [
+              0.625,
+              24
+            ],
+            [
+              0.75,
+              24
+            ],
+            [
+              0.875,
+              30
+            ],
+            [
+              1,
+              36
+            ]
+          ]
         },
         "111": {
           "kind": "enum",
@@ -40788,7 +42482,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 6,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              12
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              18
+            ],
+            [
+              0.625,
+              24
+            ],
+            [
+              0.75,
+              24
+            ],
+            [
+              0.875,
+              30
+            ],
+            [
+              1,
+              36
+            ]
+          ]
         },
         "112": {
           "kind": "float",
@@ -40936,7 +42670,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "7": {
           "kind": "float",
@@ -40945,7 +42680,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "8": {
           "kind": "float",
@@ -40954,7 +42690,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "9": {
           "kind": "float",
@@ -40963,7 +42700,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "10": {
           "kind": "float",
@@ -40972,7 +42710,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "11": {
           "kind": "float",
@@ -40981,7 +42720,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "12": {
           "kind": "float",
@@ -40999,7 +42739,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "14": {
           "kind": "float",
@@ -41160,7 +42901,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "6": {
           "kind": "float",
@@ -41169,7 +42911,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "7": {
           "kind": "float",
@@ -41178,7 +42921,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "8": {
           "kind": "float",
@@ -41187,7 +42931,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "9": {
           "kind": "float",
@@ -41196,7 +42941,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "10": {
           "kind": "float",
@@ -41309,7 +43055,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "22": {
           "kind": "enum",
@@ -41397,7 +43144,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 6,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              12
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              18
+            ],
+            [
+              0.625,
+              24
+            ],
+            [
+              0.75,
+              24
+            ],
+            [
+              0.875,
+              30
+            ],
+            [
+              1,
+              36
+            ]
+          ]
         },
         "31": {
           "kind": "enum",
@@ -41407,7 +43194,47 @@
           "step": 0.001,
           "typecode": 16,
           "enumCount": 6,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "unit": "dB/OCT",
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              6
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              12
+            ],
+            [
+              0.375,
+              12
+            ],
+            [
+              0.5,
+              18
+            ],
+            [
+              0.625,
+              24
+            ],
+            [
+              0.75,
+              24
+            ],
+            [
+              0.875,
+              30
+            ],
+            [
+              1,
+              36
+            ]
+          ]
         },
         "32": {
           "kind": "enum",
@@ -41439,7 +43266,46 @@
           "step": 0,
           "typecode": 16,
           "enumCount": 6,
-          "defaultRaw": 1
+          "defaultRaw": 1,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              2
+            ],
+            [
+              0.125,
+              2
+            ],
+            [
+              0.25,
+              4
+            ],
+            [
+              0.375,
+              4
+            ],
+            [
+              0.5,
+              6
+            ],
+            [
+              0.625,
+              8
+            ],
+            [
+              0.75,
+              8
+            ],
+            [
+              0.875,
+              10
+            ],
+            [
+              1,
+              12
+            ]
+          ]
         },
         "2": {
           "kind": "float",
@@ -41477,7 +43343,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "6": {
           "kind": "float",
@@ -41522,7 +43389,8 @@
           "scale": 1,
           "step": 0.002,
           "typecode": 51,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "11": {
           "kind": "float",
@@ -41549,7 +43417,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "14": {
           "kind": "enum",
@@ -41605,7 +43474,22 @@
           "scale": 31.623,
           "step": 0.000316,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              -10
+            ],
+            [
+              0.625,
+              2.5
+            ],
+            [
+              0.875,
+              7.5
+            ]
+          ]
         },
         "20": {
           "kind": "enum",
@@ -41624,7 +43508,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 5958
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "22": {
           "kind": "enum",
@@ -41663,7 +43548,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 5958
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "26": {
           "kind": "float",
@@ -41672,7 +43558,8 @@
           "scale": 1,
           "step": 0.001,
           "typecode": 51,
-          "defaultRaw": 30226
+          "defaultRaw": 30226,
+          "taper": "linear"
         },
         "27": {
           "kind": "float",
@@ -41708,7 +43595,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "31": {
           "kind": "enum",
@@ -41973,7 +43861,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "24": {
           "kind": "float",
@@ -41982,7 +43871,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "25": {
           "kind": "float",
@@ -41991,7 +43881,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "26": {
           "kind": "float",
@@ -42000,7 +43891,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "27": {
           "kind": "float",
@@ -42091,7 +43983,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "37": {
           "kind": "float",
@@ -42126,7 +44019,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "41": {
           "kind": "enum",
@@ -44413,7 +46307,8 @@
           "scale": 1,
           "step": 0.001,
           "typecode": 68,
-          "defaultRaw": 12577
+          "defaultRaw": 12577,
+          "taper": "log"
         },
         "4": {
           "kind": "float",
@@ -44431,7 +46326,8 @@
           "scale": 100,
           "step": 0.001,
           "typecode": 49,
-          "defaultRaw": 22507
+          "defaultRaw": 22507,
+          "taper": "linear"
         },
         "6": {
           "kind": "float",
@@ -44521,7 +46417,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "16": {
           "kind": "enum",
@@ -44603,7 +46500,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "25": {
           "kind": "float",
@@ -44639,7 +46537,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "29": {
           "kind": "float",
@@ -44648,7 +46547,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "30": {
           "kind": "float",
@@ -44675,7 +46575,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 1523
+          "defaultRaw": 1523,
+          "taper": "linear"
         },
         "33": {
           "kind": "float",
@@ -44684,7 +46585,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 68,
-          "defaultRaw": 32436
+          "defaultRaw": 32436,
+          "taper": "log"
         },
         "34": {
           "kind": "float",
@@ -44991,7 +46893,46 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "defaultRaw": 21845
+          "defaultRaw": 21845,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              0
+            ],
+            [
+              0.125,
+              0
+            ],
+            [
+              0.25,
+              0
+            ],
+            [
+              0.375,
+              1
+            ],
+            [
+              0.5,
+              1
+            ],
+            [
+              0.625,
+              1
+            ],
+            [
+              0.75,
+              2
+            ],
+            [
+              0.875,
+              2
+            ],
+            [
+              1,
+              3
+            ]
+          ]
         },
         "67": {
           "kind": "enum",
@@ -45019,7 +46960,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         },
         "70": {
           "kind": "float",
@@ -45028,7 +46970,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 4018
+          "defaultRaw": 4018,
+          "taper": "log"
         }
       },
       "RINGMOD": {
@@ -45214,7 +47157,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "8": {
           "kind": "enum",
@@ -45269,7 +47213,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 67,
-          "defaultRaw": 5296
+          "defaultRaw": 5296,
+          "taper": "log"
         },
         "14": {
           "kind": "float",
@@ -45305,7 +47250,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "18": {
           "kind": "float",
@@ -45314,7 +47260,46 @@
           "scale": 1,
           "step": 0.001,
           "typecode": 66,
-          "defaultRaw": 5958
+          "defaultRaw": 5958,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              0.01
+            ],
+            [
+              0.125,
+              0.02
+            ],
+            [
+              0.25,
+              0.03
+            ],
+            [
+              0.375,
+              0.06
+            ],
+            [
+              0.5,
+              0.1
+            ],
+            [
+              0.625,
+              0.18
+            ],
+            [
+              0.75,
+              0.32
+            ],
+            [
+              0.875,
+              0.56
+            ],
+            [
+              1,
+              1
+            ]
+          ]
         },
         "19": {
           "kind": "enum",
@@ -45398,7 +47383,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 8
+          "enumCount": 8,
+          "defaultRaw": 1
         },
         "1": {
           "kind": "float",
@@ -45406,7 +47392,8 @@
           "displayMax": 4000,
           "scale": 1,
           "step": 1,
-          "typecode": 578
+          "typecode": 578,
+          "defaultRaw": 7613
         },
         "2": {
           "kind": "enum",
@@ -45415,7 +47402,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 4
+          "enumCount": 4,
+          "defaultRaw": 2
         },
         "3": {
           "kind": "float",
@@ -45423,7 +47411,8 @@
           "displayMax": 24,
           "scale": 1,
           "step": 1,
-          "typecode": 16
+          "typecode": 16,
+          "defaultRaw": 32767
         },
         "4": {
           "kind": "float",
@@ -45431,7 +47420,8 @@
           "displayMax": 50,
           "scale": 1,
           "step": 0.1,
-          "typecode": 1842
+          "typecode": 1842,
+          "defaultRaw": 32767
         },
         "5": {
           "kind": "float",
@@ -45439,7 +47429,8 @@
           "displayMax": 99,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 32767
         },
         "6": {
           "kind": "float",
@@ -45447,7 +47438,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 65534
         },
         "7": {
           "kind": "float",
@@ -45455,7 +47447,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "8": {
           "kind": "float",
@@ -45463,7 +47457,8 @@
           "displayMax": 1000,
           "scale": 1000,
           "step": 0,
-          "typecode": 1090
+          "typecode": 1090,
+          "defaultRaw": 329
         },
         "9": {
           "kind": "float",
@@ -45471,7 +47466,8 @@
           "displayMax": 20000,
           "scale": 1,
           "step": 0,
-          "typecode": 576
+          "typecode": 576,
+          "defaultRaw": 32436
         },
         "10": {
           "kind": "float",
@@ -45479,7 +47475,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 1380,
+          "taper": "log"
         },
         "11": {
           "kind": "enum",
@@ -45488,7 +47486,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 8
+          "enumCount": 8,
+          "defaultRaw": 7
         },
         "12": {
           "kind": "float",
@@ -45496,7 +47495,8 @@
           "displayMax": 4000,
           "scale": 1,
           "step": 1,
-          "typecode": 578
+          "typecode": 578,
+          "defaultRaw": 7613
         },
         "13": {
           "kind": "enum",
@@ -45505,7 +47505,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 4
+          "enumCount": 4,
+          "defaultRaw": 2
         },
         "14": {
           "kind": "float",
@@ -45513,7 +47514,8 @@
           "displayMax": 24,
           "scale": 1,
           "step": 1,
-          "typecode": 16
+          "typecode": 16,
+          "defaultRaw": 32767
         },
         "15": {
           "kind": "float",
@@ -45521,7 +47523,8 @@
           "displayMax": 50,
           "scale": 1,
           "step": 0.1,
-          "typecode": 1842
+          "typecode": 1842,
+          "defaultRaw": 32767
         },
         "16": {
           "kind": "float",
@@ -45529,7 +47532,8 @@
           "displayMax": 99,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 32767
         },
         "17": {
           "kind": "float",
@@ -45537,7 +47541,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 65534
         },
         "18": {
           "kind": "float",
@@ -45545,7 +47550,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "19": {
           "kind": "float",
@@ -45553,7 +47560,8 @@
           "displayMax": 1000,
           "scale": 1000,
           "step": 0,
-          "typecode": 1090
+          "typecode": 1090,
+          "defaultRaw": 329
         },
         "20": {
           "kind": "float",
@@ -45561,7 +47569,8 @@
           "displayMax": 20000,
           "scale": 1,
           "step": 0,
-          "typecode": 578
+          "typecode": 578,
+          "defaultRaw": 32436
         },
         "21": {
           "kind": "float",
@@ -45569,7 +47578,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 1380,
+          "taper": "log"
         },
         "22": {
           "kind": "float",
@@ -45585,7 +47596,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1393
+          "typecode": 1393,
+          "defaultRaw": 65534
         },
         "24": {
           "kind": "float",
@@ -45593,7 +47605,8 @@
           "displayMax": 20,
           "scale": 1,
           "step": 0.1,
-          "typecode": 385
+          "typecode": 385,
+          "defaultRaw": 52427
         },
         "25": {
           "kind": "float",
@@ -45601,7 +47614,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 145
+          "typecode": 145,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "26": {
           "kind": "enum",
@@ -45610,7 +47625,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 160,
-          "enumCount": 3
+          "enumCount": 3,
+          "defaultRaw": 0
         },
         "27": {
           "kind": "float",
@@ -45618,7 +47634,8 @@
           "displayMax": 1,
           "scale": 1,
           "step": 0,
-          "typecode": 208
+          "typecode": 208,
+          "defaultRaw": 0
         },
         "28": {
           "kind": "float",
@@ -45626,7 +47643,8 @@
           "displayMax": 1,
           "scale": 1,
           "step": 0,
-          "typecode": 224
+          "typecode": 224,
+          "defaultRaw": 0
         },
         "29": {
           "kind": "enum",
@@ -45635,7 +47653,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 8
+          "enumCount": 8,
+          "defaultRaw": 7
         },
         "30": {
           "kind": "float",
@@ -45643,7 +47662,8 @@
           "displayMax": 20000,
           "scale": 1,
           "step": 1,
-          "typecode": 578
+          "typecode": 578,
+          "defaultRaw": 1574
         },
         "31": {
           "kind": "enum",
@@ -45652,7 +47672,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 4
+          "enumCount": 4,
+          "defaultRaw": 2
         },
         "32": {
           "kind": "float",
@@ -45660,7 +47681,8 @@
           "displayMax": 24,
           "scale": 1,
           "step": 1,
-          "typecode": 16
+          "typecode": 16,
+          "defaultRaw": 32767
         },
         "33": {
           "kind": "float",
@@ -45668,7 +47690,8 @@
           "displayMax": 50,
           "scale": 1,
           "step": 0.1,
-          "typecode": 1842
+          "typecode": 1842,
+          "defaultRaw": 32767
         },
         "34": {
           "kind": "float",
@@ -45676,7 +47699,8 @@
           "displayMax": 99,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 32767
         },
         "35": {
           "kind": "float",
@@ -45684,7 +47708,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 65534
         },
         "36": {
           "kind": "float",
@@ -45692,7 +47717,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "37": {
           "kind": "float",
@@ -45700,7 +47727,8 @@
           "displayMax": 1000,
           "scale": 1000,
           "step": 0,
-          "typecode": 1090
+          "typecode": 1090,
+          "defaultRaw": 329
         },
         "38": {
           "kind": "float",
@@ -45708,7 +47736,8 @@
           "displayMax": 20000,
           "scale": 1,
           "step": 0,
-          "typecode": 578
+          "typecode": 578,
+          "defaultRaw": 32436
         },
         "39": {
           "kind": "float",
@@ -45716,7 +47745,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 66
+          "typecode": 66,
+          "defaultRaw": 1380,
+          "taper": "log"
         },
         "40": {
           "kind": "enum",
@@ -45725,7 +47756,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 2
+          "enumCount": 2,
+          "defaultRaw": 0
         },
         "41": {
           "kind": "enum",
@@ -45734,7 +47766,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 2
+          "enumCount": 2,
+          "defaultRaw": 0
         }
       },
       "TENTAP": {
@@ -46403,7 +48436,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 144,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "9": {
           "kind": "enum",
@@ -46448,7 +48482,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "14": {
           "kind": "float",
@@ -46522,7 +48557,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         }
       },
       "VOCODER": {
@@ -46533,7 +48569,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 10
+          "enumCount": 10,
+          "defaultRaw": 1
         },
         "1": {
           "kind": "enum",
@@ -46542,7 +48579,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 2
+          "enumCount": 2,
+          "defaultRaw": 0
         },
         "2": {
           "kind": "float",
@@ -46550,7 +48588,47 @@
           "displayMax": 24,
           "scale": 1,
           "step": 0,
-          "typecode": 16
+          "typecode": 16,
+          "defaultRaw": 39320,
+          "taper": "custom",
+          "taperPoints": [
+            [
+              0,
+              4
+            ],
+            [
+              0.125,
+              6
+            ],
+            [
+              0.25,
+              9
+            ],
+            [
+              0.375,
+              11
+            ],
+            [
+              0.5,
+              14
+            ],
+            [
+              0.625,
+              16
+            ],
+            [
+              0.75,
+              19
+            ],
+            [
+              0.875,
+              21
+            ],
+            [
+              1,
+              24
+            ]
+          ]
         },
         "3": {
           "kind": "float",
@@ -46558,7 +48636,8 @@
           "displayMax": 2000,
           "scale": 1,
           "step": 0,
-          "typecode": 577
+          "typecode": 577,
+          "defaultRaw": 5958
         },
         "4": {
           "kind": "float",
@@ -46566,7 +48645,8 @@
           "displayMax": 20000,
           "scale": 1,
           "step": 0,
-          "typecode": 576
+          "typecode": 576,
+          "defaultRaw": 10922
         },
         "5": {
           "kind": "float",
@@ -46574,7 +48654,9 @@
           "displayMax": 2,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 21845,
+          "taper": "log"
         },
         "6": {
           "kind": "enum",
@@ -46583,7 +48665,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 16,
-          "enumCount": 2
+          "enumCount": 2,
+          "defaultRaw": 0
         },
         "7": {
           "kind": "float",
@@ -46591,7 +48674,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 65534
         },
         "8": {
           "kind": "float",
@@ -46599,7 +48683,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 65534
         },
         "9": {
           "kind": "float",
@@ -46607,7 +48692,9 @@
           "displayMax": 5,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 10922,
+          "taper": "log"
         },
         "10": {
           "kind": "float",
@@ -46615,7 +48702,8 @@
           "displayMax": 1000,
           "scale": 1000,
           "step": 0,
-          "typecode": 1090
+          "typecode": 1090,
+          "defaultRaw": 329
         },
         "11": {
           "kind": "float",
@@ -46623,7 +48711,8 @@
           "displayMax": 1000,
           "scale": 1000,
           "step": 0,
-          "typecode": 1090
+          "typecode": 1090,
+          "defaultRaw": 2964
         },
         "12": {
           "kind": "float",
@@ -46631,7 +48720,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1329
+          "typecode": 1329,
+          "defaultRaw": 0
         },
         "13": {
           "kind": "float",
@@ -46639,7 +48729,8 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.001,
-          "typecode": 1393
+          "typecode": 1393,
+          "defaultRaw": 65534
         },
         "14": {
           "kind": "float",
@@ -46647,7 +48738,8 @@
           "displayMax": 20,
           "scale": 1,
           "step": 0.1,
-          "typecode": 385
+          "typecode": 385,
+          "defaultRaw": 52427
         },
         "15": {
           "kind": "float",
@@ -46655,7 +48747,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 145
+          "typecode": 145,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "16": {
           "kind": "enum",
@@ -46664,7 +48758,8 @@
           "scale": 1,
           "step": 0,
           "typecode": 160,
-          "enumCount": 3
+          "enumCount": 3,
+          "defaultRaw": 0
         },
         "17": {
           "kind": "float",
@@ -46672,7 +48767,8 @@
           "displayMax": 1,
           "scale": 1,
           "step": 0,
-          "typecode": 208
+          "typecode": 208,
+          "defaultRaw": 0
         },
         "18": {
           "kind": "float",
@@ -46680,7 +48776,8 @@
           "displayMax": 1,
           "scale": 1,
           "step": 0,
-          "typecode": 224
+          "typecode": 224,
+          "defaultRaw": 0
         },
         "19": {
           "kind": "float",
@@ -46688,7 +48785,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "20": {
           "kind": "float",
@@ -46696,7 +48795,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "21": {
           "kind": "float",
@@ -46704,7 +48805,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "22": {
           "kind": "float",
@@ -46712,7 +48815,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "23": {
           "kind": "float",
@@ -46720,7 +48825,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "24": {
           "kind": "float",
@@ -46728,7 +48835,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "25": {
           "kind": "float",
@@ -46736,7 +48845,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "26": {
           "kind": "float",
@@ -46744,7 +48855,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "27": {
           "kind": "float",
@@ -46752,7 +48865,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "28": {
           "kind": "float",
@@ -46760,7 +48875,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "29": {
           "kind": "float",
@@ -46768,7 +48885,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "30": {
           "kind": "float",
@@ -46776,7 +48895,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "31": {
           "kind": "float",
@@ -46784,7 +48905,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "32": {
           "kind": "float",
@@ -46792,7 +48915,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "33": {
           "kind": "float",
@@ -46800,7 +48925,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "34": {
           "kind": "float",
@@ -46808,7 +48935,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "35": {
           "kind": "float",
@@ -46816,7 +48945,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "36": {
           "kind": "float",
@@ -46824,7 +48955,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "37": {
           "kind": "float",
@@ -46832,7 +48965,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "38": {
           "kind": "float",
@@ -46840,7 +48975,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "39": {
           "kind": "float",
@@ -46848,7 +48985,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "40": {
           "kind": "float",
@@ -46856,7 +48995,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "41": {
           "kind": "float",
@@ -46864,7 +49005,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "42": {
           "kind": "float",
@@ -46872,7 +49015,9 @@
           "displayMax": 10,
           "scale": 1,
           "step": 0,
-          "typecode": 67
+          "typecode": 67,
+          "defaultRaw": 5958,
+          "taper": "log"
         },
         "43": {
           "kind": "float",
@@ -46880,7 +49025,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "44": {
           "kind": "float",
@@ -46888,7 +49035,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "45": {
           "kind": "float",
@@ -46896,7 +49045,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "46": {
           "kind": "float",
@@ -46904,7 +49055,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "47": {
           "kind": "float",
@@ -46912,7 +49065,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "48": {
           "kind": "float",
@@ -46920,7 +49075,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "49": {
           "kind": "float",
@@ -46928,7 +49085,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "50": {
           "kind": "float",
@@ -46936,7 +49095,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "51": {
           "kind": "float",
@@ -46944,7 +49105,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "52": {
           "kind": "float",
@@ -46952,7 +49115,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "53": {
           "kind": "float",
@@ -46960,7 +49125,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "54": {
           "kind": "float",
@@ -46968,7 +49135,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "55": {
           "kind": "float",
@@ -46976,7 +49145,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "56": {
           "kind": "float",
@@ -46984,7 +49155,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "57": {
           "kind": "float",
@@ -46992,7 +49165,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "58": {
           "kind": "float",
@@ -47000,7 +49175,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "59": {
           "kind": "float",
@@ -47008,7 +49185,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "60": {
           "kind": "float",
@@ -47016,7 +49195,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "61": {
           "kind": "float",
@@ -47024,7 +49205,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "62": {
           "kind": "float",
@@ -47032,7 +49215,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "63": {
           "kind": "float",
@@ -47040,7 +49225,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "64": {
           "kind": "float",
@@ -47048,7 +49235,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "65": {
           "kind": "float",
@@ -47056,7 +49245,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "66": {
           "kind": "float",
@@ -47064,7 +49255,9 @@
           "displayMax": 100,
           "scale": 100,
           "step": 0.002,
-          "typecode": 49
+          "typecode": 49,
+          "defaultRaw": 32767,
+          "taper": "linear"
         }
       },
       "VOLUME": {
@@ -47075,7 +49268,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 65534
+          "defaultRaw": 65534,
+          "taper": "linear"
         },
         "1": {
           "kind": "float",
@@ -47084,7 +49278,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "2": {
           "kind": "enum",
@@ -47112,7 +49307,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "5": {
           "kind": "float",
@@ -47121,7 +49317,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 49,
-          "defaultRaw": 65534
+          "defaultRaw": 65534,
+          "taper": "linear"
         },
         "6": {
           "kind": "float",
@@ -47243,7 +49440,8 @@
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 20024
+          "defaultRaw": 20024,
+          "taper": "linear"
         },
         "4": {
           "kind": "float",
@@ -47252,7 +49450,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 49150
+          "defaultRaw": 49150,
+          "taper": "linear"
         },
         "5": {
           "kind": "float",
@@ -47261,7 +49460,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "6": {
           "kind": "float",
@@ -47279,7 +49479,8 @@
           "scale": 100,
           "step": 0.002,
           "typecode": 145,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "8": {
           "kind": "enum",
@@ -47298,7 +49499,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "10": {
           "kind": "float",
@@ -47307,7 +49509,8 @@
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "11": {
           "kind": "enum",
@@ -47335,7 +49538,8 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 50,
-          "defaultRaw": 26214
+          "defaultRaw": 26214,
+          "taper": "linear"
         },
         "14": {
           "kind": "float",
@@ -47363,7 +49567,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "17": {
           "kind": "float",
@@ -47372,7 +49577,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "18": {
           "kind": "float",
@@ -47381,7 +49587,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "19": {
           "kind": "float",
@@ -47390,7 +49597,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "20": {
           "kind": "float",
@@ -47399,7 +49607,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "21": {
           "kind": "float",
@@ -47408,7 +49617,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "22": {
           "kind": "float",
@@ -47417,7 +49627,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "23": {
           "kind": "float",
@@ -47426,7 +49637,8 @@
           "scale": 1,
           "step": 0.025,
           "typecode": 50,
-          "defaultRaw": 32767
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "24": {
           "kind": "enum",

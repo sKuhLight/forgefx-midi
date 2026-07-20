@@ -71,6 +71,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "LEGACY",
       "DYNA-CAB"
     ],
+    "32": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "42": [
       "STEREO",
       "LEFT",
@@ -537,6 +541,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "MUTE FX OUT",
       "MUTE OUT"
     ],
+    "14": [
+      "OFF",
+      "ON"
+    ],
+    "15": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "16": [
       "NONE",
       "RIGHT",
@@ -652,6 +664,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "PEAK",
       "RMS+PEAK",
       "HALF-WAVE"
+    ],
+    "9": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "10": [
       "BLOCK L+R",
@@ -1128,6 +1144,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "THRU",
       "MUTE"
     ],
+    "14": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
   },
   "DELAY": {
     "0": [
@@ -1258,6 +1278,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "MUTE OUT",
       "MUTE FX IN",
       "MUTE IN"
+    ],
+    "21": [
+      "OFF",
+      "ON"
+    ],
+    "22": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "24": [
       "SINE",
@@ -1773,6 +1801,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "OFF",
       "ON"
     ],
+    "86": [
+      "OFF",
+      "ON"
+    ],
     "87": [
       "LOWPASS",
       "BANDPASS",
@@ -2148,6 +2180,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
     "23": [
       "THRU",
       "MUTE"
+    ],
+    "28": [
+      "OFF",
+      "ON"
     ],
     "30": [
       "NORMAL",
@@ -2663,6 +2699,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
     ],
   },
   "ENHANCER": {
+    "5": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "6": [
       "Modern",
       "Classic",
@@ -2714,6 +2754,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
     "7": [
       "2nd",
       "4th"
+    ],
+    "8": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "11": [
       "NONE",
@@ -3008,6 +3052,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "MUTE FX OUT",
       "MUTE OUT"
     ],
+    "15": [
+      "OFF",
+      "ON"
+    ],
+    "16": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "17": [
       "NONE",
       "RIGHT",
@@ -3119,10 +3171,18 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "UHH",
       "ERR"
     ],
+    "8": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "9": [
       "THRU",
       "MUTE FX OUT",
       "MUTE OUT"
+    ],
+    "10": [
+      "OFF",
+      "ON"
     ],
     "11": [
       "OFF",
@@ -3222,6 +3282,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
     "5": [
       "THRU",
       "MUTE"
+    ],
+    "7": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "10": [
       "LV TUBE",
@@ -3381,6 +3445,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "7 Band Pedal",
       "7 Band Bass Pedal"
     ],
+    "18": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "19": [
       "OFF",
       "ON"
@@ -3413,7 +3481,8 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
     ],
     "37": [
       "STANDARD",
-      "ULTRA-RES"
+      "ULTRA-RES",
+      "FULL-RES"
     ],
     "38": [
       "MIC ONLY",
@@ -3580,6 +3649,16 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "CHAN 15",
       "CHAN 16",
       "OMNI"
+    ],
+    "74": [
+      "CONTINUOUS",
+      "MOMENTARY",
+      "LATCHING"
+    ],
+    "75": [
+      "CONTINUOUS",
+      "MOMENTARY",
+      "LATCHING"
     ],
     "80": [
       "CC #1",
@@ -6244,9 +6323,18 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "INPUT 3",
       "INPUT 4"
     ],
+    "127": [
+      "NONE",
+      "AUTO-TRIM",
+      "MINIMUM-PHASE"
+    ],
     "129": [
       "CONVENTIONAL",
       "REVERSE FILTER"
+    ],
+    "130": [
+      "AUTHENTIC",
+      "IDEAL"
     ],
     "132": [
       "1/2 -> OUT1, 3/4 -> OUT2",
@@ -7175,6 +7263,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "22K",
       "22K+CAP"
     ],
+    "6": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "7": [
       "CLASSIC",
       "INTELLIGENT",
@@ -7291,6 +7383,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "MUTE FX IN",
       "MUTE IN"
     ],
+    "21": [
+      "OFF",
+      "ON"
+    ],
+    "22": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "23": [
       "L+R",
       "LEFT",
@@ -7324,6 +7424,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "OFF",
       "ON"
     ],
+    "34": [
+      "OFF",
+      "ON"
+    ],
   },
   "MIXER": {
     "14": [
@@ -7333,6 +7437,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
     "15": [
       "THRU",
       "MUTE"
+    ],
+    "16": [
+      "ENGAGED",
+      "BYPASSED"
     ],
   },
   "MOD": {
@@ -8127,6 +8235,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "MUTE FX IN",
       "MUTE IN"
     ],
+    "35": [
+      "OFF",
+      "ON"
+    ],
+    "37": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "68": [
       "SINE",
       "TRIANGLE",
@@ -8301,6 +8417,16 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "OFF",
       "ON"
     ],
+    "120": [
+      "OFF",
+      "ON"
+    ],
+  },
+  "OUTPUT": {
+    "15": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
   },
   "PEQ": {
     "15": [
@@ -8336,6 +8462,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
     "22": [
       "THRU",
       "MUTE"
+    ],
+    "23": [
+      "OFF",
+      "ON"
+    ],
+    "24": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "25": [
       "OFF",
@@ -8503,6 +8637,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "THRU",
       "MUTE FX OUT",
       "MUTE OUT"
+    ],
+    "15": [
+      "OFF",
+      "ON"
+    ],
+    "16": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "17": [
       "NORMAL",
@@ -8848,6 +8990,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "MUTE OUT",
       "MUTE FX IN",
       "MUTE IN"
+    ],
+    "42": [
+      "OFF",
+      "ON"
+    ],
+    "44": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "46": [
       "LINEAR",
@@ -9553,6 +9703,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "JUST"
     ],
     "111": [
+      "OFF",
+      "ON"
+    ],
+    "112": [
       "OFF",
       "ON"
     ],
@@ -10790,6 +10944,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "MUTE FX IN",
       "MUTE IN"
     ],
+    "17": [
+      "OFF",
+      "ON"
+    ],
+    "22": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "43": [
       "ECONOMY",
       "NORMAL",
@@ -10918,6 +11080,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "INPUT",
       "OUTPUT"
     ],
+    "68": [
+      "OFF",
+      "ON"
+    ],
   },
   "RINGMOD": {
     "2": [
@@ -11030,6 +11196,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "MUTE FX OUT",
       "MUTE OUT"
     ],
+    "9": [
+      "OFF",
+      "ON"
+    ],
+    "11": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "19": [
       "L+R",
       "LEFT",
@@ -11093,6 +11267,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "THRU",
       "MUTE FX OUT",
       "MUTE OUT"
+    ],
+    "27": [
+      "OFF",
+      "ON"
+    ],
+    "28": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "29": [
       "SINE",
@@ -11564,6 +11746,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "THRU",
       "MUTE"
     ],
+    "14": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "16": [
       "6 dB/oct",
       "12 dB/oct",
@@ -11600,6 +11786,14 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "MUTE FX OUT",
       "MUTE OUT"
     ],
+    "17": [
+      "OFF",
+      "ON"
+    ],
+    "18": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
   },
   "VOLUME": {
     "2": [
@@ -11610,6 +11804,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "LOG 10A",
       "LOG 5A",
       "S-TAPER"
+    ],
+    "3": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "7": [
       "THRU",
@@ -11648,6 +11846,10 @@ export const AXE3_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string
       "LOG 15A",
       "LOG 10A",
       "LOG 5A"
+    ],
+    "12": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "15": [
       "OFF",

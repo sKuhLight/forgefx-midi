@@ -412,6 +412,13 @@ export function buildDeviceCache(
         eo[String(pid)] = cleanLabels(r.values);
       }
       if (r.unit) entry.unit = r.unit; // device-true unit from the live-walk (view 0x00)
+      // device-true taper from a FULL-mode live-walk sweep (reliable fits only;
+      // 'flat'/'unknown' are unreliable and carry no taper). 'custom' also keeps
+      // its sample points. Same threading pattern as `unit` above.
+      if (r.kind === 'float' && r.taper && r.taper.reliable && r.taper.shape !== 'flat' && r.taper.shape !== 'unknown') {
+        entry.taper = r.taper.shape;
+        if (r.taper.shape === 'custom') entry.taperPoints = r.taper.points.map(([n, v]) => [n, v] as const);
+      }
       rg[pid] = entry;
     }
     if (Object.keys(eo).length > 0) enumOverrides[fam] = eo;

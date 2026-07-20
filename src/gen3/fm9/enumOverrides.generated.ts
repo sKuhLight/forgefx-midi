@@ -43,6 +43,10 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "LEGACY",
       "DYNA-CAB"
     ],
+    "32": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "42": [
       "STEREO",
       "LEFT",
@@ -478,6 +482,10 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "PEAK",
       "RMS+PEAK",
       "HALF-WAVE"
+    ],
+    "9": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "10": [
       "BLOCK L+R",
@@ -961,7 +969,15 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "MUTE FX IN",
       "MUTE IN"
     ],
+    "5": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "6": [
+      "OFF",
+      "ON"
+    ],
+    "7": [
       "OFF",
       "ON"
     ],
@@ -1607,6 +1623,10 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
     "3": [
       "THRU",
       "MUTE"
+    ],
+    "5": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "6": [
       "OFF",
@@ -3172,6 +3192,10 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "7 Band Pedal",
       "7 Band Bass Pedal"
     ],
+    "18": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "19": [
       "OFF",
       "ON"
@@ -3202,6 +3226,14 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "OFF",
       "ON"
     ],
+    "48": [
+      "ULTRA-RES",
+      "STANDARD"
+    ],
+    "49": [
+      "MIC ONLY",
+      "MIC + DI"
+    ],
     "51": [
       "AVERAGE",
       "LAST TWO"
@@ -3213,6 +3245,12 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "SUM L+R"
     ],
     "53": [
+      "STEREO",
+      "LEFT ONLY",
+      "RIGHT ONLY",
+      "SUM L+R"
+    ],
+    "54": [
       "STEREO",
       "LEFT ONLY",
       "RIGHT ONLY",
@@ -3235,6 +3273,11 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "SUM L+R",
       "COPY L->R"
     ],
+    "62": [
+      "STEREO",
+      "SUM L+R",
+      "COPY L->R"
+    ],
     "63": [
       "NORMAL",
       "INVERT"
@@ -3247,6 +3290,10 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "NORMAL",
       "INVERT"
     ],
+    "66": [
+      "NORMAL",
+      "INVERT"
+    ],
     "67": [
       "+4 dBu",
       "-10 dBV"
@@ -3256,6 +3303,12 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "-10 dBV"
     ],
     "69": [
+      "0 dB",
+      "6 dB",
+      "12 dB",
+      "18 dB"
+    ],
+    "70": [
       "0 dB",
       "6 dB",
       "12 dB",
@@ -3339,6 +3392,18 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "CHAN 15",
       "CHAN 16",
       "OMNI"
+    ],
+    "85": [
+      "EXPRESSION",
+      "SWITCH"
+    ],
+    "86": [
+      "EXPRESSION",
+      "SWITCH"
+    ],
+    "87": [
+      "EXPRESSION",
+      "SWITCH"
     ],
     "94": [
       "CC #1",
@@ -5525,6 +5590,10 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "OFF",
       "ON"
     ],
+    "117": [
+      "OFF",
+      "ON"
+    ],
     "118": [
       "VALUE",
       "TOGGLE"
@@ -5827,6 +5896,19 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
     "136": [
       "INPUT 2",
       "INPUT 3"
+    ],
+    "141": [
+      "MINIMUM-PHASE",
+      "AUTO-TRIM",
+      "NONE"
+    ],
+    "143": [
+      "CONVENTIONAL",
+      "REVERSE FILTER"
+    ],
+    "144": [
+      "AUTHENTIC",
+      "IDEAL"
     ],
     "146": [
       "1/2 -> OUT1, 3/4 -> OUT2",
@@ -6718,6 +6800,10 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "22K",
       "22K+CAP"
     ],
+    "6": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "7": [
       "CLASSIC",
       "INTELLIGENT",
@@ -7526,6 +7612,10 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "MUTE FX IN",
       "MUTE IN"
     ],
+    "37": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "68": [
       "SINE",
       "TRIANGLE",
@@ -7705,6 +7795,12 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "ON"
     ],
   },
+  "OUTPUT": {
+    "15": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
+  },
   "PEQ": {
     "15": [
       "Shelving",
@@ -7739,6 +7835,10 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
     "22": [
       "THRU",
       "MUTE"
+    ],
+    "24": [
+      "ENGAGED",
+      "BYPASSED"
     ],
     "25": [
       "OFF",
@@ -10119,7 +10219,15 @@ export const FM9_ENUM_OVERRIDES: Readonly<Record<string, Readonly<Record<string,
       "MUTE FX IN",
       "MUTE IN"
     ],
+    "5": [
+      "ENGAGED",
+      "BYPASSED"
+    ],
     "6": [
+      "OFF",
+      "ON"
+    ],
+    "7": [
       "OFF",
       "ON"
     ],

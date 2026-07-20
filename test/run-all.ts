@@ -81,6 +81,7 @@ import { runAssign, runAssignLive, ASSIGN_CASE_COUNT, ASSIGN_LIVE_CASE_COUNT } f
 import { runBuildProfile, BUILDPROFILE_CASE_COUNT } from './cache/buildprofile.test.js';
 import { runAm4Cache, AM4_CACHE_CASE_COUNT } from './cache/am4-cache.test.js';
 import { runLiveWalk, LIVEWALK_CASE_COUNT } from './cache/livewalk.test.js';
+import { runRigV2Replay, RIGV2REPLAY_CASE_COUNT } from './cache/rigv2replay.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
 import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
 import { runGen3AdapterTests, GEN3_ADAPTER_CASE_COUNT } from './convert/gen3-adapter.test.js';
@@ -177,6 +178,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/buildprofile (${BUILDPROFILE_CASE_COUNT} cases)`, run: runBuildProfile },
   { name: `cache/am4 (${AM4_CACHE_CASE_COUNT} cases)`, run: runAm4Cache },
   { name: `cache/livewalk (${LIVEWALK_CASE_COUNT} cases)`, run: runLiveWalk },
+  { name: `cache/rigv2replay (${RIGV2REPLAY_CASE_COUNT} device captures)`, run: runRigV2Replay },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
   { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },
   { name: `convert/gen3-adapter (${GEN3_ADAPTER_CASE_COUNT} preset goldens)`, run: runGen3AdapterTests },

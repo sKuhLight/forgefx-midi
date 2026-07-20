@@ -50,7 +50,7 @@ Every `catalog/<device>.json` is one object:
 | `axe-fx-ii` | `KNOWN_PARAMS` (Record `"block.name"` → param: paramId, controlType, enumValues, displayMin/Max, displayScale, xmlLabel…), `AXE_FX_II_BLOCKS` (effectId, name, groupCode…), `PARAM_ALIASES_AXEFX2` |
 | `axe-fx-iii` | `PARAMS` (array: family, paramId, name, displayLabel, unit…), `AXE_FX_III_BLOCKS` (gen-3 family-shared effect IDs), `GEN3_READ_ROSTERS` (enum ordinal → display name; the ordinal IS the wire set value, sent as float32(ordinal)) |
 | `fm3` | `FM3_PARAMS` (same shape as III `PARAMS`, paramIds FM3-true) |
-| `fm9` | `FM9_PARAMS`, `FM9_RANGES` (per family+paramId: kind, displayMin/Max, scale, step), `FM9_ENUM_OVERRIDES`, `FM9_AMP_ROSTER`, `FM9_DRIVE_ROSTER`, `FM9_REVERB_TYPE_ROSTER` |
+| `fm9` | `FM9_PARAMS`, `FM9_RANGES` (per family+paramId: kind, displayMin/Max, scale, step, typecode, optional enumCount/defaultRaw/unit/taper/taperPoints), `FM9_ENUM_OVERRIDES`, `FM9_AMP_ROSTER`, `FM9_DRIVE_ROSTER`, `FM9_REVERB_TYPE_ROSTER` |
 | `vp4` | `VP4_PARAMS` (paramIds VP4-true; display calibration pending — write raw wire values) |
 | `axe-fx-gen1` | `KNOWN_PARAMS` (paramId, controlType, display, scaling — `"pending"` means the display curve is unknown, pass raw wire 0..254), `AXE_FX_GEN1_BLOCKS` |
 
@@ -78,6 +78,28 @@ The effective enum table for a gen-3 param = the family-shared
 `GEN3_READ_ROSTERS` entry (in `axe-fx-iii.json`) overlaid by the device's own
 overrides (`FM9_ENUM_OVERRIDES` in `fm9.json`), **device override winning per
 ordinal**. The ordinal IS the wire set value (sent as float32(ordinal)).
+
+## Gen-3 range rows: device-true units and tapers (additive)
+
+Each `*_RANGES` row (`FM9_RANGES`, `AXE3_RANGES`, `FM3_RANGES`) always carries
+`kind`, `displayMin`, `displayMax`, `scale`, `step`, `typecode`, with optional
+`enumCount` (enum rows) and `defaultRaw` (the device default as the stored u16).
+FM9 and Axe-Fx III rows additionally carry, **where a CaptureRig capture observed
+them**, three optional device-true fields:
+
+- `unit` — the physical unit token, **verbatim** from the device self-describe
+  value view (e.g. `"Hz"`, `"dB"`, `"dB/OCT"`, `"dBu"`, `"dBV"`, `"SAMPLES"`,
+  `"SECONDS"`). Absent for enum/label and unitless params.
+- `taper` — the value curve shape from the capture curve fit, **reliable fits
+  only**: `"linear" | "log" | "flat" | "custom"`. Absent when no reliable taper
+  was captured.
+- `taperPoints` — for a `"custom"` taper only: an array of `[normalized, raw]`
+  sample points (normalized position 0..1 → raw value) describing the curve.
+
+These are **additive**: they never appear as required, older consumers ignore
+them, and the `schema_version` is unchanged (per the additive-keys rule above).
+FM3 declares the same optional fields for schema uniformity but has no capture
+yet, so no FM3 row currently populates them.
 
 ## The two traps to read before using gen-3 data
 

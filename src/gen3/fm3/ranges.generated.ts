@@ -51,6 +51,19 @@ export interface Fm3ParamRange {
    *  Enum params store the default ordinal directly; float/int params store
    *  the linearly-normalized default (write it as the raw u16). */
   readonly defaultRaw?: number;
+  /** Device-true unit token, verbatim from the CaptureRig v2 self-describe value
+   *  view (e.g. 'Hz', 'dB', 'dB/OCT', 'dBu', 'dBV', 'SAMPLES', 'SECONDS').
+   *  Present only where a capture observed a unit; absent for enum/label and
+   *  unitless params. (FM3 has no CaptureRig v2 capture yet, so no FM3 row
+   *  currently carries one — the field is declared for schema uniformity with
+   *  FM9/Axe-Fx III.) */
+  readonly unit?: string;
+  /** Device-true value taper from the CaptureRig v2 curve fit (reliable fits
+   *  only): 'linear' | 'log' | 'flat' emitted bare; 'custom' also carries
+   *  `taperPoints`. Absent when no reliable taper was captured. */
+  readonly taper?: 'linear' | 'log' | 'flat' | 'custom';
+  /** Sample points [normalized 0..1, raw value] for a 'custom' taper only. */
+  readonly taperPoints?: ReadonlyArray<readonly [number, number]>;
 }
 
 /** Per-family cache section tag + fn=0x1F channel-block stride. */

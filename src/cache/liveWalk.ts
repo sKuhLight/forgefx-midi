@@ -496,6 +496,15 @@ function buildRecord(block: number, param: number, d: LiveDefinition, labels: re
 // Walk driver
 // ---------------------------------------------------------------------------
 
+/** Extra attempts for an ENUM-LABEL query that got no reply at all (transport timeout —
+ *  `request()` resolved null), before accepting that as the list's end. A genuine end-of-list
+ *  reply (sentinel tag / cnt=0) is never retried — only a flat-out missing frame is, since that
+ *  is the case a real device outcome can't be told apart from a dropped/delayed reply on a
+ *  sustained query burst. Observed live: FM3 DISTORT's 331-entry amp roster and three other
+ *  families came back with a clean, in-order TAIL truncation (1-4 entries short) — consistent
+ *  with exactly one dropped reply ending the sweep early, not a math error in the loop bound. */
+const ENUM_LABEL_NO_REPLY_RETRIES = 2;
+
 /**
  * Minimal transport the walk drives: send a query frame, resolve with the reply
  * frame (or `null` on timeout/no reply). Deliberately transport-agnostic — a
@@ -790,11 +799,23 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
         const bound = Math.max(1, Math.min(span >= 1 ? span : enumCap, enumCap));
         for (let i = 0; i < bound; i++) {
           throwIfAborted(signal);
-          await pace(opts.interQueryMs ?? 0, signal, sleep);
-          const er = await transport.request(buildEnumQuery(model, block, param, lo + i));
-          queries += 1;
-          const ed = er ? decodeReply(er) : null;
-          if (!ed || ed.view !== 'enum_label') break; // end sentinel / empty reply ends the list
+          // A GENUINE end-of-list is a REPLY that decodes to "no payload" (sentinel tag or
+          // cnt=0 — `er` non-null, `decodeReply(er)` null). A dropped/timed-out query is
+          // `er === null` itself — no frame matched at all — and is indistinguishable from a
+          // genuine end ONLY if we give up on the first miss. Retry a few times on that case
+          // alone (never on a real sentinel reply) so a single lost frame near the tail of a
+          // long roster (e.g. DISTORT's 331-entry amp list) can't silently truncate it.
+          let ed: LiveReply = null;
+          for (let attempt = 0; attempt <= ENUM_LABEL_NO_REPLY_RETRIES; attempt++) {
+            await pace(opts.interQueryMs ?? 0, signal, sleep);
+            const er = await transport.request(buildEnumQuery(model, block, param, lo + i));
+            queries += 1;
+            if (er) {
+              ed = decodeReply(er);
+              break;
+            }
+          }
+          if (!ed || ed.view !== 'enum_label') break; // genuine end sentinel, or retries exhausted
           labels.push(ed.label);
         }
         enumLabels += labels.length;

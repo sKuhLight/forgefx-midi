@@ -44,7 +44,7 @@ import { assertFm3Equivalence } from './oracle.js';
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const FM3 = 0x11;
 
-export const LIVEWALK_CASE_COUNT = 15;
+export const LIVEWALK_CASE_COUNT = 17;
 
 // ===========================================================================
 // Test-only wire ENCODER (inverse of the liveWalk codec)
@@ -452,6 +452,66 @@ export async function runLiveWalk(): Promise<void> {
     if (!got || got.values.length !== 3) fail(`tag-0x40 end: expected 3 labels, got ${got?.values.length}`);
   }
   console.log('  cache/livewalk: cnt==0 tag-0x40 past-end reply terminates the label walk');
+
+  // ---- Case 8b: a single dropped reply near the tail is retried, not treated
+  // as the list's end (FORGEFX: live FM3 DISTORT roster came back 330/331) ----
+  {
+    const rec: EnumRecord = { kind: 'enum', section: 94, offset: 0, id: 0, tc: 16, min: 0, max: 4, def: 0, step: 0, count: 5, values: ['a', 'b', 'c', 'd', 'e'], x: 0 };
+    let dropOnce = true;
+    const t: LiveTransport = {
+      request(q) {
+        const view = q[6]!;
+        const param = q[10]! | (q[11]! << 7);
+        const sub = q[12]! | (q[13]! << 7);
+        if (view === VIEW_DEFINITION && param === 0) return Promise.resolve(definitionReply(rec, 0));
+        if (view === VIEW_ENUM_LABEL) {
+          if (sub === 4 && dropOnce) {
+            dropOnce = false;
+            return Promise.resolve(null); // simulated timeout on the LAST entry, once
+          }
+          if (sub < rec.values.length) return Promise.resolve(labelReply(rec.values[sub]!, 0));
+          return Promise.resolve(endOfRangeFrame(VIEW_ENUM_LABEL, 0));
+        }
+        return Promise.resolve(sentinelFrame(view, param));
+      },
+    };
+    const recs = await liveWalk(t, { model: FM3, blocks: [94], maxParamId: 0 });
+    const got = recs[0] as EnumRecord | undefined;
+    if (!got || got.values.length !== 5 || got.values[4] !== 'e') {
+      fail(`dropped-reply retry: expected all 5 labels incl. tail 'e', got ${got?.values.length} (${got?.values.join(',')})`);
+    }
+    if (dropOnce) fail('dropped-reply retry: the simulated drop never fired');
+  }
+  console.log('  cache/livewalk: a single dropped reply (no frame at all) near the tail is retried, not treated as end-of-list');
+
+  // ---- Case 8c: retries exhaust on a persistently missing reply — the walk
+  // still terminates (bounded), it doesn't hang or loop forever -------------
+  {
+    const rec: EnumRecord = { kind: 'enum', section: 95, offset: 0, id: 0, tc: 16, min: 0, max: 4, def: 0, step: 0, count: 5, values: ['a', 'b', 'c', 'd', 'e'], x: 0 };
+    let attempts = 0;
+    const t: LiveTransport = {
+      request(q) {
+        const view = q[6]!;
+        const param = q[10]! | (q[11]! << 7);
+        const sub = q[12]! | (q[13]! << 7);
+        if (view === VIEW_DEFINITION && param === 0) return Promise.resolve(definitionReply(rec, 0));
+        if (view === VIEW_ENUM_LABEL) {
+          if (sub === 4) {
+            attempts += 1;
+            return Promise.resolve(null); // never replies for this sub
+          }
+          if (sub < rec.values.length) return Promise.resolve(labelReply(rec.values[sub]!, 0));
+          return Promise.resolve(endOfRangeFrame(VIEW_ENUM_LABEL, 0));
+        }
+        return Promise.resolve(sentinelFrame(view, param));
+      },
+    };
+    const recs = await liveWalk(t, { model: FM3, blocks: [95], maxParamId: 0 });
+    const got = recs[0] as EnumRecord | undefined;
+    if (!got || got.values.length !== 4) fail(`retry exhaustion: expected the 4 recovered labels, got ${got?.values.length}`);
+    if (attempts < 2 || attempts > 10) fail(`retry exhaustion: expected a small bounded retry count, got ${attempts} attempts`);
+  }
+  console.log('  cache/livewalk: a persistently missing reply still bounds the retry and ends the walk');
 
   // ---- Case 9: abort stops the walk ----------------------------------------
   {

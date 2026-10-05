@@ -101,6 +101,9 @@ import { runConceptCoverageTests, CONCEPT_COVERAGE_CASE_COUNT } from './convert/
 import { runLineageIndexTests, LINEAGE_INDEX_CASE_COUNT } from './convert/lineage-index.test.js';
 import { runEngineTests, ENGINE_CASE_COUNT } from './convert/engine.test.js';
 import { runTargetRangesTests, TARGET_RANGES_CASE_COUNT } from './convert/target-ranges.test.js';
+import { runSerialCloseTests, SERIAL_CLOSE_CASE_COUNT } from './shared/serial-close.test.js';
+import { runGridGuardTests, GRID_GUARD_CASE_COUNT } from './gen3/presetbody-grid-guard.test.js';
+import { runLiveGridShuntTests, LIVE_GRID_SHUNT_CASE_COUNT } from './gen3/live-grid-shunt.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -210,6 +213,9 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `convert/engine (${ENGINE_CASE_COUNT} conversion cases)`, run: runEngineTests },
   { name: `convert/grid-eid (${CONVERT_GRID_EID_CASE_COUNT} cross-device fm3 eid-assignment)`, run: runConvertGridEidTests },
   { name: `convert/target-ranges (${TARGET_RANGES_CASE_COUNT} cases)`, run: runTargetRangesTests },
+  { name: `shared/serial-close (${SERIAL_CLOSE_CASE_COUNT} cases)`, run: runSerialCloseTests },
+  { name: `gen3/presetbody-grid-guard (${GRID_GUARD_CASE_COUNT} cases)`, run: runGridGuardTests },
+  { name: `gen3/live-grid-shunt (${LIVE_GRID_SHUNT_CASE_COUNT} cases)`, run: runLiveGridShuntTests },
 ];
 
 let failures = 0;

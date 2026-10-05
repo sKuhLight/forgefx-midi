@@ -334,7 +334,11 @@ export function liveGridView(frame: number[], modelByte: number): Gen3GridCellVi
   return parseGen3GridLayout(frame, modelByte).map((c) =>
     c.isShunt
       ? {
-          effect_id: c.shuntIndex ?? 0,
+          // Shunt: carry the SAME `effect_id` convention as the dump grid
+          // (`presetBody.parseGrid`: effect_id > 1000 = shunt, `Shunt <eid-1023>`),
+          // so a consumer keying shunts by effect_id sees one id across both
+          // representations. `shuntIndex` is the device's sequential 1-based index.
+          effect_id: 1023 + (c.shuntIndex ?? 0),
           row: c.row,
           col: c.col,
           route_flag: c.cableInputMask,

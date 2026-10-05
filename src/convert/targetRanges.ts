@@ -130,6 +130,10 @@ interface Gen3RangeRow {
   readonly displayMin: number;
   readonly displayMax: number;
   readonly enumCount?: number;
+  /** Undecoded device taper bitfield (unit/taper candidate). */
+  readonly typecode?: number;
+  /** Device-true explicit taper (CaptureRig v2 fit); wins over `typecode`. */
+  readonly taper?: 'linear' | 'log' | 'flat' | 'custom';
 }
 type Gen3RangeTable = Readonly<Record<string, Readonly<Record<number, Gen3RangeRow>>>>;
 type Gen3ParamTable = Readonly<Record<string, readonly Gen3Param[]>>;
@@ -239,6 +243,24 @@ function am4Param(family: ConverterFamily, nativeName: string): Am4Param | undef
 interface Gen3Hit {
   param: Gen3Param;
   range?: Gen3RangeRow;
+}
+
+/**
+ * gen-3 taper decision, MIRRORING the live server (`ForgeFX/server/src/
+ * drivers/gen3.ts` `#display`): a device-true explicit `range.taper` wins
+ * ('log' → log10; 'linear' | 'flat' | 'custom' → linear), otherwise fall back
+ * to the typecode-nibble heuristic `(typecode >> 4) & 0xf ∈ {4,5}` ⇒ log10.
+ * A log sweep requires a positive `displayMin` (the live `wireToDisplay` throws
+ * on log10 with a non-positive min) — the same guard the live nibble branch
+ * uses. Without a range row the taper is unknown → linear (matches the live
+ * fall-through). `param.scaling` is deliberately NOT consulted: the live path
+ * does not read it, and most FM3 catalog rows do not carry it.
+ */
+function gen3TaperIsLog(range: Gen3RangeRow | undefined): boolean {
+  if (range === undefined || !(range.displayMin > 0)) return false;
+  if (range.taper !== undefined) return range.taper === 'log';
+  const nib = ((range.typecode ?? 0) >> 4) & 0xf;
+  return nib === 4 || nib === 5;
 }
 
 function gen3Hit(
@@ -423,7 +445,7 @@ export function resolveTargetRange(
       }
       if (lo !== undefined && hi !== undefined) {
         const unit = unitSymbol(param.unit);
-        const log = param.scaling === 'log10';
+        const log = gen3TaperIsLog(range);
         return { min: lo, max: hi, ...(unit ? { unit } : {}), ...(log ? { log } : {}) };
       }
     }

@@ -93,41 +93,37 @@ export function createSysExAssembler(
   let accumulator: number[] | undefined;
   return (bytes: number[]): void => {
     if (bytes.length === 0) return;
-    const startsWithF0 = bytes[0] === 0xf0;
-    const endsWithF7 = bytes[bytes.length - 1] === 0xf7;
 
-    // Fast path: complete SysEx in one fragment, or a non-SysEx
-    // short message. Nothing to assemble.
-    if (accumulator === undefined && startsWithF0 && endsWithF7) {
-      dispatch(bytes);
-      return;
-    }
-    if (accumulator === undefined && !startsWithF0) {
-      dispatch(bytes);
-      return;
-    }
-
-    // Open or continuing SysEx fragment.
-    if (accumulator === undefined && startsWithF0) {
+    if (accumulator === undefined) {
+      // A non-SysEx short message (status byte first, e.g. note/CC/PC) has nothing to assemble.
+      if (bytes[0] !== 0xf0) {
+        dispatch(bytes);
+        return;
+      }
       accumulator = bytes.slice();
-    } else if (accumulator !== undefined) {
+    } else {
+      // Continuing fragment: append and keep draining below.
       for (const b of bytes) accumulator.push(b);
     }
 
-    // Drain on any F7. Handle F7-in-middle by splitting (defensive).
-    if (accumulator !== undefined && endsWithF7) {
-      const f7Index = accumulator.lastIndexOf(0xf7);
-      const complete = accumulator.slice(0, f7Index + 1);
-      const trailing = accumulator.slice(f7Index + 1);
-      accumulator = undefined;
+    // Drain EVERY complete F0..F7 message the accumulator now holds — one fragment may carry more
+    // than one (MIDI permits it, and a busy link coalesces a burst into a single read). The old code
+    // dispatched a coalesced fragment as ONE glued blob (and its "split at the F7" branch was
+    // unreachable, since under `endsWithF7` the last F7 is always the final byte), which broke the
+    // one-message-per-emit invariant every downstream parser relies on.
+    for (;;) {
+      const f7 = accumulator.indexOf(0xf7);
+      if (f7 < 0) return; // incomplete message — keep accumulating
+      const complete = accumulator.slice(0, f7 + 1);
+      const rest = accumulator.slice(f7 + 1);
+      accumulator = undefined; // clear BEFORE dispatch so a throwing consumer can't corrupt state
       dispatch(complete);
-      if (trailing.length > 0 && trailing[0] === 0xf0) {
-        if (trailing[trailing.length - 1] === 0xf7) {
-          dispatch(trailing);
-        } else {
-          accumulator = trailing;
-        }
+      if (rest.length === 0) return;
+      if (rest[0] !== 0xf0) {
+        dispatch(rest); // trailing non-SysEx bytes are their own (short) message
+        return;
       }
+      accumulator = rest; // a new message started inside this fragment
     }
   };
 }

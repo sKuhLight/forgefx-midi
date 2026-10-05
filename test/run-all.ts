@@ -80,6 +80,7 @@ import { runGen3TypeNameTests, GEN3_TYPENAME_CASE_COUNT } from './gen3/axe-fx-ii
 import { runAm4InternalFromDisplayTests, AM4_INTERNAL_FROM_DISPLAY_CASE_COUNT } from './am4/internalfromdisplay.test.js';
 import { runAxeFxIIApplicabilityTests, AXEFX2_APPLICABILITY_CASE_COUNT } from './gen2/axe-fx-ii/applicability.test.js';
 import { runSharedDisplayScaleTests, SHARED_DISPLAYSCALE_CASE_COUNT } from './shared/displayscale.test.js';
+import { runSysExAssemblerTests, SYSEX_ASSEMBLER_CASE_COUNT } from './shared/sysexassembler.test.js';
 import { runDevicesSmokeTests, DEVICES_SMOKE_CASE_COUNT } from './devices-smoke.test.js';
 import { runRecords, RECORDS_CASE_COUNT } from './cache/records.test.js';
 import { runAssign, runAssignLive, ASSIGN_CASE_COUNT, ASSIGN_LIVE_CASE_COUNT } from './cache/assign.test.js';
@@ -186,6 +187,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `am4/internalFromDisplay (${AM4_INTERNAL_FROM_DISPLAY_CASE_COUNT} cases)`, run: runAm4InternalFromDisplayTests },
   { name: `axe-fx-ii/applicability (${AXEFX2_APPLICABILITY_CASE_COUNT} cases)`, run: runAxeFxIIApplicabilityTests },
   { name: `shared/displayScale (${SHARED_DISPLAYSCALE_CASE_COUNT} cases)`, run: runSharedDisplayScaleTests },
+  { name: `shared/sysexAssembler (${SYSEX_ASSEMBLER_CASE_COUNT} inbound-fragment cases)`, run: runSysExAssemblerTests },
   { name: `devices/smoke (${DEVICES_SMOKE_CASE_COUNT} descriptors, from dist)`, run: runDevicesSmokeTests },
   { name: `cache/records (${RECORDS_CASE_COUNT} cases)`, run: runRecords },
   { name: `cache/assign (${ASSIGN_CASE_COUNT} oracle cases)`, run: runAssign },

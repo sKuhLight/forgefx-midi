@@ -641,7 +641,14 @@ export function decodeGen3Body(body: Uint8Array, modelId: number): Gen3PresetBod
     out.scene_names = scenes;
   }
 
-  if (body.length >= 0x1c4) out.grid = parseGrid(body, profile.gridRows, profile.gridCols);
+  // The grid table starts at GRID_BASE (0x104) and holds `cols * rows * 2` u16
+  // cells (2 words/cell). Gate on the DEVICE PROFILE's shape — the FM3 is 4x12
+  // (table end 0x1c4 = 452) while III/FM9 are 6x14 (end 596). A hardcoded 0x1c4
+  // let a 452..595-byte III/FM9 body silently decode an empty/truncated grid.
+  const gridTableEnd = GRID_BASE + profile.gridRows * profile.gridCols * 2 * 2;
+  if (body.length >= gridTableEnd) {
+    out.grid = parseGrid(body, profile.gridRows, profile.gridCols);
+  }
 
   const chainStart = findBlockChainStart(body);
   if (chainStart >= 0) {

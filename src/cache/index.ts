@@ -5,12 +5,14 @@
 // structured data; brings no MIDI transport and no fs dependency.
 
 export { parseCacheRecords, WalkError } from './records.js';
+export type { ParseCacheOptions } from './records.js';
 export { buildDeviceCache, HW_SEEDS } from './assign.js';
 export type { BuildDeviceCacheOptions } from './assign.js';
 export { buildCache, CACHE_SCHEMA } from './buildProfile.js';
-export type { RecordSource, BuiltCache } from './buildProfile.js';
+export type { RecordSource, BuiltCache, BuiltCacheWalkStats } from './buildProfile.js';
 export {
   liveWalk,
+  liveWalkDetailed,
   liveSource,
   buildDefQuery,
   buildEnumQuery,
@@ -27,6 +29,7 @@ export type {
   LiveWalkWriteHooks,
   LiveWalkOptions,
   LiveWalkProgress,
+  LiveWalkResult,
   LiveReply,
   LiveDefinition,
 } from './liveWalk.js';
@@ -38,6 +41,7 @@ export type {
   FloatTaper,
   CacheRecord,
   CacheWalk,
+  CacheWalkIssue,
   DeviceParam,
   RangeDef,
   RangeSectionMeta,

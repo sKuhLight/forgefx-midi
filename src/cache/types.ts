@@ -70,13 +70,43 @@ export interface FloatRecord extends RecordBase {
    * walks. Only a `reliable` taper is threaded into the derived `RangeDef`.
    */
   taper?: FloatTaper;
+  /**
+   * Live walk only: an inner EMPTY slot — the device answered with an empty-slot definition, and a
+   * later real definition placed it inside the parameter table. The all-zero row the editor cache
+   * carries for the same slot. `buildDeviceCache` counts it as a slot only in table-shaped
+   * sections; in a sparse id space (system data) an unanswered-for id is a gap, not a slot.
+   */
+  placeholder?: boolean;
 }
 
 export type CacheRecord = EnumRecord | FloatRecord;
 
+/**
+ * One stretch a TOLERANT cache walk could not parse and skipped (see
+ * `parseCacheRecords(buf, { tolerant: true })`).
+ */
+export interface CacheWalkIssue {
+  /** Section tag the damage was in (`null` for a damaged section header / trailing bytes). */
+  section: number | null;
+  /** 0-based record index within that section, when the damage was inside a record. */
+  record: number | null;
+  /** Byte offset of the violation. */
+  offset: number;
+  /** Short violation reason (e.g. `BAD-PAD id=0x5 tc=0x64 pad=0x1`). */
+  reason: string;
+  /** Good records of the damaged section that were dropped with it (the section is all or nothing). */
+  droppedRecords: number;
+  /** Bytes skipped from the damaged record/header to where the walk resumed (or to EOF). */
+  skippedBytes: number;
+  /** Offset of the section header the walk resumed at, or `null` when it stopped. */
+  resumedAt: number | null;
+}
+
 export interface CacheWalk {
   sections: Section[];
   records: CacheRecord[];
+  /** Tolerant walks only: every skipped stretch (empty when the cache parsed cleanly). */
+  issues?: CacheWalkIssue[];
 }
 
 // ---------------------------------------------------------------------------
@@ -133,7 +163,18 @@ export interface RangeDef {
 /** Per-family cache section tag + fn=0x1F channel-block wire stride. */
 export interface RangeSectionMeta {
   sectionTag: number;
-  /** Ordinary records only (id < 0xff00). */
+  /**
+   * Parameter slots of the section: ordinary records (id < 0xff00) INCLUDING the all-zero
+   * placeholder slots — the fn=0x1F channel-block wire stride. Exact from the editor cache. From a
+   * live walk it is exact for table-shaped sections unless the section ENDS in unused slots (a
+   * trailing empty slot answers exactly like the end of the table; FM3 fw 12.0: VOLUME 14 live vs
+   * 15) or the walk reported `missingSlots`; it is then a lower bound. Live placeholder rows count
+   * only where the section's records fill at least a quarter of their id span, so the id gaps of a
+   * sparse system section walked in full are not slots. A sparse section walked only in part can
+   * still look table-shaped and count its gaps (FM3 fw 12.0 GLOBAL in the read-only 0..127 window:
+   * 127 incl. 33 gap rows, vs 186 from the cache) — treat live strides of system sections as
+   * informational. Never let a live-derived stride shrink a known one.
+   */
   stride: number;
   /** Declared cache section record count, INCLUDING special table records. */
   recordCount: number;

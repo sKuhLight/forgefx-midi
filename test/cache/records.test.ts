@@ -9,6 +9,14 @@
  *    parse it and assert JSON.stringify equality with the committed
  *    `fm3-12p0.walk.json` fixture. Skipped (not failed) when absent — CI
  *    won't have it.
+ * 4. Empty names: a later empty entry and an empty first entry inside a cab/IR
+ *    table are accepted; an all-empty table is a table only with a parallel
+ *    wire-id array, otherwise a float-tailed record.
+ * 5. Generous bounds: a section tag above 64, a long name, UTF-8 names.
+ * 6. Strict errors name the section and record; a tolerant walk drops the
+ *    damaged section whole, resumes at the next section (no tag order assumed)
+ *    and reports the skip.
+ * 7. A tolerant walk of a clean buffer equals the strict walk (no issues).
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -20,7 +28,7 @@ const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const REAL_CACHE =
   '/home/pascal/Dokumente/Repositorys/FractalAudio/fas-re/raw/archive/fm3-protocol/samples/effectDefinitions_11_12p0.cache';
 
-export const RECORDS_CASE_COUNT = 3;
+export const RECORDS_CASE_COUNT = 7;
 
 // --- little-endian byte builders --------------------------------------------
 
@@ -35,6 +43,27 @@ const pushF32 = (a: number[], v: number) => {
 const pushLp = (a: number[], s: string) => {
   pushU32(a, s.length);
   for (let i = 0; i < s.length; i++) a.push(s.charCodeAt(i));
+};
+/** Length-prefixed raw bytes (e.g. a UTF-8 name). */
+const pushLpBytes = (a: number[], bytes: readonly number[]) => {
+  pushU32(a, bytes.length);
+  a.push(...bytes);
+};
+const preamble = (): number[] => new Array<number>(0x2e).fill(0);
+/** A 32-byte float record. */
+const pushFloat = (a: number[], id: number, tc = 2, t1 = 0, t2 = 0) => {
+  pushHead(a, id, tc, 0, 1, 1, 0);
+  pushU32(a, t1);
+  pushU32(a, t2);
+  pushU16(a, 0);
+};
+/** A plain enum record. */
+const pushEnum = (a: number[], id: number, names: readonly string[]) => {
+  pushHead(a, id, 16, 0, names.length - 1, 0, 0);
+  pushU32(a, names.length);
+  for (const n of names) pushLp(a, n);
+  pushU32(a, 0); // x
+  pushU16(a, 0);
 };
 
 /** 22-byte record head: id, tc, pad, min, max, def, step. */
@@ -212,4 +241,170 @@ export function runRecords(): void {
       }
     }
   }
+
+  // ---- Case 4: empty names --------------------------------------------------
+  {
+    const a = preamble();
+    pushU32(a, 11);
+    pushU32(a, 5);
+    // enum with an empty LAST entry: accepted
+    pushHead(a, 3, 16, 0, 2, 0, 0);
+    pushU32(a, 3);
+    pushLp(a, 'MONO');
+    pushLp(a, 'STEREO');
+    pushLp(a, '');
+    pushU32(a, 0);
+    pushU16(a, 0);
+    // cab/IR table with an empty FIRST entry: accepted
+    pushHead(a, 0xfff3, 0, 0, 0, 0, 0);
+    pushU32(a, 2);
+    pushLp(a, '');
+    pushLp(a, 'MY IR');
+    pushU16(a, 0);
+    pushU32(a, 2);
+    pushU32(a, 7);
+    pushU32(a, 8);
+    // an unused bank: ALL names empty, parallel wire-id array of the same length → a table
+    pushHead(a, 0xfff4, 0, 0, 0, 0, 0);
+    pushU32(a, 3);
+    for (let i = 0; i < 3; i++) pushU32(a, 0);
+    pushU16(a, 0);
+    pushU32(a, 3);
+    for (let i = 0; i < 3; i++) pushU32(a, 0xff);
+    // an unpopulated table record that is float-tailed (t1 = count, t2 = 0), followed by an
+    // all-zero record: read as a table its zero bytes would be 4 empty names — but no parallel
+    // wire-id array follows, so it stays a float record
+    pushFloat(a, 0xfff5, 0, 4, 0);
+    pushHead(a, 0, 0, 0, 0, 0, 0);
+    pushU32(a, 0);
+    pushU32(a, 0);
+    pushU16(a, 0);
+    const w = parseCacheRecords(new Uint8Array(a));
+    const [e, t, bank, flt] = w.records as CacheRecord[];
+    if (w.records.length !== 5) fail(`empty names: ${w.records.length} records`);
+    if (e.kind !== 'enum' || JSON.stringify((e as EnumRecord).values) !== JSON.stringify(['MONO', 'STEREO', ''])) {
+      fail(`empty last entry: ${JSON.stringify(e)}`);
+    }
+    if (t.kind !== 'enum' || (t as EnumRecord).values[0] !== '' || JSON.stringify((t as EnumRecord).wireIds) !== '[7,8]') {
+      fail(`empty first table entry: ${JSON.stringify(t)}`);
+    }
+    if (bank.kind !== 'enum' || (bank as EnumRecord).values.join('|') !== '||' || (bank as EnumRecord).wireIds?.length !== 3) {
+      fail(`all-empty bank with wire ids: ${JSON.stringify(bank)}`);
+    }
+    if (flt.kind !== 'float' || (flt as FloatRecord).t1 !== 4) fail(`float-tailed table record: ${JSON.stringify(flt)}`);
+
+    // An empty FIRST entry outside a table is a float tail (t1 = 1, t2 = 0), not a one-name enum.
+    const b = preamble();
+    pushU32(b, 7);
+    pushU32(b, 1);
+    pushFloat(b, 9, 2, 1, 0);
+    const f = parseCacheRecords(new Uint8Array(b)).records[0];
+    if (f?.kind !== 'float') fail(`t1=1,t2=0 float tail read as ${f?.kind}`);
+  }
+  console.log('  cache/records: empty names accepted (later entries, table first entries, unused banks); float tails stay floats');
+
+  // ---- Case 5: generous bounds ---------------------------------------------
+  {
+    const a = preamble();
+    pushU32(a, 1);
+    pushU32(a, 1);
+    pushFloat(a, 0);
+    pushU32(a, 200); // section tag > 64
+    pushU32(a, 2);
+    const long = 'X'.repeat(150); // name > 64 bytes
+    pushEnum(a, 0, ['A', long]);
+    // UTF-8 names (a device-synced name table): 'Sä' and a truncated sequence
+    pushHead(a, 0xffff, 0, 0, 0, 0, 0);
+    pushU32(a, 2);
+    pushLpBytes(a, [0x53, 0xc3, 0xa4]);
+    pushLpBytes(a, [0x53, 0xc3]);
+    pushU32(a, 0);
+    pushU16(a, 0);
+    const w = parseCacheRecords(new Uint8Array(a));
+    if (w.sections.map((x) => x.index).join(',') !== '1,200') fail(`section tags: ${w.sections.map((x) => x.index)}`);
+    const en = w.records[1] as EnumRecord;
+    if (en.kind !== 'enum' || en.values[1] !== long) fail('long name not accepted');
+    const names = (w.records[2] as EnumRecord).values;
+    if (names[0] !== 'S\u00e4' || names[1] !== 'S\uFFFD') fail(`UTF-8 names decoded as ${JSON.stringify(names)}`);
+
+    // The FIRST section header may carry a tag above 64 too (detection uses the same bounds,
+    // confirmed by the whole first section parsing).
+    const b = preamble();
+    pushU32(b, 100);
+    pushU32(b, 1);
+    pushFloat(b, 0);
+    const first = parseCacheRecords(new Uint8Array(b));
+    if (first.sections[0]?.index !== 100 || first.sections[0]?.offset !== 0x2e) fail(`first-header detection: ${JSON.stringify(first.sections)}`);
+  }
+  console.log('  cache/records: section tags > 64 (first header included), names > 64 bytes and UTF-8 names walk');
+
+  // ---- Case 6: strict errors name the record; tolerant walks resume -------
+  // Tags DESCEND (3, 2, 1) on purpose: device-synced caches do not list sections in order.
+  const damaged = (): { buf: Uint8Array; third: number } => {
+    const a = preamble();
+    pushU32(a, 3);
+    pushU32(a, 2);
+    pushFloat(a, 0);
+    pushEnum(a, 1, ['ON', 'OFF']);
+    pushU32(a, 2);
+    pushU32(a, 3);
+    pushFloat(a, 0);
+    pushHead(a, 1, 2, 0, 1, 1, 0, 0x00ff); // damaged: non-zero pad
+    pushU32(a, 0);
+    pushU32(a, 0);
+    pushU16(a, 0);
+    pushFloat(a, 2);
+    const third = a.length;
+    pushU32(a, 1);
+    pushU32(a, 2);
+    pushEnum(a, 0, ['A', 'B']);
+    pushFloat(a, 1);
+    return { buf: new Uint8Array(a), third };
+  };
+  {
+    const { buf, third } = damaged();
+    try {
+      parseCacheRecords(buf);
+      fail('strict walk must throw on a damaged record');
+    } catch (e) {
+      if (!(e instanceof WalkError)) throw e;
+      if (!/BAD-PAD/.test(e.message) || !/in section 2 record 2\/3/.test(e.message)) {
+        fail(`strict error must name the section/record: ${e.message.split('\n')[0]}`);
+      }
+      if (e.position?.section !== 2 || e.position.record !== 1) fail(`WalkError.position ${JSON.stringify(e.position)}`);
+    }
+    const w = parseCacheRecords(buf, { tolerant: true });
+    const tags = w.sections.map((x) => `${x.index}:${x.records}/${x.count}`).join(' ');
+    if (tags !== '3:2/2 2:0/3 1:2/2') fail(`tolerant sections: ${tags}`);
+    if (w.records.length !== 4 || w.records.some((r) => r.section === 2)) fail(`tolerant records: ${w.records.length} (section 2 must be gone)`);
+    const iss = w.issues ?? [];
+    if (
+      iss.length !== 1 || iss[0]!.section !== 2 || iss[0]!.record !== 1 || iss[0]!.droppedRecords !== 1 ||
+      iss[0]!.resumedAt !== third || !/BAD-PAD/.test(iss[0]!.reason)
+    ) {
+      fail(`tolerant issue: ${JSON.stringify(iss)}`);
+    }
+    // Damage with no later section: the walk keeps the intact sections and reports the rest skipped.
+    const tail = parseCacheRecords(buf.subarray(0, third - 10), { tolerant: true });
+    const ti = tail.issues ?? [];
+    if (tail.records.length !== 2 || ti.length !== 1 || ti[0]!.resumedAt !== null) fail(`tolerant tail: ${JSON.stringify(ti)}`);
+  }
+  console.log('  cache/records: strict errors name section/record; a tolerant walk drops the damaged section whole and resumes (any tag order)');
+
+  // ---- Case 7: tolerant == strict on a clean buffer ------------------------
+  {
+    const { buf } = damaged();
+    const clean = Uint8Array.from(buf);
+    // repair the damaged pad
+    const all = parseCacheRecords(buf, { tolerant: true });
+    const badOff = all.issues![0]!.offset;
+    clean[badOff + 4] = 0;
+    clean[badOff + 5] = 0;
+    const strict = parseCacheRecords(clean);
+    const tol = parseCacheRecords(clean, { tolerant: true });
+    if (JSON.stringify(tol.issues) !== '[]') fail(`clean buffer reported issues: ${JSON.stringify(tol.issues)}`);
+    if (JSON.stringify({ ...tol, issues: undefined }) !== JSON.stringify(strict)) fail('tolerant walk of a clean buffer differs from strict');
+    if ('issues' in strict) fail('a strict walk must not carry an issues key (fixture JSON equality)');
+  }
+  console.log('  cache/records: a tolerant walk of a clean buffer equals the strict walk');
 }

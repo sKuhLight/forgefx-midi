@@ -25,7 +25,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildCache, HW_SEEDS } from '../../src/cache/index.js';
+import { buildCache, CACHE_SCHEMA, HW_SEEDS } from '../../src/cache/index.js';
 import type { BuiltCache, LiveTransport } from '../../src/cache/index.js';
 import {
   buildDefQuery,
@@ -33,6 +33,7 @@ import {
   decodeReply,
   decodeSeptetStream,
   liveWalk,
+  liveWalkDetailed,
   liveSource,
   VIEW_DEFINITION,
   VIEW_ENUM_LABEL,
@@ -45,7 +46,7 @@ import { assertFm3Equivalence } from './oracle.js';
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const FM3 = 0x11;
 
-export const LIVEWALK_CASE_COUNT = 16;
+export const LIVEWALK_CASE_COUNT = 17;
 
 // ===========================================================================
 // Test-only wire ENCODER (inverse of the liveWalk codec)
@@ -152,6 +153,19 @@ function valueReply(value: string, param: number, tag = 0x3a): Uint8Array {
   const raw = Uint8Array.from([...value].map((c) => c.charCodeAt(0) & 0x7f));
   return replyFrame(VIEW_VALUE, param, tag, raw);
 }
+
+/** Test-only wire encoders, shared with the sibling live-walk suites. */
+export {
+  encodeSeptetStream,
+  replyFrame,
+  sentinelFrame,
+  endOfRangeFrame,
+  definitionBlock,
+  definitionBlockScaled,
+  labelReply,
+  valueReply,
+  encodeCache,
+};
 
 // ===========================================================================
 // Fake transport over the fixture
@@ -460,6 +474,84 @@ export async function runLiveWalk(): Promise<void> {
   }
   console.log('  cache/livewalk: cnt==0 tag-0x40 past-end reply terminates the label walk');
 
+  // ---- Case 8b: a single dropped reply near the tail is retried, not treated
+  // as the list's end (FORGEFX: live FM3 DISTORT roster came back 330/331) ----
+  {
+    const rec: EnumRecord = { kind: 'enum', section: 94, offset: 0, id: 0, tc: 16, min: 0, max: 4, def: 0, step: 0, count: 5, values: ['a', 'b', 'c', 'd', 'e'], x: 0 };
+    let dropOnce = true;
+    const t: LiveTransport = {
+      request(q) {
+        const view = q[6]!;
+        const param = q[10]! | (q[11]! << 7);
+        const sub = q[12]! | (q[13]! << 7);
+        if (view === VIEW_DEFINITION && param === 0) return Promise.resolve(definitionReply(rec, 0));
+        if (view === VIEW_ENUM_LABEL) {
+          if (sub === 4 && dropOnce) {
+            dropOnce = false;
+            return Promise.resolve(null); // simulated timeout on the LAST entry, once
+          }
+          if (sub < rec.values.length) return Promise.resolve(labelReply(rec.values[sub]!, 0));
+          return Promise.resolve(endOfRangeFrame(VIEW_ENUM_LABEL, 0));
+        }
+        return Promise.resolve(sentinelFrame(view, param));
+      },
+    };
+    const pauses: number[] = [];
+    const res = await liveWalkDetailed(t, {
+      model: FM3,
+      blocks: [94],
+      maxParamId: 0,
+      lostReplyDrainMs: 40,
+      sleep: (ms) => {
+        pauses.push(ms);
+        return Promise.resolve();
+      },
+    });
+    const got = res.records[0] as EnumRecord | undefined;
+    if (!got || got.values.length !== 5 || got.values[4] !== 'e') {
+      fail(`dropped-reply retry: expected all 5 labels incl. tail 'e', got ${got?.values.length} (${got?.values.join(',')})`);
+    }
+    if (dropOnce) fail('dropped-reply retry: the simulated drop never fired');
+    if (res.lostReplies !== 1 || res.recoveredReplies !== 1 || res.unresolvedReplies !== 0) {
+      fail(`dropped-reply accounting: lost ${res.lostReplies} recovered ${res.recoveredReplies} unresolved ${res.unresolvedReplies}`);
+    }
+    // One drain pause before the retry, one before the walk moves on.
+    if (pauses.filter((ms) => ms === 40).length !== 2) fail(`dropped-reply drain: pauses ${JSON.stringify(pauses)}`);
+  }
+  console.log('  cache/livewalk: a single dropped reply (no frame at all) near the tail is retried, not treated as end-of-list');
+
+  // ---- Case 8c: retries exhaust on a persistently missing reply — the walk
+  // still terminates (bounded), it doesn't hang or loop forever -------------
+  {
+    const rec: EnumRecord = { kind: 'enum', section: 95, offset: 0, id: 0, tc: 16, min: 0, max: 4, def: 0, step: 0, count: 5, values: ['a', 'b', 'c', 'd', 'e'], x: 0 };
+    let attempts = 0;
+    const t: LiveTransport = {
+      request(q) {
+        const view = q[6]!;
+        const param = q[10]! | (q[11]! << 7);
+        const sub = q[12]! | (q[13]! << 7);
+        if (view === VIEW_DEFINITION && param === 0) return Promise.resolve(definitionReply(rec, 0));
+        if (view === VIEW_ENUM_LABEL) {
+          if (sub === 4) {
+            attempts += 1;
+            return Promise.resolve(null); // never replies for this sub
+          }
+          if (sub < rec.values.length) return Promise.resolve(labelReply(rec.values[sub]!, 0));
+          return Promise.resolve(endOfRangeFrame(VIEW_ENUM_LABEL, 0));
+        }
+        return Promise.resolve(sentinelFrame(view, param));
+      },
+    };
+    const res = await liveWalkDetailed(t, { model: FM3, blocks: [95], maxParamId: 0, sleep: () => Promise.resolve() });
+    const got = res.records[0] as EnumRecord | undefined;
+    if (!got || got.values.length !== 4) fail(`retry exhaustion: expected the 4 recovered labels, got ${got?.values.length}`);
+    if (attempts !== 3) fail(`retry exhaustion: expected 1 + 2 retries = 3 attempts, got ${attempts}`);
+    if (res.lostReplies !== 3 || res.unresolvedReplies !== 1 || res.recoveredReplies !== 0) {
+      fail(`retry exhaustion accounting: lost ${res.lostReplies} unresolved ${res.unresolvedReplies} recovered ${res.recoveredReplies}`);
+    }
+  }
+  console.log('  cache/livewalk: a persistently missing reply still bounds the retry and ends the walk');
+
   // ---- Case 9: abort stops the walk ----------------------------------------
   {
     const controller = new AbortController();
@@ -498,6 +590,14 @@ export async function runLiveWalk(): Promise<void> {
   console.log('  cache/livewalk: pacing routes delays through the injected scheduler');
 
   // ---- Case 11: end-to-end live == bytes (source-agnostic) ------------------
+  // The fixture's empty rows (typecode 0, all-zero body) answer as empty slots. Inner ones come
+  // back as placeholder records; TRAILING ones are unobservable (they answer exactly like the end
+  // of the table), so the byte arm is built from the same observable record set.
+  const isEmptyRow = (r: CacheRecord): boolean => r.tc === 0 && r.min === 0 && r.max === 0 && r.def === 0 && r.step === 0;
+  const lastReal = new Map<number, number>();
+  for (const r of ordinary) if (!isEmptyRow(r)) lastReal.set(r.section, Math.max(lastReal.get(r.section) ?? -1, r.id));
+  const observable = ordinary.filter((r) => !isEmptyRow(r) || r.id < (lastReal.get(r.section) ?? -1));
+  const innerEmpty = observable.filter(isEmptyRow).length;
   const transport = new FixtureTransport(ordinary);
   const liveRecords = await liveWalk(transport, {
     model: FM3,
@@ -506,16 +606,21 @@ export async function runLiveWalk(): Promise<void> {
     paramAbsentRunLimit: 7000, // bridge the fixture's largest internal id gap
     interQueryMs: 0,
   });
-  if (liveRecords.length !== ordinary.length) {
-    fail(`live walk reached ${liveRecords.length} records, expected ${ordinary.length} ordinary`);
+  if (liveRecords.length !== observable.length) {
+    fail(`live walk reached ${liveRecords.length} records, expected ${observable.length} observable (of ${ordinary.length} ordinary)`);
   }
 
   const fromLive = await buildCache(liveSource(transport, {
     model: FM3, blocks: sections, maxParamId: maxId, paramAbsentRunLimit: 7000,
   }), FM3_PARAMS, HW_SEEDS, { model: FM3, firmware: '12.0' });
-  const fromBytes = await buildCache({ kind: 'bytes', buf: encodeCache(ordinary) }, FM3_PARAMS, HW_SEEDS, {
+  const fromBytes = await buildCache({ kind: 'bytes', buf: encodeCache(observable) }, FM3_PARAMS, HW_SEEDS, {
     model: FM3, firmware: '12.0',
   });
+  if (fromLive.meta.schema !== CACHE_SCHEMA) fail(`live build schema ${fromLive.meta.schema} != ${CACHE_SCHEMA}`);
+  const ws = fromLive.meta.walk;
+  if (!ws || ws.lostReplies !== 0 || ws.unresolvedReplies !== 0 || ws.placeholderSlots !== innerEmpty) {
+    fail(`liveSource walk stats not carried into meta.walk: ${JSON.stringify(ws)} (inner empty rows ${innerEmpty})`);
+  }
 
   const a = JSON.stringify(dataOf(fromLive));
   const b = JSON.stringify(dataOf(fromBytes));
@@ -524,7 +629,10 @@ export async function runLiveWalk(): Promise<void> {
     while (i < a.length && i < b.length && a[i] === b[i]) i++;
     fail(`live vs bytes diverged at char ${i}: live …${a.slice(Math.max(0, i - 40), i + 40)}… vs bytes …${b.slice(Math.max(0, i - 40), i + 40)}…`);
   }
-  console.log(`  cache/livewalk: buildCache(live) deep-equals buildCache(bytes) (${liveRecords.length} records, ${a.length} JSON chars)`);
+  console.log(
+    `  cache/livewalk: buildCache(live) deep-equals buildCache(bytes) (${liveRecords.length} records incl. ${innerEmpty} inner placeholders, ` +
+      `${ordinary.length - observable.length} trailing empty rows unobservable, ${a.length} JSON chars)`,
+  );
 
   // ---- Case 12: live build + byte-sourced special tables clears the oracle --
   const complete = await buildCache(

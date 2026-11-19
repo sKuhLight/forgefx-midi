@@ -5,7 +5,8 @@
  * 0x01. Sweeping that self-describe map yields the SAME `CacheRecord[]` the
  * `.cache` byte-walker (`records.ts`) produces, so either source feeds
  * `buildCache` and the derived device tables are identical (aside from the five
- * special table records — see "Coverage" below).
+ * special table records — see "Coverage" below — and unused slots at the very
+ * END of a table, which a walk cannot see; see "Empty slots").
  *
  * This module has two layers:
  *   1. a PURE codec — `buildDefQuery` / `buildEnumQuery` / `decodeReply` /
@@ -73,8 +74,15 @@
  *     int  : step is an integer >= 1
  *     float: otherwise
  * A captured 0x1f label list always wins → enum (a genuine enum whose step is
- * non-zero is still an enum). The walk's 2-way output is {enum,float}: `int`
- * maps to `float` (the cache grammar has no integer kind).
+ * non-zero is still an enum); a list the device answers as empty, or a continuous
+ * unit in the formatted value, vetoes the numeric guess → float. The walk's 2-way
+ * output is {enum,float}: `int` maps to `float` (the cache grammar has no integer
+ * kind).
+ *
+ * Empty slots: the device answers an unused or absent slot with an empty-slot
+ * definition (typecode 0, all-zero body). Inner empty slots become the all-zero
+ * float placeholder rows the `.cache` carries; trailing ones are trimmed (see
+ * `liveWalkDetailed`).
  *
  * ── Coverage ────────────────────────────────────────────────────────────────
  * PARAM is 14-bit, so ids up to 16383 are reachable; the special table records
@@ -83,6 +91,25 @@
  * declared record count and the cab/IR banks; every other derived table is
  * reproduced exactly. A complete cache pairs the live walk with those few
  * byte-sourced table records.
+ *
+ * ── Reply assumptions (open hardware questions) ─────────────────────────────
+ * The reply handling below rests on assumptions not yet verified on hardware;
+ * the walk is built to stay correct either way, but what it reports depends on
+ * them:
+ *   1. Does the device answer EVERY definition address — including blocks that
+ *      do not exist, addresses past the end of a table and id gaps of sparse
+ *      sections — with an empty-slot definition, or does it stay silent there?
+ *      (Assumed: it answers. Silence is handled: re-read of a known definition,
+ *      then counted as `silentAddresses`, not as loss.)
+ *   2. Do unused slots INSIDE a table answer with the empty-slot definition
+ *      (typecode 0, all-zero body)? The placeholder rows rest on this, and a
+ *      trailing unused slot is indistinguishable from the table end.
+ *   3. Does the end of a label list always answer with a no-payload reply?
+ *   4. Can a reply arrive later than `lostReplyDrainMs` (500 ms), and does the
+ *      host buffer frames between requests (then it must implement `drain`)?
+ *   5. Does the formatted-value view (0x00) answer for every found param?
+ * The shared test device (`test/cache/cacheDevice.ts`) models "answers
+ * everything"; the suites also replay the opposite (silent addresses).
  */
 import { fractalChecksum } from '../shared/checksum.js';
 import { buildSetParameterContinuous } from '../gen3/axe-fx-iii/setParam.js';
@@ -303,9 +330,28 @@ export function decodeReply(frame: Uint8Array): LiveReply {
 // Record synthesis
 // ---------------------------------------------------------------------------
 
-/** The all-zero definition body a device returns for an empty/absent slot. */
+/**
+ * The empty-slot definition a device returns for an unused / absent slot: typecode 0 and an
+ * all-zero numeric body. Keyed on the typecode and the numeric fields, NOT on the symbol id: the
+ * empty slot in the low param region carries id 0, but the past-the-end answer in the high
+ * (param > 127) region carries a non-zero id with the same empty body. A real parameter always
+ * has a non-zero typecode or a non-zero range, so nothing real is lost — and an empty slot is
+ * never label- or value-probed.
+ */
 function isFillerDefinition(d: LiveDefinition): boolean {
-  return d.id === 0 && d.tc === 0 && d.min === 0 && d.max === 0 && d.def === 0 && d.step === 0;
+  return d.tc === 0 && d.min === 0 && d.max === 0 && d.def === 0 && d.step === 0;
+}
+
+/**
+ * The record an INNER empty slot becomes: the all-zero float placeholder row the editor `.cache`
+ * byte source carries for the same slot, so both sources agree on a section's slot count (and
+ * thus its channel-block stride). Only emitted retroactively, once a later real definition proves
+ * the slot lies inside the parameter table — never for trailing empty slots, which a walk cannot
+ * tell apart from the end of the table. Flagged `placeholder` so `buildDeviceCache` can refuse it
+ * where the section is a sparse id space rather than a parameter table.
+ */
+function placeholderRecord(block: number, param: number): FloatRecord {
+  return { kind: 'float', section: block, offset: 0, id: param, tc: 0, min: 0, max: 0, def: 0, step: 0, t1: 0, t2: 0, placeholder: true };
 }
 
 /** Largest plausible wire typecode — real catalogs top out ~3200; system-selector junk reads
@@ -452,8 +498,26 @@ function invertTaper(
   return best[0];
 }
 
-function buildRecord(block: number, param: number, d: LiveDefinition, labels: readonly string[], unit?: string, taper?: FloatTaper): CacheRecord {
-  const enumKind = labels.length > 0 || (d.kind === 'enum' && !unit);
+/**
+ * Kind: a captured label list always makes an enum. Without labels the numeric enum signature
+ * (step 0, scale 0, integral bounds) is only a guess, and two pieces of device evidence veto it:
+ *   - a continuous unit in the formatted value (e.g. a 20..200 Hz low cut);
+ *   - `emptyList`: a label walk was attempted and the device ANSWERED its first query with an
+ *     end-of-list reply — the param has no label list. That is exactly the editor cache's rule
+ *     (a record is an enum only if it carries labels), and it turns integer-valued params
+ *     (e.g. an effect-id or MIDI-number selector) and empty table slots into the float rows the
+ *     cache has. A first query that got NO reply is not evidence and leaves the guess in place.
+ */
+function buildRecord(
+  block: number,
+  param: number,
+  d: LiveDefinition,
+  labels: readonly string[],
+  unit?: string,
+  taper?: FloatTaper,
+  emptyList = false,
+): CacheRecord {
+  const enumKind = labels.length > 0 || (d.kind === 'enum' && !unit && !emptyList);
   if (enumKind) {
     let count = Math.round(d.max - d.min + 1);
     if (count < 1) count = labels.length;
@@ -497,12 +561,106 @@ function buildRecord(block: number, param: number, d: LiveDefinition, labels: re
 // ---------------------------------------------------------------------------
 
 /**
+ * Default extra attempts for a query that got NO reply at all (`request()` resolved `null`).
+ *
+ * Assumed (see "Reply assumptions" above, questions 1-3): the device answers every self-describe
+ * query — an empty slot with an empty-slot definition, the end of a label list with a no-payload
+ * reply — so a `null` means the frame was dropped or is LATE. Where that assumption fails, the
+ * liveness re-read books the silence as `silentAddresses` instead. A genuine end/sentinel reply is
+ * never retried. Observed on a live FM3: the 331-entry amp roster and three other lists came back
+ * short by exactly their tail entries — one dropped reply had ended each list early.
+ */
+const DEFAULT_LOST_REPLY_RETRIES = 2;
+
+/**
+ * Default pause (ms) after a lost reply — before every retry, and after a lost LABEL reply again
+ * before the walk moves on to the next sub.
+ *
+ * A late reply is the dangerous case: a self-describe reply echoes view, block and param but NOT
+ * the label SUB ordinal, so a late answer to sub `i` that is accepted for sub `i+1` would silently
+ * shift every following label (a roster with the wrong model names — worse than a short one). The
+ * pause lets a straggler arrive while no request is listening (and `LiveTransport.drain` discards
+ * it where the host buffers frames). Only spent after a loss, so a clean walk is not slowed.
+ */
+const DEFAULT_LOST_REPLY_DRAIN_MS = 500;
+
+/**
+ * Default longest run of empty slots, bounded by real definitions, kept as inner placeholders.
+ * Effect blocks carry runs of 1-6 unused slots inside their tables; a longer run is an id-space
+ * gap (sparse system sections), which the editor cache does not fill either.
+ */
+const DEFAULT_PLACEHOLDER_RUN_LIMIT = 32;
+
+/**
+ * Default number of CONSECUTIVE unanswered queries after which the walk checks the device is
+ * still alive: it re-sends the last definition query that DID get an answer. An answer proves the
+ * silence is specific to those addresses — they are treated as absent and the walk goes on (with
+ * no further retries in that block, as before retries existed). No answer means the device stopped
+ * answering altogether (frozen or gone): the walk rejects rather than keep querying it.
+ */
+const DEFAULT_MAX_SILENT_QUERIES = 8;
+
+/** After proven silence in a block, re-read the known definition every this many further silent
+ *  definitions (no pause) so a device that freezes mid-block is still noticed. */
+const FREEZE_RECHECK_EVERY = 32;
+
+/**
  * Minimal transport the walk drives: send a query frame, resolve with the reply
  * frame (or `null` on timeout/no reply). Deliberately transport-agnostic — a
  * ForgeFX MIDI port, a browser Web-MIDI adapter, or a test fake all satisfy it.
  */
 export interface LiveTransport {
   request(query: Uint8Array): Promise<Uint8Array | null>;
+  /**
+   * Optional: discard any reply frames the host has received but not yet handed out. The walk
+   * calls it after each drain pause (before a retry, and after a lost label reply before the next
+   * sub) so a LATE reply to an earlier query can never be returned for a later one. A host that
+   * only listens while a request is pending may omit it — the drain pause alone lets a straggler
+   * arrive unheard.
+   */
+  drain?(): Promise<void> | void;
+}
+
+/**
+ * Outcome of a live walk: the records plus the reply-loss accounting a caller needs to judge
+ * whether the profile is complete. Any `unresolvedReplies` means a definition may be missing or a
+ * label list / unit cut short; `lostReplies > 0` with everything recovered is complete, but a
+ * caller may still prefer a re-walk (a late reply cannot be matched to its sub — see
+ * `lostReplyDrainMs`).
+ */
+export interface LiveWalkResult {
+  records: CacheRecord[];
+  /** Queries sent, retries included. */
+  queries: number;
+  /** Enum labels collected. */
+  enumLabels: number;
+  /** Attempts that got no reply at all and count as LOSS (dropped or late frames) — attempts at
+   *  silent addresses (see `silentAddresses`) are not included. */
+  lostReplies: number;
+  /** Queries whose lost reply was recovered by a retry. */
+  recoveredReplies: number;
+  /** Queries left unanswered after every allowed retry that are genuine LOSS. Lost labels and unit
+   *  reads always count here (a cut-short label list stays visible); definitions count unless a
+   *  liveness check explained their silent run. Non-zero means the profile may be incomplete. */
+  unresolvedReplies: number;
+  /** Inner empty slots emitted as placeholder records (flagged `placeholder`). */
+  placeholderSlots: number;
+  /**
+   * Slots inside a parameter table whose definition was LOST (never answered, not explained as a
+   * silent address): neither a record nor a placeholder is emitted for them (that would invent
+   * data), so the section's slot count — its stride — comes out short by this many. Non-zero
+   * means re-walk before trusting strides.
+   */
+  missingSlots: number;
+  /**
+   * DEFINITION queries at addresses that stayed silent while the device demonstrably kept
+   * answering — a silent run of `maxSilentQueries` in a row, or the silent run a block ends on,
+   * followed by an answered re-read of a known definition: treated as absent, not as loss. Shorter
+   * silent runs that an answer ends stay loss (`unresolvedReplies` / `missingSlots`): they cannot
+   * be told apart from dropped replies. Expected to be 0 if the device answers every address (see
+   * the hardware assumptions above).
+   */
+  silentAddresses: number;
 }
 
 /**
@@ -540,6 +698,8 @@ export interface LiveWalkProgress {
   queries: number;
   /** Cumulative FULL-mode taper sweeps completed (present in full mode). */
   tapers?: number;
+  /** Cumulative attempts that got no reply at all (see `LiveWalkResult.lostReplies`). */
+  lostReplies?: number;
 }
 
 export interface LiveWalkOptions {
@@ -598,6 +758,36 @@ export interface LiveWalkOptions {
   blockProbeDepth?: number;
   /** Hard cap on labels collected per enum param (default 1024). */
   enumCountCap?: number;
+  /**
+   * Extra attempts for a query that got no reply at all (default 2). Applies to definition
+   * queries once a block's table has started (the block-probe phase stays one-shot), the unit
+   * read and enum labels AFTER the first one (a list already proven by a label). The FIRST label
+   * query of a param is never repeated: it may be a speculative probe, and those stay one-shot.
+   * A genuine end/sentinel reply is never retried. 0 disables retries.
+   */
+  lostReplyRetries?: number;
+  /**
+   * Pause (ms) before a retry, and after a lost label reply before the next sub, so a late reply
+   * cannot be taken for a later query (default 500; routed through `sleep`). See
+   * `LiveTransport.drain` for hosts that buffer frames.
+   */
+  lostReplyDrainMs?: number;
+  /**
+   * Longest run of empty slots between real definitions (or before the first one) that is kept
+   * as inner placeholder records (default 32). Trailing empty slots are always trimmed — they
+   * cannot be told apart from the end of the table. 0 keeps none (the pre-placeholder behaviour).
+   */
+  placeholderRunLimit?: number;
+  /**
+   * Consecutive unanswered queries within a block before the walk re-sends the last answered
+   * definition query as a liveness check (default 8; a block that ENDS in unanswered queries is
+   * checked once at its end). If that answers, the silent addresses count as absent
+   * (`silentAddresses`) and the rest of the block runs without retries or further checks; if not,
+   * the walk rejects with a "device stopped answering" error. Also the number of unanswered
+   * queries after which a walk that never got any answer rejects. Bounds the traffic aimed at a
+   * frozen device without failing on addresses that merely do not answer.
+   */
+  maxSilentQueries?: number;
   /** Pause between queries, ms (default 0 = none). */
   interQueryMs?: number;
   /** Pause between blocks, ms (default 0 = none). */
@@ -708,11 +898,40 @@ async function sweepTaper(ctx: SweepContext, block: number, param: number): Prom
 /**
  * Sweep a device's self-describe map into `CacheRecord[]` deep-equivalent to the
  * `.cache` byte-walker's output (minus the unreachable special table records).
+ * Shorthand for `liveWalkDetailed(...).records`.
  *
  * Feed the result straight to `buildCache({ kind: 'live', walk })` — or use
  * `liveSource(transport, opts)` to build that source in one call.
  */
 export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions): Promise<CacheRecord[]> {
+  return (await liveWalkDetailed(transport, opts)).records;
+}
+
+/**
+ * The live walk with its reply-loss accounting (`LiveWalkResult`).
+ *
+ * Reply handling — a NO-REPLY (`null`) is never read as a device answer:
+ *   - definition queries inside a block's table: retried (a lost definition would otherwise
+ *     silently drop a param); still unanswered → the slot is skipped and counted in
+ *     `unresolvedReplies` (and `missingSlots` when it is inner). The block-probe phase stays
+ *     one-shot, as before;
+ *   - enum labels: the FIRST label query of a param is one-shot exactly as before (it may be a
+ *     speculative probe); a lost reply there ends the list. Later labels belong to a list the
+ *     device has already proven, so a lost one is retried instead of truncating the list;
+ *   - the unit read (view 0x00): retried.
+ * A retry follows a drain pause (and `transport.drain`); a lost label is followed by one more
+ * before the next sub — see `lostReplyDrainMs` for why a late reply must never answer a later
+ * sub. After `maxSilentQueries` unanswered queries in a row the walk checks the device is alive
+ * (see there) and either carries on or rejects. On a device that answers every query the query
+ * and pause sequence is exactly the one the walk always sent.
+ *
+ * Empty slots: an empty-slot definition between two real definitions (or before the first one)
+ * is an unused slot INSIDE the parameter table — the editor cache keeps it as an all-zero float
+ * placeholder, so the walk emits the same placeholder once the next real definition proves it is
+ * inner. Trailing empty slots are trimmed (indistinguishable from the end of the table), and a run
+ * longer than `placeholderRunLimit` is an id-space gap, not placeholders.
+ */
+export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkOptions): Promise<LiveWalkResult> {
   const model = opts.model;
   // 160 (not 127): the block byte now splits lo/hi (body[2]/[3]) so effectId>=128
   // blocks are reachable. Empty high blocks are skipped after `blockProbeDepth`
@@ -725,6 +944,11 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
   const enumCap = opts.enumCountCap ?? 1024;
   // read view 0x00 per found param to capture the device-true unit (default on).
   const readValues = opts.readValues ?? true;
+  const lostRetries = Math.max(0, opts.lostReplyRetries ?? DEFAULT_LOST_REPLY_RETRIES);
+  const drainMs = opts.lostReplyDrainMs ?? DEFAULT_LOST_REPLY_DRAIN_MS;
+  const placeholderRunLimit = Math.max(0, opts.placeholderRunLimit ?? DEFAULT_PLACEHOLDER_RUN_LIMIT);
+  const maxSilent = Math.max(1, opts.maxSilentQueries ?? DEFAULT_MAX_SILENT_QUERIES);
+  const interQueryMs = opts.interQueryMs ?? 0;
   const { signal, sleep, onProgress } = opts;
 
   // FULL mode: opt-in taper sweep. Requires host write hooks — fail fast at the
@@ -746,24 +970,168 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
   let queries = 0;
   let enumLabels = 0;
   let tapers = 0;
+  let lostReplies = 0;
+  let recoveredReplies = 0;
+  let unresolvedReplies = 0;
+  let placeholderSlots = 0;
+  let missingSlots = 0;
+  let silentAddresses = 0;
+  let lastAnsweredDef: Uint8Array | undefined; // liveness probe: a definition query that answered
+  let neverAnswered = 0; // unanswered queries before anything answered at all
+  // Per block: consecutive unanswered queries, and whether the liveness check has shown that
+  // this block's silence is address-specific (the device itself still answers).
+  let blockSilentRun = 0;
+  let blockSilenceProven = false;
+  let trailingSilentDefs = 0; // unanswered definition queries since the block's last answered one
+  let silentSinceProof = 0; // silent definitions since this block's silence was proven
+  // DEFINITION queries booked as loss that a proof of silence may re-book as silent addresses:
+  // the current silent run (reset by every answered query), and the runs of earlier blocks that
+  // ended silent before anything had answered (no liveness check could cover them yet). Lost
+  // labels and unit reads are never re-booked: they stay genuine loss.
+  interface Booked {
+    lost: number;
+    unresolved: number;
+  }
+  let runBooked: Booked = { lost: 0, unresolved: 0 };
+  let deferredBooked: Booked = { lost: 0, unresolved: 0 };
+
+  /** After a lost reply: give a late frame time to arrive unheard, then drop anything buffered. */
+  const settleAfterLoss = async (): Promise<void> => {
+    await pace(drainMs, signal, sleep);
+    throwIfAborted(signal);
+    await transport.drain?.();
+  };
+
+  /**
+   * Send one query (paced). A `null` reply is LOST. With `retry` the same query is re-sent after a
+   * drain pause, up to `lostRetries` times. After a lost LABEL reply the walk drains again before
+   * moving on: the next query is the next sub of the same param, and a straggler (the late answer,
+   * or a duplicate after a successful retry) would be indistinguishable from its reply. Other
+   * views move to a different view or param, which the reply echo tells apart. One-shot queries
+   * that get no reply cost exactly what they always did — no pause, no retry.
+   */
+  const ask = async (query: Uint8Array, retry: boolean, label = false): Promise<Uint8Array | null> => {
+    const attempts = retry ? lostRetries + 1 : 1;
+    let lost = 0;
+    let frame: Uint8Array | null = null;
+    for (let a = 0; a < attempts; a++) {
+      if (a > 0) await settleAfterLoss();
+      throwIfAborted(signal);
+      await pace(interQueryMs, signal, sleep);
+      frame = await transport.request(query);
+      queries += 1;
+      if (frame) break;
+      lost += 1;
+    }
+    const isDef = query[6] === VIEW_DEFINITION;
+    if (isDef) {
+      if (frame) lastAnsweredDef = query;
+      trailingSilentDefs = frame ? 0 : trailingSilentDefs + 1;
+    }
+    if (frame) {
+      blockSilentRun = 0;
+      runBooked = { lost: 0, unresolved: 0 };
+      if (lost > 0) {
+        lostReplies += lost; // a late or dropped frame: the retry got the answer
+        recoveredReplies += 1;
+      }
+    } else if (blockSilenceProven && isDef) {
+      silentAddresses += 1; // this block's definition silence is already explained
+      // Still notice a device that freezes later in the block: a cheap re-read now and then.
+      if (++silentSinceProof % FREEZE_RECHECK_EVERY === 0) await stillAlive();
+    } else {
+      // Genuine loss — unless a later proof re-books it (definitions of the current run only).
+      lostReplies += lost;
+      unresolvedReplies += 1;
+      if (isDef) {
+        runBooked.lost += lost;
+        runBooked.unresolved += 1;
+      }
+      if (!blockSilenceProven) {
+        blockSilentRun += 1;
+        if (!lastAnsweredDef && ++neverAnswered >= maxSilent) stopped(neverAnswered);
+        if (lastAnsweredDef && blockSilentRun >= maxSilent) await proveSilence();
+      }
+    }
+    if (lost > 0 && label) await settleAfterLoss(); // a straggler must not answer the next sub
+    return frame;
+  };
+
+  const stopped = (n: number): never => {
+    throw new Error(`liveWalk: device stopped answering (${n} consecutive queries unanswered, liveness check unanswered); walk aborted`);
+  };
+
+  /**
+   * A silent run in this block: re-send the last definition query that DID answer. An answer
+   * means the silence is specific to those addresses — the run's DEFINITION queries (and any
+   * earlier unchecked block's) are re-booked from the loss counters to `silentAddresses`, and the
+   * rest of the block runs without definition retries. No answer means the device stopped
+   * answering: the walk rejects.
+   */
+  const proveSilence = async (): Promise<void> => {
+    const n = blockSilentRun;
+    await settleAfterLoss();
+    await pace(interQueryMs, signal, sleep);
+    const alive = await transport.request(lastAnsweredDef!);
+    queries += 1;
+    if (!alive) stopped(n);
+    for (const b of [runBooked, deferredBooked]) {
+      lostReplies -= b.lost;
+      unresolvedReplies -= b.unresolved;
+      silentAddresses += b.unresolved;
+    }
+    runBooked = { lost: 0, unresolved: 0 };
+    deferredBooked = { lost: 0, unresolved: 0 };
+    blockSilentRun = 0;
+    silentSinceProof = 0;
+    blockSilenceProven = true;
+  };
+
+  /** After proven silence: re-read the known definition (no pause — nothing is in flight). */
+  const stillAlive = async (): Promise<void> => {
+    await pace(interQueryMs, signal, sleep);
+    const alive = await transport.request(lastAnsweredDef!);
+    queries += 1;
+    if (!alive) stopped(silentSinceProof);
+  };
+
+  type ProgressHead = Omit<LiveWalkProgress, 'records' | 'enumLabels' | 'queries' | 'tapers' | 'lostReplies'>;
+  const progress = (p: ProgressHead): void => {
+    onProgress?.({ ...p, records: records.length, enumLabels, queries, ...(full ? { tapers } : {}), lostReplies });
+  };
 
   for (let bi = 0; bi < blocks.length; bi++) {
     const block = blocks[bi]!;
     throwIfAborted(signal);
-    onProgress?.({ phase: 'block-start', block, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries, ...(full ? { tapers } : {}) });
+    progress({ phase: 'block-start', block, blockIndex: bi, blockCount: blocks.length });
 
     let absentRun = 0;
     let found = 0;
     let sweptInBlock = false;
+    // Empty slots seen since the last real definition (candidate inner placeholders), and
+    // whether that run is still placeholder-shaped (no sentinel / junk answer inside it).
+    let pendingEmpty: number[] = [];
+    let pendingUnknown = 0;
+    let pendingIntact = true;
+    let lastReal = -1;
+    blockSilenceProven = false;
+    blockSilentRun = 0;
+    trailingSilentDefs = 0;
+    silentSinceProof = 0;
+    runBooked = { lost: 0, unresolved: 0 };
     for (let param = 0; param <= maxParamId; param++) {
       throwIfAborted(signal);
-      await pace(opts.interQueryMs ?? 0, signal, sleep);
-      const reply = await transport.request(buildDefQuery(model, block, param));
-      queries += 1;
+      // The block-probe phase (no definition found yet) stays one-shot, exactly as before:
+      // retries there would multiply the cost of every empty block. So does a block whose
+      // silent addresses the liveness check has already explained.
+      const reply = await ask(buildDefQuery(model, block, param), found > 0 && !blockSilenceProven);
       const dec = reply ? decodeReply(reply) : null;
       const def = dec && dec.view === 'definition' ? dec : null;
 
       if (!def || isFillerDefinition(def) || isGarbageDefinition(def)) {
+        if (def && isFillerDefinition(def)) pendingEmpty.push(param);
+        else if (reply) pendingIntact = false; // a sentinel / junk answer: not a table slot
+        else pendingUnknown += 1; // unanswered: the slot is simply unknown
         absentRun += 1;
         // Skip an empty block once its opening params are all absent.
         if (found === 0 && param + 1 >= probeDepth) break;
@@ -773,7 +1141,20 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
       absentRun = 0;
       found += 1;
 
-      let labels: string[] = [];
+      // This real definition proves the empty slots before it are INNER: keep them as the
+      // all-zero placeholders the editor cache carries, unless the run is an id-space gap.
+      if (pendingIntact && param - lastReal - 1 <= placeholderRunLimit) {
+        for (const p of pendingEmpty) records.push(placeholderRecord(block, p));
+        placeholderSlots += pendingEmpty.length;
+        if (!blockSilenceProven) missingSlots += pendingUnknown; // inner slots nobody answered for
+      }
+      pendingEmpty = [];
+      pendingUnknown = 0;
+      pendingIntact = true;
+      lastReal = param;
+
+      const labels: string[] = [];
+      let emptyList = false;
       const lo = Math.round(def.min);
       // SPECULATIVE probes (def not positively enum-kind) never open a list at a
       // high absolute sub: every hardware-verified enum starts at a small ordinal,
@@ -790,11 +1171,15 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
         const bound = Math.max(1, Math.min(span >= 1 ? span : enumCap, enumCap));
         for (let i = 0; i < bound; i++) {
           throwIfAborted(signal);
-          await pace(opts.interQueryMs ?? 0, signal, sleep);
-          const er = await transport.request(buildEnumQuery(model, block, param, lo + i));
-          queries += 1;
+          // i === 0 is the first (possibly speculative) probe: one-shot, as always. From i > 0
+          // the list is proven, so a NO-REPLY is retried rather than read as its end. A reply
+          // that decodes to no label (sentinel / cnt == 0) is the genuine end either way.
+          const er = await ask(buildEnumQuery(model, block, param, lo + i), i > 0, true);
           const ed = er ? decodeReply(er) : null;
-          if (!ed || ed.view !== 'enum_label') break; // end sentinel / empty reply ends the list
+          if (!ed || ed.view !== 'enum_label') {
+            if (i === 0 && er) emptyList = true; // answered: there is no label list
+            break;
+          }
           labels.push(ed.label);
         }
         enumLabels += labels.length;
@@ -804,10 +1189,7 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
       // opts out or for enum/label params whose value carries no unit.
       let unit: string | undefined;
       if (readValues && labels.length === 0) {
-        throwIfAborted(signal);
-        await pace(opts.interQueryMs ?? 0, signal, sleep);
-        const vr = await transport.request(buildQuery(model, VIEW_VALUE, block, param, 0));
-        queries += 1;
+        const vr = await ask(buildQuery(model, VIEW_VALUE, block, param, 0), true);
         const vd = vr ? decodeReply(vr) : null;
         if (vd && vd.view === 'value') unit = parseUnit(vd.value);
       }
@@ -819,16 +1201,35 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
       // its taper rides the FloatRecord and is threaded into the RangeDef.
       let taper: FloatTaper | undefined;
       if (sweepCtx && labels.length === 0 && def.kind === 'float' && def.max !== def.min) {
-        await pace(opts.interQueryMs ?? 0, signal, sleep);
+        await pace(interQueryMs, signal, sleep);
         const swept = await sweepTaper(sweepCtx, block, param);
         taper = swept.taper;
         queries += swept.reads;
         tapers += 1;
         sweptInBlock = true;
-        onProgress?.({ phase: 'param-sweep', block, param, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries, tapers });
+        progress({ phase: 'param-sweep', block, param, blockIndex: bi, blockCount: blocks.length });
       }
 
-      records.push(buildRecord(block, param, def, labels, unit, taper));
+      records.push(buildRecord(block, param, def, labels, unit, taper, emptyList));
+    }
+    // Empty slots still pending here are TRAILING and dropped: a walk cannot tell them apart
+    // from the end of the table, so a section ending in unused slots yields a SHORTER stride
+    // than the editor cache (a lower bound).
+
+    // A block whose definition sweep ENDED in a silent run: check the device is alive. An answer
+    // re-books that run's definition queries as silent addresses; no answer ends the walk. With
+    // nothing answered yet the check has nothing to re-read: keep the run booked for the next
+    // successful check. Everything else unanswered (lost labels / unit reads, silent runs that an
+    // answer ended) stays genuine loss.
+    if (!blockSilenceProven && trailingSilentDefs > 0 && runBooked.unresolved > 0) {
+      if (lastAnsweredDef) {
+        await proveSilence();
+      } else {
+        deferredBooked = {
+          lost: deferredBooked.lost + runBooked.lost,
+          unresolved: deferredBooked.unresolved + runBooked.unresolved,
+        };
+      }
     }
 
     // FULL-mode safety net: reload the preset from flash after every block whose
@@ -839,12 +1240,12 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
       await sweepCtx.write.reloadPreset();
     }
 
-    onProgress?.({ phase: 'block-done', block, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries, ...(full ? { tapers } : {}) });
+    progress({ phase: 'block-done', block, blockIndex: bi, blockCount: blocks.length });
     await pace(opts.blockPauseMs ?? 0, signal, sleep);
   }
 
-  onProgress?.({ phase: 'done', blockIndex: blocks.length, blockCount: blocks.length, records: records.length, enumLabels, queries, ...(full ? { tapers } : {}) });
-  return records;
+  progress({ phase: 'done', blockIndex: blocks.length, blockCount: blocks.length });
+  return { records, queries, enumLabels, lostReplies, recoveredReplies, unresolvedReplies, placeholderSlots, missingSlots, silentAddresses };
 }
 
 /**
@@ -852,5 +1253,5 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
  * `buildCache(liveSource(transport, opts), params, seeds, …)`.
  */
 export function liveSource(transport: LiveTransport, opts: LiveWalkOptions): RecordSource {
-  return { kind: 'live', walk: () => liveWalk(transport, opts) };
+  return { kind: 'live', walk: () => liveWalkDetailed(transport, opts) };
 }

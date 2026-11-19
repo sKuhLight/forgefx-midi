@@ -17,7 +17,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildCache, HW_SEEDS } from '../../src/cache/index.js';
+import { buildCache, CACHE_SCHEMA, HW_SEEDS, parseCacheRecords } from '../../src/cache/index.js';
 import type { BuiltCache } from '../../src/cache/index.js';
 import type { CacheRecord } from '../../src/cache/types.js';
 import { FM3_PARAMS } from '../../src/gen3/fm3/index.js';
@@ -25,7 +25,7 @@ import { assertFm3Equivalence } from './oracle.js';
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 
-export const BUILDPROFILE_CASE_COUNT = 4;
+export const BUILDPROFILE_CASE_COUNT = 5;
 
 /** Strip the `meta` envelope so only the derived data is compared. */
 function dataOf(c: BuiltCache): Record<string, unknown> {
@@ -101,6 +101,36 @@ export async function runBuildProfile(): Promise<void> {
     `  cache/buildprofile: oracle clear (enum ${m.enum.exact}/${m.enum.total}, ` +
       `ranges ${m.ranges.pct.toFixed(2)}%, DELAY ${m.delayRoster.count})`,
   );
+
+  // ---- Case 5: a tolerant bytes source survives a damaged record ---------
+  // Break one record of an unmapped system section (tag 58): strict rejects the whole buffer,
+  // tolerant drops that WHOLE section (no truncated section survives), reports it in
+  // meta.issues, and still clears the oracle.
+  {
+    if (fromBytes.meta.schema !== CACHE_SCHEMA || fromBytes.meta.issues !== undefined) {
+      fail(`clean bytes build: schema ${fromBytes.meta.schema}, issues ${JSON.stringify(fromBytes.meta.issues)}`);
+    }
+    const damaged = Uint8Array.from(buf);
+    const victim = parseCacheRecords(buf).records.find((r) => r.section === 58 && r.id === 10)!;
+    damaged[victim.offset + 4] = 0x7f; // non-zero pad
+    let threw = false;
+    try {
+      await buildCache({ kind: 'bytes', buf: damaged }, FM3_PARAMS, HW_SEEDS, {});
+    } catch {
+      threw = true;
+    }
+    if (!threw) fail('strict bytes source must reject a damaged record');
+    const tol = await buildCache({ kind: 'bytes', buf: damaged, tolerant: true }, FM3_PARAMS, HW_SEEDS, {});
+    const iss = tol.meta.issues ?? [];
+    if (iss.length !== 1 || iss[0]!.section !== 58 || iss[0]!.record !== 10 || iss[0]!.droppedRecords !== 10) {
+      fail(`tolerant meta.issues: ${JSON.stringify(iss)}`);
+    }
+    const in58 = records.filter((r) => r.section === 58).length;
+    if (tol.meta.recordCount !== records.length - in58) fail(`section 58 not dropped whole: ${tol.meta.recordCount} records`);
+    if (tol.unmappedSections.some((u) => u.sectionTag === 58)) fail('the dropped section must not appear in the profile');
+    assertFm3Equivalence(tol);
+  }
+  console.log('  cache/buildprofile: tolerant bytes source drops the damaged section whole and reports it in meta.issues');
 }
 
 // --- minimal little-endian cache encoder (inverse of parseCacheRecords) ------

@@ -99,6 +99,19 @@ function isPlaceholder(r: CacheRecord): boolean {
   return r.kind === 'float' && r.min === 0 && r.max === 0 && r.def === 0;
 }
 
+/**
+ * A section is a parameter TABLE (rather than a sparse id space of system data) when its records
+ * fill at least a quarter of their id span. Effect tables are dense — the sparsest, CABINET, still
+ * fills ~60% — while the sparse system sections (GLOBAL / PRESET style) fill under 5%.
+ */
+const TABLE_SPAN_FACTOR = 4;
+
+function isTableShaped(sec: Sec): boolean {
+  let maxId = -1;
+  for (const id of sec.keys()) if (id > maxId) maxId = id;
+  return sec.size > 0 && maxId + 1 <= TABLE_SPAN_FACTOR * sec.size;
+}
+
 function informativeSize(sec: Sec): number {
   let n = 0;
   for (const r of sec.values()) if (!isPlaceholder(r)) n += 1;
@@ -370,7 +383,17 @@ export function buildDeviceCache(
   // by_sec: ordinary records only (id < 0xff00), first occurrence per id wins.
   const bySec = new Map<number, Sec>();
   const declared = new Map<number, number>(); // section tag -> total record count
+  // Live-walk placeholder rows (flagged inner empty slots) are provisional: they become slots only
+  // in a table-shaped section. In a sparse id space an id nobody defines is a gap, not a slot —
+  // counting it would inflate that section's stride far beyond the editor cache's.
+  const provisional = new Map<number, CacheRecord[]>();
   for (const r of records) {
+    if (r.kind === 'float' && r.placeholder) {
+      let rows = provisional.get(r.section);
+      if (!rows) provisional.set(r.section, (rows = []));
+      rows.push(r);
+      continue;
+    }
     declared.set(r.section, (declared.get(r.section) ?? 0) + 1);
     if (r.id >= 0xff00) continue;
     let sec = bySec.get(r.section);
@@ -379,6 +402,15 @@ export function buildDeviceCache(
       bySec.set(r.section, sec);
     }
     if (!sec.has(r.id)) sec.set(r.id, r);
+  }
+  for (const [tag, rows] of provisional) {
+    const sec = bySec.get(tag);
+    if (!sec || !isTableShaped(sec)) continue;
+    for (const r of rows) {
+      if (sec.has(r.id)) continue;
+      sec.set(r.id, r);
+      declared.set(tag, (declared.get(tag) ?? 0) + 1);
+    }
   }
 
   const famParams = paramsByFamily(params);
@@ -427,6 +459,11 @@ export function buildDeviceCache(
     const grp = groupOf.get(tag) ?? [tag];
     const meta: RangeSectionMeta = {
       sectionTag: tag,
+      // Slot count incl. placeholder slots. A live walk keeps inner empty slots as placeholders
+      // (table-shaped sections only, see above) but cannot see trailing ones, so for a live source
+      // this is a lower bound whenever the table ends in unused slots or `missingSlots > 0` (see
+      // RangeSectionMeta.stride). Not maxId + 1: sparse system sections span far more ids than
+      // they have slots.
       stride: sec.size,
       recordCount: declared.get(tag) ?? sec.size,
     };

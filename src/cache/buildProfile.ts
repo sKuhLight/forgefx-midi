@@ -19,24 +19,41 @@
  */
 import { parseCacheRecords } from './records.js';
 import { buildDeviceCache } from './assign.js';
-import type { BuiltCacheData, CacheRecord, DeviceParam } from './types.js';
+import type { LiveWalkResult } from './liveWalk.js';
+import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam } from './types.js';
 
 /**
  * Current cache format schema. Bump whenever the live-walk classification or the section→family
  * assignment shape changes in a way that would make a previously-persisted cache serve wrong data
  * (e.g. the enum/float kind heuristic). Consuming runtimes reject docs whose `meta.schema` differs.
+ *
+ * History: 1 (first versioned schema) = a continuous unit or an answered-but-empty label list
+ * vetoes the enum heuristic; a live walk keeps inner empty slots as (flagged) placeholder records,
+ * counted as slots only in table-shaped sections; empty slots are recognised by their empty body.
  */
 export const CACHE_SCHEMA = 1;
 
 /**
  * Where the decoded cache records come from.
- *   - `bytes`: a raw decoded `.cache` buffer (walked here).
+ *   - `bytes`: a raw decoded `.cache` buffer (walked here). `tolerant` keeps going past a
+ *     damaged record (see `parseCacheRecords`); the skips land in `meta.issues`.
  *   - `live`: an injected async producer of already-decoded records (a device
  *     self-describe walk supplied by the caller).
  */
 export type RecordSource =
-  | { kind: 'bytes'; buf: Uint8Array }
-  | { kind: 'live'; walk: () => Promise<CacheRecord[]> };
+  | { kind: 'bytes'; buf: Uint8Array; tolerant?: boolean }
+  | { kind: 'live'; walk: () => Promise<CacheRecord[] | LiveWalkResult> };
+
+/** Reply-loss accounting of a live walk, carried into `meta.walk` (see `LiveWalkResult`). */
+export interface BuiltCacheWalkStats {
+  queries: number;
+  lostReplies: number;
+  recoveredReplies: number;
+  unresolvedReplies: number;
+  placeholderSlots: number;
+  missingSlots: number;
+  silentAddresses: number;
+}
 
 /**
  * A complete built cache: the derived device tables (`BuiltCacheData` shapes)
@@ -57,6 +74,14 @@ export interface BuiltCache extends BuiltCacheData {
     builtAt?: string;
     /** Which `RecordSource` variant produced the records. */
     source: 'bytes' | 'live';
+    /** Live walks only, when the walk reported it (`liveSource` / `liveWalkDetailed`): reply-loss
+     *  accounting. `unresolvedReplies > 0` means the profile may be incomplete; `missingSlots > 0`
+     *  means some strides are short by that many slots (both count genuine loss only);
+     *  `silentAddresses` counts addresses the device left unanswered while alive. */
+    walk?: BuiltCacheWalkStats;
+    /** Tolerant byte walks only, when something was skipped: the damaged stretches. Any entry
+     *  means the profile lacks (part of) the named sections. */
+    issues?: CacheWalkIssue[];
   };
 }
 
@@ -76,10 +101,23 @@ export async function buildCache(
   seeds: Record<string, number>,
   opts: { model?: number; firmware?: string; builtAt?: string } = {},
 ): Promise<BuiltCache> {
-  const records: CacheRecord[] =
-    source.kind === 'bytes'
-      ? parseCacheRecords(source.buf).records
-      : await source.walk();
+  let records: CacheRecord[];
+  let walk: BuiltCacheWalkStats | undefined;
+  let issues: CacheWalkIssue[] | undefined;
+  if (source.kind === 'bytes') {
+    const parsed = parseCacheRecords(source.buf, { tolerant: source.tolerant === true });
+    records = parsed.records;
+    if (parsed.issues && parsed.issues.length > 0) issues = parsed.issues;
+  } else {
+    const walked = await source.walk();
+    if (Array.isArray(walked)) {
+      records = walked;
+    } else {
+      records = walked.records;
+      const { queries, lostReplies, recoveredReplies, unresolvedReplies, placeholderSlots, missingSlots, silentAddresses } = walked;
+      walk = { queries, lostReplies, recoveredReplies, unresolvedReplies, placeholderSlots, missingSlots, silentAddresses };
+    }
+  }
 
   const data = buildDeviceCache(records, params, seeds);
 
@@ -89,6 +127,8 @@ export async function buildCache(
     source: source.kind,
   };
   if (opts.builtAt !== undefined) meta.builtAt = opts.builtAt;
+  if (walk !== undefined) meta.walk = walk;
+  if (issues !== undefined) meta.issues = issues;
 
   const out: BuiltCache = { ...data, meta };
   if (opts.model !== undefined) out.model = opts.model;

@@ -308,3 +308,4 @@ export {
   buildSetTempoViaParam,
   type Gen3OutputMeter,
 } from './telemetry.js';
+export { SUB_ACTION_GET_RAW_VALUE, buildGetRawParamValue, isGen3ReadPollFrame } from './readPolls.js';

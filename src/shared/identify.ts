@@ -57,8 +57,13 @@ export function buildIdentifyBroadcast(): number[] {
 }
 
 /** True when a frame carries the Fractal manufacturer header (any model, any fn). */
-export function isFractalHeaderFrame(frame: readonly number[]): boolean {
+export function isFractalHeaderFrame(frame: ArrayLike<number>): boolean {
   return frame[0] === 0xf0 && frame[1] === 0x00 && frame[2] === 0x01 && frame[3] === 0x74 && frame.length > 5;
+}
+
+/** The function byte (f[5]) of a Fractal-headed frame (`F0 00 01 74 <model> <fn> …`); null if not one. */
+export function sysexFunctionByte(frame: ArrayLike<number>): number | null {
+  return isFractalHeaderFrame(frame) ? frame[5]! : null;
 }
 
 /** Model byte from a handshake reply (or any Fractal-headed frame); null if not one. */

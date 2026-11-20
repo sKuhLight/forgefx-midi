@@ -280,6 +280,17 @@ export function connectSerial(opts: SerialConnectOptions = {}): MidiConnection {
   })();
 
   const send = (bytes: number[]): void => {
+    if (closed) {
+      // A send after close() must fail loudly, not re-enter the deferred-open
+      // queue branch forever (openError is undefined after a successful open).
+      // Always report the CLOSED state: an earlier write or open error stored in
+      // lastSendError is stale by now and would point the caller at the wrong
+      // cause. Mirror the stale-handle contract (throw + lastSendError) so
+      // fire-and-forget callers do not see silence-means-accepted.
+      const err = new Error('Serial connection is closed. Call reconnect_midi.');
+      sendErrCell.value = err;
+      throw err;
+    }
     if (openError) throw openError;
     if (!opened) {
       sendQueue.push([...bytes]);

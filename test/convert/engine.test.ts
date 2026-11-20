@@ -15,6 +15,8 @@ import { convertPreset } from '../../src/convert/engine.js';
 import { severityOf, type ConversionEvent } from '../../src/convert/events.js';
 import { conceptKeyForLocal } from '../../src/convert/conceptLookup.js';
 import { targetParamId, targetParamIdByName } from '../../src/convert/targetRanges.js';
+import { valueToRaw } from '../../src/devices/gen3/blockParams.js';
+import { displayToWire } from '../../src/shared/index.js';
 import type {
   ConverterPreset,
   ConverterBlock,
@@ -569,7 +571,76 @@ function caseNameJoinSafetyAndFm3Identity(): void {
   RESULTS.push({ label: 'name-join-safety+fm3-identity', line: `${selectors.length} selectors refused, ${checked} fm3->fm3 params byte-identical` });
 }
 
-export const ENGINE_CASE_COUNT = 12;
+/**
+ * 12. `normalized` follows the target taper. A log-taper target range (FM3 delay
+ * low/high cut) must report the GEOMETRIC knob position, which is also the wire
+ * fraction `valueToRaw` writes (`raw = normalized * 65534`); a linear range stays
+ * linear. A linear `normalized` on a log param would draw the knob at the wrong
+ * place and make the first drag write a wildly different value.
+ */
+function caseLogNormalized(): void {
+  const src: ConverterPreset = {
+    sourceDevice: 'am4',
+    name: 'am4-delay-log',
+    sceneNames: ['A', 'B', 'C', 'D'],
+    sceneCount: 4,
+    blocks: [
+      {
+        key: 'delay1',
+        family: 'delay',
+        instance: 1,
+        typeName: 'Digital Mono',
+        params: [
+          { nativeName: 'low_cut', conceptKey: conceptKeyForLocal('am4', 'delay', 'low_cut'), value: 100, displayValue: '100' },
+          { nativeName: 'high_cut', conceptKey: conceptKeyForLocal('am4', 'delay', 'high_cut'), value: 5000, displayValue: '5000' },
+          { nativeName: 'mix', conceptKey: conceptKeyForLocal('am4', 'delay', 'mix'), value: 50, displayValue: '50' },
+          // Below the target's 20 Hz floor: clamped, so the position must land on 0 (not NaN / negative).
+          { nativeName: 'low_cut', conceptKey: conceptKeyForLocal('am4', 'delay', 'low_cut'), value: 1, displayValue: '1' },
+        ],
+        liftedFrom: 'full-decode',
+      },
+    ],
+    routing: { seriesChains: [['delay1']] },
+    decodeDepth: 'partial',
+  };
+  const { target } = convertPreset(src, 'fm3');
+  const delay = target.blocks.find((b) => b.family === 'delay');
+  assert(delay !== undefined, 'log-normalized: delay block missing');
+  const byValue = (name: string, value: number) => delay!.params.find((p) => p.nativeName === name && p.value === value);
+  const near = (a: number | undefined, b: number, what: string): void => {
+    assert(a !== undefined && Math.abs(a - b) < 1e-9, `log-normalized: ${what} expected ${b}, got ${a}`);
+  };
+
+  // Low cut 100 Hz on 20..2000 Hz: geometric position log(5)/log(100) ≈ 0.349, NOT the linear 0.040.
+  const locut = byValue('locut', 100);
+  assert(locut !== undefined && locut.log === true && locut.min === 20 && locut.max === 2000, `log-normalized: locut range ${JSON.stringify(locut)}`);
+  near(locut!.normalized, Math.log(100 / 20) / Math.log(2000 / 20), 'locut 100 Hz normalized');
+  assert(locut!.normalized! > 0.3, 'log-normalized: locut normalized must not be the linear 0.04');
+
+  // High cut 5 kHz on 200..20000 Hz.
+  const hicut = byValue('hicut', 5000);
+  assert(hicut !== undefined && hicut.log === true, `log-normalized: hicut ${JSON.stringify(hicut)}`);
+  near(hicut!.normalized, Math.log(5000 / 200) / Math.log(20000 / 200), 'hicut 5 kHz normalized');
+
+  // Writing it: the normalized position IS the wire fraction, so valueToRaw agrees with the
+  // display->wire mapping and a log-aware reader gets the value back.
+  const wire = displayToWire(100, { displayMin: 20, displayMax: 2000, displayScale: 'log10' });
+  assert(valueToRaw(locut!) === wire, `log-normalized: valueToRaw ${valueToRaw(locut!)} != displayToWire ${wire}`);
+
+  // Clamped to the range floor: position 0, value 20.
+  const floor = delay!.params.find((p) => p.nativeName === 'locut' && p.value === 20);
+  assert(floor !== undefined, 'log-normalized: below-floor locut was not clamped to 20 Hz');
+  near(floor!.normalized, 0, 'clamped locut normalized');
+
+  // A linear target range keeps the linear fraction.
+  const mix = delay!.params.find((p) => p.nativeName === 'mix');
+  assert(mix !== undefined && mix.log !== true && mix.min === 0 && mix.max === 100, `log-normalized: mix range ${JSON.stringify(mix)}`);
+  near(mix!.normalized, 0.5, 'linear mix normalized');
+
+  RESULTS.push({ label: 'log-normalized', line: `locut 100 Hz -> ${locut!.normalized!.toFixed(4)}, hicut 5 kHz -> ${hicut!.normalized!.toFixed(4)}, mix 50 -> ${mix!.normalized}` });
+}
+
+export const ENGINE_CASE_COUNT = 13;
 
 export function runEngineTests(): void {
   RESULTS.length = 0;
@@ -584,6 +655,7 @@ export function runEngineTests(): void {
   caseResolverReproducesFm3Ids();
   caseCrossGen3ToFm3ParamIds();
   caseNameJoinSafetyAndFm3Identity();
+  caseLogNormalized();
   assert(RESULTS.length === ENGINE_CASE_COUNT, `engine: expected ${ENGINE_CASE_COUNT} cases, ran ${RESULTS.length}`);
   if (process.env.CONVERT_ENGINE_VERBOSE) {
     for (const r of RESULTS) console.log(`  [engine] ${r.label}: ${r.line}`);

@@ -54,7 +54,13 @@
  * emitted record's `id` is the PARAM POSITION that was queried. The `scale`
  * slot is absent from the `.cache` grammar and is dropped here (cache/records.ts
  * has no scale field); the field VALUES min/max/def/step/tc match the cache
- * record byte-for-byte.
+ * record byte-for-byte. Despite its name, `scale` reads like the parameter's
+ * DEFAULT raw value on the units walked so far (it lies inside min..max and
+ * matches the formatted value at factory settings; a type list whose default is
+ * not its first entry reports that ordinal here). The display multiplier is the
+ * `def` slot instead — the value the cache stores under `def` and
+ * `buildDeviceCache` reads as a range's `scale`. So `scale != 0` says nothing
+ * about whether a param has a label list.
  *
  * Enum labels (view 0x1f): one septet-ASCII label per SUB ordinal. The SUB
  * ordinal is the parameter's RAW VALUE (min..max), NOT an index into the value
@@ -78,6 +84,18 @@
  * unit in the formatted value, vetoes the numeric guess → float. The walk's 2-way
  * output is {enum,float}: `int` maps to `float` (the cache grammar has no integer
  * kind).
+ *
+ * Which definitions are label-walked (a 0x1f query against a param WITHOUT a
+ * label list is out of contract, see `couldBeEnum`): those with `scale` 0 and
+ * integral bounds (as always), and — only when the CALLER names the param as a
+ * label list (`enumHintByBlock`, from a catalog or a byte-exact cache) — one
+ * with a non-zero `scale` whose bounds fit that list (see `hintedListFit`).
+ * Many genuine lists have a non-zero default ordinal (an amp's tube type, a
+ * reverb type, every tempo division, the foot-controller assignments), and the
+ * device's own data offers no SAFE sign of a list for them: their formatted
+ * value is often number-like ('12 dB/OCT', '1536', '-10 dBV'), and some
+ * continuous or integer params display words ('OFF', 'INFINITE', a note name).
+ * The formatted value only corroborates a hint whose list has grown.
  *
  * Empty slots: the device answers an unused slot with an empty-slot definition
  * (typecode 0, all-zero body). Inner empty slots become the all-zero float
@@ -305,7 +323,16 @@ export interface LiveDefinition {
   kind: 'enum' | 'int' | 'float';
   min: number;
   max: number;
+  /**
+   * The f32 at offset 16. Named `scale` for history, but it reads like the parameter's DEFAULT raw
+   * value (inside min..max; equal to the formatted value at factory settings). Not in the cache
+   * grammar. A non-zero value says nothing about a label list — see "Which definitions are
+   * label-walked" in the module header.
+   */
   scale: number;
+  /** The f32 at offset 20: the display multiplier (display = raw value × def; 0 = raw value shown
+   *  as is) — the value the editor cache stores in its `def` slot, which `buildDeviceCache` reads
+   *  as the range's `scale`. */
   def: number;
   step: number;
 }
@@ -578,13 +605,13 @@ function judgeDefinition(d: LiveDefinition, seen: ReadonlyMap<number, readonly L
 }
 
 /**
- * A definition COULD be an enum worth a 0x1f label walk when its bounds are
- * integral and the value count is within the cap — regardless of `step` (an
- * enum with a non-zero step is still an enum, decided by whether labels exist).
- * Scaled controls (`scale != 0`) are NEVER label-walked: they are continuous by
- * contract, and a 0x1f label query against a param with no label list is
- * out-of-contract for the device — the FM3 hard-freezes on it (power-cycle
- * recovery). Genuine step!=0 enums all report scale == 0.
+ * A definition COULD be an enum worth a 0x1f label walk on its own numbers when its bounds are
+ * integral and the value count is within the cap — regardless of `step` (an enum with a non-zero
+ * step is still an enum, decided by whether labels exist). A definition with a non-zero `scale` is
+ * NEVER label-walked on its numbers alone: a 0x1f label query against a param with no label list is
+ * out of contract for the device — the FM3 hard-freezes on it (power-cycle recovery) — and the
+ * numbers cannot tell such a list apart from a continuous or integer param (see "kind" above).
+ * Only a caller hint can (`hintedListFit`).
  */
 function couldBeEnum(d: LiveDefinition, cap: number): boolean {
   if (d.kind === 'enum') return true;
@@ -592,6 +619,78 @@ function couldBeEnum(d: LiveDefinition, cap: number): boolean {
   if (!integral(d.min) || !integral(d.max)) return false;
   const span = Math.round(d.max - d.min + 1);
   return span >= 1 && span <= cap;
+}
+
+/**
+ * A label list the caller knows a param to carry (a catalog row or a byte-exact cache record of the
+ * same device model): its label count and its wire typecode. Every catalog enum row and every
+ * byte-exact cache record carries both; a hint without a typecode is not used.
+ */
+export interface LiveEnumHint {
+  /** Number of labels in the known list (raw values min..min+count-1). */
+  count: number;
+  /** Wire typecode of the known definition; the device's must equal it. */
+  typecode: number;
+}
+
+/**
+ * Enum hints for one block from the range rows of its family — the shipped static catalog's
+ * `ranges[family]` or a BYTE-EXACT built cache's (editor-cache import), never a live-walk profile's —
+ * so a host can fill `LiveWalkOptions.enumHintByBlock`: every enum row with a usable label count
+ * (`enumCount`) and an integer `typecode`.
+ */
+export function enumHintsFromRanges(
+  ranges: Readonly<Record<number, { kind: string; enumCount?: number; typecode?: number }>>,
+): Record<number, LiveEnumHint> {
+  const out: Record<number, LiveEnumHint> = {};
+  for (const [key, r] of Object.entries(ranges)) {
+    const id = Number(key);
+    const count = r.enumCount;
+    const typecode = r.typecode;
+    if (r.kind !== 'enum' || !Number.isInteger(id) || id < 0) continue;
+    if (typeof count !== 'number' || !Number.isInteger(count) || count < 1) continue;
+    if (typeof typecode !== 'number' || !Number.isInteger(typecode)) continue;
+    out[id] = { count, typecode };
+  }
+  return out;
+}
+
+/** A hint is used only when its count is a positive integer and its typecode an integer. */
+function usableHint(h: LiveEnumHint | undefined): LiveEnumHint | undefined {
+  if (!h || typeof h.count !== 'number' || !Number.isInteger(h.count) || h.count < 1) return undefined;
+  if (typeof h.typecode !== 'number' || !Number.isInteger(h.typecode)) return undefined;
+  return h;
+}
+
+/** How many labels a list may have grown past its hint and still be walked (see `hintedListFit`). */
+const HINT_GROWTH_LIMIT = 4;
+
+/**
+ * Does a definition fit the label list a caller hint names? Same envelope as a speculative probe —
+ * integral bounds, first ordinal 0..127, at most `cap` values — plus the hint's typecode, and the
+ * definition's `scale` slot (the default value) an integer inside min..max, as a list's default
+ * ordinal is.
+ *   'exact': the value count equals the hint's — the list as known;
+ *   'grown': 1..`HINT_GROWTH_LIMIT` more values than the hint's — a newer firmware appended labels
+ *            (an amp's tube list grew by one), or the id now means something else; the walk then
+ *            wants a second sign (a label in the formatted value) before it label-walks;
+ *   false:   no fit (fewer values or more than that growth, other bounds, typecode or default):
+ *            never label-walked on the hint.
+ */
+function hintedListFit(d: LiveDefinition, hint: LiveEnumHint, cap: number): 'exact' | 'grown' | false {
+  if (!integral(d.min) || !integral(d.max)) return false;
+  const lo = Math.round(d.min);
+  const span = Math.round(d.max - d.min + 1);
+  if (lo < 0 || lo > 127 || span < 1 || span > cap) return false;
+  if (hint.typecode !== d.tc) return false;
+  if (!integral(d.scale) || d.scale < d.min || d.scale > d.max) return false;
+  if (span === hint.count) return 'exact';
+  return span > hint.count && span <= hint.count + HINT_GROWTH_LIMIT ? 'grown' : false;
+}
+
+/** A formatted value that is a label, not a number (a leading number makes it a value with a unit). */
+function isLabelDisplay(display: string): boolean {
+  return display.trim() !== '' && parseDisplayValue(display) === null;
 }
 
 /** Build one `CacheRecord` from a decoded definition (+ any 0x1f labels). */
@@ -1039,6 +1138,26 @@ export interface LiveWalkOptions {
    * Infinity or a fraction is ignored as if the block had no entry.
    */
   paramBoundByBlock?: Record<number, number>;
+  /**
+   * Label lists the caller knows of (key = block address, then param id): the label count and the
+   * wire typecode of each param that carries a label list (`enumHintsFromRanges` builds one block's
+   * entry from a family's range rows). It is the ONLY way a definition with a non-zero `scale` (a
+   * non-zero default ordinal) is label-walked: the device's own data offers no safe sign of a list
+   * there (see "Which definitions are label-walked" in the module header). A hinted definition is
+   * label-walked when it fits the hint: integral bounds, first ordinal 0..127, at most `enumCountCap`
+   * values, the hint's typecode, a `scale` slot (default) that is an integer inside min..max, and
+   * exactly the hint's count — or 1..4 more values (a newer firmware appended labels) when its
+   * formatted value, read first (read-only, needs `readValues`), is a label rather than a number.
+   * Anything else: no label walk on the hint. Definitions the numeric rule label-walks anyway are
+   * unaffected. In FULL mode a param with ANY entry here (even an unusable one) is never swept.
+   *
+   * Sources: hints must come ONLY from the shipped static catalog of the model being walked or from a
+   * byte-exact cache of the attached firmware (an editor-cache import), keyed to blocks through the
+   * static effect-id roster — NEVER from a live-walk profile (its lists may rest on a kind guess, and
+   * a hint is a promise that the param HAS a label list: a label query to a param without one is out
+   * of contract).
+   */
+  enumHintByBlock?: Record<number, Readonly<Record<number, LiveEnumHint>>>;
   /**
    * Consecutive absent params that end a block's sweep (default 32, like `placeholderRunLimit`).
    * Counted from the last real definition (and from the start of the block, until the first one is
@@ -1531,7 +1650,28 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       // and an out-of-contract high-sub 0x1f (e.g. a 430..450 pitch range) is the
       // FORGEFX-32 freeze trigger. Positively-classified enums keep the full range.
       const speculative = def.kind !== 'enum';
-      if (lo >= 0 && (!speculative || lo <= 127) && couldBeEnum(def, enumCap)) {
+      // A label list the caller names for this param (`enumHintByBlock`), if any: the only way a
+      // definition the numeric rule refuses (a non-zero `scale`) is label-walked. ANY entry the
+      // caller made for the param — even one too malformed to use — keeps FULL mode from sweeping it.
+      const blockHints = opts.enumHintByBlock?.[block];
+      const hintEntry = blockHints !== undefined && blockHints !== null && Object.prototype.hasOwnProperty.call(blockHints, param);
+      const hint = hintEntry ? usableHint(blockHints![param]) : undefined;
+      let walkLabels = lo >= 0 && (!speculative || lo <= 127) && couldBeEnum(def, enumCap);
+      // The formatted value (view 0x00, read-only) when it was read BEFORE the label walk.
+      let display: string | null | undefined;
+      if (!walkLabels && hint) {
+        const fit = hintedListFit(def, hint, enumCap);
+        if (fit === 'exact') {
+          walkLabels = true;
+        } else if (fit === 'grown' && readValues) {
+          // More values than the hinted list: label-walk only if the device DISPLAYS a label.
+          const vr = await ask(buildValueQuery(model, block, param), true);
+          const vd = vr ? decodeReply(vr) : null;
+          display = vd && vd.view === 'value' ? vd.value : null;
+          walkLabels = display !== null && isLabelDisplay(display);
+        }
+      }
+      if (walkLabels) {
         // The SUB ordinal is the parameter's RAW VALUE, not a list index:
         // values[i] lives at sub = min + i, so the walk covers exactly
         // min..max. Raw values below min can answer with a label, but they are
@@ -1559,22 +1699,27 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       // opts out or for enum/label params whose value carries no unit.
       let unit: string | undefined;
       if (readValues && labels.length === 0) {
-        const vr = await ask(buildValueQuery(model, block, param), true);
-        const vd = vr ? decodeReply(vr) : null;
-        if (vd && vd.view === 'value') unit = parseUnit(vd.value);
+        if (display === undefined) {
+          const vr = await ask(buildValueQuery(model, block, param), true);
+          const vd = vr ? decodeReply(vr) : null;
+          display = vd && vd.view === 'value' ? vd.value : null;
+        }
+        if (display !== null) unit = parseUnit(display);
       }
 
       // FULL mode: sweep the taper of a CONTINUOUS FLOAT param only — never an
-      // enum (a label list was found) nor an int/inert param (kind!=float or
-      // max==min). Mirrors CaptureRig v2's `d["kind"]=="float" and max!=min`
-      // (the label walk already claimed any enum). The sweep writes + restores;
-      // its taper rides the FloatRecord and is threaded into the RangeDef.
+      // enum (a label list was found, or the caller names one: a param with a hint
+      // entry, usable or not, is never written, whatever its label walk gave) nor
+      // an int/inert param
+      // (kind!=float or max==min). Mirrors CaptureRig v2's `d["kind"]=="float" and
+      // max!=min` (the label walk already claimed any enum). The sweep writes +
+      // restores; its taper rides the FloatRecord and is threaded into the RangeDef.
       // WRITES only on a trustworthy record: reaching here means the definition passed every
       // pseudo / implausible check. `param <= bound` is defense in depth — the loop bound (the
       // block's ceiling) already guarantees it; it stays so a later change to the loop cannot let a
       // sweep write above the ceiling.
       let taper: FloatTaper | undefined;
-      if (sweepCtx && labels.length === 0 && def.kind === 'float' && def.max !== def.min && param <= bound) {
+      if (sweepCtx && labels.length === 0 && !hintEntry && def.kind === 'float' && def.max !== def.min && param <= bound) {
         await pace(interQueryMs, signal, sleep);
         const swept = await sweepTaper(sweepCtx, block, param);
         taper = swept.taper;

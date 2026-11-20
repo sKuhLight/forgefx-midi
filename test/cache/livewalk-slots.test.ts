@@ -51,7 +51,7 @@ function q(query: Uint8Array): Q {
 
 const emptySlot = emptySlotFrame;
 
-/** A real float definition (scale 1: never label-probed). */
+/** A real float definition (scale 1 and no hint: never label-probed). */
 function realDef(param: number, block: number): Uint8Array {
   const rec: CacheRecord = { kind: 'float', section: block, offset: 0, id: param, tc: 2, min: 0, max: 10, def: 1, step: 0, t1: 0, t2: 0 };
   return replyFrame(VIEW_DEFINITION, param, 0x3a, definitionBlockScaled(rec, 1));

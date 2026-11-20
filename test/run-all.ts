@@ -91,6 +91,7 @@ import { runLiveWalkReplies, LIVEWALK_REPLIES_CASE_COUNT } from './cache/livewal
 import { runLiveWalkSlots, LIVEWALK_SLOTS_CASE_COUNT } from './cache/livewalk-slots.test.js';
 import { runLiveWalkTraffic, LIVEWALK_TRAFFIC_CASE_COUNT } from './cache/livewalk-traffic.test.js';
 import { runLiveWalkBounds, LIVEWALK_BOUNDS_CASE_COUNT } from './cache/livewalk-bounds.test.js';
+import { runLiveWalkHints, LIVEWALK_HINTS_CASE_COUNT } from './cache/livewalk-hints.test.js';
 import { runFullWalk, FULLWALK_CASE_COUNT } from './cache/fullwalk.test.js';
 import { runKnobRule, KNOBRULE_CASE_COUNT } from './cache/knobrule.test.js';
 import { runRigV2Replay, RIGV2REPLAY_CASE_COUNT } from './cache/rigv2replay.test.js';
@@ -204,6 +205,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/livewalk-slots (${LIVEWALK_SLOTS_CASE_COUNT} cases)`, run: runLiveWalkSlots },
   { name: `cache/livewalk-traffic (${LIVEWALK_TRAFFIC_CASE_COUNT} cases)`, run: runLiveWalkTraffic },
   { name: `cache/livewalk-bounds (${LIVEWALK_BOUNDS_CASE_COUNT} cases)`, run: runLiveWalkBounds },
+  { name: `cache/livewalk-hints (${LIVEWALK_HINTS_CASE_COUNT} cases)`, run: runLiveWalkHints },
   { name: `cache/fullwalk (${FULLWALK_CASE_COUNT} cases)`, run: runFullWalk },
   { name: `cache/knobrule (${KNOBRULE_CASE_COUNT} cases)`, run: runKnobRule },
   { name: `cache/rigv2replay (${RIGV2REPLAY_CASE_COUNT} device captures)`, run: runRigV2Replay },

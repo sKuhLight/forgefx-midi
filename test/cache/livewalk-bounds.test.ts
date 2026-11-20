@@ -54,7 +54,7 @@ function defFrame(param: number, d: Def): Uint8Array {
   return replyFrame(VIEW_DEFINITION, param, 0x3a, buf);
 }
 
-/** A real continuous param (scale != 0 → float, never label-walked) under a unique symbol id. */
+/** A real continuous param (scale != 0, no hint → float, never label-walked) under a unique symbol id. */
 const realFloat = (id: number): Def => ({ id, tc: 2, min: 0, max: 10, scale: 1, def: 5, step: 0 });
 /** An enum-shaped body (step 0, scale 0, integral bounds): a label walk would follow if accepted. */
 const enumShaped = (id: number): Def => ({ id, tc: 16, min: 0, max: 3, scale: 0, def: 0, step: 0 });

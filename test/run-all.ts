@@ -85,6 +85,7 @@ import { runLiveWalk, LIVEWALK_CASE_COUNT } from './cache/livewalk.test.js';
 import { runLiveWalkReplies, LIVEWALK_REPLIES_CASE_COUNT } from './cache/livewalk-replies.test.js';
 import { runLiveWalkSlots, LIVEWALK_SLOTS_CASE_COUNT } from './cache/livewalk-slots.test.js';
 import { runLiveWalkTraffic, LIVEWALK_TRAFFIC_CASE_COUNT } from './cache/livewalk-traffic.test.js';
+import { runLiveWalkBounds, LIVEWALK_BOUNDS_CASE_COUNT } from './cache/livewalk-bounds.test.js';
 import { runFullWalk, FULLWALK_CASE_COUNT } from './cache/fullwalk.test.js';
 import { runRigV2Replay, RIGV2REPLAY_CASE_COUNT } from './cache/rigv2replay.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
@@ -187,6 +188,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/livewalk-replies (${LIVEWALK_REPLIES_CASE_COUNT} cases)`, run: runLiveWalkReplies },
   { name: `cache/livewalk-slots (${LIVEWALK_SLOTS_CASE_COUNT} cases)`, run: runLiveWalkSlots },
   { name: `cache/livewalk-traffic (${LIVEWALK_TRAFFIC_CASE_COUNT} cases)`, run: runLiveWalkTraffic },
+  { name: `cache/livewalk-bounds (${LIVEWALK_BOUNDS_CASE_COUNT} cases)`, run: runLiveWalkBounds },
   { name: `cache/fullwalk (${FULLWALK_CASE_COUNT} cases)`, run: runFullWalk },
   { name: `cache/rigv2replay (${RIGV2REPLAY_CASE_COUNT} device captures)`, run: runRigV2Replay },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },

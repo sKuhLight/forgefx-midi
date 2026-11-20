@@ -124,7 +124,7 @@ function endOfRangeFrame(selector: number, param: number): Uint8Array {
 function definitionBlock(r: CacheRecord): Uint8Array {
   const buf = new Uint8Array(36);
   const dv = new DataView(buf.buffer);
-  dv.setUint32(0, r.id === 0 ? 1 : r.id, true); // symbol id — must be non-zero (not filler)
+  dv.setUint32(0, r.id + 1, true); // symbol id — unique per param within a block (real params carry unique ids) and non-zero
   dv.setUint32(4, r.tc, true);
   dv.setFloat32(8, r.min, true);
   dv.setFloat32(12, r.max, true);

@@ -63,11 +63,17 @@ interface DeviceCase {
   model: number;
   defsRel: string;
   params: readonly DeviceParam[];
+  /** Definition records the walk kept before the pseudo-definition rules (1e-37 junk floor, no id / order rules). */
+  baseline: number;
+  /** Rows those rules reject now: junk only, all in `junkBlocks`, none carrying a label list. */
+  rejected: number;
+  junkBlocks: readonly number[];
 }
 
+// A future rule change that drops real params (or stops dropping this junk) fails the pins below.
 const DEVICES: DeviceCase[] = [
-  { name: 'FM9', model: 0x12, defsRel: 'fm9-full-fw12p0/fm9-full.defs.jsonl', params: FM9_PARAMS as unknown as DeviceParam[] },
-  { name: 'AXE3', model: 0x10, defsRel: 'axe3-full-fw32p6/axe3-full.defs.jsonl', params: AXE3_PARAMS as unknown as DeviceParam[] },
+  { name: 'FM9', model: 0x12, defsRel: 'fm9-full-fw12p0/fm9-full.defs.jsonl', params: FM9_PARAMS as unknown as DeviceParam[], baseline: 2361, rejected: 62, junkBlocks: [58, 59, 70, 71] },
+  { name: 'AXE3', model: 0x10, defsRel: 'axe3-full-fw32p6/axe3-full.defs.jsonl', params: AXE3_PARAMS as unknown as DeviceParam[], baseline: 4227, rejected: 256, junkBlocks: [0] },
 ];
 
 // ---------------------------------------------------------------------------
@@ -120,11 +126,23 @@ function synthReply(model: number, view: number, param: number, tag: number, raw
   return Uint8Array.from([...core, ck & 0x7f, 0xf7]);
 }
 
-/** Mirror of liveWalk's system-selector junk filter (MAX_PLAUSIBLE_TC / SUBNORMAL_FLOOR). */
-function isGarbage(d: { tc: number; min: number; max: number; def: number; step: number; scale: number }): boolean {
+/** Mirror of liveWalk's system-selector junk filter (MAX_PLAUSIBLE_TC / SUBNORMAL_FLOOR = 1e-9). */
+function isGarbage(d: { tc: number; min: number; max: number; def: number; step: number; scale: number }, floor = 1e-9): boolean {
   if (d.tc > 0x3fff) return true;
-  const junk = (x: number): boolean => !Number.isFinite(x) || (x !== 0 && Math.abs(x) < 1e-37);
+  const junk = (x: number): boolean => !Number.isFinite(x) || (x !== 0 && Math.abs(x) < floor);
   return junk(d.min) || junk(d.max) || junk(d.def) || junk(d.step) || junk(d.scale);
+}
+
+/** The junk floor before it was raised from 1e-37 to 1e-9 (the baseline the replay counts were recorded with). */
+const LEGACY_JUNK_FLOOR = 1e-37;
+
+/**
+ * Mirror of liveWalk's pseudo-definition rules for a non-filler, non-garbage definition: a NON-ZERO
+ * symbol id already seen in the block (id 0 = no symbol id, shared by real params), or bounds in the
+ * wrong order. `seen` holds the block's earlier non-zero ids (real definitions and end markers).
+ */
+function isPseudo(d: { id: number; min: number; max: number }, seen: ReadonlySet<number>): boolean {
+  return (d.id !== 0 && seen.has(d.id)) || d.min > d.max;
 }
 
 interface Loaded {
@@ -133,7 +151,11 @@ interface Loaded {
   maxParam: number;
   defCount: number; // distinct (blk,param) 0x1c definition addresses
   labelLines: number; // 0x1f label lines
-  expectedRecords: number; // non-filler, non-garbage definition records
+  expectedRecords: number; // definition records the walk must keep (see `isPseudo`)
+  baselineRecords: number; // definition records the pre-pseudo-rules walk kept (1e-37 float floor, no id / order rules)
+  pseudoDefs: number; // junk-shaped definitions the walk now rejects on top of that (junk floor, repeated non-zero id, min > max)
+  rejectedRows: Array<{ blk: number; param: number }>; // those rows, for the where-are-they pins
+  labelAddrs: Set<string>; // `${blk}:${param}` of every address with 0x1f label lines
   defKeys: Set<string>; // `${blk}:${param}` of every 0x1c address
 }
 
@@ -143,7 +165,8 @@ function loadCapture(path: string, model: number, silent: boolean): Loaded {
   const defKeys = new Set<string>();
   let maxParam = 0;
   let labelLines = 0;
-  let expectedRecords = 0;
+  const labelAddrs = new Set<string>();
+  const defsByBlock = new Map<number, Array<{ param: number; id: number; tc: number; min: number; max: number; def: number; step: number; scale: number }>>();
 
   for (const raw of readFileSync(path, 'utf8').split('\n')) {
     const line = raw.trim();
@@ -159,11 +182,42 @@ function loadCapture(path: string, model: number, silent: boolean): Loaded {
       defKeys.add(`${c.blk}:${c.param}`);
       maxParam = Math.max(maxParam, c.param);
       const d = decodeReply(frame);
-      if (d && d.view === 'definition' && !isFiller(d) && !isGarbage(d)) expectedRecords += 1;
+      if (d && d.view === 'definition') {
+        let g = defsByBlock.get(c.blk);
+        if (!g) defsByBlock.set(c.blk, (g = []));
+        g.push({ param: c.param, id: d.id, tc: d.tc, min: d.min, max: d.max, def: d.def, step: d.step, scale: d.scale });
+      }
     } else {
       labelLines += 1;
+      labelAddrs.add(`${c.blk}:${c.param}`);
     }
   }
+
+  // The walk visits each block's params in ascending order, so the repeated-id rule is order-dependent:
+  // replay it the same way (sorted by param, one id set per block).
+  let expectedRecords = 0;
+  let baselineRecords = 0;
+  const rejectedRows: Array<{ blk: number; param: number }> = [];
+  for (const [blk, defs] of defsByBlock) {
+    const seen = new Set<number>();
+    for (const d of defs.sort((a, b) => a.param - b.param)) {
+      if (isFiller(d)) {
+        if (d.id !== 0) seen.add(d.id);
+        continue;
+      }
+      const baseline = !isGarbage(d, LEGACY_JUNK_FLOOR);
+      if (baseline) baselineRecords += 1;
+      if (isGarbage(d)) {
+        if (baseline) rejectedRows.push({ blk, param: d.param });
+        continue;
+      }
+      if (!isPseudo(d, seen)) {
+        expectedRecords += 1;
+        if (d.id !== 0) seen.add(d.id);
+      } else if (baseline) rejectedRows.push({ blk, param: d.param });
+    }
+  }
+  const pseudoDefs = baselineRecords - expectedRecords;
 
   const transport: LiveTransport = {
     request(query: Uint8Array): Promise<Uint8Array | null> {
@@ -187,6 +241,10 @@ function loadCapture(path: string, model: number, silent: boolean): Loaded {
     defCount: defKeys.size,
     labelLines,
     expectedRecords,
+    baselineRecords,
+    pseudoDefs,
+    rejectedRows,
+    labelAddrs,
     defKeys,
   };
 }
@@ -223,6 +281,18 @@ export async function runRigV2Replay(): Promise<void> {
       continue;
     }
     const cap = loadCapture(path, dev.model, false);
+
+    // Pin what the pseudo-definition rules do to this capture, so a rule change that drops real params
+    // (or stops dropping this junk) cannot pass: the baseline count, the number of rejected rows, and
+    // that every rejected row lies in the known junk blocks and carried no label list.
+    if (cap.baselineRecords !== dev.baseline) fail(`${dev.name}: baseline walk would keep ${cap.baselineRecords} definitions, pinned ${dev.baseline}`);
+    if (cap.pseudoDefs !== dev.rejected || cap.rejectedRows.length !== dev.rejected) {
+      fail(`${dev.name}: ${cap.pseudoDefs} definitions rejected (${cap.rejectedRows.length} rows), pinned ${dev.rejected}`);
+    }
+    const strayRejects = cap.rejectedRows.filter((r) => !dev.junkBlocks.includes(r.blk));
+    if (strayRejects.length > 0) fail(`${dev.name}: rejected row(s) outside the junk blocks [${dev.junkBlocks.join(',')}], e.g. ${strayRejects[0]!.blk}:${strayRejects[0]!.param}`);
+    const labelled = cap.rejectedRows.filter((r) => cap.labelAddrs.has(`${r.blk}:${r.param}`));
+    if (labelled.length > 0) fail(`${dev.name}: rejected row(s) with a label list, e.g. ${labelled[0]!.blk}:${labelled[0]!.param}`);
 
     // Replay through the real liveWalk driver. Sweep exactly the captured block
     // set; run/probe limits are opened past the highest captured param so every
@@ -342,7 +412,7 @@ export async function runRigV2Replay(): Promise<void> {
     );
     console.log(
       `  cache/rigv2replay ${dev.name}: ${records.length - walked.placeholderSlots}/${cap.defCount} defs reconstructed ` +
-        `(+${walked.placeholderSlots} inner placeholders), ` +
+        `(+${walked.placeholderSlots} inner placeholders; baseline walk kept ${cap.baselineRecords}, ${cap.pseudoDefs} junk-shaped definitions now rejected), ` +
         `${labels} enum labels reconcile; ${Object.keys(built.ranges).length} families mapped, ` +
         `0 param-sections unmapped; seeds present [${seedsResolved.join(',')}]` +
         (seedsAbsent.length ? ` absent [${seedsAbsent.join(',')}] (preset-scoped)` : ''),

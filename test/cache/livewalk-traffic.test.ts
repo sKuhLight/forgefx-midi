@@ -3,10 +3,12 @@
  *
  * The walk's query and pause sequence is a hardware-validated envelope (pacing, read-only param
  * ceiling, speculative-probe class). Reply-loss handling may only ADD traffic when a reply is
- * actually missing. Pinned against goldens recorded from the walk as it was before reply-loss
- * handling existed, on the shared cache-shaped fake device over the FM3 fw 12.0 fixture, in the
- * host's read-only envelope (params 0..127, 3 ms between queries, 150 ms between blocks) incl. a
- * few blocks the fixture lacks:
+ * actually missing. Pinned against goldens on the shared cache-shaped fake device over the FM3
+ * fw 12.0 fixture, in the host's read-only envelope (params 0..127, 3 ms between queries, 150 ms
+ * between blocks) incl. a few blocks the fixture lacks. The RECORDS are those of the walk as it was
+ * before reply-loss handling existed; the TRAFFIC was re-recorded once, when a block began to end
+ * `paramAbsentRunLimit` (32) params after its last real definition instead of sweeping on to the
+ * ceiling (15 027 -> 12 588 queries; not one record, label or placeholder changed):
  *   1. a device that answers every query gets byte-identical queries AND pauses, and the same
  *      records (placeholder rows aside);
  *   2. a device that leaves non-table addresses unanswered (the opposite assumption about the
@@ -26,10 +28,11 @@ export const LIVEWALK_TRAFFIC_CASE_COUNT = 2;
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 
-/** Golden: the pre-rework walk on the healthy fake — 15 027 queries + pauses (30 106 trace entries). */
-const GOLDEN_QUERIES = 15027;
-const GOLDEN_TRACE_ENTRIES = 30106;
-const GOLDEN_TRACE_SHA256 = '753840383e8d1a6ca137df716895c95259f1642fc3771a2c756c280f13357b6f';
+/** Golden: the walk on the healthy fake — 12 588 queries + pauses (25 228 trace entries); 15 027 / 30 106
+ *  before blocks ended a small run after their last real definition. */
+const GOLDEN_QUERIES = 12588;
+const GOLDEN_TRACE_ENTRIES = 25228;
+const GOLDEN_TRACE_SHA256 = '6bdd6346fa7711ba1815e126ef53024e89da2017433736ebe98fbd2dd6b8ef20';
 /** Golden: the pre-rework walk's records (1744) — identical whether or not non-table addresses answer. */
 const GOLDEN_RECORDS = 1744;
 const GOLDEN_RECORDS_SHA256 = '9e4ea5e2723d00a18f56abb3401c4bd01a6d23dfff7a5b6f070ad9397bd46d05';
@@ -60,7 +63,7 @@ export async function runLiveWalkTraffic(): Promise<void> {
       fail(`healthy device reported losses: ${JSON.stringify({ ...res, records: undefined })}`);
     }
     healthyLabels = res.enumLabels;
-    console.log(`  cache/livewalk-traffic: healthy device — ${res.queries} queries + pauses byte-identical to the pre-rework walk, same ${real.length} records (+${res.placeholderSlots} placeholders)`);
+    console.log(`  cache/livewalk-traffic: healthy device — ${res.queries} queries + pauses byte-identical to the golden, the pre-rework walk's ${real.length} records (+${res.placeholderSlots} placeholders)`);
   }
 
   // ---- Case 2: silent non-table addresses — completes with the same records -------------
@@ -78,7 +81,7 @@ export async function runLiveWalkTraffic(): Promise<void> {
     if (res.silentAddresses === 0 || res.unresolvedReplies !== res.missingSlots || res.enumLabels !== healthyLabels) {
       fail(`silent-address accounting: ${JSON.stringify({ ...res, records: undefined })}`);
     }
-    if (res.queries > GOLDEN_QUERIES * 1.1) fail(`silent addresses cost too much extra traffic: ${res.queries} queries (pre-rework ${GOLDEN_QUERIES})`);
+    if (res.queries > GOLDEN_QUERIES * 1.1) fail(`silent addresses cost too much extra traffic: ${res.queries} queries (healthy golden ${GOLDEN_QUERIES})`);
     console.log(
       `  cache/livewalk-traffic: silent non-table addresses — walk completes with the same ${real.length} records ` +
         `(${res.queries} queries, +${(((res.queries - GOLDEN_QUERIES) / GOLDEN_QUERIES) * 100).toFixed(1)}%, ${res.silentAddresses} silent addresses, ` +

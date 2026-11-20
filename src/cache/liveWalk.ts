@@ -85,12 +85,82 @@
  * `liveWalkDetailed`).
  *
  * ── Coverage ────────────────────────────────────────────────────────────────
- * PARAM is 14-bit, so ids up to 16383 are reachable; the special table records
- * (id >= 0xff00: cab/IR bank tables, padded rosters) are NOT param-addressable
- * and are absent from a live walk by design. They affect only a section's
- * declared record count and the cab/IR banks; every other derived table is
- * reproduced exactly. A complete cache pairs the live walk with those few
- * byte-sourced table records.
+ * PARAM is 14-bit, so ids up to 16383 are addressable on the wire, but the walk
+ * only queries up to a per-block ceiling (see "Table end, bounds and pseudo
+ * definitions"). The special table records (id >= 0xff00: cab/IR bank tables,
+ * padded rosters) are NOT param-addressable and are absent from a live walk by
+ * design. They affect only a section's declared record count and the cab/IR
+ * banks; every other derived table is reproduced exactly. A complete cache
+ * pairs the live walk with those few byte-sourced table records.
+ *
+ * ── Table end, bounds and pseudo definitions ────────────────────────────────
+ * A table does not announce its end, and a definition query far outside it is
+ * out of contract. Read-only definition queries on an FM3 (fw 13.0) showed:
+ *   - block 1 holds real params 0..132 (each definition carries its own `id`).
+ *     From 133 on EVERY reply is the same end marker — typecode 0, empty body,
+ *     one fixed non-zero `id`, `scale` 0 (at 133) or 128 (after); checked to 600.
+ *   - much further out the same block answers junk that is shaped like a
+ *     definition (an `id` reused from the end marker, an enum-shaped range of
+ *     65 546 values, ...) or a short non-definition reply.
+ *   - walks of an FM9 and an Axe-Fx III hold junk definitions too: a system block
+ *     repeating one `id` and one near-zero float body over 250 params, rows with
+ *     near-zero float fields, and records with `min > max`, a typecode 0 and a
+ *     float bit pattern as `id`.
+ *   - block 0 answers table-shaped definitions up to param 511. A single
+ *     definition query for param 1000 of block 0 froze the unit: no reply, then
+ *     no reply to anything until a power cycle. Queries inside its table
+ *     (128..300) were fine.
+ * So the walk never probes far past a table's last real definition, and in
+ * FULL mode must not write to a parameter that does not exist:
+ *   1. CEILING — no query above a per-block ceiling, the first that applies:
+ *        - `paramBoundByBlock[block]`: a HARD ceiling (highest id, inclusive),
+ *          never exceeded for any reason. It wins over `maxParamId` in both
+ *          directions — and over a known size, even above n - 1 + the stop
+ *          run, so a host passes it only as a cap tighter than that; a
+ *          negative bound skips the block; a bound above 16383 is clamped
+ *          (the wire field would wrap);
+ *        - `paramKnownSizeByBlock[block]` = n (a table size from a catalog or
+ *          cache): min(`maxParamId`, n - 1 + `paramAbsentRunLimit`) — the known
+ *          table plus room for the params a newer unit appends;
+ *        - `maxParamId`, which defaults to 127 in read-only mode (the validated
+ *          envelope) and 511 in FULL mode (the largest table seen, well below
+ *          the freeze at 1000) — never the whole 14-bit space.
+ *   2. STOP RUN — a block ends once `paramAbsentRunLimit` (default 32, the
+ *      `placeholderRunLimit` default) consecutive params in a row answered
+ *      absent — an empty slot, the end marker, a pseudo definition, a sentinel
+ *      or silence. A run of exactly that many ends the block, so inner empty
+ *      runs are bridged (and kept as placeholders) only up to one less. A
+ *      KNOWN SIZE n suspends the stop run for ids 0..n-1 only, so a sparse
+ *      table keeps its real rows after long id gaps; past it the normal stop
+ *      run applies, counted afresh from id n (the lookahead past the table is
+ *      always a full run), up to the ceiling, which is how params appended by
+ *      a newer unit are found. Pass only the EXACT table size of the attached firmware:
+ *      an over-large known size removes the stop run up to it, and junk past a
+ *      table's end that passes the pseudo checks is then walked and, in FULL
+ *      mode, swept up to it. The stop run is also what holds a caller that
+ *      passes a wide `maxParamId` and no bound away from the far ids.
+ *   3. PSEUDO DEFINITIONS — treated exactly like an absent slot (no record, no
+ *      label walk, no unit read, no sweep) and counted in
+ *      `LiveWalkResult.pseudoReplies`:
+ *        endMarker   typecode 0 + empty body with a non-zero `id` (any scale):
+ *                    the past-the-end answer. It also counts an INNER unused
+ *                    slot that answers with a non-zero `id` (that slot still
+ *                    becomes a placeholder). An empty slot with `id` 0 is not
+ *                    counted.
+ *        duplicateId a definition whose NON-ZERO `id` was already seen in the same
+ *                    block on a real definition or an end marker (non-zero ids
+ *                    are unique per real param). Id 0 means "no symbol id" and
+ *                    is shared by many real params — never a duplicate.
+ *        implausible junk the typecode / float checks flag (`isGarbageDefinition`,
+ *                    incl. non-zero magnitudes below 1e-9) or bounds in the
+ *                    wrong order (`min > max`). NOT a size
+ *                    limit on an enum-shaped range: real continuous params
+ *                    whose bounds are integers (e.g. 200..20000) look like one,
+ *                    and a range over `enumCountCap` only has its label list
+ *                    clamped.
+ *   4. WRITES — a FULL-mode taper sweep runs only on a definition that passed
+ *      all of the above and sits at or below its block's bound. Far-id safety
+ *      for a caller that passes a wide ceiling rests on the stop run (2).
  *
  * ── Reply assumptions (open hardware questions) ─────────────────────────────
  * The reply handling below rests on assumptions not yet verified on hardware;
@@ -410,9 +480,12 @@ function placeholderRecord(block: number, param: number): FloatRecord {
 /** Largest plausible wire typecode — real catalogs top out ~3200; system-selector junk reads
  *  in the tens of thousands. */
 const MAX_PLAUSIBLE_TC = 0x3fff;
-/** Anything with magnitude below this (but non-zero) is float32 subnormal junk, not a value a
- *  parameter definition would carry. */
-const SUBNORMAL_FLOOR = 1e-37;
+/** Anything with magnitude below this (but non-zero) is junk (near-zero float bit patterns), not a
+ *  value a parameter definition would carry. 1e-9 rather than the float32 subnormal edge: a system
+ *  block fills hundreds of ids with one body of ~1e-36 floats and some effect blocks answer rows of
+ *  1e-19..1e-10 floats, while the smallest non-zero magnitude of any real definition in the fixtures
+ *  and replayed walks is 1e-6. */
+const SUBNORMAL_FLOOR = 1e-9;
 
 /**
  * NOT a real parameter definition (FORGEFX-32): system selectors (e.g. FM3 block 0) answer
@@ -424,6 +497,34 @@ function isGarbageDefinition(d: LiveDefinition): boolean {
   if (d.tc > MAX_PLAUSIBLE_TC) return true;
   const junk = (x: number): boolean => !Number.isFinite(x) || (x !== 0 && Math.abs(x) < SUBNORMAL_FLOOR);
   return junk(d.min) || junk(d.max) || junk(d.def) || junk(d.step) || junk(d.scale);
+}
+
+/**
+ * Structurally implausible even though `isGarbageDefinition` passes it: bounds in the wrong order.
+ * Conservative on purpose — only rules that no definition of the FM3 / AM4 fixtures and no
+ * plausible definition of the FM9 / Axe-Fx III replay walks satisfies are admitted (the replay
+ * and fixture suites pin it). A size limit on an enum-shaped range is NOT one of them: real
+ * integer-bounded continuous params (200..20000) span far more values than `enumCountCap`.
+ */
+function isImplausibleDefinition(d: LiveDefinition): boolean {
+  return d.min > d.max;
+}
+
+/** What a decoded definition reply is, for the walk (see "Table end, bounds and pseudo definitions"). */
+type DefinitionVerdict = 'real' | 'empty' | 'end-marker' | 'garbage' | 'duplicate-id' | 'implausible';
+
+/**
+ * Judge one decoded definition against the ids already seen in its block. Only `real` becomes a
+ * record; every other verdict is an ABSENT slot (never label-walked, value-read or swept). `empty`
+ * is the ordinary unused slot (symbol id 0); `end-marker` is the same empty body under a non-zero id,
+ * the answer a table gives past its last real parameter.
+ */
+function judgeDefinition(d: LiveDefinition, seenIds: ReadonlySet<number>): DefinitionVerdict {
+  if (isFillerDefinition(d)) return d.id === 0 ? 'empty' : 'end-marker';
+  if (isGarbageDefinition(d)) return 'garbage';
+  if (d.id !== 0 && seenIds.has(d.id)) return 'duplicate-id'; // id 0 = no symbol id, shared by real params
+  if (isImplausibleDefinition(d)) return 'implausible';
+  return 'real';
 }
 
 /**
@@ -645,6 +746,40 @@ const DEFAULT_LOST_REPLY_DRAIN_MS = 500;
 const DEFAULT_PLACEHOLDER_RUN_LIMIT = 32;
 
 /**
+ * Default number of CONSECUTIVE absent params (empty slot, end marker, pseudo definition, sentinel
+ * or silence) that end the sweep of a block WITHOUT a caller bound. A run of exactly this many ends
+ * the block, so an inner empty run is bridged (and kept as placeholders) up to one less — the
+ * placeholder run limit has the same value, and a longer inner run is an id-space gap. Small on
+ * purpose — the table's real end is followed by an endless run of end-marker replies, and every
+ * query past it is wasted traffic that moves toward the far ids a device may not survive (see "Table
+ * end, bounds and pseudo definitions"). A block with a caller bound is walked to the bound instead.
+ */
+const DEFAULT_ABSENT_RUN_LIMIT = 32;
+
+/** Highest param id the 14-bit PARAM field (body[4]/[5]) can carry; one more would wrap to 0. */
+const MAX_WIRE_PARAM_ID = 16383;
+
+/**
+ * Default highest param id queried per block, READ-ONLY mode: the validated envelope (the id
+ * space above 127 was never swept read-only on a unit), the same ceiling the host passes.
+ */
+const DEFAULT_READ_ONLY_MAX_PARAM_ID = 127;
+
+/**
+ * Default highest param id queried per block, FULL mode. The largest table seen on a unit ends at
+ * id 511; a definition query for id 1000 of the same block froze the unit. 511 reaches every table
+ * seen with a wide margin below that; a caller that knows a block's size passes
+ * `paramKnownSizeByBlock` / `paramBoundByBlock` (a larger table than 511 is cut off here, never
+ * over-probed).
+ */
+const DEFAULT_FULL_MAX_PARAM_ID = 511;
+
+/** The effective inclusive param ceiling for a finite requested bound: floored, never above the wire limit. */
+function clampParamBound(requested: number): number {
+  return Math.min(MAX_WIRE_PARAM_ID, Math.floor(requested));
+}
+
+/**
  * Default number of CONSECUTIVE unanswered queries after which the walk checks the device is
  * still alive: it re-sends the last definition query that DID get an answer. An answer proves the
  * silence is specific to those addresses — they are treated as absent and the walk goes on (with
@@ -714,6 +849,23 @@ export interface LiveWalkResult {
    * the hardware assumptions above).
    */
   silentAddresses: number;
+  /**
+   * Definition replies that were answered but are not real parameter definitions, so the walk
+   * treated them as absent slots (no record, label walk, unit read or sweep) — see "Table end,
+   * bounds and pseudo definitions". Not loss: these replies are the device's own answer.
+   */
+  pseudoReplies: PseudoReplyStats;
+}
+
+/** Breakdown of `LiveWalkResult.pseudoReplies`, counted per query answered. */
+export interface PseudoReplyStats {
+  /** Empty body under a non-zero symbol id: the answer a table gives past its last real param. Also
+   *  counts an INNER unused slot that answers with a non-zero id (it still becomes a placeholder). */
+  endMarker: number;
+  /** A definition whose non-zero symbol id repeated one already seen in the same block. */
+  duplicateId: number;
+  /** Junk-shaped definitions (system-selector junk the float / typecode checks flag, `min > max`). */
+  implausible: number;
 }
 
 /**
@@ -794,14 +946,52 @@ export interface LiveWalkOptions {
    */
   readValues?: boolean;
   /**
-   * Highest PARAM id swept per block (default 16383 = the full 14-bit range).
-   * The reachable id range can be capped here.
+   * Highest PARAM id queried per block, inclusive. Default 127 in read-only mode and 511 in FULL
+   * mode — NOT the whole 14-bit space: a definition query far past a table's end is out of
+   * contract and one such query (block 0, id 1000) froze a unit. Values above 16383 are clamped
+   * (the wire field would wrap); a non-finite value (NaN, +-Infinity) is ignored and the mode
+   * default applies. A block's entry in `paramBoundByBlock` takes precedence; an entry in
+   * `paramKnownSizeByBlock` can only lower it (to size - 1 + `paramAbsentRunLimit`).
    */
   maxParamId?: number;
   /**
-   * Consecutive absent params that end a block's sweep (default 256). Must
-   * exceed a section's largest internal id gap to reach every record; raise it
-   * to reach sparse high-id (param>127) records.
+   * Table size per block (key = block address) known from a catalog or an editor cache: ids
+   * 0..size-1 are walked WITHOUT the `paramAbsentRunLimit` stop, so a sparse table keeps real rows
+   * that follow long id gaps. Past the known size the normal stop run applies, counted afresh from
+   * id `size` (trailing empty slots inside the table do not eat into it), so params a newer unit
+   * appends to the table are found. With no `paramBoundByBlock` entry the block's ceiling is
+   * min(`maxParamId`, size - 1 + `paramAbsentRunLimit`) — never further. `blockProbeDepth` still
+   * skips a block whose first params are all absent; raise it for a table that starts with a long
+   * gap. Blocks without an entry keep the stop run and the `maxParamId` ceiling.
+   *
+   * Pass ONLY the exact table size of the attached firmware (from a catalog or a byte-exact
+   * cache). An over-large size removes the stop run up to it: junk that a unit answers past a
+   * table's end and that passes the pseudo checks is walked there and, in FULL mode, swept (written)
+   * up to it. Only a finite integer >= 0 is used; NaN, Infinity, a fraction or a negative value is
+   * ignored as if the block had no entry.
+   */
+  paramKnownSizeByBlock?: Record<number, number>;
+  /**
+   * HARD ceiling per block (key = block address): the highest PARAM id queried, inclusive. The walk
+   * never queries above it, for any reason; it wins over `maxParamId` in both directions and over
+   * `paramKnownSizeByBlock` (a bound below size - 1 truncates the known table; one above
+   * size - 1 + `paramAbsentRunLimit` is honoured too, so pass a bound only as a cap tighter than
+   * that, e.g. min(size - 1 + `paramAbsentRunLimit`, the mode cap)). It does not change
+   * the stop run: on its own it only caps a walk that would otherwise go on. A negative value skips
+   * the block (no queries); a value above 16383 is clamped. Only a finite integer is used; NaN,
+   * Infinity or a fraction is ignored as if the block had no entry.
+   */
+  paramBoundByBlock?: Record<number, number>;
+  /**
+   * Consecutive absent params that end a block's sweep (default 32, like `placeholderRunLimit`).
+   * Counted from the last real definition (and from the start of the block, until the first one is
+   * found — see `blockProbeDepth`); suspended for ids below a block's `paramKnownSizeByBlock`
+   * entry (and counted afresh from that size). Only a finite integer >= 1 is used; anything else
+   * (NaN, Infinity, a fraction, 0, a negative value) is the default 32. A run of exactly this many ends the block, so an inner run of empty slots is bridged
+   * (and kept as placeholders up to `placeholderRunLimit`) only when it is shorter; a longer one
+   * ends the block. Raise it only for a section known to carry bigger internal id gaps, together
+   * with `maxParamId` — the ceiling still bounds the sweep whatever this is. It also sets how far
+   * past a known size the ceiling reaches (size - 1 + this).
    */
   paramAbsentRunLimit?: number;
   /**
@@ -978,6 +1168,11 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
  * (see there) and either carries on or rejects. On a device that answers every query the query
  * and pause sequence is exactly the one the walk always sent.
  *
+ * Table end: a block ends a small run past its last real definition and never above its ceiling;
+ * end markers, repeated non-zero ids and implausible junk are absent slots, never swept — see the
+ * header section "Table end, bounds and pseudo definitions" (`paramAbsentRunLimit`, `maxParamId`,
+ * `paramKnownSizeByBlock`, `paramBoundByBlock`, `LiveWalkResult.pseudoReplies`).
+ *
  * Empty slots: an empty-slot definition between two real definitions (or before the first one)
  * is an unused slot INSIDE the parameter table — the editor cache keeps it as an all-zero float
  * placeholder, so the walk emits the same placeholder once the next real definition proves it is
@@ -991,8 +1186,33 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
   // params (see the found===0 break below), so the extra range is nearly free.
   const maxBlock = opts.maxBlock ?? 160;
   const blocks = opts.blocks ?? Array.from({ length: maxBlock + 1 }, (_, i) => i);
-  const maxParamId = opts.maxParamId ?? 16383;
-  const absentRunLimit = opts.paramAbsentRunLimit ?? 256;
+  // FULL mode writes, so its default ceiling and the sweep guard below care about the mode early.
+  const mode = opts.mode ?? 'read-only';
+  const full = mode === 'full';
+  const defaultMaxParamId = full ? DEFAULT_FULL_MAX_PARAM_ID : DEFAULT_READ_ONLY_MAX_PARAM_ID;
+  // A non-finite value (NaN, +-Infinity) is no value: the mode default applies. Finite ones are clamped.
+  const requestedMax = opts.maxParamId;
+  const maxParamId = typeof requestedMax === 'number' && Number.isFinite(requestedMax) ? clampParamBound(requestedMax) : defaultMaxParamId;
+  // Only a finite integer >= 1 is a run limit; anything else (NaN, Infinity, 1.5, 0, negative) is the default.
+  const requestedRun = opts.paramAbsentRunLimit;
+  const absentRunLimit = typeof requestedRun === 'number' && Number.isInteger(requestedRun) && requestedRun >= 1 ? requestedRun : DEFAULT_ABSENT_RUN_LIMIT;
+  /**
+   * A block's walk plan. `ceiling`: the highest id queried, inclusive — the caller's HARD bound when
+   * given (wins over `maxParamId` both ways), else a known size's `size - 1 + absentRunLimit` capped
+   * by `maxParamId`, else `maxParamId`. `knownSize`: ids below it are walked without the stop run
+   * (0 = none known); past it the normal stop run applies, so appended params are found.
+   */
+  const planOf = (block: number): { ceiling: number; knownSize: number } => {
+    // Only a finite INTEGER is trusted: NaN, Infinity and 1.5 are ignored (treated as no entry).
+    // A negative bound is a deliberate "skip this block"; a negative size means nothing, so it is ignored.
+    const bound = opts.paramBoundByBlock?.[block];
+    const size = opts.paramKnownSizeByBlock?.[block];
+    const hardBound = bound !== undefined && Number.isInteger(bound) ? bound : undefined;
+    const knownSize = size !== undefined && Number.isInteger(size) && size >= 0 ? Math.min(MAX_WIRE_PARAM_ID + 1, size) : undefined;
+    if (hardBound !== undefined) return { ceiling: clampParamBound(hardBound), knownSize: knownSize ?? 0 };
+    if (knownSize !== undefined) return { ceiling: Math.min(maxParamId, clampParamBound(knownSize - 1 + absentRunLimit)), knownSize };
+    return { ceiling: maxParamId, knownSize: 0 };
+  };
   const probeDepth = opts.blockProbeDepth ?? 4;
   const enumCap = opts.enumCountCap ?? 1024;
   // read view 0x00 per found param to capture the device-true unit (default on).
@@ -1006,8 +1226,6 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
 
   // FULL mode: opt-in taper sweep. Requires host write hooks — fail fast at the
   // walk start (before any wire traffic) when they are missing.
-  const mode = opts.mode ?? 'read-only';
-  const full = mode === 'full';
   if (full && !opts.write) {
     throw new Error(
       "liveWalk: mode 'full' requires write hooks (opts.write.{send,reloadPreset}); pass them or use mode 'read-only'",
@@ -1029,6 +1247,7 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
   let placeholderSlots = 0;
   let missingSlots = 0;
   let silentAddresses = 0;
+  const pseudoReplies: PseudoReplyStats = { endMarker: 0, duplicateId: 0, implausible: 0 };
   let lastAnsweredDef: Uint8Array | undefined; // liveness probe: a definition query that answered
   let neverAnswered = 0; // unanswered queries before anything answered at all
   // Per block: consecutive unanswered queries, and whether the liveness check has shown that
@@ -1167,13 +1386,20 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
     let pendingUnknown = 0;
     let pendingIntact = true;
     let lastReal = -1;
+    // Symbol ids already seen in this block (real definitions + end markers): real params carry
+    // unique ids, so a definition repeating one is a pseudo definition.
+    const seenIds = new Set<number>();
+    const { ceiling: bound, knownSize } = planOf(block);
     blockSilenceProven = false;
     blockSilentRun = 0;
     trailingSilentDefs = 0;
     silentSinceProof = 0;
     runBooked = { lost: 0, unresolved: 0 };
-    for (let param = 0; param <= maxParamId; param++) {
+    for (let param = 0; param <= bound; param++) {
       throwIfAborted(signal);
+      // Crossing a known table size: the stop run counts afresh, so the lookahead past the table is
+      // always a full `absentRunLimit` (trailing empty slots inside the table do not eat into it).
+      if (param === knownSize) absentRun = 0;
       // The block-probe phase (no definition found yet) stays one-shot, exactly as before:
       // retries there would multiply the cost of every empty block. So does a block whose
       // silent addresses the liveness check has already explained.
@@ -1181,18 +1407,30 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       const dec = reply ? decodeReply(reply) : null;
       const def = dec && dec.view === 'definition' ? dec : null;
 
-      if (!def || isFillerDefinition(def) || isGarbageDefinition(def)) {
-        if (def && isFillerDefinition(def)) pendingEmpty.push(param);
-        else if (reply) pendingIntact = false; // a sentinel / junk answer: not a table slot
+      const verdict = def ? judgeDefinition(def, seenIds) : undefined;
+
+      if (!def || verdict !== 'real') {
+        if (verdict === 'empty' || verdict === 'end-marker') pendingEmpty.push(param);
+        else if (reply) pendingIntact = false; // a sentinel / pseudo / junk answer: not a table slot
         else pendingUnknown += 1; // unanswered: the slot is simply unknown
+        if (def) {
+          // Answered, but not a parameter: counted so a build can report what it ignored.
+          if (verdict === 'end-marker') {
+            pseudoReplies.endMarker += 1;
+            seenIds.add(def.id); // (non-zero by definition) a later definition reusing it is a copy
+          } else if (verdict === 'duplicate-id') pseudoReplies.duplicateId += 1;
+          else if (verdict === 'garbage' || verdict === 'implausible') pseudoReplies.implausible += 1;
+        }
         absentRun += 1;
         // Skip an empty block once its opening params are all absent.
         if (found === 0 && param + 1 >= probeDepth) break;
-        if (absentRun >= absentRunLimit) break;
+        // The stop run; suspended inside a known table size (ids below it).
+        if (absentRun >= absentRunLimit && param >= knownSize) break;
         continue;
       }
       absentRun = 0;
       found += 1;
+      if (def.id !== 0) seenIds.add(def.id);
 
       // This real definition proves the empty slots before it are INNER: keep them as the
       // all-zero placeholders the editor cache carries, unless the run is an id-space gap.
@@ -1252,8 +1490,12 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       // max==min). Mirrors CaptureRig v2's `d["kind"]=="float" and max!=min`
       // (the label walk already claimed any enum). The sweep writes + restores;
       // its taper rides the FloatRecord and is threaded into the RangeDef.
+      // WRITES only on a trustworthy record: reaching here means the definition passed every
+      // pseudo / implausible check. `param <= bound` is defense in depth — the loop bound (the
+      // block's ceiling) already guarantees it; it stays so a later change to the loop cannot let a
+      // sweep write above the ceiling.
       let taper: FloatTaper | undefined;
-      if (sweepCtx && labels.length === 0 && def.kind === 'float' && def.max !== def.min) {
+      if (sweepCtx && labels.length === 0 && def.kind === 'float' && def.max !== def.min && param <= bound) {
         await pace(interQueryMs, signal, sleep);
         const swept = await sweepTaper(sweepCtx, block, param);
         taper = swept.taper;
@@ -1298,7 +1540,7 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
   }
 
   progress({ phase: 'done', blockIndex: blocks.length, blockCount: blocks.length });
-  return { records, queries, enumLabels, lostReplies, recoveredReplies, unresolvedReplies, placeholderSlots, missingSlots, silentAddresses };
+  return { records, queries, enumLabels, lostReplies, recoveredReplies, unresolvedReplies, placeholderSlots, missingSlots, silentAddresses, pseudoReplies };
 }
 
 /**

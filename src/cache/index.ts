@@ -31,6 +31,7 @@ export type {
   LiveWalkOptions,
   LiveWalkProgress,
   LiveWalkResult,
+  PseudoReplyStats,
   LiveReply,
   LiveDefinition,
 } from './liveWalk.js';

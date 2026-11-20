@@ -19,7 +19,7 @@
  */
 import { parseCacheRecords } from './records.js';
 import { buildDeviceCache } from './assign.js';
-import type { LiveWalkResult } from './liveWalk.js';
+import type { LiveWalkResult, PseudoReplyStats } from './liveWalk.js';
 import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam } from './types.js';
 
 /**
@@ -35,8 +35,13 @@ import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam } from '.
  * pads that way (and such a unit keeps a continuous param off the enum list); a 36-byte label or value
  * is no longer misread as a definition; and full-mode taper sweeps gain samples, because their display
  * read-back no longer drops those replies. A cache built before this may lack units and, for affected
- * params, carry the old kind (enum instead of float); rebuild it. No bump, because schema 1 is not
- * released yet.
+ * params, carry the old kind (enum instead of float); rebuild it. Schema 1 also covers where the live
+ * walk stops: a block now ends a small run (default 32) after its last real definition and is capped by a
+ * per-block ceiling (never the whole 14-bit id space), and an end marker, a definition repeating a non-zero
+ * id already seen in its block, or an implausible one (junk floats, `min > max`) is treated as an absent
+ * slot, so none of them ever becomes a record (`meta.walk.pseudoReplies` counts them). A cache built by a
+ * walk that probed past a table's end can carry junk records from far ids; rebuild it. No bump, because
+ * schema 1 is not released yet.
  */
 export const CACHE_SCHEMA = 1;
 
@@ -60,6 +65,9 @@ export interface BuiltCacheWalkStats {
   placeholderSlots: number;
   missingSlots: number;
   silentAddresses: number;
+  /** Answered-but-not-a-parameter definition replies the walk ignored (end markers, repeated ids,
+   *  implausible junk); absent in a cache whose walk predates the count. */
+  pseudoReplies?: PseudoReplyStats;
 }
 
 /**
@@ -121,8 +129,18 @@ export async function buildCache(
       records = walked;
     } else {
       records = walked.records;
-      const { queries, lostReplies, recoveredReplies, unresolvedReplies, placeholderSlots, missingSlots, silentAddresses } = walked;
-      walk = { queries, lostReplies, recoveredReplies, unresolvedReplies, placeholderSlots, missingSlots, silentAddresses };
+      const { queries, lostReplies, recoveredReplies, unresolvedReplies, placeholderSlots, missingSlots, silentAddresses, pseudoReplies } = walked;
+      // A result from a walk that predates the count omits the field instead of carrying `undefined`.
+      walk = {
+        queries,
+        lostReplies,
+        recoveredReplies,
+        unresolvedReplies,
+        placeholderSlots,
+        missingSlots,
+        silentAddresses,
+        ...(pseudoReplies !== undefined ? { pseudoReplies: { ...pseudoReplies } } : {}),
+      };
     }
   }
 

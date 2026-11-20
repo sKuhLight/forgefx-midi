@@ -421,7 +421,8 @@ export async function runLiveWalkReplies(): Promise<void> {
           return Promise.resolve(sentinelFrame(view, param));
         },
       };
-      return liveWalkDetailed(t, { model: FM3, blocks: [3], maxParamId: 127, readValues: false, sleep: () => Promise.resolve() });
+      // The scenario needs the sweep to run to the ceiling (127): the default stop run would end it earlier.
+      return liveWalkDetailed(t, { model: FM3, blocks: [3], maxParamId: 127, paramAbsentRunLimit: 256, readValues: false, sleep: () => Promise.resolve() });
     };
     for (const [mode, silent] of [['a', 0], ['b', 1], ['c', 127]] as const) {
       const res = await run(mode);

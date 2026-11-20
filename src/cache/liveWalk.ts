@@ -1086,8 +1086,9 @@ export interface LiveWalkOptions {
    * back to recover the knob taper (linear/log/custom), records it on the
    * `FloatRecord`, then RESTORES the original value (non-destructive). Full mode
    * REQUIRES `write` hooks — the walk throws at start when they are absent. It
-   * never writes to a system / virtual block (Global, Controllers, Modifier, IR
-   * Capture, Scene MIDI, foot controller — see `NO_SWEEP_BLOCKS`): those are
+   * never writes to a system / virtual block (Global, Controllers, the modifier
+   * tables 3..34, IR Capture, Scene MIDI, foot controller — see
+   * `NO_SWEEP_BLOCKS`): those are
    * walked read-only only. Nor does it write to a param whose current display
    * (read just before the sweep) is not a number: it could not be restored.
    */
@@ -1266,18 +1267,35 @@ async function pace(ms: number, signal: AbortSignal | undefined, sleep?: (ms: nu
 // Full-mode taper sweep (write + restore) — port of CaptureRig v2's Gen3Profile
 // ---------------------------------------------------------------------------
 
+/** First and last block address that answer with the modifier table (see `modifierTableBlocks`). */
+const MODIFIER_TABLE_FIRST = 3;
+const MODIFIER_TABLE_LAST = 34;
+
 /**
  * Block addresses a FULL-mode sweep never writes to: the system / virtual blocks of the gen-3
  * effect-id roster (shared by the Axe-Fx III, FM3 and FM9) — the FM3/FM9 family table's 'virtual'
  * entries (Global 1, Controllers 2, Modifier 3, IR Capture 36, Scene MIDI 190, Foot Controller 199)
  * plus the roster blocks the third-party surface cannot address (`addressable: false`, adding
- * Preset FC 200). Their settings are persistent device state, not preset data: the per-block preset
- * reload that backs up the restore does not bring them back. They are still walked read-only.
+ * Preset FC 200), and the modifier-table copies (`modifierTableBlocks`, 3..34). Their settings are
+ * persistent device state, or not shown to be preset data: the per-block preset reload that backs up
+ * the restore is not known to bring them back. They are still walked read-only.
  */
 const NO_SWEEP_BLOCKS: ReadonlySet<number> = new Set<number>([
   ...FM3_EFFECT_ID_TABLE.filter((e) => e.addressing === 'virtual' && e.firstId !== null).map((e) => e.firstId as number),
   ...AXE_FX_III_BLOCKS.filter((b) => b.addressable === false && b.firstId !== null).map((b) => b.firstId as number),
+  ...modifierTableBlocks(),
 ]);
+
+/**
+ * The block addresses that answer with the modifier table: 3 (the roster's Modifier) through 34. The
+ * roster leaves 4..34 unenumerated ("reserved"), so this range is a documented list, not a roster
+ * class — it is the same on every gen-3 model walked so far (Axe-Fx III, FM3, FM9: 32 identical
+ * modifier tables at 3..34). Nothing shows that a preset reload restores what a write there changes,
+ * so a sweep never writes to them; they are walked read-only like the other system blocks.
+ */
+function modifierTableBlocks(): number[] {
+  return Array.from({ length: MODIFIER_TABLE_LAST - MODIFIER_TABLE_FIRST + 1 }, (_, i) => MODIFIER_TABLE_FIRST + i);
+}
 
 /** CaptureRig v2's ≥20ms floor between a sweep SET and the display read-back. */
 const MIN_SWEEP_SETTLE_MS = 20;

@@ -23,11 +23,11 @@ import type { LiveTransport, LiveWalkProgress, LiveWalkWriteHooks } from '../../
 import type { CacheRecord, DeviceParam, FloatRecord } from '../../src/cache/types.js';
 import { VIEW_DEFINITION, VIEW_ENUM_LABEL, VIEW_VALUE } from '../../src/cache/index.js';
 
-export const FULLWALK_CASE_COUNT = 11;
+export const FULLWALK_CASE_COUNT = 12;
 
 const MFR = [0xf0, 0x00, 0x01, 0x74] as const;
 const MODEL = 0x12; // FM9
-const BLOCK = 20;
+const BLOCK = 58; // an effect block (amp): blocks 3..34 and the system blocks are never swept
 
 // ===========================================================================
 // Wire encoders (test-only; inverse of the liveWalk codec)
@@ -311,17 +311,17 @@ export async function runFullWalk(): Promise<void> {
   // ---- Case 4: reloadPreset fires once per swept block ---------------------
   if (t.reloads !== 1) fail(`reloadPreset called ${t.reloads}x (expected 1 for one swept block)`);
   {
-    // Blocks 30 & 32 each carry a swept float; block 31 carries only an enum.
+    // Blocks 66 & 70 each carry a swept float; block 67 carries only an enum.
     // Exactly two reloads: the enum-only block sweeps nothing, so it triggers none.
     const multiSpecs: Spec[] = [
-      { block: 30, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.2, respond: (n) => 10 * n },
-      { block: 31, param: 0, kind: 'enum', min: 0, max: 1, values: ['x', 'y'] },
-      { block: 32, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.7, respond: (n) => 10 * n },
+      { block: 66, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.2, respond: (n) => 10 * n },
+      { block: 67, param: 0, kind: 'enum', min: 0, max: 1, values: ['x', 'y'] },
+      { block: 70, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.7, respond: (n) => 10 * n },
     ];
     const multi = new FullFakeTransport(multiSpecs);
     await liveWalk(multi, {
       model: MODEL,
-      blocks: [30, 31, 32],
+      blocks: [66, 67, 70],
       maxParamId: 0,
       paramAbsentRunLimit: 4,
       blockProbeDepth: 4,
@@ -329,7 +329,7 @@ export async function runFullWalk(): Promise<void> {
       write: multi.hooks(),
       sleep: noSleep,
     });
-    if (multi.reloads !== 2) fail(`multi-block reload: ${multi.reloads} reloads (expected 2 — enum-only block 31 sweeps nothing)`);
+    if (multi.reloads !== 2) fail(`multi-block reload: ${multi.reloads} reloads (expected 2 — enum-only block 67 sweeps nothing)`);
   }
   console.log('  cache/fullwalk: reloadPreset fires once per swept block, never for a sweep-free block');
 
@@ -429,15 +429,38 @@ export async function runFullWalk(): Promise<void> {
       { param: 0, kind: 'float', min: 0, max: 10, origNorm: 0, text: (n) => (n === 0 ? 'OFF' : `${(10 * n).toFixed(1)} ms`) },
       { param: 1, kind: 'float', min: 0, max: 10, origNorm: 0.5, text: () => null },
       { param: 2, kind: 'float', min: 0, max: 10, origNorm: 0.3, respond: (n) => 10 * n, unit: 'Hz' },
-      { block: 21, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0, text: (n) => (n === 0 ? 'OFF' : `${n}`) },
+      { block: 59, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0, text: (n) => (n === 0 ? 'OFF' : `${n}`) },
     ];
     const t2 = new FullFakeTransport(words);
-    const recs = await liveWalk(t2, fullWalkOpts({ blocks: [BLOCK, 21], maxParamId: 2, mode: 'full', write: t2.hooks() }));
+    const recs = await liveWalk(t2, fullWalkOpts({ blocks: [BLOCK, 59], maxParamId: 2, mode: 'full', write: t2.hooks() }));
     const written = [...new Set(t2.sends.map((s) => `${s.eid}:${s.pid}`))];
     if (written.join(',') !== `${BLOCK}:2`) fail(`non-numeric originals written: SETs to ${written.join(',')} (want only ${BLOCK}:2)`);
-    if (t2.reloads !== 1) fail(`${t2.reloads} preset reloads (want 1: block 21 had nothing written)`);
+    if (t2.reloads !== 1) fail(`${t2.reloads} preset reloads (want 1: block 59 had nothing written)`);
     const r0 = recs.find((x) => x.section === BLOCK && x.id === 0);
     if (!r0 || r0.kind !== 'float' || r0.taper !== undefined) fail(`word-display param: ${JSON.stringify(r0)} (want a float without a taper)`);
   }
   console.log('  cache/fullwalk: a param whose original display is a word or unanswered gets no SET (no restore possible); numeric neighbours are still swept');
+
+  // ---- Case 12: the modifier-table copies (blocks 3..34) are walked but never written --------
+  // Every gen-3 model answers 32 identical modifier tables at 3..34. Nothing shows that a preset
+  // reload restores them, so a full walk reads them (record, unit) and writes nothing there: no SET,
+  // no preset reload. Block 35, just past the range, is still swept.
+  {
+    const MODS = [3, 4, 17, 33, 34];
+    const specs: Spec[] = [...MODS, 35].map((block) => ({ block, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.3, respond: (n: number) => 10 * n, unit: 'Hz' }));
+    const mods = new FullFakeTransport(specs);
+    const recs = await liveWalk(mods, fullWalkOpts({ blocks: [...MODS, 35], maxParamId: 0, mode: 'full', write: mods.hooks() }));
+    const written = [...new Set(mods.sends.map((s) => s.eid))];
+    if (written.join(',') !== '35') fail(`modifier tables written: SETs went to blocks ${written.join(',')} (want only 35)`);
+    if (mods.reloads !== 1) fail(`${mods.reloads} preset reloads (want 1, for block 35 only)`);
+    for (const block of MODS) {
+      const r = recs.find((x) => x.section === block && x.id === 0);
+      if (!r || r.kind !== 'float' || r.taper !== undefined || r.unit !== 'Hz') fail(`modifier block ${block}: record ${JSON.stringify(r)} (want a float with its unit and no taper)`);
+    }
+    // A walk of modifier blocks only: no write and no reload at all.
+    const only = new FullFakeTransport(specs.filter((s) => s.block !== 35));
+    await liveWalk(only, fullWalkOpts({ blocks: MODS, maxParamId: 0, mode: 'full', write: only.hooks() }));
+    if (only.sends.length !== 0 || only.reloads !== 0) fail(`modifier-only full walk: ${only.sends.length} SETs, ${only.reloads} reloads (want none)`);
+  }
+  console.log('  cache/fullwalk: the modifier-table copies (blocks 3..34) are walked read-only — no SET, no reload — while block 35 is swept');
 }

@@ -336,7 +336,7 @@ export async function runLiveWalkBounds(): Promise<void> {
 
   // ---- Case 6: FULL mode writes only trustworthy records inside their bound ----------------
   {
-    const BLOCK = 8;
+    const BLOCK = 74; // an effect block: full mode never writes to the system blocks or the modifier tables 3..34
     const layout = {
       [BLOCK]: {
         real: 5,
@@ -408,7 +408,7 @@ export async function runLiveWalkBounds(): Promise<void> {
 
   // ---- Case 9: a known table size keeps a sparse table's late rows ------------------------
   {
-    const BLOCK = 4;
+    const BLOCK = 78; // an effect block, so the full-mode SET check below has writes to check
     // Real rows at 0..2 and at 216 (an unnamed 14-value enum), an id gap of 213 between them.
     const sparse = {
       [BLOCK]: {

@@ -218,7 +218,11 @@ export function connect(opts: ConnectOptions): MidiConnection {
 
   const handlers = new Set<(bytes: number[]) => void>();
   const dispatch = (bytes: number[]): void => {
-    for (const h of handlers) h(bytes);
+    for (const h of handlers) {
+      // A throwing handler must neither skip the remaining handlers nor unwind into the
+      // assembler (which would lose any partial SysEx it is still holding).
+      try { h(bytes); } catch { /* handler errors are the handler's own concern */ }
+    }
   };
   const assemble = createSysExAssembler(dispatch);
   input.on('message', (_dt: number, bytes: number[]) => {

@@ -65,18 +65,22 @@ export interface MidiConnection {
  * assumption holds.
  *
  * Returned function is the inbound seam: feed every raw `message`
- * callback through it; it emits to `dispatch` once a fragment ends
- * in F7 (or immediately for any non-SysEx fragment, which short MIDI
- * messages always are).
+ * callback through it. It emits one `dispatch` call per complete F0…F7
+ * message, as soon as that message's F7 has arrived, and one per
+ * non-SysEx (short MIDI) message.
  *
  * Edge cases:
- *   - Short MIDI (3-byte note/CC/PC) bypasses the accumulator —
- *     the first byte is a non-F0 status, so it ships straight through.
- *   - Complete SysEx in a single fragment (F0…F7, length ≤ 1024)
- *     also bypasses the accumulator. Fast path.
- *   - A fragment with F7 mid-buffer (rare on WinMM but legal MIDI)
- *     is split at the F7: prefix is emitted as the completed message,
- *     trailing bytes open a new accumulation if they start with F0.
+ *   - Short MIDI (3-byte note/CC/PC) arriving while no SysEx is open
+ *     ships straight through — its first byte is a non-F0 status.
+ *   - A fragment may hold more than one message (a busy link coalesces
+ *     a burst into one read). Every complete F0…F7 message in the
+ *     accumulator is dispatched on its own, in order, never glued.
+ *   - Bytes after an F7 that do not start with F0 are a short message
+ *     and are dispatched on their own, up to the next F0 if there is
+ *     one (so `[F0…F7][90 40 7F][F0…F7]` yields three messages).
+ *   - Bytes after an F7 that start with F0 open a new accumulation; a
+ *     trailing partial message is held until a later fragment
+ *     completes it.
  *
  * Serial byte streams use `createSerialMidiFramer` (serialFraming.ts)
  * instead — the two stay separate deliberately: the input contracts
@@ -107,23 +111,38 @@ export function createSysExAssembler(
     }
 
     // Drain EVERY complete F0..F7 message the accumulator now holds — one fragment may carry more
-    // than one (MIDI permits it, and a busy link coalesces a burst into a single read). The old code
-    // dispatched a coalesced fragment as ONE glued blob (and its "split at the F7" branch was
-    // unreachable, since under `endsWithF7` the last F7 is always the final byte), which broke the
-    // one-message-per-emit invariant every downstream parser relies on.
+    // than one (MIDI permits it, and a busy link coalesces a burst into a single read). Dispatching a
+    // coalesced fragment as ONE glued blob would break the one-message-per-emit invariant every
+    // downstream parser relies on.
+    let buf: number[] = accumulator;
     for (;;) {
-      const f7 = accumulator.indexOf(0xf7);
-      if (f7 < 0) return; // incomplete message — keep accumulating
-      const complete = accumulator.slice(0, f7 + 1);
-      const rest = accumulator.slice(f7 + 1);
-      accumulator = undefined; // clear BEFORE dispatch so a throwing consumer can't corrupt state
-      dispatch(complete);
-      if (rest.length === 0) return;
-      if (rest[0] !== 0xf0) {
-        dispatch(rest); // trailing non-SysEx bytes are their own (short) message
+      const f7 = buf.indexOf(0xf7);
+      if (f7 < 0) {
+        accumulator = buf; // incomplete message — keep accumulating
         return;
       }
-      accumulator = rest; // a new message started inside this fragment
+      const complete = buf.slice(0, f7 + 1);
+      const rest = buf.slice(f7 + 1);
+      // Decide what survives BEFORE dispatching, so a throwing consumer can't lose the pending
+      // partial: whatever starts at the next F0 stays in the accumulator.
+      let short: number[] | undefined;
+      let next: number[] | undefined;
+      if (rest.length > 0) {
+        const f0 = rest.indexOf(0xf0);
+        if (f0 === 0) {
+          next = rest; // a new message started right after this one
+        } else if (f0 < 0) {
+          short = rest; // trailing non-SysEx bytes are their own (short) message
+        } else {
+          short = rest.slice(0, f0); // a short message, then a new SysEx
+          next = rest.slice(f0);
+        }
+      }
+      accumulator = next;
+      dispatch(complete);
+      if (short !== undefined) dispatch(short);
+      if (next === undefined) return;
+      buf = next;
     }
   };
 }

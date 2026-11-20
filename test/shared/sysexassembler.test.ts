@@ -12,7 +12,7 @@
  */
 import { createSysExAssembler } from '../../src/core/midi/pure.js';
 
-export const SYSEX_ASSEMBLER_CASE_COUNT = 6;
+export const SYSEX_ASSEMBLER_CASE_COUNT = 8;
 
 const MSG_A = [0xf0, 0x00, 0x01, 0x74, 0x11, 0x0c, 0x03, 0x00, 0xf7];
 const MSG_B = [0xf0, 0x00, 0x01, 0x74, 0x11, 0x76, 0x00, 0xf7];
@@ -71,4 +71,39 @@ export function runSysExAssemblerTests(): void {
   got = feed([SHORT.slice()]);
   eqCount(got, 1, 'short message alone');
   eq(got[0]!, SHORT, 'short message payload');
+
+  // 7. A short message sandwiched between two SysEx messages in one fragment is split on both
+  //    sides: three messages, the short one never glued onto the SysEx that follows it.
+  got = feed([[...MSG_A, ...SHORT, ...MSG_B]]);
+  eqCount(got, 3, 'message + short + message');
+  eq(got[0]!, MSG_A, 'message + short + message: first');
+  eq(got[1]!, SHORT, 'message + short + message: short');
+  eq(got[2]!, MSG_B, 'message + short + message: last');
+  //    ...and when the trailing SysEx is only partial, it is held and completed by the next fragment.
+  got = feed([[...MSG_A, ...SHORT, ...MSG_B.slice(0, 4)], MSG_B.slice(4)]);
+  eqCount(got, 3, 'message + short + partial then completion');
+  eq(got[1]!, SHORT, 'message + short + partial: short');
+  eq(got[2]!, MSG_B, 'message + short + partial: completed');
+
+  // 8. A consumer that throws must not lose the pending partial: the next fragment still completes it.
+  const seen: number[][] = [];
+  let armed = true;
+  const assemble = createSysExAssembler((bytes) => {
+    seen.push(bytes);
+    if (armed) {
+      armed = false;
+      throw new Error('consumer failure');
+    }
+  });
+  let threw = false;
+  try {
+    assemble([...MSG_A, ...MSG_B.slice(0, 4)]);
+  } catch {
+    threw = true;
+  }
+  if (!threw) throw new Error('throwing consumer: expected the consumer error to propagate');
+  assemble(MSG_B.slice(4));
+  eqCount(seen, 2, 'throwing consumer');
+  eq(seen[0]!, MSG_A, 'throwing consumer: first message was delivered to the consumer');
+  eq(seen[1]!, MSG_B, 'throwing consumer: pending partial survived and completed');
 }

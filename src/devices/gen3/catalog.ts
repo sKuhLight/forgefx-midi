@@ -289,6 +289,14 @@ export interface DeviceParamRange {
    * type/mode selectors the overlay missed were stored wrong as continuous).
    */
   readonly enumCount?: number;
+  /**
+   * Float rows only: the device-true value taper, when a reliable one is known
+   * (`'linear' | 'log' | 'flat' | 'custom'`). A `'linear'` taper takes
+   * precedence over the catalog's AM4-inferred `scaling: 'log10'` hint when the
+   * display↔wire calibration is resolved (the dimensionless 0..10 knobs, typecode
+   * 0x52, are linear on the device but carry the AM4's log hint in the catalog).
+   */
+  readonly taper?: 'linear' | 'log' | 'flat' | 'custom';
 }
 
 /** Device-true ranges keyed family → paramId → range (e.g. `FM9_RANGES`). */
@@ -378,7 +386,9 @@ function resolveCalibration(
   if (displayMin === undefined || displayMax === undefined) return undefined;
   if (!Number.isFinite(displayMin) || !Number.isFinite(displayMax)) return undefined;
   if (displayMin >= displayMax) return undefined;
-  const displayScale: 'linear' | 'log10' = scaling === 'log10' ? 'log10' : 'linear';
+  // A device-true LINEAR taper beats the catalog's AM4-inferred log10 hint.
+  const deviceLinear = deviceRange !== undefined && deviceRange.kind === 'float' && deviceRange.taper === 'linear';
+  const displayScale: 'linear' | 'log10' = scaling === 'log10' && !deviceLinear ? 'log10' : 'linear';
   if (displayScale === 'log10' && (displayMin <= 0 || displayMax <= 0)) return undefined;
   return { displayMin, displayMax, displayScale };
 }

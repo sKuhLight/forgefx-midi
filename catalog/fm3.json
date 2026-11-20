@@ -14937,12 +14937,13 @@
         },
         "33": {
           "kind": "float",
-          "displayMin": 0.01,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "34": {
           "kind": "float",
@@ -15771,12 +15772,13 @@
         },
         "20": {
           "kind": "float",
-          "displayMin": 0.5,
-          "displayMax": 500,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "21": {
           "kind": "float",
@@ -17587,12 +17589,13 @@
         },
         "22": {
           "kind": "float",
-          "displayMin": 0.5,
-          "displayMax": 500,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "23": {
           "kind": "float",
@@ -17923,12 +17926,13 @@
         },
         "58": {
           "kind": "float",
-          "displayMin": 2,
-          "displayMax": 200,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 993
+          "defaultRaw": 13039,
+          "taper": "linear"
         },
         "59": {
           "kind": "float",
@@ -18863,12 +18867,13 @@
         },
         "72": {
           "kind": "float",
-          "displayMin": 0.1,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "73": {
           "kind": "float",
@@ -19027,12 +19032,13 @@
         },
         "90": {
           "kind": "float",
-          "displayMin": 2.5,
-          "displayMax": 40,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 13107
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "91": {
           "kind": "float",
@@ -19933,12 +19939,13 @@
         },
         "25": {
           "kind": "float",
-          "displayMin": 10,
-          "displayMax": 200,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 17246
+          "defaultRaw": 39196,
+          "taper": "linear"
         },
         "26": {
           "kind": "float",
@@ -19960,12 +19967,13 @@
         },
         "28": {
           "kind": "float",
-          "displayMin": 1,
-          "displayMax": 400,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 3121
+          "defaultRaw": 32767,
+          "taper": "linear"
         },
         "29": {
           "kind": "float",
@@ -20231,12 +20239,13 @@
         },
         "20": {
           "kind": "float",
-          "displayMin": 0.05,
-          "displayMax": 50,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 984
+          "defaultRaw": 26304,
+          "taper": "linear"
         },
         "21": {
           "kind": "float",
@@ -20288,12 +20297,13 @@
         },
         "26": {
           "kind": "float",
-          "displayMin": 200,
-          "displayMax": 20000,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "27": {
           "kind": "enum",
@@ -20386,12 +20396,13 @@
         },
         "3": {
           "kind": "float",
-          "displayMin": 40,
-          "displayMax": 400,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 7282
+          "defaultRaw": 19728,
+          "taper": "linear"
         },
         "4": {
           "kind": "float",
@@ -20527,12 +20538,13 @@
         },
         "6": {
           "kind": "float",
-          "displayMin": 1,
-          "displayMax": 100,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 2648
+          "defaultRaw": 22903,
+          "taper": "linear"
         },
         "7": {
           "kind": "float",
@@ -24826,12 +24838,13 @@
         },
         "65": {
           "kind": "float",
-          "displayMin": 5,
-          "displayMax": 5000,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "66": {
           "kind": "float",
@@ -29137,12 +29150,13 @@
         },
         "32": {
           "kind": "float",
-          "displayMin": 0.1,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 1523
+          "defaultRaw": 16990,
+          "taper": "linear"
         },
         "33": {
           "kind": "float",
@@ -29768,12 +29782,13 @@
         },
         "17": {
           "kind": "float",
-          "displayMin": 0.5,
-          "displayMax": 500,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "18": {
           "kind": "float",
@@ -30922,12 +30937,13 @@
         },
         "3": {
           "kind": "float",
-          "displayMin": 20,
-          "displayMax": 200,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 20024
+          "defaultRaw": 37619,
+          "taper": "linear"
         },
         "4": {
           "kind": "float",
@@ -30986,12 +31002,13 @@
         },
         "10": {
           "kind": "float",
-          "displayMin": 0.1,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 0
+          "defaultRaw": 0,
+          "taper": "linear"
         },
         "11": {
           "kind": "enum",

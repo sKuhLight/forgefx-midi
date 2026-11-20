@@ -244,8 +244,9 @@ export function createModernFractalDescriptor(config: FractalModernConfig): Devi
     // Device-true display ranges (FM9 + III today, mined from each editor's
     // effectDefinitions cache) override the AM4-overlay-inferred bounds for
     // calibration, correcting the float params whose inherited range contradicts
-    // the real front panel (DELAY_TIME, REVERB_PREDELAY, etc.). FM3/VP4 have no
-    // wired range table yet, so they keep the catalog inference.
+    // the real front panel (DELAY_TIME, REVERB_PREDELAY, etc.). FM3 wires only its
+    // typecode-0x52 knob rows; VP4 has none, so both keep the catalog inference
+    // everywhere else.
     deviceRanges: config.device_ranges,
     // Discrete-ordinal classification overlay for this model byte (III/FM9 from
     // each device's own hardware roundtrip; FM3 via sibling family-join). Params

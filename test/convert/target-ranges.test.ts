@@ -10,6 +10,7 @@
 import {
   resolveTargetRange,
   resolveTargetEnumOptions,
+  resolveEnumOptionsByParamId,
 } from '../../src/convert/targetRanges.js';
 import { convertPreset } from '../../src/convert/engine.js';
 import type { ConverterPreset } from '../../src/convert/ir.js';
@@ -60,11 +61,26 @@ export function runTargetRangesTests(): void {
   );
   assert(am4AmpType?.[0] === '1959SLP Normal', `am4 amp type[0] expected '1959SLP Normal', got ${am4AmpType?.[0]}`);
 
-  // gen-3: device-true enum row + dense overlay labels → ordered options.
+  // gen-3: device-true enum row + the device's own mined label list → ordered options.
+  // FM3 amp input select reads LEFT / RIGHT / SUM L+R on the unit (the curated overlay's
+  // L+R / LEFT / RIGHT order is not the device's).
   const inputSel = resolveTargetEnumOptions('fm3', 'amp', 'inputselect');
   assert(
-    Array.isArray(inputSel) && inputSel.length === 3 && inputSel[0] === 'L+R',
-    `fm3 amp inputselect expected 3 options starting L+R, got ${JSON.stringify(inputSel)}`,
+    Array.isArray(inputSel) && inputSel.length === 3 && inputSel.join('|') === 'LEFT|RIGHT|SUM L+R',
+    `fm3 amp inputselect expected LEFT|RIGHT|SUM L+R, got ${JSON.stringify(inputSel)}`,
+  );
+
+  // The device's list is the source of truth even where the overlay has a different one: FM3 delay
+  // type is the unit's MONO / STEREO / PING-PONG routing list, not the overlay's model-style names.
+  const delayType = resolveTargetEnumOptions('fm3', 'delay', 'type');
+  assert(
+    delayType?.length === 8 && delayType[0] === 'MONO' && delayType[2] === 'PING-PONG',
+    `fm3 delay type expected the device list (MONO, STEREO, PING-PONG, ...), got ${JSON.stringify(delayType)}`,
+  );
+  // By name and by device address resolve to the same labels (FM3 amp input select is param 21).
+  assert(
+    resolveEnumOptionsByParamId('fm3', 'amp', 21)?.join('|') === inputSel?.join('|'),
+    'by-name and by-paramId enum options must agree for fm3 amp inputselect',
   );
 
   // A continuous (float) param yields no enum options.

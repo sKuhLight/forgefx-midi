@@ -14,7 +14,10 @@
  * typecode-0x52 knob params (dimensionless, shown on a linear 0..10 scale) was
  * refreshed when their display range became 0..10 (see cache/knobrule). The old
  * server derived those values from the cache's (min, max) * scale bounds, which
- * is not what the device displays. Every other field is still the original capture.
+ * is not what the device displays. Likewise the decoded `value` of the log-taper params
+ * (frequency / time style knobs) was refreshed when the decode became taper-aware: it is the
+ * true display value now (a 20..2000 Hz cut at mid sweep reads 200 Hz, not the linear 1010 Hz).
+ * Raw words and every other field are unchanged.
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';

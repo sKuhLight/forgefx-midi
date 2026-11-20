@@ -173,9 +173,10 @@ export interface RangeSectionMeta {
   /**
    * Parameter slots of the section: ordinary records (id < 0xff00) INCLUDING the all-zero
    * placeholder slots — the fn=0x1F channel-block wire stride. Exact from the editor cache. From a
-   * live walk it is exact for table-shaped sections unless the section ENDS in unused slots (a
-   * trailing empty slot answers exactly like the end of the table; FM3 fw 12.0: VOLUME 14 live vs
-   * 15) or the walk reported `missingSlots`; it is then a lower bound. Live placeholder rows count
+   * live walk it is exact for table-shaped sections — including a table that ends in unused slots
+   * when the device answers past the table's end with a no-payload reply (FM3 fw 13.0: DELAY 89,
+   * VOLUME 15) — unless the walk reported `missingSlots`, or the section ends in unused slots on a
+   * device whose table end answers like an empty slot; it is then a lower bound. Live placeholder rows count
    * only where the section's records fill at least a quarter of their id span, so the id gaps of a
    * sparse system section walked in full are not slots. A sparse section walked only in part can
    * still look table-shaped and count its gaps (FM3 fw 12.0 GLOBAL in the read-only 0..127 window:

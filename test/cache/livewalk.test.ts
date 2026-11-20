@@ -649,12 +649,13 @@ export async function runLiveWalk(): Promise<void> {
       `ranges ${m.ranges.pct.toFixed(2)}%, DELAY ${m.delayRoster.count}, cab ${m.cabIrs.factory1}/${m.cabIrs.factory2}/${m.cabIrs.legacy})`,
   );
 
-  // ---- Case 13: scaled (continuous) params get NO speculative 0x1f probes ----
+  // ---- Case 13: scale != 0 params get NO speculative 0x1f probes without a hint ----
   // FORGEFX-32: a 0x1f label query against a param with no label list is
-  // out-of-contract and hard-freezes the FM3. A def with scale != 0 is
-  // continuous by contract — the walk must emit only its definition query.
+  // out-of-contract and hard-freezes the FM3. A def with a non-zero `scale` slot
+  // (the default value) may or may not have a list, and its numbers cannot tell —
+  // without a caller hint the walk must emit only its definition query.
   {
-    // Integral bounds + small span: WOULD pass the old enum heuristic, but scale=2 marks it continuous.
+    // Integral bounds + small span: WOULD pass the old enum heuristic, but scale=2 keeps it unprobed.
     const rec: CacheRecord = { kind: 'float', section: 94, offset: 0, id: 0, tc: 2, min: 0, max: 10, def: 5, step: 0, t1: 0, t2: 0 };
     let labelQueries = 0;
     const t: LiveTransport = {
@@ -670,7 +671,7 @@ export async function runLiveWalk(): Promise<void> {
     if (labelQueries !== 0) fail(`scaled param got ${labelQueries} 0x1f probes (must be 0)`);
     if (recs[0]?.kind === 'enum') fail('scaled param mis-classified as enum');
   }
-  console.log('  cache/livewalk: scale!=0 (continuous) params are never 0x1f label-probed');
+  console.log('  cache/livewalk: scale!=0 params are never 0x1f label-probed without a hint');
 
   // ---- Case 14: speculative probes never open a list at a high absolute sub --
   // The A440-style case: non-enum kind, scale 0, integral bounds far above 127
@@ -910,7 +911,8 @@ export async function runLiveWalk(): Promise<void> {
   // anything non-NUL after its terminator means the reply is not a label.
   //
   // Reachability: only a def `couldBeEnum` accepts is probed, which needs
-  // scale == 0 (a scale!=0 def is continuous-by-contract and never probed). A
+  // scale == 0 (a scale!=0 def is never probed on its numbers, only on a caller
+  // hint whose list fits it). A
   // scale-0 float with integral bounds IS reachable: bounds 0..5 with a
   // non-integral step 0.5 → classifyKind 'float'. That is the case below.
   {

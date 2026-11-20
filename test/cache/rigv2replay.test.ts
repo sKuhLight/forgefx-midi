@@ -68,12 +68,15 @@ interface DeviceCase {
   /** Rows those rules reject now: junk only, all in `junkBlocks`, none carrying a label list. */
   rejected: number;
   junkBlocks: readonly number[];
+  /** Blocks whose family the vote must pick by the gen-3 effect-id roster (block -> family). A vote
+   *  tie used to hand these to a family whose own table merely shares their leading rows. */
+  rosterPins: Readonly<Record<number, string>>;
 }
 
 // A future rule change that drops real params (or stops dropping this junk) fails the pins below.
 const DEVICES: DeviceCase[] = [
-  { name: 'FM9', model: 0x12, defsRel: 'fm9-full-fw12p0/fm9-full.defs.jsonl', params: FM9_PARAMS as unknown as DeviceParam[], baseline: 2361, rejected: 62, junkBlocks: [58, 59, 70, 71] },
-  { name: 'AXE3', model: 0x10, defsRel: 'axe3-full-fw32p6/axe3-full.defs.jsonl', params: AXE3_PARAMS as unknown as DeviceParam[], baseline: 4227, rejected: 256, junkBlocks: [0] },
+  { name: 'FM9', model: 0x12, defsRel: 'fm9-full-fw12p0/fm9-full.defs.jsonl', params: FM9_PARAMS as unknown as DeviceParam[], baseline: 2361, rejected: 62, junkBlocks: [58, 59, 70, 71], rosterPins: { 3: 'MOD' } },
+  { name: 'AXE3', model: 0x10, defsRel: 'axe3-full-fw32p6/axe3-full.defs.jsonl', params: AXE3_PARAMS as unknown as DeviceParam[], baseline: 4227, rejected: 256, junkBlocks: [0], rosterPins: { 37: 'INPUT' } },
 ];
 
 // ---------------------------------------------------------------------------
@@ -375,6 +378,12 @@ export async function runRigV2Replay(): Promise<void> {
     const seedsResolved = Object.keys(HW_SEEDS).filter((f) => built.rangeSections[f] !== undefined);
     const seedsAbsent = Object.keys(HW_SEEDS).filter((f) => built.rangeSections[f] === undefined);
     if (!seedsResolved.includes('DISTORT')) fail(`${dev.name}: DISTORT (amp) block did not resolve`);
+    // Roster pins: the family of these blocks follows the effect-id roster (Modifier at 3, Input 1 at 37).
+    for (const [blk, fam] of Object.entries(dev.rosterPins)) {
+      const meta = built.rangeSections[fam];
+      const tags = meta ? [meta.sectionTag, ...(meta.instanceTags ?? [])] : [];
+      if (!tags.includes(Number(blk))) fail(`${dev.name}: block ${blk} should map to ${fam}, ${fam} got ${meta ? tags.join('/') : 'no section'}`);
+    }
     if (Object.keys(built.ranges).length < 10) {
       fail(`${dev.name}: only ${Object.keys(built.ranges).length} families mapped (expected the full effect set)`);
     }

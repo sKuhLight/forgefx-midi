@@ -21,7 +21,7 @@ import type { LiveTransport, LiveWalkOptions, LiveWalkResult, LiveWalkWriteHooks
 import type { DeviceParam } from '../../src/cache/types.js';
 import { endOfRangeFrame, replyFrame, sentinelFrame, valueReply } from './livewalk.test.js';
 
-export const LIVEWALK_BOUNDS_CASE_COUNT = 14;
+export const LIVEWALK_BOUNDS_CASE_COUNT = 16;
 
 const FM3 = 0x11;
 const noSleep = (): Promise<void> => Promise.resolve();
@@ -54,7 +54,7 @@ function defFrame(param: number, d: Def): Uint8Array {
   return replyFrame(VIEW_DEFINITION, param, 0x3a, buf);
 }
 
-/** A real continuous param (scale != 0 → float, never label-walked) under a unique symbol id. */
+/** A real continuous param (scale != 0, no hint → float, never label-walked) under a unique symbol id. */
 const realFloat = (id: number): Def => ({ id, tc: 2, min: 0, max: 10, scale: 1, def: 5, step: 0 });
 /** An enum-shaped body (step 0, scale 0, integral bounds): a label walk would follow if accepted. */
 const enumShaped = (id: number): Def => ({ id, tc: 16, min: 0, max: 3, scale: 0, def: 0, step: 0 });
@@ -336,7 +336,7 @@ export async function runLiveWalkBounds(): Promise<void> {
 
   // ---- Case 6: FULL mode writes only trustworthy records inside their bound ----------------
   {
-    const BLOCK = 8;
+    const BLOCK = 74; // an effect block: full mode never writes to the system blocks or the modifier tables 3..34
     const layout = {
       [BLOCK]: {
         real: 5,
@@ -408,7 +408,7 @@ export async function runLiveWalkBounds(): Promise<void> {
 
   // ---- Case 9: a known table size keeps a sparse table's late rows ------------------------
   {
-    const BLOCK = 4;
+    const BLOCK = 78; // an effect block, so the full-mode SET check below has writes to check
     // Real rows at 0..2 and at 216 (an unnamed 14-value enum), an id gap of 213 between them.
     const sparse = {
       [BLOCK]: {
@@ -618,4 +618,82 @@ export async function runLiveWalkBounds(): Promise<void> {
     if (!sameList(paramsOf(ru, BLOCK), [0, 1, 2, 3, 4]) || unknown.maxParam(BLOCK) !== 4 + 32) fail(`no known size: records ${paramsOf(ru, BLOCK).join(',')}, highest query ${unknown.maxParam(BLOCK)} (want 0..4 / 36)`);
   }
   console.log('  cache/livewalk-bounds: the stop run counts afresh at a known size — a table ending in empty slots gets a full lookahead (highest query size - 1 + 32) and an appended row at size + 4 is found');
+
+  // ---- Case 15: a reused symbol id with a new body continuing a known table is real ----------
+  {
+    const BLOCK = 9;
+    // A mixer-shaped table: six level rows under ids 600, 604, ... 620; the first two balance rows
+    // reuse the ids of the last two level rows with a DIFFERENT body; then rows under fresh ids.
+    const level = (id: number): Def => ({ id, tc: 1329, min: 0, max: 1, scale: 1, def: 100, step: 0.001 });
+    const balance = (id: number): Def => ({ id, tc: 50, min: -1, max: 1, scale: 0.5, def: 100, step: 0.002 });
+    const mixer = (extra?: (p: number) => Def | undefined) => ({
+      [BLOCK]: {
+        real: 0,
+        extra: (p: number): Def | undefined => {
+          const x = extra?.(p);
+          if (x) return x;
+          if (p <= 5) return level(600 + 4 * p);
+          if (p <= 11) return balance(616 + 4 * (p - 6)); // 6 -> 616 (= p4's id), 7 -> 620 (= p5's id), 8.. fresh
+          if (p <= 13) return realFloat(700 + p);
+          return endMarker(128);
+        },
+      },
+    });
+    const known = { ...base, blocks: [BLOCK], paramKnownSizeByBlock: { [BLOCK]: 14 } };
+    const rk = await liveWalkDetailed(tableDevice(mixer()), known);
+    if (!sameList(paramsOf(rk, BLOCK), range(0, 13)) || rk.pseudoReplies.duplicateId !== 0) {
+      fail(`reused ids inside a known table: records ${paramsOf(rk, BLOCK).join(',')}, ${JSON.stringify(rk.pseudoReplies)} (want 0..13, no duplicates)`);
+    }
+    // Without a known size the walk stays conservative: both reuses are copies.
+    const ru = await liveWalkDetailed(tableDevice(mixer()), { ...base, blocks: [BLOCK] });
+    if (!sameList(paramsOf(ru, BLOCK), [...range(0, 5), ...range(8, 13)]) || ru.pseudoReplies.duplicateId !== 2) {
+      fail(`reused ids without a known size: records ${paramsOf(ru, BLOCK).join(',')}, ${JSON.stringify(ru.pseudoReplies)}`);
+    }
+    // Inside the known table a reuse with the SAME body is still a copy, and so is a reuse of an end
+    // marker's id; a reuse past the known size is a copy whatever its body.
+    const copies = tableDevice(mixer((p) => {
+      if (p === 12) return level(600); // same body as param 0
+      if (p === 9) return { ...endMarker(0) }; // an inner slot answering the marker body
+      if (p === 10) return { id: END_MARKER_ID, tc: 50, min: -1, max: 1, scale: 0, def: 100, step: 0.002 }; // reuses the marker id
+      return undefined;
+    }));
+    const rc = await liveWalkDetailed(copies, known);
+    // (9 is no placeholder: the run it opens holds the pseudo answer at 10, so it is a gap.)
+    if (!sameList(paramsOf(rc, BLOCK), [...range(0, 8), 11, 13]) || rc.pseudoReplies.duplicateId !== 2) {
+      fail(`copies inside a known table: records ${paramsOf(rc, BLOCK).join(',')}, ${JSON.stringify(rc.pseudoReplies)} (want 0..8, 11, 13; 2 duplicates)`);
+    }
+    // A reuse with a new body that does NOT directly follow the last real definition (an empty slot
+    // in between) stays a copy even inside the known table.
+    const gap = tableDevice(mixer((p) => (p === 6 ? { id: 0, tc: 0, min: 0, max: 0, scale: 0, def: 0, step: 0 } : undefined)));
+    const rgap = await liveWalkDetailed(gap, known);
+    if (paramsOf(rgap, BLOCK).includes(7) || !paramsOf(rgap, BLOCK).includes(8) || rgap.pseudoReplies.duplicateId !== 1) {
+      fail(`a reuse after a gap: records ${paramsOf(rgap, BLOCK).join(',')}, ${JSON.stringify(rgap.pseudoReplies)}`);
+    }
+    const past = await liveWalkDetailed(tableDevice(mixer()), { ...base, blocks: [BLOCK], paramKnownSizeByBlock: { [BLOCK]: 7 } });
+    if (paramsOf(past, BLOCK).includes(7) || !paramsOf(past, BLOCK).includes(6) || past.pseudoReplies.duplicateId !== 1) {
+      fail(`a reuse past the known size: records ${paramsOf(past, BLOCK).join(',')}, ${JSON.stringify(past.pseudoReplies)}`);
+    }
+  }
+  console.log('  cache/livewalk-bounds: a reused symbol id with a new body right after the last real param of a known table is a real param; same-body and end-marker reuses, reuses after a gap and outside a known size stay copies');
+
+  // ---- Case 16: the default block sweep stops at 160; higher blocks are the caller's opt-in ----
+  {
+    // Tables at 158 (inside the default range) and at 191 (a multiplexer address above it).
+    const layout = { 158: { real: 3 }, 191: { real: 7 } };
+    const dev = tableDevice(layout);
+    const res = await liveWalkDetailed(dev, { ...base, maxParamId: 20 });
+    const blocksQueried = [...new Set(dev.sent.map((q) => q.block))].sort((a, b) => a - b);
+    if (!sameList(blocksQueried, range(0, 160))) fail(`default sweep queried blocks ${blocksQueried[0]}..${blocksQueried[blocksQueried.length - 1]} (${blocksQueried.length}), want 0..160`);
+    if (!sameList(paramsOf(res, 158), range(0, 2)) || paramsOf(res, 191).length !== 0) fail('default sweep: the table at 158 must be found and 191 never queried');
+    // An explicit block list reaches 191 (and only the listed blocks).
+    const listed = tableDevice(layout);
+    const rl = await liveWalkDetailed(listed, { ...base, maxParamId: 20, blocks: [158, 191] });
+    const lb = [...new Set(listed.sent.map((q) => q.block))].sort((a, b) => a - b);
+    if (!sameList(lb, [158, 191]) || !sameList(paramsOf(rl, 191), range(0, 6))) fail(`explicit block list: queried ${lb.join(',')}, records at 191 ${paramsOf(rl, 191).join(',')}`);
+    // So does an explicit maxBlock.
+    const wide = tableDevice(layout);
+    const rw = await liveWalkDetailed(wide, { ...base, maxParamId: 20, maxBlock: 191 });
+    if (!sameList(paramsOf(rw, 191), range(0, 6)) || wide.sent.some((q) => q.block > 191)) fail('explicit maxBlock 191: table missed or a block above it queried');
+  }
+  console.log('  cache/livewalk-bounds: the default sweep covers blocks 0..160 only; an explicit block list or maxBlock reaches the effect tables above');
 }

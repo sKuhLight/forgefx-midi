@@ -23,7 +23,7 @@ import type { LiveTransport, LiveWalkProgress, LiveWalkWriteHooks } from '../../
 import type { CacheRecord, DeviceParam, FloatRecord } from '../../src/cache/types.js';
 import { VIEW_DEFINITION, VIEW_ENUM_LABEL, VIEW_VALUE } from '../../src/cache/index.js';
 
-export const FULLWALK_CASE_COUNT = 10;
+export const FULLWALK_CASE_COUNT = 11;
 
 const MFR = [0xf0, 0x00, 0x01, 0x74] as const;
 const MODEL = 0x12; // FM9
@@ -137,6 +137,9 @@ interface Spec {
   origNorm?: number;
   /** Float only: display value as a function of the current normalized value. */
   respond?: (n: number) => number;
+  /** Float only: the display as TEXT for a normalized value (wins over `respond`; `null` = the
+   *  value view does not answer with a value). */
+  text?: (n: number) => string | null;
   unit?: string;
   /** Enum only. */
   values?: string[];
@@ -178,6 +181,10 @@ class FullFakeTransport implements LiveTransport {
       return Promise.resolve(endOfRangeFrame(VIEW_ENUM_LABEL, param));
     }
     if (view === VIEW_VALUE) {
+      if (s.kind === 'float' && s.text) {
+        const shown = s.text(this.current.get(key) ?? 0);
+        return Promise.resolve(shown === null ? sentinelFrame(view, param) : replyFrame(VIEW_VALUE, param, ascii(shown)));
+      }
       if (s.kind === 'float' && s.respond) {
         const n = this.current.get(key) ?? 0;
         const v = s.respond(n);
@@ -411,4 +418,26 @@ export async function runFullWalk(): Promise<void> {
     }
   }
   console.log('  cache/fullwalk: system/virtual blocks (1, 2, 3, 36) are walked read-only — no SET, no reload — while effect blocks are swept');
+
+  // ---- Case 11: no write when the original display is not a number ----------
+  // The restore inverts the swept taper at the ORIGINAL displayed number. A param that currently
+  // shows a word ('OFF' at its end stop) or whose value view does not answer cannot be restored,
+  // so it gets no SET at all; a numeric neighbour is still swept. A block whose only floats are
+  // such params gets no preset reload either.
+  {
+    const words: Spec[] = [
+      { param: 0, kind: 'float', min: 0, max: 10, origNorm: 0, text: (n) => (n === 0 ? 'OFF' : `${(10 * n).toFixed(1)} ms`) },
+      { param: 1, kind: 'float', min: 0, max: 10, origNorm: 0.5, text: () => null },
+      { param: 2, kind: 'float', min: 0, max: 10, origNorm: 0.3, respond: (n) => 10 * n, unit: 'Hz' },
+      { block: 21, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0, text: (n) => (n === 0 ? 'OFF' : `${n}`) },
+    ];
+    const t2 = new FullFakeTransport(words);
+    const recs = await liveWalk(t2, fullWalkOpts({ blocks: [BLOCK, 21], maxParamId: 2, mode: 'full', write: t2.hooks() }));
+    const written = [...new Set(t2.sends.map((s) => `${s.eid}:${s.pid}`))];
+    if (written.join(',') !== `${BLOCK}:2`) fail(`non-numeric originals written: SETs to ${written.join(',')} (want only ${BLOCK}:2)`);
+    if (t2.reloads !== 1) fail(`${t2.reloads} preset reloads (want 1: block 21 had nothing written)`);
+    const r0 = recs.find((x) => x.section === BLOCK && x.id === 0);
+    if (!r0 || r0.kind !== 'float' || r0.taper !== undefined) fail(`word-display param: ${JSON.stringify(r0)} (want a float without a taper)`);
+  }
+  console.log('  cache/fullwalk: a param whose original display is a word or unanswered gets no SET (no restore possible); numeric neighbours are still swept');
 }

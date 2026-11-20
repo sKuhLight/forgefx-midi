@@ -1088,7 +1088,8 @@ export interface LiveWalkOptions {
    * REQUIRES `write` hooks — the walk throws at start when they are absent. It
    * never writes to a system / virtual block (Global, Controllers, Modifier, IR
    * Capture, Scene MIDI, foot controller — see `NO_SWEEP_BLOCKS`): those are
-   * walked read-only only.
+   * walked read-only only. Nor does it write to a param whose current display
+   * (read just before the sweep) is not a number: it could not be restored.
    */
   mode?: 'read-only' | 'full';
   /**
@@ -1306,11 +1307,16 @@ interface SweepContext {
  * 0..1 via CONTINUOUS-SET reading the display back at each step, classify the
  * taper, then RESTORE the original value through the classified curve's analytic
  * inverse. Faithful port of CaptureRig v2's `_sweep_taper`/`_restore`. Returns
- * the classified taper; ALWAYS attempts the restore (the codec builds every
- * SET with `buildSetParameterContinuous` and sends it via the host `write`
- * hook). `reads` counts the display queries issued (folded into `queries`).
+ * the classified taper (`undefined` when nothing was written, see below); the
+ * codec builds every SET with `buildSetParameterContinuous` and sends it via the
+ * host `write` hook. `reads` counts the display queries issued (folded into
+ * `queries`).
+ *
+ * No write at all when the ORIGINAL display does not parse as a number (a word
+ * such as 'OFF', or no answer): the restore inverts the taper at that number, so
+ * without it the original value could not be put back.
  */
-async function sweepTaper(ctx: SweepContext, block: number, param: number): Promise<{ taper: FloatTaper; reads: number }> {
+async function sweepTaper(ctx: SweepContext, block: number, param: number): Promise<{ taper: FloatTaper | undefined; reads: number }> {
   const { transport, write, model, points, settleMs, signal, sleep } = ctx;
   const settle = Math.max(settleMs, MIN_SWEEP_SETTLE_MS);
   let reads = 0;
@@ -1318,6 +1324,7 @@ async function sweepTaper(ctx: SweepContext, block: number, param: number): Prom
   const origDisplay = await readDisplay(transport, model, block, param);
   reads += 1;
   const origVal = origDisplay === null ? null : parseDisplayValue(origDisplay);
+  if (origVal === null) return { taper: undefined, reads };
 
   const samples: Array<readonly [number, number | null]> = [];
   const denom = points > 1 ? points - 1 : 1;
@@ -1756,11 +1763,14 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       if (sweepCtx && !NO_SWEEP_BLOCKS.has(block) && labels.length === 0 && !hintEntry && def.kind === 'float' && def.max !== def.min && param <= bound) {
         await pace(interQueryMs, signal, sleep);
         const swept = await sweepTaper(sweepCtx, block, param);
-        taper = swept.taper;
         queries += swept.reads;
-        tapers += 1;
-        sweptInBlock = true;
-        progress({ phase: 'param-sweep', block, param, blockIndex: bi, blockCount: blocks.length });
+        if (swept.taper) {
+          // Written (and restored): the block gets its preset reload.
+          taper = swept.taper;
+          tapers += 1;
+          sweptInBlock = true;
+          progress({ phase: 'param-sweep', block, param, blockIndex: bi, blockCount: blocks.length });
+        }
       }
 
       records.push(buildRecord(block, param, def, labels, unit, taper, emptyList));

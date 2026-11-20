@@ -133,8 +133,10 @@ export interface DeviceParam {
  * Device-true display range for one (family, paramId), mirroring the shipped
  * `Fm3ParamRange` shape (kind + display bounds + scale/step + raw typecode,
  * plus `enumCount` on enum-kind rows). `displayMin`/`displayMax` are the cache
- * `min`/`max` multiplied by `scale`; placeholder (unused) wire slots carry an
- * all-zero float row.
+ * `min`/`max` multiplied by `scale`, except typecode-0x52 float rows (dimensionless
+ * knobs), which are shown on a linear 0..10 scale: they derive 0..10, `taper:
+ * 'linear'` and `unit: 'knob_0_10'` whatever their definition's min/max are.
+ * Placeholder (unused) wire slots carry an all-zero float row.
  */
 export interface RangeDef {
   kind: 'enum' | 'float';

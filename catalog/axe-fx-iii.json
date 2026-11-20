@@ -29080,12 +29080,13 @@
         },
         "33": {
           "kind": "float",
-          "displayMin": 0.01,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "34": {
@@ -30734,12 +30735,13 @@
         },
         "20": {
           "kind": "float",
-          "displayMin": 0.5,
-          "displayMax": 500,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "21": {
@@ -33141,12 +33143,13 @@
         },
         "16": {
           "kind": "float",
-          "displayMin": 0.5,
-          "displayMax": 500,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "17": {
@@ -33538,12 +33541,13 @@
         },
         "58": {
           "kind": "float",
-          "displayMin": 2,
-          "displayMax": 200,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
           "defaultRaw": 993,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "59": {
@@ -34510,12 +34514,13 @@
         },
         "70": {
           "kind": "float",
-          "displayMin": 0.1,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "71": {
@@ -34694,12 +34699,13 @@
         },
         "88": {
           "kind": "float",
-          "displayMin": 2.5,
-          "displayMax": 40,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 13107,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "89": {
@@ -35257,11 +35263,13 @@
         },
         "7": {
           "kind": "float",
-          "displayMin": 1,
-          "displayMax": 1000,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.1,
-          "typecode": 82
+          "typecode": 82,
+          "unit": "knob_0_10",
+          "taper": "linear"
         },
         "8": {
           "kind": "float",
@@ -35741,12 +35749,13 @@
         },
         "25": {
           "kind": "float",
-          "displayMin": 10,
-          "displayMax": 200,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
           "defaultRaw": 17246,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "26": {
@@ -35769,12 +35778,13 @@
         },
         "28": {
           "kind": "float",
-          "displayMin": 1,
-          "displayMax": 400,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
           "defaultRaw": 3121,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "29": {
@@ -36045,12 +36055,13 @@
         },
         "20": {
           "kind": "float",
-          "displayMin": 0.05,
-          "displayMax": 50,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 984,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "21": {
@@ -36103,12 +36114,13 @@
         },
         "26": {
           "kind": "float",
-          "displayMin": 200,
-          "displayMax": 20000,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "27": {
@@ -36203,12 +36215,13 @@
         },
         "3": {
           "kind": "float",
-          "displayMin": 40,
-          "displayMax": 400,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
           "defaultRaw": 7282,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "4": {
@@ -36349,12 +36362,13 @@
         },
         "6": {
           "kind": "float",
-          "displayMin": 1,
-          "displayMax": 100,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 2648,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "7": {
@@ -42010,12 +42024,13 @@
         },
         "65": {
           "kind": "float",
-          "displayMin": 5,
-          "displayMax": 5000,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "66": {
@@ -46570,12 +46585,13 @@
         },
         "32": {
           "kind": "float",
-          "displayMin": 0.1,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 1523,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "33": {
@@ -47245,12 +47261,13 @@
         },
         "17": {
           "kind": "float",
-          "displayMin": 0.5,
-          "displayMax": 500,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "18": {
@@ -49435,12 +49452,13 @@
         },
         "3": {
           "kind": "float",
-          "displayMin": 20,
-          "displayMax": 200,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
           "defaultRaw": 20024,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "4": {
@@ -49504,12 +49522,13 @@
         },
         "10": {
           "kind": "float",
-          "displayMin": 0.1,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
           "defaultRaw": 0,
+          "unit": "knob_0_10",
           "taper": "linear"
         },
         "11": {

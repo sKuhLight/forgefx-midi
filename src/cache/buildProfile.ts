@@ -40,10 +40,14 @@ import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam } from '.
  * per-block ceiling (never the whole 14-bit id space), and an end marker, a definition repeating a non-zero
  * id already seen in its block, or an implausible one (junk floats, `min > max`) is treated as an absent
  * slot, so none of them ever becomes a record (`meta.walk.pseudoReplies` counts them). A cache built by a
- * walk that probed past a table's end can carry junk records from far ids; rebuild it. No bump, because
- * schema 1 is not released yet.
+ * walk that probed past a table's end can carry junk records from far ids; rebuild it.
+ *
+ * 2 = typecode-0x52 float records (dimensionless knobs) derive a linear 0..10 display (displayMin 0,
+ * displayMax 10, taper 'linear', unit 'knob_0_10') instead of the definition's `(min, max) * scale`, matching
+ * the shipped catalogs. A cache built with schema 1 carries the old, wrong display bounds for these rows
+ * (e.g. 0.5..500 for a drive knob that reads 0..10); rebuild it.
  */
-export const CACHE_SCHEMA = 1;
+export const CACHE_SCHEMA = 2;
 
 /**
  * Where the decoded cache records come from.

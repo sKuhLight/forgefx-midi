@@ -1081,7 +1081,7 @@
           "label": "Out Comp Clarity",
           "kind": "float",
           "raw": 42631,
-          "value": 6.54012115848262,
+          "value": 6.505172887356182,
           "unit": "knob_0_10"
         },
         {
@@ -1245,7 +1245,7 @@
           "label": "Hardness",
           "kind": "float",
           "raw": 32767,
-          "value": 21.25,
+          "value": 5,
           "unit": "numeric"
         },
         {
@@ -2412,7 +2412,7 @@
           "label": "Out Comp Clarity",
           "kind": "float",
           "raw": 42631,
-          "value": 6.54012115848262,
+          "value": 6.505172887356182,
           "unit": "knob_0_10"
         },
         {
@@ -2576,7 +2576,7 @@
           "label": "Hardness",
           "kind": "float",
           "raw": 32767,
-          "value": 21.25,
+          "value": 5,
           "unit": "numeric"
         },
         {
@@ -3743,7 +3743,7 @@
           "label": "Out Comp Clarity",
           "kind": "float",
           "raw": 42631,
-          "value": 6.54012115848262,
+          "value": 6.505172887356182,
           "unit": "knob_0_10"
         },
         {
@@ -3907,7 +3907,7 @@
           "label": "Hardness",
           "kind": "float",
           "raw": 32767,
-          "value": 21.25,
+          "value": 5,
           "unit": "numeric"
         },
         {
@@ -5074,7 +5074,7 @@
           "label": "Out Comp Clarity",
           "kind": "float",
           "raw": 42631,
-          "value": 6.54012115848262,
+          "value": 6.505172887356182,
           "unit": "knob_0_10"
         },
         {
@@ -5238,7 +5238,7 @@
           "label": "Hardness",
           "kind": "float",
           "raw": 32767,
-          "value": 21.25,
+          "value": 5,
           "unit": "numeric"
         },
         {
@@ -6066,7 +6066,7 @@
           "label": "Drive",
           "kind": "float",
           "raw": 0,
-          "value": 0.01,
+          "value": 0,
           "unit": "numeric"
         },
         {
@@ -7067,7 +7067,7 @@
           "label": "Drive",
           "kind": "float",
           "raw": 15269,
-          "value": 116.88028351695304,
+          "value": 2.3299356059450056,
           "unit": "numeric"
         },
         {
@@ -7460,7 +7460,7 @@
           "label": "Resonance",
           "kind": "float",
           "raw": 22903,
-          "value": 71.1975768303476,
+          "value": 3.4948271126438186,
           "unit": "numeric"
         },
         {
@@ -7784,7 +7784,7 @@
           "label": "Resonance Q",
           "kind": "float",
           "raw": 51232,
-          "value": 160.71718497268594,
+          "value": 7.817621387371441,
           "unit": "numeric"
         },
         {
@@ -7848,7 +7848,7 @@
           "label": "Drive",
           "kind": "float",
           "raw": 38537,
-          "value": 5.921654408398694,
+          "value": 5.88045899838252,
           "unit": "knob_0_10"
         },
         {
@@ -8199,7 +8199,7 @@
           "label": "Slew Rate",
           "kind": "float",
           "raw": 40318,
-          "value": 61.90704062013611,
+          "value": 6.152226325266273,
           "unit": "numeric"
         },
         {

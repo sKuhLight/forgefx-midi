@@ -23,7 +23,7 @@ import type { LiveTransport, LiveWalkProgress, LiveWalkWriteHooks } from '../../
 import type { CacheRecord, DeviceParam, FloatRecord } from '../../src/cache/types.js';
 import { VIEW_DEFINITION, VIEW_ENUM_LABEL, VIEW_VALUE } from '../../src/cache/index.js';
 
-export const FULLWALK_CASE_COUNT = 9;
+export const FULLWALK_CASE_COUNT = 10;
 
 const MFR = [0xf0, 0x00, 0x01, 0x74] as const;
 const MODEL = 0x12; // FM9
@@ -392,4 +392,23 @@ export async function runFullWalk(): Promise<void> {
     if (!blockDone || blockDone.tapers !== 4) fail(`block-done tapers=${blockDone?.tapers} (expected 4)`);
   }
   console.log('  cache/fullwalk: full-mode sweep progress reports through onProgress (param-sweep + cumulative tapers)');
+
+  // ---- Case 10: system / virtual blocks are walked but never written --------
+  // Global (1), Controllers (2), Modifier (3) and IR Capture (36) hold persistent device settings a
+  // preset reload does not restore: their continuous params must get no SET, while an ordinary
+  // effect block in the same walk is still swept.
+  {
+    const SYSTEM = [1, 2, 3, 36];
+    const specs: Spec[] = [...SYSTEM, BLOCK].map((block) => ({ block, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.3, respond: (n: number) => 10 * n, unit: 'Hz' }));
+    const sys = new FullFakeTransport(specs);
+    const recs = await liveWalk(sys, fullWalkOpts({ blocks: [...SYSTEM, BLOCK], maxParamId: 0, mode: 'full', write: sys.hooks() }));
+    const written = [...new Set(sys.sends.map((s) => s.eid))];
+    if (written.join(',') !== String(BLOCK)) fail(`system blocks written: SETs went to blocks ${written.join(',')} (want only ${BLOCK})`);
+    if (sys.reloads !== 1) fail(`${sys.reloads} preset reloads (want 1, for block ${BLOCK})`);
+    for (const block of SYSTEM) {
+      const r = recs.find((x) => x.section === block && x.id === 0);
+      if (!r || r.kind !== 'float' || r.taper !== undefined || r.unit !== 'Hz') fail(`system block ${block}: record ${JSON.stringify(r)} (want a float with its unit and no taper)`);
+    }
+  }
+  console.log('  cache/fullwalk: system/virtual blocks (1, 2, 3, 36) are walked read-only — no SET, no reload — while effect blocks are swept');
 }

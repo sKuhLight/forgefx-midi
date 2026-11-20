@@ -188,7 +188,10 @@
  *                    clamped.
  *   4. WRITES — a FULL-mode taper sweep runs only on a definition that passed
  *      all of the above and sits at or below its block's bound. Far-id safety
- *      for a caller that passes a wide ceiling rests on the stop run (2).
+ *      for a caller that passes a wide ceiling rests on the stop run (2). It
+ *      never runs in a system / virtual block (`NO_SWEEP_BLOCKS`): their
+ *      settings persist outside the preset, so the per-block preset reload
+ *      would not undo a write that the restore missed.
  *
  * ── Reply assumptions (open hardware questions) ─────────────────────────────
  * The reply handling below rests on assumptions not yet verified on hardware;
@@ -213,6 +216,8 @@
  */
 import { fractalChecksum } from '../shared/checksum.js';
 import { buildSetParameterContinuous } from '../gen3/axe-fx-iii/setParam.js';
+import { AXE_FX_III_BLOCKS } from '../gen3/axe-fx-iii/blockTypes.js';
+import { FM3_EFFECT_ID_TABLE } from '../gen3/fm3/effectIds.js';
 import type { RecordSource } from './buildProfile.js';
 import type { CacheRecord, EnumRecord, FloatRecord, FloatTaper } from './types.js';
 
@@ -1080,7 +1085,10 @@ export interface LiveWalkOptions {
    * continuous float param with a normalized CONTINUOUS-SET, reads the display
    * back to recover the knob taper (linear/log/custom), records it on the
    * `FloatRecord`, then RESTORES the original value (non-destructive). Full mode
-   * REQUIRES `write` hooks — the walk throws at start when they are absent.
+   * REQUIRES `write` hooks — the walk throws at start when they are absent. It
+   * never writes to a system / virtual block (Global, Controllers, Modifier, IR
+   * Capture, Scene MIDI, foot controller — see `NO_SWEEP_BLOCKS`): those are
+   * walked read-only only.
    */
   mode?: 'read-only' | 'full';
   /**
@@ -1256,6 +1264,19 @@ async function pace(ms: number, signal: AbortSignal | undefined, sleep?: (ms: nu
 // ---------------------------------------------------------------------------
 // Full-mode taper sweep (write + restore) — port of CaptureRig v2's Gen3Profile
 // ---------------------------------------------------------------------------
+
+/**
+ * Block addresses a FULL-mode sweep never writes to: the system / virtual blocks of the gen-3
+ * effect-id roster (shared by the Axe-Fx III, FM3 and FM9) — the FM3/FM9 family table's 'virtual'
+ * entries (Global 1, Controllers 2, Modifier 3, IR Capture 36, Scene MIDI 190, Foot Controller 199)
+ * plus the roster blocks the third-party surface cannot address (`addressable: false`, adding
+ * Preset FC 200). Their settings are persistent device state, not preset data: the per-block preset
+ * reload that backs up the restore does not bring them back. They are still walked read-only.
+ */
+const NO_SWEEP_BLOCKS: ReadonlySet<number> = new Set<number>([
+  ...FM3_EFFECT_ID_TABLE.filter((e) => e.addressing === 'virtual' && e.firstId !== null).map((e) => e.firstId as number),
+  ...AXE_FX_III_BLOCKS.filter((b) => b.addressable === false && b.firstId !== null).map((b) => b.firstId as number),
+]);
 
 /** CaptureRig v2's ≥20ms floor between a sweep SET and the display read-back. */
 const MIN_SWEEP_SETTLE_MS = 20;
@@ -1732,7 +1753,7 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       // block's ceiling) already guarantees it; it stays so a later change to the loop cannot let a
       // sweep write above the ceiling.
       let taper: FloatTaper | undefined;
-      if (sweepCtx && labels.length === 0 && !hintEntry && def.kind === 'float' && def.max !== def.min && param <= bound) {
+      if (sweepCtx && !NO_SWEEP_BLOCKS.has(block) && labels.length === 0 && !hintEntry && def.kind === 'float' && def.max !== def.min && param <= bound) {
         await pace(interQueryMs, signal, sleep);
         const swept = await sweepTaper(sweepCtx, block, param);
         taper = swept.taper;

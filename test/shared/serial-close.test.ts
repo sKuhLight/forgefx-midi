@@ -1,5 +1,5 @@
 /**
- * W5.2 red/green — `connectSerial().close()` must not leave `send()` silently
+ * `connectSerial().close()` must not leave `send()` silently
  * queueing forever.
  *
  * The facade defers the open: `send()` before the port opens queues. But

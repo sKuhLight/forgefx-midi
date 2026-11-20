@@ -1,5 +1,5 @@
 /**
- * W5.3 red/green — the gen-3 body grid guard must be grid-SHAPE aware.
+ * The gen-3 body grid guard must be grid-SHAPE aware.
  *
  * `decodeGen3Body` gated the grid decode on the hardcoded FM3 table end
  * `0x1c4 = 452 = 0x104 + 4*12*2*2`. A III/FM9 (6×14) body needs

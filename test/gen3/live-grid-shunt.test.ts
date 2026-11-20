@@ -1,5 +1,5 @@
 /**
- * W5.4 red/green — a live-grid shunt must carry the SAME `effect_id` as the
+ * A live-grid shunt must carry the SAME `effect_id` as the
  * dump grid.
  *
  * The dump grid (`presetBody.parseGrid`) reserves `effect_id > 1000` for

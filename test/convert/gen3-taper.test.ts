@@ -1,5 +1,5 @@
 /**
- * W5.1 red/green — gen-3 convert taper must mirror the LIVE server rule.
+ * Gen-3 convert taper must mirror the LIVE server rule.
  *
  * The live server (ForgeFX/server/src/drivers/gen3.ts #display) decides the
  * taper from the DEVICE-TRUE range row: an explicit `range.taper` wins

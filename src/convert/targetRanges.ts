@@ -132,7 +132,7 @@ interface Gen3RangeRow {
   readonly enumCount?: number;
   /** Undecoded device taper bitfield (unit/taper candidate). */
   readonly typecode?: number;
-  /** Device-true explicit taper (CaptureRig v2 fit); wins over `typecode`. */
+  /** Explicit per-parameter taper from the device range table; wins over `typecode`. */
   readonly taper?: 'linear' | 'log' | 'flat' | 'custom';
 }
 type Gen3RangeTable = Readonly<Record<string, Readonly<Record<number, Gen3RangeRow>>>>;

@@ -157,6 +157,17 @@ export function buildDefQuery(model: number, block: number, param: number): Uint
   return buildQuery(model, VIEW_DEFINITION, block, param, 0);
 }
 
+/**
+ * Build a FORMATTED-VALUE query (view 0x00) for (model, block, param).
+ *
+ * Read-only: the same query the live walk uses to read the device's own display string for a
+ * parameter ('5.00', '0.316', '36.5 %'). Exported so a caller can ask the device what it shows for a
+ * parameter, independent of the range tables.
+ */
+export function buildValueQuery(model: number, block: number, param: number): Uint8Array {
+  return buildQuery(model, VIEW_VALUE, block, param, 0);
+}
+
 /** Build an ENUM-LABEL query (view 0x1f) for (model, block, param, sub). */
 export function buildEnumQuery(model: number, block: number, param: number, sub: number): Uint8Array {
   return buildQuery(model, VIEW_ENUM_LABEL, block, param, sub);

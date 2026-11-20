@@ -912,6 +912,13 @@ export interface PresetSnapshot {
    * `from_rows` here. Present only when the live grid read succeeded; absent on
    * II/AM4/Hydra, on stored-by-location gen-3 reads (use `whole_preset.grid`),
    * and when the grid read returned nothing (then `slots` is the poll inventory).
+   *
+   * Shunt cells use the SAME `effect_id` convention as `whole_preset.grid`:
+   * `effect_id = 1023 + shuntIndex` (so `effect_id > 1000` marks a shunt and
+   * `effect_id - 1023` is its 1-based index, named `Shunt <index>`), with
+   * `is_shunt: true`. A consumer keying cells by `effect_id` therefore sees one
+   * id per shunt across both views. Earlier versions put the raw 1-based shunt
+   * index in `effect_id` for live-grid shunts; real blocks are unchanged.
    */
   live_grid?: readonly Gen3GridCellView[];
   _meta: PresetSnapshotMeta;
@@ -1017,6 +1024,10 @@ export interface GetPresetOptions {
 
 /** One placed cell in the routing grid (column-major). */
 export interface Gen3GridCellView {
+  /**
+   * The placed block's effect id. For a shunt (`is_shunt: true`) it is
+   * `1023 + shuntIndex`, in both the stored-dump grid and the live grid.
+   */
   effect_id: number;
   row: number;
   col: number;

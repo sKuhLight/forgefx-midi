@@ -21,7 +21,7 @@ import type { LiveTransport, LiveWalkOptions, LiveWalkResult, LiveWalkWriteHooks
 import type { DeviceParam } from '../../src/cache/types.js';
 import { endOfRangeFrame, replyFrame, sentinelFrame, valueReply } from './livewalk.test.js';
 
-export const LIVEWALK_BOUNDS_CASE_COUNT = 15;
+export const LIVEWALK_BOUNDS_CASE_COUNT = 16;
 
 const FM3 = 0x11;
 const noSleep = (): Promise<void> => Promise.resolve();
@@ -675,4 +675,25 @@ export async function runLiveWalkBounds(): Promise<void> {
     }
   }
   console.log('  cache/livewalk-bounds: a reused symbol id with a new body right after the last real param of a known table is a real param; same-body and end-marker reuses, reuses after a gap and outside a known size stay copies');
+
+  // ---- Case 16: the default block sweep stops at 160; higher blocks are the caller's opt-in ----
+  {
+    // Tables at 158 (inside the default range) and at 191 (a multiplexer address above it).
+    const layout = { 158: { real: 3 }, 191: { real: 7 } };
+    const dev = tableDevice(layout);
+    const res = await liveWalkDetailed(dev, { ...base, maxParamId: 20 });
+    const blocksQueried = [...new Set(dev.sent.map((q) => q.block))].sort((a, b) => a - b);
+    if (!sameList(blocksQueried, range(0, 160))) fail(`default sweep queried blocks ${blocksQueried[0]}..${blocksQueried[blocksQueried.length - 1]} (${blocksQueried.length}), want 0..160`);
+    if (!sameList(paramsOf(res, 158), range(0, 2)) || paramsOf(res, 191).length !== 0) fail('default sweep: the table at 158 must be found and 191 never queried');
+    // An explicit block list reaches 191 (and only the listed blocks).
+    const listed = tableDevice(layout);
+    const rl = await liveWalkDetailed(listed, { ...base, maxParamId: 20, blocks: [158, 191] });
+    const lb = [...new Set(listed.sent.map((q) => q.block))].sort((a, b) => a - b);
+    if (!sameList(lb, [158, 191]) || !sameList(paramsOf(rl, 191), range(0, 6))) fail(`explicit block list: queried ${lb.join(',')}, records at 191 ${paramsOf(rl, 191).join(',')}`);
+    // So does an explicit maxBlock.
+    const wide = tableDevice(layout);
+    const rw = await liveWalkDetailed(wide, { ...base, maxParamId: 20, maxBlock: 191 });
+    if (!sameList(paramsOf(rw, 191), range(0, 6)) || wide.sent.some((q) => q.block > 191)) fail('explicit maxBlock 191: table missed or a block above it queried');
+  }
+  console.log('  cache/livewalk-bounds: the default sweep covers blocks 0..160 only; an explicit block list or maxBlock reaches the effect tables above');
 }

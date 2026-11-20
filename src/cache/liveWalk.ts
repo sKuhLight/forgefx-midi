@@ -905,6 +905,18 @@ const DEFAULT_PLACEHOLDER_RUN_LIMIT = 32;
  */
 const DEFAULT_ABSENT_RUN_LIMIT = 32;
 
+/**
+ * Default highest block address swept when `blocks` is omitted: 160, the range walked and verified on
+ * hardware. The gen-3 roster has effect blocks above it — Resonator 162, Looper 166, Plex Delay 178,
+ * Send 182, Return 186, Multiplexer 191 — whose tables the editor cache carries, so a default walk
+ * leaves those families out of a live profile. Reaching them is the HOST's opt-in: pass an explicit
+ * `blocks` list derived from the model's roster once that model has been verified on hardware above
+ * 160, leaving out the virtual and unrostered addresses there (Scene MIDI 190, 194 on a three-
+ * multiplexer unit, the foot-controller blocks 199 / 200). The walk itself handles any block
+ * address up to 16383 (the block field splits lo/hi).
+ */
+const DEFAULT_MAX_BLOCK = 160;
+
 /** Highest param id the 14-bit PARAM field (body[4]/[5]) can carry; one more would wrap to 0. */
 const MAX_WIRE_PARAM_ID = 16383;
 
@@ -1086,10 +1098,11 @@ export interface LiveWalkOptions {
    * 20ms (CaptureRig v2's ≥20ms pacing). Routed through `sleep`. Full mode only.
    */
   sweepSettleMs?: number;
-  /** Explicit block addresses to sweep; defaults to `0..maxBlock`. */
+  /** Explicit block addresses to sweep; defaults to `0..maxBlock`. The way to reach blocks above
+   * the default range (see `DEFAULT_MAX_BLOCK`): a roster-derived list, verified per model. */
   blocks?: number[];
-  /** Highest block address swept when `blocks` is omitted (default 160 — the block
-   * byte splits lo/hi so effectId>=128 blocks are reachable). */
+  /** Highest block address swept when `blocks` is omitted (default 160, `DEFAULT_MAX_BLOCK` — the
+   * hardware-verified range; the block byte splits lo/hi so effect ids >= 128 are reachable). */
   maxBlock?: number;
   /**
    * Read the device's formatted value (self-describe view 0x00) for each found
@@ -1363,7 +1376,7 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
   // 160 (not 127): the block byte now splits lo/hi (body[2]/[3]) so effectId>=128
   // blocks are reachable. Empty high blocks are skipped after `blockProbeDepth`
   // params (see the found===0 break below), so the extra range is nearly free.
-  const maxBlock = opts.maxBlock ?? 160;
+  const maxBlock = opts.maxBlock ?? DEFAULT_MAX_BLOCK;
   const blocks = opts.blocks ?? Array.from({ length: maxBlock + 1 }, (_, i) => i);
   // FULL mode writes, so its default ceiling and the sweep guard below care about the mode early.
   const mode = opts.mode ?? 'read-only';

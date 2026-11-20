@@ -27,10 +27,11 @@
  * Enum coverage today:
  *   - `am4`               — from each enum param's `enumValues` map, when it
  *                           densely covers ordinals 0..N-1.
- *   - gen-3 (III/FM9/FM3) — from the shared Fractal enum vocabulary overlay
- *                           (`resolveEnumValues`), gated to params the
+ *   - gen-3 (III/FM9/FM3) — from the device's own mined label list, falling
+ *                           back to the shared Fractal enum vocabulary overlay
+ *                           (`resolveEnumValues`); gated to params the
  *                           device-true table marks `kind: 'enum'` AND whose
- *                           overlay labels densely cover 0..enumCount-1.
+ *                           labels densely cover 0..enumCount-1.
  *   - `vp4`, gen-1/gen-2  → no enum options (reported as a remaining gap).
  */
 
@@ -493,21 +494,36 @@ export function resolveTargetEnumOptions(
   }
 
   if (port === 'axe-fx-iii') {
-    return gen3OverlayEnumOptions(gen3Hit(device, family, nativeName));
+    return gen3EnumOptions(device, family, gen3Hit(device, family, nativeName));
   }
 
   return undefined;
 }
 
-/** Enum labels from the name-keyed curated overlay, or `undefined` unless the device range row is a cleanly-labelled enum. */
-function gen3OverlayEnumOptions(hit: Gen3Hit | undefined): readonly string[] | undefined {
+/**
+ * Enum labels of a resolved gen-3 param, or `undefined` unless its device range row is a
+ * cleanly-labelled enum. The device's own mined label list wins: it is what the unit indexes (checked
+ * against the hardware) and what the body decoder labels with, so options agree with a lifted preset's
+ * `displayValue`. The name-keyed curated overlay is only the fallback for params the device tables
+ * carry no complete list for; it is hand-curated and not always in device order.
+ */
+function gen3EnumOptions(
+  device: ConverterDeviceId,
+  family: ConverterFamily,
+  hit: Gen3Hit | undefined,
+): readonly string[] | undefined {
   // The device-true table is the authoritative enum signal (the FM3/FM9
   // catalogs tag every param 'unverified'); only trust an enum row.
-  if (hit?.range?.kind === 'enum' && typeof hit.range.enumCount === 'number') {
-    const entry = resolveEnumValues(hit.param.name);
-    if (entry) return denseOptions(entry.values, hit.range.enumCount);
+  if (hit?.range?.kind !== 'enum' || typeof hit.range.enumCount !== 'number') return undefined;
+  const count = hit.range.enumCount;
+  const fam = GEN3_FAMILY[family];
+  const mined = fam === undefined ? undefined : gen3Tables(device)?.enumOverrides?.[fam]?.[String(hit.param.paramId)];
+  if (mined !== undefined) {
+    const dense = denseOptions({ ...mined }, count);
+    if (dense !== undefined) return dense;
   }
-  return undefined;
+  const entry = resolveEnumValues(hit.param.name);
+  return entry ? denseOptions(entry.values, count) : undefined;
 }
 
 /** `${device}|${FAMILY}` → (paramId → Param), for resolving a param by its device address. */
@@ -516,10 +532,8 @@ const GEN3_ID_INDEX = new Map<string, Map<number, Gen3Param>>();
 /**
  * Enum labels for the gen-3 param at the device `paramId` (the form a lifted or re-addressed IR param
  * carries), or `undefined` for a non-gen-3 device, an unknown id, a non-enum param, or a vocabulary
- * that does not densely cover its ordinals. Unlike `resolveTargetEnumOptions` (which uses the curated
- * name-keyed overlay), the device's own mined label list wins here — the list the body decoder labels
- * with, so a lifted preset's options agree with its `displayValue` — and the overlay is the fallback
- * for params the device tables carry no list for.
+ * that does not densely cover its ordinals. Same label source as `resolveTargetEnumOptions`: the
+ * device's mined list first, the curated overlay as the fallback.
  */
 export function resolveEnumOptionsByParamId(
   device: ConverterDeviceId,
@@ -539,12 +553,5 @@ export function resolveEnumOptionsByParamId(
   }
   const param = idx.get(paramId);
   if (param === undefined) return undefined;
-  const hit: Gen3Hit = { param, range: tables.ranges?.[fam]?.[paramId] };
-  const count = hit.range?.kind === 'enum' ? hit.range.enumCount : undefined;
-  const mined = tables.enumOverrides?.[fam]?.[String(paramId)];
-  if (mined !== undefined && typeof count === 'number') {
-    const dense = denseOptions({ ...mined }, count);
-    if (dense !== undefined) return dense;
-  }
-  return gen3OverlayEnumOptions(hit);
+  return gen3EnumOptions(device, family, { param, range: tables.ranges?.[fam]?.[paramId] });
 }

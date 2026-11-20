@@ -39,6 +39,7 @@ import {
   VIEW_ENUM_LABEL,
   VIEW_VALUE,
 } from '../../src/cache/index.js';
+import { parseUnit } from '../../src/cache/liveWalk.js';
 import type { CacheRecord, EnumRecord } from '../../src/cache/types.js';
 import { FM3_PARAMS } from '../../src/gen3/fm3/index.js';
 import { assertFm3Equivalence } from './oracle.js';
@@ -46,7 +47,7 @@ import { assertFm3Equivalence } from './oracle.js';
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const FM3 = 0x11;
 
-export const LIVEWALK_CASE_COUNT = 17;
+export const LIVEWALK_CASE_COUNT = 18;
 
 // ===========================================================================
 // Test-only wire ENCODER (inverse of the liveWalk codec)
@@ -752,4 +753,93 @@ export async function runLiveWalk(): Promise<void> {
     if (recs[0]!.unit !== 'Hz') fail(`continuous-unit param lost its unit: got ${recs[0]!.unit}`);
   }
   console.log('  cache/livewalk: a captured continuous unit vetoes the enum heuristic (LOCUT 20..200 Hz)');
+
+  // ---- Case 17: view-0x00 value frames decode — interior NUL padding --------
+  // Synthesized view-0x00 replies (model 0x11, built here from the documented layout:
+  // 6-byte header, 15-byte inner header, cnt-byte payload as a continuous septet stream,
+  // checksum, 0xF7 — i.e. complete 60-byte frames for a 32-byte payload). The payload is a
+  // FIXED-WIDTH display buffer: a NUL-terminated display string followed by NUL padding.
+  // A short value ('5.00', '0.00') pads with trailing NULs only, which a decode that trims
+  // trailing NULs already handled. A string ('20.0 Hz') followed by NUL padding and then
+  // further buffer content ('…Hz\0\0sec') leaves INTERIOR NUL padding; a decode that only
+  // trims trailing NULs reads that padding as a non-printable byte and rejects the reply
+  // with null, dropping the param's value AND its per-param unit on the live walk. The
+  // string ends at the FIRST NUL.
+  {
+    const PAYLOAD = 32;
+    // Zero-filled buffer = NUL padding; `extra` places a further field `gap` NULs after the string.
+    const valueBuffer = (display: string, extra?: { gap: number; text: string }): Uint8Array => {
+      const buf = new Uint8Array(PAYLOAD);
+      for (let i = 0; i < display.length; i++) buf[i] = display.charCodeAt(i) & 0x7f;
+      if (extra) {
+        for (let i = 0; i < extra.text.length; i++) buf[display.length + extra.gap + i] = extra.text.charCodeAt(i) & 0x7f;
+      }
+      return buf;
+    };
+    const valueFrame = (display: string, param: number, extra?: { gap: number; text: string }): Uint8Array =>
+      replyFrame(VIEW_VALUE, param, 0x3a, valueBuffer(display, extra));
+    const DELAY = 70;
+    const LOWCUT = 16;
+    const trailingA = valueFrame('5.00', 33);
+    const trailingB = valueFrame('0.00', 0);
+    const interior = valueFrame('20.0 Hz', LOWCUT, { gap: 2, text: 'sec' });
+    const interiorShort = valueFrame('-3.0 dB', 5, { gap: 1, text: 'ms' });
+
+    // The synthesized frames have the documented shape: 60 bytes, cnt 32, payload recovered by
+    // the septet decoder exactly as built.
+    for (const f of [trailingA, trailingB, interior, interiorShort]) {
+      if (f.length !== 60) fail(`synthesized value frame is ${f.length} bytes (expected 60)`);
+      const inner = f.subarray(6, f.length - 2);
+      if ((inner[13]! | (inner[14]! << 8)) !== PAYLOAD) fail('synthesized value frame cnt != 32');
+    }
+    const interiorPayload = decodeSeptetStream(interior.subarray(6, interior.length - 2), PAYLOAD, 15);
+    if (interiorPayload[7] !== 0 || interiorPayload[8] !== 0 || interiorPayload[9] !== 0x73) {
+      fail('synthesized interior-padding payload is not "20.0 Hz" + 2 NULs + "sec"');
+    }
+
+    const dA = decodeReply(trailingA);
+    const dB = decodeReply(trailingB);
+    const dInterior = decodeReply(interior);
+    const dShort = decodeReply(interiorShort);
+    if (!dA || dA.view !== 'value' || dA.value !== '5.00') {
+      fail(`trailing-padding value frame decoded ${JSON.stringify(dA)} (expected value '5.00')`);
+    }
+    if (!dB || dB.view !== 'value' || dB.value !== '0.00') {
+      fail(`trailing-padding value frame decoded ${JSON.stringify(dB)} (expected value '0.00')`);
+    }
+    if (!dInterior || dInterior.view !== 'value' || dInterior.value !== '20.0 Hz') {
+      fail(`interior-padding value frame decoded ${JSON.stringify(dInterior)} (expected value '20.0 Hz')`);
+    }
+    if (!dShort || dShort.view !== 'value' || dShort.value !== '-3.0 dB') {
+      fail(`single-NUL interior value frame decoded ${JSON.stringify(dShort)} (expected value '-3.0 dB')`);
+    }
+
+    // The side effect follows from the same decode: the walk's per-param unit
+    // read uses view 0x00 and previously got null for this frame, so the
+    // served record carried NO `unit`. A decoded value recovers it.
+    if (parseUnit(dInterior.value) !== 'Hz') fail(`interior-padding unit not recovered: ${parseUnit(dInterior.value)}`);
+    if (parseUnit(dShort.value) !== 'dB') fail(`single-NUL interior unit not recovered: ${parseUnit(dShort.value)}`);
+    const defRec: CacheRecord = { kind: 'float', section: DELAY, offset: 0, id: LOWCUT, tc: 0x241, min: 0, max: 100, def: 0, step: 0, t1: 0, t2: 0 };
+    const t: LiveTransport = {
+      request(q) {
+        const view = q[6]!;
+        const param = q[10]! | (q[11]! << 7);
+        if (view === VIEW_DEFINITION && param === LOWCUT) return Promise.resolve(definitionReply(defRec, LOWCUT));
+        if (view === VIEW_VALUE && param === LOWCUT) return Promise.resolve(interior);
+        if (view === VIEW_ENUM_LABEL) return Promise.resolve(endOfRangeFrame(VIEW_ENUM_LABEL, param));
+        return Promise.resolve(sentinelFrame(view, param));
+      },
+    };
+    const recs = await liveWalk(t, {
+      model: FM3,
+      blocks: [DELAY],
+      maxParamId: LOWCUT,
+      paramAbsentRunLimit: LOWCUT + 4,
+      blockProbeDepth: LOWCUT + 2,
+    });
+    const got = recs.find((r) => r.id === LOWCUT);
+    if (!got || got.kind !== 'float') fail(`unit-read walk did not reach the interior-padding param (got ${JSON.stringify(got)})`);
+    if (got.unit !== 'Hz') fail(`interior-padding record unit=${JSON.stringify(got.unit)} (interior-NUL value frame dropped the unit)`);
+  }
+  console.log('  cache/livewalk: view-0x00 value frames (incl. interior-NUL padding) decode and recover the unit');
 }

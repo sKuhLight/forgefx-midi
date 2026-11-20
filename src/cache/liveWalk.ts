@@ -312,8 +312,19 @@ export function decodeReply(frame: Uint8Array): LiveReply {
   }
 
   // STRING payload: enum label (0x1f) or formatted value (0x00).
-  let end = raw.length;
-  while (end > 0 && raw[end - 1] === 0x00) end -= 1;
+  //
+  // The device returns a FIXED-WIDTH buffer whose display string is
+  // NUL-terminated, so the string is the LEADING run of bytes up to the FIRST
+  // NUL. Trimming only TRAILING NULs is not enough: a display string shorter
+  // than the region the device packs ahead of further buffer content leaves
+  // INTERIOR NUL padding (a delay low-cut reply reads "20.0 Hz\0\0sec"), and
+  // that padding byte then fails the printable check, so the reply would decode
+  // to null and the parameter would lose its value and unit. Ending the string
+  // at the first NUL decodes trailing-only padding ("5.00\0\0…") identically,
+  // skips interior padding, and still falls through to null for a payload whose
+  // leading byte is a NUL or non-printable.
+  let end = 0;
+  while (end < raw.length && raw[end] !== 0x00) end += 1;
   if (end > 0) {
     let printable = true;
     for (let i = 0; i < end; i++) {

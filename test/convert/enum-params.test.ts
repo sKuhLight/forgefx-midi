@@ -3,6 +3,8 @@
  *
  * - Lossless (same-vocabulary gen-3) lift carries `kind: 'enum'`, the ordinal span and the label
  *   list, so an editor renders a selector instead of a 0..65534 knob.
+ * - The mapped path writes the exact ordinal: a gen-3 target's `normalized` is `ordinal / 65534`
+ *   (what `valueToRaw` turns back into the ordinal), not the position within `0..N-1`.
  *
  * Synthetic input only: a hand-built FM3 body with one delay block, and hand-built IR presets.
  */
@@ -14,7 +16,7 @@ import type { ConverterBlock, ConverterFamily, ConverterParam, ConverterPreset }
 import { FM3_BODY_LAYOUT, valueToRaw } from '../../src/devices/gen3/blockParams.js';
 import { FM3_ENUM_OVERRIDES } from '../../src/gen3/fm3/index.js';
 
-export const ENUM_PARAMS_CASE_COUNT = 3;
+export const ENUM_PARAMS_CASE_COUNT = 5;
 
 const WIRE_MAX = 65534;
 const FM3_DELAY_EID = 70; // 'Delay 1' in the shared gen-3 effect id space
@@ -119,7 +121,46 @@ function caseLosslessCrossDevice(): void {
   assert(valueToRaw(type) === 2, `fm3->fm9 delay type: valueToRaw ${valueToRaw(type)} != 2`);
 }
 
-/** 3. A non-gen-3 target keeps its own convention: kind + labels, `normalized` = position in 0..N-1. */
+/** 3. Mapped path to a gen-3 target writes the exact ordinal for every enum family. */
+function caseMappedOrdinals(): void {
+  const families: ConverterFamily[] = ['delay', 'reverb', 'chorus', 'flanger', 'phaser', 'wah', 'comp', 'geq', 'filter', 'tremolo', 'gate'];
+  let checked = 0;
+  for (const family of families) {
+    const { target } = convertPreset(synthPreset('am4', family, 'type', 1), 'fm3');
+    const p = target.blocks.find((b) => b.family === family)?.params.find((q) => q.nativeName === 'type');
+    if (p === undefined || p.kind !== 'enum') continue; // family/param absent on this target
+    assert(p.value === 1, `am4->fm3 ${family}.type: value ${p.value}`);
+    assert(p.normalized === 1 / WIRE_MAX, `am4->fm3 ${family}.type: normalized ${p.normalized} (want ordinal / 65534)`);
+    assert(valueToRaw(p) === 1, `am4->fm3 ${family}.type: valueToRaw ${valueToRaw(p)} != 1`);
+    checked += 1;
+  }
+  assert(checked >= 6, `only ${checked} enum families reached the gen-3 target`);
+
+  // The reported case: delay type 2 of 8 used to be written as 18724.
+  const delay = convertPreset(synthPreset('am4', 'delay', 'type', 2), 'fm3').target;
+  const type = paramByName(delay, 'type');
+  assert(valueToRaw(type) === 2, `am4->fm3 delay type 2: valueToRaw ${valueToRaw(type)}`);
+  assert(type.enumOptions?.length === 8 && type.min === 0 && type.max === 7, 'am4->fm3 delay type: options/span');
+  assert(type.displayValue === type.enumOptions![2], `am4->fm3 delay type 2: displayValue ${type.displayValue} is not its option label`);
+}
+
+/** 4. Ordinals are integers inside 0..N-1: a fractional source value rounds, an out-of-range one clamps. */
+function caseOrdinalRoundingAndClamp(): void {
+  const rounded = convertPreset(synthPreset('am4', 'delay', 'type', 2.4), 'fm3');
+  assert(paramByName(rounded.target, 'type').value === 2, 'fractional ordinal 2.4 must round to 2');
+  assert(!rounded.events.some((e) => e.kind === 'param-clamped'), 'rounding a fractional ordinal is not a clamp');
+
+  const clamped = convertPreset(synthPreset('am4', 'delay', 'type', 99), 'fm3');
+  const type = paramByName(clamped.target, 'type');
+  assert(type.value === 7 && valueToRaw(type) === 7, `out-of-range ordinal must clamp to the last option, got ${type.value}`);
+  assert(clamped.events.some((e) => e.kind === 'param-clamped'), 'clamping an out-of-range ordinal must be reported');
+
+  // A continuous param is unaffected: kind float, no rounding, log/linear position as before.
+  const mix = paramByName(convertPreset(synthPreset('am4', 'delay', 'mix', 37.5), 'fm3').target, 'mix');
+  assert(mix.kind === 'float' && mix.value === 37.5 && mix.normalized === 0.375, `delay mix: ${JSON.stringify(mix)}`);
+}
+
+/** 5. A non-gen-3 target keeps its own convention: kind + labels, `normalized` = position in 0..N-1. */
 function caseAm4Target(): void {
   const src = synthPreset('fm3', 'delay', 'type', 2);
   const { target } = convertPreset(src, 'am4');
@@ -133,5 +174,7 @@ function caseAm4Target(): void {
 export function runEnumParamsTests(): void {
   caseLosslessLift();
   caseLosslessCrossDevice();
+  caseMappedOrdinals();
+  caseOrdinalRoundingAndClamp();
   caseAm4Target();
 }

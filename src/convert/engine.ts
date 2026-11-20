@@ -50,6 +50,7 @@ import {
 import type { ConversionEvent } from './events.js';
 import { assignGridEffectIds, hasSynthModel, type SynthPreset } from '../devices/gen3/presetSynth.js';
 import { MODEL_BY_DEVICE } from './adapters/gen3.js';
+import { GEN3_WIRE_MAX } from '../devices/gen3/taper.js';
 import { GEN3_DEVICE_IDS, type Gen3DeviceId } from './families.js';
 
 // ── Public API ───────────────────────────────────────────────────────
@@ -319,6 +320,7 @@ export function convertPreset(
 
   // ── 4. Param mapping ──────────────────────────────────────────────
   const lossless = sameVocabulary(source.sourceDevice, targetDevice);
+  const isGen3Target = normalizeConceptPort(targetDevice) === 'axe-fx-iii';
   if (!lossless) {
     for (const b of blocks) {
       const mapped: ConverterParam[] = [];
@@ -349,8 +351,10 @@ export function convertPreset(
           });
           continue;
         }
-        const clamped = Math.min(range.max, Math.max(range.min, p.value));
-        if (clamped !== p.value) {
+        // An ordinal is an integer: round a fractional source value before clamping into 0..N-1.
+        const sourceValue = isEnum ? Math.round(p.value) : p.value;
+        const clamped = Math.min(range.max, Math.max(range.min, sourceValue));
+        if (clamped !== sourceValue) {
           events.push({
             kind: 'param-clamped',
             blockKey: b.key,
@@ -362,7 +366,9 @@ export function convertPreset(
             targetMax: range.max,
           });
         }
-        const normalized = normalizedInRange(clamped, range);
+        const normalized = isEnum && isGen3Target
+          ? clamped / GEN3_WIRE_MAX // a gen-3 enum is stored as its raw ordinal, so the wire fraction is ordinal / 65534
+          : normalizedInRange(clamped, range);
         mapped.push({
           nativeName: tgtName,
           conceptKey: p.conceptKey,

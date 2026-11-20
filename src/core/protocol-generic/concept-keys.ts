@@ -357,9 +357,11 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
     'axe-fx-ii': 'effect_type',
     am4: 'type',
   },
-  // gen-3 delay routing config (DELAY_TYPE): MONO / STEREO / PING-PONG / DUAL / ... No other
-  // device has this as a separate param, so it only maps across the gen-3 family.
+  // The delay routing config (gen-3 DELAY_TYPE, Axe-Fx II CONFIG): MONO / STEREO / PING-PONG / DUAL /
+  // REVERSE / SWEEP / TAPE, ordinals 0..6 identical on both; gen-3 adds SURROUND at 7. AM4 has no
+  // separate routing param.
   'delay.config': {
+    'axe-fx-ii': 'config',
     'axe-fx-iii': 'type',
   },
   'delay.time': {

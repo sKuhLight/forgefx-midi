@@ -18,7 +18,7 @@ import type { ConverterBlock, ConverterFamily, ConverterParam, ConverterPreset }
 import { FM3_BODY_LAYOUT, valueToRaw } from '../../src/devices/gen3/blockParams.js';
 import { FM3_ENUM_OVERRIDES } from '../../src/gen3/fm3/index.js';
 
-export const ENUM_PARAMS_CASE_COUNT = 7;
+export const ENUM_PARAMS_CASE_COUNT = 8;
 
 const WIRE_MAX = 65534;
 const FM3_DELAY_EID = 70; // 'Delay 1' in the shared gen-3 effect id space
@@ -272,6 +272,20 @@ function caseLosslessReaddress(): void {
   assert(resolveEnumCountByParamId('fm3', 'delay', 8) === undefined, 'a continuous param (delay time) has no enum count');
 }
 
+/** 8. Delay routing config maps between the Axe-Fx II (CONFIG) and gen-3 (DELAY_TYPE): ordinals 0..6 line up. */
+function caseDelayConfigAcrossGenerations(): void {
+  const toGen3 = convertPreset(synthPreset('axe-fx-ii', 'delay', 'config', 2), 'fm3');
+  const type = paramByName(toGen3.target, 'type');
+  assert(type.paramId === DELAY_TYPE_ID && type.kind === 'enum', `ii->fm3 delay config: ${JSON.stringify(type)}`);
+  assert(type.value === 2 && valueToRaw(type) === 2, `ii->fm3 delay config: ordinal ${type.value} / raw ${valueToRaw(type)}`);
+  assert(type.displayValue === DELAY_TYPE_LABELS[2], `ii->fm3 delay config: displayValue ${type.displayValue}`);
+
+  const toGen2 = convertPreset(synthPreset('fm3', 'delay', 'type', 2), 'axe-fx-ii');
+  const config = paramByName(toGen2.target, 'config');
+  assert(config.value === 2, `fm3->ii delay config: ordinal ${config.value}`);
+  assert(!toGen2.events.some((e) => e.kind === 'param-dropped' && e.nativeName === 'type'), 'fm3->ii delay config must not be dropped');
+}
+
 export function runEnumParamsTests(): void {
   caseLosslessLift();
   caseLosslessCrossDevice();
@@ -280,4 +294,5 @@ export function runEnumParamsTests(): void {
   caseAm4Target();
   caseTypeSelectorsDropped();
   caseLosslessReaddress();
+  caseDelayConfigAcrossGenerations();
 }

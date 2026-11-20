@@ -458,7 +458,10 @@ export function convertPreset(
                 p.value = clamped;
                 p.normalized = clamped / GEN3_WIRE_MAX;
               }
-              p.displayValue = options?.[p.value] ?? String(p.value);
+              // Without target labels the source's label would name the wrong ordinal, and a bare number
+              // would read like a numeric setting: leave it unset so a client falls back to "#n".
+              if (options) p.displayValue = options[p.value];
+              else delete p.displayValue;
             }
           }
         } else if (p.paramId !== undefined) delete p.paramId;

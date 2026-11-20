@@ -529,6 +529,22 @@ function gen3EnumOptions(
 /** `${device}|${FAMILY}` → (paramId → Param), for resolving a param by its device address. */
 const GEN3_ID_INDEX = new Map<string, Map<number, Gen3Param>>();
 
+function gen3ParamById(
+  device: ConverterDeviceId,
+  fam: string,
+  params: Gen3ParamTable,
+  paramId: number,
+): Gen3Param | undefined {
+  const cacheKey = `${device}|${fam}`;
+  let idx = GEN3_ID_INDEX.get(cacheKey);
+  if (idx === undefined) {
+    idx = new Map<number, Gen3Param>();
+    for (const p of params[fam] ?? []) if (!idx.has(p.paramId)) idx.set(p.paramId, p);
+    GEN3_ID_INDEX.set(cacheKey, idx);
+  }
+  return idx.get(paramId);
+}
+
 /**
  * Enum labels for the gen-3 param at the device `paramId` (the form a lifted or re-addressed IR param
  * carries), or `undefined` for a non-gen-3 device, an unknown id, a non-enum param, or a vocabulary
@@ -544,14 +560,51 @@ export function resolveEnumOptionsByParamId(
   const tables = gen3Tables(device);
   const fam = GEN3_FAMILY[family];
   if (tables === undefined || fam === undefined) return undefined;
-  const cacheKey = `${device}|${fam}`;
-  let idx = GEN3_ID_INDEX.get(cacheKey);
-  if (idx === undefined) {
-    idx = new Map<number, Gen3Param>();
-    for (const p of tables.params[fam] ?? []) if (!idx.has(p.paramId)) idx.set(p.paramId, p);
-    GEN3_ID_INDEX.set(cacheKey, idx);
-  }
-  const param = idx.get(paramId);
+  const param = gen3ParamById(device, fam, tables.params, paramId);
   if (param === undefined) return undefined;
   return gen3EnumOptions(device, family, { param, range: tables.ranges?.[fam]?.[paramId] });
+}
+
+/**
+ * Ordinal count of the gen-3 enum param at the device `paramId` (from its device range row), or
+ * `undefined` for a non-gen-3 device, an unknown id or a param that is not an enum. Unlike
+ * `resolveEnumOptionsByParamId` it does not need a label list, so it still bounds an enum whose
+ * labels are not available.
+ */
+export function resolveEnumCountByParamId(
+  device: ConverterDeviceId,
+  family: ConverterFamily,
+  paramId: number,
+): number | undefined {
+  if (normalizeConceptPort(device) !== 'axe-fx-iii') return undefined;
+  const fam = GEN3_FAMILY[family];
+  const range = fam === undefined ? undefined : gen3Tables(device)?.ranges?.[fam]?.[paramId];
+  return range?.kind === 'enum' && typeof range.enumCount === 'number' ? range.enumCount : undefined;
+}
+
+/**
+ * True when the device-local param `localName` is the block's TYPE / MODEL selector on `device`:
+ * AM4 `type`, Axe-Fx II `effect_type`, and for the gen-3 family the family's `<FAMILY>_MODEL` param
+ * (else `<FAMILY>_TYPE`) - the same selector the body decoder treats as the block type. A block's
+ * type travels via `typeName` / `typeValue`, so the conversion never carries it as a param.
+ */
+export function isBlockTypeSelector(
+  device: ConverterDeviceId,
+  family: ConverterFamily,
+  localName: string,
+): boolean {
+  const port = normalizeConceptPort(device);
+  const name = localName.toLowerCase();
+  if (port === 'am4') return name === 'type';
+  if (port === 'axe-fx-ii') return name === 'effect_type';
+  if (port === 'axe-fx-iii') {
+    const tables = gen3Tables(device);
+    const fam = GEN3_FAMILY[family];
+    if (tables === undefined || fam === undefined) return false;
+    const params = tables.params[fam] ?? [];
+    const selector = params.find((p) => p.name === `${fam}_MODEL`) ?? params.find((p) => p.name === `${fam}_TYPE`);
+    const hit = gen3ParamFor(device, fam, tables.params, name);
+    return selector !== undefined && hit !== undefined && hit.paramId === selector.paramId;
+  }
+  return false;
 }

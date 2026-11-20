@@ -39,6 +39,8 @@ import {
   resolveTargetRange,
   resolveTargetEnumOptions,
   resolveEnumOptionsByParamId,
+  resolveEnumCountByParamId,
+  isBlockTypeSelector,
   targetParamId,
   targetParamIdByName,
   type TargetRange,
@@ -325,6 +327,11 @@ export function convertPreset(
     for (const b of blocks) {
       const mapped: ConverterParam[] = [];
       for (const p of b.params) {
+        // A block's TYPE / MODEL selector travels via typeName / typeValue (lineage-matched above), never
+        // as a param: the type write comes first, so a param carrying the source's roster ordinal would
+        // overwrite it with an ordinal from the wrong list. No event: the type itself is reported by the
+        // type-substituted / type-unresolved events.
+        if (isBlockTypeSelector(source.sourceDevice, b.family, p.nativeName)) continue;
         if (p.conceptKey === undefined) {
           events.push({ kind: 'param-dropped', blockKey: b.key, nativeName: p.nativeName, reason: 'no-concept-mapping' });
           continue;
@@ -335,6 +342,7 @@ export function convertPreset(
           continue;
         }
         const tgtName = resolved.localName;
+        if (isBlockTypeSelector(targetDevice, b.family, tgtName)) continue; // the target's selector is set via typeValue
         const range = resolveTargetRange(targetDevice, b.family, tgtName);
         const enumOptions = resolveTargetEnumOptions(targetDevice, b.family, tgtName);
         // An enum target is a discrete ordinal: labelled options, or an enum range row without a clean vocabulary.
@@ -351,10 +359,10 @@ export function convertPreset(
           });
           continue;
         }
-        // An ordinal is an integer: round a fractional source value before clamping into 0..N-1.
-        const sourceValue = isEnum ? Math.round(p.value) : p.value;
-        const clamped = Math.min(range.max, Math.max(range.min, sourceValue));
-        if (clamped !== sourceValue) {
+        // An ordinal is an integer: round a fractional source value, then clamp into 0..N-1. Either step
+        // changes the value, so the event compares against the source value as given.
+        const clamped = Math.min(range.max, Math.max(range.min, isEnum ? Math.round(p.value) : p.value));
+        if (clamped !== p.value) {
           events.push({
             kind: 'param-clamped',
             blockKey: b.key,
@@ -427,11 +435,30 @@ export function convertPreset(
           // target's own options above.
           if (lossless && p.kind === 'enum') {
             const options = resolveEnumOptionsByParamId(targetDevice, b.family, tid);
-            if (options) {
-              p.enumOptions = options;
+            const count = options?.length ?? resolveEnumCountByParamId(targetDevice, b.family, tid);
+            if (count !== undefined) {
+              // The target's span replaces the source's; without a clean label list the source's labels
+              // would name the wrong ordinals, so they are cleared.
               p.min = 0;
-              p.max = options.length - 1;
-              if (Number.isInteger(p.value) && options[p.value] !== undefined) p.displayValue = options[p.value];
+              p.max = count - 1;
+              if (options) p.enumOptions = options;
+              else delete p.enumOptions;
+              const clamped = Math.min(count - 1, Math.max(0, p.value));
+              if (clamped !== p.value) {
+                events.push({
+                  kind: 'param-clamped',
+                  blockKey: b.key,
+                  nativeName: p.nativeName,
+                  ...(p.conceptKey !== undefined ? { conceptKey: p.conceptKey } : {}),
+                  sourceValue: p.value,
+                  targetValue: clamped,
+                  targetMin: 0,
+                  targetMax: count - 1,
+                });
+                p.value = clamped;
+                p.normalized = clamped / GEN3_WIRE_MAX;
+              }
+              p.displayValue = options?.[p.value] ?? String(p.value);
             }
           }
         } else if (p.paramId !== undefined) delete p.paramId;

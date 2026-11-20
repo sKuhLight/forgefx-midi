@@ -5,18 +5,20 @@
  *   list, so an editor renders a selector instead of a 0..65534 knob.
  * - The mapped path writes the exact ordinal: a gen-3 target's `normalized` is `ordinal / 65534`
  *   (what `valueToRaw` turns back into the ordinal), not the position within `0..N-1`.
+ * - A block's TYPE / MODEL selector never travels as a param (it would overwrite the lineage-matched
+ *   type with an ordinal from the source's roster); the type comes from typeName / typeValue.
  *
  * Synthetic input only: a hand-built FM3 body with one delay block, and hand-built IR presets.
  */
 import { liftGen3Preset } from '../../src/convert/adapters/gen3.js';
 import { convertPreset } from '../../src/convert/engine.js';
 import { conceptKeyForLocal } from '../../src/convert/conceptLookup.js';
-import { targetParamId } from '../../src/convert/targetRanges.js';
+import { resolveEnumCountByParamId, resolveEnumOptionsByParamId, targetParamId } from '../../src/convert/targetRanges.js';
 import type { ConverterBlock, ConverterFamily, ConverterParam, ConverterPreset } from '../../src/convert/ir.js';
 import { FM3_BODY_LAYOUT, valueToRaw } from '../../src/devices/gen3/blockParams.js';
 import { FM3_ENUM_OVERRIDES } from '../../src/gen3/fm3/index.js';
 
-export const ENUM_PARAMS_CASE_COUNT = 5;
+export const ENUM_PARAMS_CASE_COUNT = 7;
 
 const WIRE_MAX = 65534;
 const FM3_DELAY_EID = 70; // 'Delay 1' in the shared gen-3 effect id space
@@ -121,54 +123,153 @@ function caseLosslessCrossDevice(): void {
   assert(valueToRaw(type) === 2, `fm3->fm9 delay type: valueToRaw ${valueToRaw(type)} != 2`);
 }
 
-/** 3. Mapped path to a gen-3 target writes the exact ordinal for every enum family. */
+/** 3. Mapped path to a gen-3 target writes the exact ordinal for enum params. */
 function caseMappedOrdinals(): void {
-  const families: ConverterFamily[] = ['delay', 'reverb', 'chorus', 'flanger', 'phaser', 'wah', 'comp', 'geq', 'filter', 'tremolo', 'gate'];
-  let checked = 0;
-  for (const family of families) {
-    const { target } = convertPreset(synthPreset('am4', family, 'type', 1), 'fm3');
-    const p = target.blocks.find((b) => b.family === family)?.params.find((q) => q.nativeName === 'type');
-    if (p === undefined || p.kind !== 'enum') continue; // family/param absent on this target
-    assert(p.value === 1, `am4->fm3 ${family}.type: value ${p.value}`);
-    assert(p.normalized === 1 / WIRE_MAX, `am4->fm3 ${family}.type: normalized ${p.normalized} (want ordinal / 65534)`);
-    assert(valueToRaw(p) === 1, `am4->fm3 ${family}.type: valueToRaw ${valueToRaw(p)} != 1`);
-    checked += 1;
+  // delay tempo (79 notes) and amp bright (2): the enum params that map between AM4 and gen-3.
+  const cases: Array<{ family: ConverterFamily; name: string; value: number; count: number }> = [
+    { family: 'delay', name: 'tempo', value: 1, count: 79 },
+    { family: 'delay', name: 'tempo', value: 5, count: 79 },
+    { family: 'delay', name: 'tempo', value: 78, count: 79 },
+    { family: 'amp', name: 'bright', value: 1, count: 2 },
+  ];
+  for (const { family, name, value, count } of cases) {
+    const { target } = convertPreset(synthPreset('am4', family, name, value), 'fm3');
+    const p = target.blocks.find((b) => b.family === family)?.params.find((q) => q.nativeName === name);
+    assert(p !== undefined && p.kind === 'enum', `am4->fm3 ${family}.${name}: kind ${p?.kind}`);
+    assert(p!.value === value, `am4->fm3 ${family}.${name}: value ${p!.value} != ${value}`);
+    assert(p!.min === 0 && p!.max === count - 1, `am4->fm3 ${family}.${name}: span ${p!.min}..${p!.max}`);
+    assert(p!.normalized === value / WIRE_MAX, `am4->fm3 ${family}.${name}: normalized ${p!.normalized} (want ordinal / 65534)`);
+    assert(valueToRaw(p!) === value, `am4->fm3 ${family}.${name}: valueToRaw ${valueToRaw(p!)} != ${value}`);
+    assert(p!.displayValue === p!.enumOptions?.[value], `am4->fm3 ${family}.${name}: displayValue ${p!.displayValue} is not its option label`);
   }
-  assert(checked >= 6, `only ${checked} enum families reached the gen-3 target`);
-
-  // The reported case: delay type 2 of 8 used to be written as 18724.
-  const delay = convertPreset(synthPreset('am4', 'delay', 'type', 2), 'fm3').target;
-  const type = paramByName(delay, 'type');
-  assert(valueToRaw(type) === 2, `am4->fm3 delay type 2: valueToRaw ${valueToRaw(type)}`);
-  assert(type.enumOptions?.length === 8 && type.min === 0 && type.max === 7, 'am4->fm3 delay type: options/span');
-  assert(type.displayValue === type.enumOptions![2], `am4->fm3 delay type 2: displayValue ${type.displayValue} is not its option label`);
 }
 
-/** 4. Ordinals are integers inside 0..N-1: a fractional source value rounds, an out-of-range one clamps. */
+/** 4. Ordinals are integers inside 0..N-1: a fractional source value rounds, an out-of-range one clamps; both are reported. */
 function caseOrdinalRoundingAndClamp(): void {
-  const rounded = convertPreset(synthPreset('am4', 'delay', 'type', 2.4), 'fm3');
-  assert(paramByName(rounded.target, 'type').value === 2, 'fractional ordinal 2.4 must round to 2');
-  assert(!rounded.events.some((e) => e.kind === 'param-clamped'), 'rounding a fractional ordinal is not a clamp');
+  const clampEvents = (r: ReturnType<typeof convertPreset>) => r.events.filter((e) => e.kind === 'param-clamped');
+  const tempo = (value: number) => convertPreset(synthPreset('am4', 'delay', 'tempo', value), 'fm3');
 
-  const clamped = convertPreset(synthPreset('am4', 'delay', 'type', 99), 'fm3');
-  const type = paramByName(clamped.target, 'type');
-  assert(type.value === 7 && valueToRaw(type) === 7, `out-of-range ordinal must clamp to the last option, got ${type.value}`);
-  assert(clamped.events.some((e) => e.kind === 'param-clamped'), 'clamping an out-of-range ordinal must be reported');
+  const rounded = tempo(2.4);
+  assert(paramByName(rounded.target, 'tempo').value === 2, 'fractional ordinal 2.4 must round to 2');
+  const roundEvent = clampEvents(rounded)[0];
+  assert(
+    roundEvent !== undefined && roundEvent.kind === 'param-clamped' && roundEvent.sourceValue === 2.4 && roundEvent.targetValue === 2,
+    `rounding 2.4 to 2 must be reported against the unrounded source value, got ${JSON.stringify(roundEvent)}`,
+  );
+  assert(clampEvents(tempo(2)).length === 0, 'an exact integer ordinal needs no event');
 
-  // A continuous param is unaffected: kind float, no rounding, log/linear position as before.
+  const clamped = tempo(99);
+  const p = paramByName(clamped.target, 'tempo');
+  assert(p.value === 78 && valueToRaw(p) === 78, `out-of-range ordinal must clamp to the last option, got ${p.value}`);
+  assert(clampEvents(clamped).length === 1, 'clamping an out-of-range ordinal must be reported once');
+
+  // A continuous param is unaffected: kind float, no rounding, linear position as before.
   const mix = paramByName(convertPreset(synthPreset('am4', 'delay', 'mix', 37.5), 'fm3').target, 'mix');
   assert(mix.kind === 'float' && mix.value === 37.5 && mix.normalized === 0.375, `delay mix: ${JSON.stringify(mix)}`);
 }
 
 /** 5. A non-gen-3 target keeps its own convention: kind + labels, `normalized` = position in 0..N-1. */
 function caseAm4Target(): void {
-  const src = synthPreset('fm3', 'delay', 'type', 2);
-  const { target } = convertPreset(src, 'am4');
-  const type = paramByName(target, 'type');
-  assert(type.kind === 'enum', `fm3->am4 delay type: kind ${type.kind}`);
-  assert(type.value === 2, `fm3->am4 delay type: ordinal ${type.value}`);
-  assert(type.enumOptions !== undefined && type.enumOptions.length === (type.max ?? -2) + 1, 'fm3->am4 delay type: options match the 0..N-1 span');
-  assert(type.normalized === 2 / type.max!, `fm3->am4 delay type: normalized ${type.normalized} (AM4 keeps position in range)`);
+  const { target } = convertPreset(synthPreset('fm3', 'delay', 'tempo', 5), 'am4');
+  const tempo = paramByName(target, 'tempo');
+  assert(tempo.kind === 'enum', `fm3->am4 delay tempo: kind ${tempo.kind}`);
+  assert(tempo.value === 5, `fm3->am4 delay tempo: ordinal ${tempo.value}`);
+  assert(tempo.enumOptions !== undefined && tempo.enumOptions.length === (tempo.max ?? -2) + 1, 'fm3->am4 delay tempo: options match the 0..N-1 span');
+  assert(tempo.normalized === 5 / tempo.max!, `fm3->am4 delay tempo: normalized ${tempo.normalized} (AM4 keeps position in range)`);
+}
+
+/** 6. The block type selector is never a param; the lineage-matched typeValue survives. */
+function caseTypeSelectorsDropped(): void {
+  const families: ConverterFamily[] = ['amp', 'drive', 'reverb', 'delay', 'chorus', 'flanger', 'phaser', 'tremolo', 'wah', 'filter', 'compressor', 'gate', 'geq'];
+  let checked = 0;
+  for (const family of families) {
+    const { target } = convertPreset(synthPreset('am4', family, 'type', 1), 'fm3');
+    const block = target.blocks.find((b) => b.family === family);
+    if (block === undefined) continue; // family absent on this target
+    assert(
+      !block.params.some((q) => q.nativeName === 'type' || q.nativeName === 'model'),
+      `am4->fm3 ${family}: the type selector leaked through as a param: ${JSON.stringify(block.params)}`,
+    );
+    checked += 1;
+  }
+  assert(checked >= 8, `only ${checked} families reached the target`);
+
+  // AM4 "delay type" is the delay MODEL; FM3's DELAY_TYPE (7) is the routing config and DELAY_MODEL
+  // (6) is the model selector. Neither may be written from an AM4 model ordinal.
+  const delay = convertPreset(synthPreset('am4', 'delay', 'type', 2), 'fm3').target.blocks.find((b) => b.family === 'delay')!;
+  assert(!delay.params.some((q) => q.paramId === 6 || q.paramId === 7), `am4->fm3 delay type reached FM3 ${JSON.stringify(delay.params)}`);
+
+  // The type itself still comes from the lineage match, and a type param next to it changes nothing.
+  const withType = synthPreset('am4', 'delay', 'type', 2);
+  withType.blocks[0]!.typeName = 'Digital Mono';
+  const withoutType = synthPreset('am4', 'delay', 'tempo', 5);
+  withoutType.blocks[0]!.typeName = 'Digital Mono';
+  const a = convertPreset(withType, 'fm3').target.blocks.find((b) => b.family === 'delay')!;
+  const b = convertPreset(withoutType, 'fm3').target.blocks.find((x) => x.family === 'delay')!;
+  assert(a.typeName !== undefined && a.typeValue !== undefined, `lineage-matched type missing: ${a.typeName}/${a.typeValue}`);
+  assert(a.typeName === b.typeName && a.typeValue === b.typeValue, 'a type param must not change the lineage-matched type');
+
+  // And the other direction: FM3's routing config (DELAY_TYPE) has no AM4 column, so it is dropped, not mapped onto the AM4 model.
+  const back = convertPreset(synthPreset('fm3', 'delay', 'type', 2), 'am4');
+  assert(!back.target.blocks.find((x) => x.family === 'delay')!.params.some((q) => q.nativeName === 'type'), 'fm3 delay config must not become the AM4 delay model');
+  assert(back.events.some((e) => e.kind === 'param-dropped' && e.nativeName === 'type'), 'dropping the routing config must be reported');
+}
+
+/** 7. Lossless re-address: the target's span and labels replace the source's, an ordinal beyond the span clamps. */
+function caseLosslessReaddress(): void {
+  const labels79 = Array.from({ length: 79 }, (_, i) => `src ${i}`);
+  const tempoPreset = (value: number): ConverterPreset => ({
+    sourceDevice: 'fm9',
+    name: 'synthetic',
+    sceneNames: ['A'],
+    sceneCount: 1,
+    blocks: [
+      {
+        key: 'delay1',
+        family: 'delay',
+        instance: 1,
+        params: [
+          {
+            paramId: 19,
+            nativeName: 'tempo',
+            conceptKey: 'delay.tempo',
+            kind: 'enum',
+            value,
+            min: 0,
+            max: 200,
+            normalized: value / WIRE_MAX,
+            displayValue: `src ${value}`,
+            enumOptions: labels79,
+          },
+        ],
+        liftedFrom: 'full-decode',
+      },
+    ],
+    routing: { seriesChains: [['delay1']] },
+    decodeDepth: 'full',
+  });
+
+  const inSpan = convertPreset(tempoPreset(5), 'fm3');
+  const t = paramByName(inSpan.target, 'tempo');
+  assert(t.paramId === targetParamId('fm3', 'delay', 'delay.tempo'), `fm9->fm3 tempo: paramId ${t.paramId}`);
+  assert(t.min === 0 && t.max === 78, `fm9->fm3 tempo: span ${t.min}..${t.max} (the target's 79 notes)`);
+  assert(t.enumOptions !== undefined && t.enumOptions.join('|') !== labels79.join('|'), 'fm9->fm3 tempo: source labels must be replaced by the target\'s');
+  assert(t.displayValue === t.enumOptions![5], `fm9->fm3 tempo: displayValue ${t.displayValue}`);
+  assert(!inSpan.events.some((e) => e.kind === 'param-clamped'), 'an in-span ordinal needs no event');
+
+  const beyond = convertPreset(tempoPreset(100), 'fm3');
+  const c = paramByName(beyond.target, 'tempo');
+  assert(c.value === 78 && c.normalized === 78 / WIRE_MAX && valueToRaw(c) === 78, `fm9->fm3 tempo 100: clamped to ${c.value}`);
+  const ev = beyond.events.find((e) => e.kind === 'param-clamped');
+  assert(
+    ev !== undefined && ev.kind === 'param-clamped' && ev.sourceValue === 100 && ev.targetValue === 78 && ev.targetMax === 78,
+    `an ordinal beyond the target span must be reported, got ${JSON.stringify(ev)}`,
+  );
+
+  // The count of an enum is available without its labels (what bounds the span when no clean list exists).
+  const id = targetParamId('fm3', 'delay', 'delay.tempo')!;
+  assert(resolveEnumCountByParamId('fm3', 'delay', id) === resolveEnumOptionsByParamId('fm3', 'delay', id)?.length, 'enum count by paramId matches the option count');
+  assert(resolveEnumCountByParamId('fm3', 'delay', 8) === undefined, 'a continuous param (delay time) has no enum count');
 }
 
 export function runEnumParamsTests(): void {
@@ -177,4 +278,6 @@ export function runEnumParamsTests(): void {
   caseMappedOrdinals();
   caseOrdinalRoundingAndClamp();
   caseAm4Target();
+  caseTypeSelectorsDropped();
+  caseLosslessReaddress();
 }

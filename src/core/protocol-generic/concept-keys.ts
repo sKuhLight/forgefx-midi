@@ -349,9 +349,17 @@ export const CONCEPT_KEYS: Readonly<Record<string, ConceptKeyMap>> = Object.free
   },
 
   // ── Delay ───────────────────────────────────────────────────────
+  // The delay MODEL selector (AM4 `type`, Axe-Fx II `effect_type`). The gen-3 delay model is
+  // DELAY_MODEL; gen-3's DELAY_TYPE is a different param (the mono / stereo / ping-pong routing
+  // config, see `delay.config`), so it deliberately has no column here: mapping an AM4 model
+  // ordinal onto it would write a routing mode.
   'delay.type': {
     'axe-fx-ii': 'effect_type',
     am4: 'type',
+  },
+  // gen-3 delay routing config (DELAY_TYPE): MONO / STEREO / PING-PONG / DUAL / ... No other
+  // device has this as a separate param, so it only maps across the gen-3 family.
+  'delay.config': {
     'axe-fx-iii': 'type',
   },
   'delay.time': {

@@ -284,8 +284,17 @@ export function decodeReply(frame: Uint8Array): LiveReply {
   const raw = decodeSeptetStream(inner, cnt, 15);
   if (raw.length < cnt) return null;
 
-  // DEFINITION record: exactly 36 raw bytes with finite numeric fields.
-  if (cnt === 36 && raw.length === 36) {
+  // DEFINITION record: only under the DEFINITION view (0x1c), exactly 36 raw
+  // bytes with finite numeric fields.
+  //
+  // The view byte MUST be checked: any 36-byte payload whose five f32 fields
+  // are finite satisfies the shape test, and ASCII text always does (a top byte
+  // <= 0x7E can never give an exponent of 0xFF, so the floats are always
+  // finite). Without this the string/value branch is unreachable for a 36-byte
+  // text reply — it would be returned as a bogus `definition`. `selector` is the
+  // view echo (`frame[6]`). A reply that is NOT the definition view falls
+  // through to the string branch below.
+  if (selector === VIEW_DEFINITION && cnt === 36 && raw.length === 36) {
     const dv = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
     const id = dv.getUint32(0, true);
     const tc = dv.getUint32(4, true);
@@ -323,9 +332,30 @@ export function decodeReply(frame: Uint8Array): LiveReply {
   // at the first NUL decodes trailing-only padding ("5.00\0\0…") identically,
   // skips interior padding, and still falls through to null for a payload whose
   // leading byte is a NUL or non-printable.
+  //
+  // The interior-NUL tolerance is scoped to the VALUE buffer (0x00): it packs
+  // SEVERAL NUL-separated fields, so bytes after the first NUL are structural.
+  // Every other view keeps the strict rule (as before): once the string ends,
+  // only NUL padding may follow. A LABEL buffer (0x1f) holds exactly ONE string,
+  // so any non-NUL content after the terminating NUL means the reply is not a
+  // label (another field in the same fixed-width buffer, or a mis-targeted
+  // read). Accepting it would let a speculative 0x1f probe of a numeric float
+  // that answers with printable bytes, a NUL and then junk decode to a label,
+  // and the `labels.length > 0` test in `buildRecord` would then turn that float
+  // into an enum. A genuine label has no non-NUL byte after the terminator, so
+  // the strict rule still recovers every real label.
   let end = 0;
   while (end < raw.length && raw[end] !== 0x00) end += 1;
-  if (end > 0) {
+  let clean = end > 0;
+  if (clean && selector !== VIEW_VALUE) {
+    for (let i = end; i < raw.length; i++) {
+      if (raw[i] !== 0x00) {
+        clean = false;
+        break;
+      }
+    }
+  }
+  if (clean) {
     let printable = true;
     for (let i = 0; i < end; i++) {
       const c = raw[i]!;
@@ -343,8 +373,9 @@ export function decodeReply(frame: Uint8Array): LiveReply {
     }
   }
 
-  // tag carries payload but it is neither a clean record nor a printable string
-  // (e.g. the 0x2e large value dump). Not a parameter definition.
+  // The tag carries a payload but it is neither a definition record nor a clean
+  // printable string (e.g. the 0x2e large value dump, or any non-value view with
+  // non-NUL bytes after its first NUL): decodes to null. Not a parameter definition.
   return null;
 }
 

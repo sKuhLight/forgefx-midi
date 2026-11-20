@@ -27,7 +27,7 @@ import { assertFm3Equivalence } from './oracle.js';
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 
 export const ASSIGN_CASE_COUNT = 5;
-export const ASSIGN_LIVE_CASE_COUNT = 4;
+export const ASSIGN_LIVE_CASE_COUNT = 5;
 
 export function runAssign(): void {
   const walkText = readFileSync(join(FIXTURES, 'fm3-12p0.walk.json'), 'utf8');
@@ -176,4 +176,28 @@ export function runAssignLive(): void {
     }
   }
   console.log('  cache/assign-live: mixed seed coherence (one anchor absent) still throws seed disagreement');
+
+  // ---- Case 5: a score tie goes to the section that holds more of the family's ids ----------
+  // OUT's catalog shares its first rows with a smaller sibling table (MIX's). Both sections score
+  // OUT the same — the small one simply lacks OUT's last ids — and the small one comes first in
+  // section order. The tie must go to the section holding all of OUT's ids, leaving MIX its own.
+  {
+    const shared = (section: number): CacheRecord[] => [0, 1, 2, 3, 4].map((id) => fl(section, id, 0, 10));
+    const records: CacheRecord[] = [
+      ...shared(50), en(50, 5, ['m', 's']), // the small table: MIX's
+      ...shared(60), fl(60, 5, 0, 10), fl(60, 6, 0, 10), en(60, 7, ['x', 'y']), // the big table: OUT's
+    ];
+    const tieParams: DeviceParam[] = [
+      ...[0, 1, 2, 3, 4].map((id) => ({ family: 'OUT', paramId: id, name: `OUT_LEVEL${id}`, displayMin: 0, displayMax: 10 })),
+      { family: 'OUT', paramId: 6, name: 'OUT_PAN' },
+      { family: 'OUT', paramId: 7, name: 'OUT_SCENE' },
+      ...[0, 1, 2, 3, 4].map((id) => ({ family: 'MIX', paramId: id, name: `MIX_GAIN${id}` })),
+      { family: 'MIX', paramId: 5, name: 'MIX_MODE', unit: 'enum' },
+    ];
+    const b = buildDeviceCache(records, tieParams, {});
+    if (b.rangeSections['OUT']?.sectionTag !== 60 || b.rangeSections['MIX']?.sectionTag !== 50) {
+      fail(`tie: OUT -> ${b.rangeSections['OUT']?.sectionTag}, MIX -> ${b.rangeSections['MIX']?.sectionTag} (expected 60 / 50)`);
+    }
+  }
+  console.log('  cache/assign-live: a vote tie goes to the section holding more of the family ids (no swap with a smaller sibling table)');
 }

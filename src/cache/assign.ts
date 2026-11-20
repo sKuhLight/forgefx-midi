@@ -324,10 +324,21 @@ function assignSections(
   // else VOTE-ONLY (live block-id space): no pre-mapping — the vote decides
   // every family (seeds are enforced only as existence checks below).
 
-  // Stable sort by descending score (ties keep pairScores insertion order).
+  /** Catalog params of `fam` with no record at all in section `t` (absent ids, not placeholders). */
+  const absentIds = (fam: string, t: number): number => {
+    const sec = bySec.get(t)!;
+    let n = 0;
+    for (const p of famParams.get(fam) ?? []) if (!sec.has(p.paramId)) n += 1;
+    return n;
+  };
+
+  // Stable sort by descending score. A tie goes to the pair whose section holds more of the family's
+  // catalog ids: the score only counts the ids a section HAS, so a smaller sibling table that matches
+  // the shared rows equally well (an FM3 output table's level/pan rows also open its mixer table) must
+  // not win by section order. Remaining ties keep pairScores insertion order.
   const ordered = pairScores
-    .map((p, i) => [p, i] as const)
-    .sort((a, b) => b[0][2] - a[0][2] || a[1] - b[1])
+    .map((p, i) => [p, i, absentIds(p[0], p[1])] as const)
+    .sort((a, b) => b[0][2] - a[0][2] || a[2] - b[2] || a[1] - b[1])
     .map(([p]) => p);
 
   for (const [fam, t, sc] of ordered) {

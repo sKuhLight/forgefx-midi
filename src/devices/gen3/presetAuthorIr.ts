@@ -327,6 +327,7 @@ export function authorGen3PresetFromIR(
   }
   const parsed = parsePresetDump(baseDumpBytes, 0, modelId);
   const decodedRaw = decodeRawPatch(parsed.chunkPayloads);
+  if (decodedRaw.empty) throw new Error('authorGen3PresetFromIR: the base dump is an empty preset slot');
   const { rawPatch, body } = decodedRaw;
   const profile: DeviceProfile = getProfile(modelId);
   const { tables, layout } = gen3BlockParamModel(modelId);
@@ -565,6 +566,7 @@ export function authorGen3PresetFromIRFull(
   }
   const parsed = parsePresetDump(scaffoldDumpBytes, 0, modelId);
   const decodedRaw = decodeRawPatch(parsed.chunkPayloads);
+  if (decodedRaw.empty) throw new Error('authorGen3PresetFromIRFull: the scaffold dump is an empty preset slot');
   const { rawPatch, body: scaffoldBody, decompSize } = decodedRaw;
 
   // Slice the scaffold's carried prelude + trailing via a robust chain walk keyed

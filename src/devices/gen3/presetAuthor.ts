@@ -103,7 +103,10 @@ function writeCrc(rawPatch: Uint8Array): Uint8Array {
  */
 export function renamePreset(dumpBytes: Uint8Array, newName: string): Uint8Array {
   const parsed = parsePresetDump(dumpBytes);
-  const { rawPatch } = decodeRawPatch(parsed.chunkPayloads);
+  const { rawPatch, empty } = decodeRawPatch(parsed.chunkPayloads);
+  // A name on a zero patch would yield a dump with no body that no longer reads
+  // as an empty slot and cannot be decoded.
+  if (empty) throw new Error('renamePreset: cannot rename an empty preset slot');
   const out = rawPatch.slice();
   const bytes = new TextEncoder().encode(newName).subarray(0, 31);
   out.fill(0, 0x08, 0x28);
@@ -173,7 +176,8 @@ export function swapBlockType(
   channel = 'A',
 ): SwapResult {
   const parsed = parsePresetDump(dumpBytes);
-  const { rawPatch, body } = decodeRawPatch(parsed.chunkPayloads);
+  const { rawPatch, body, empty } = decodeRawPatch(parsed.chunkPayloads);
+  if (empty) throw new Error('swapBlockType: cannot edit an empty preset slot');
   const profile = getProfile(parsed.modelId);
   const decoded = decodeGen3Body(body, parsed.modelId);
 

@@ -689,6 +689,9 @@ export interface Gen3DecodedPreset extends Gen3PresetBody {
   preset_name: string;
   /** True when the stored CRC matches the recomputed CRC (device-validity gate). */
   crc_valid: boolean;
+  /** True for an unused preset slot (all-zero raw_patch): no name, no body, no
+   *  blocks, and `crc_valid` is false. See `isEmptyRawPatch`. */
+  empty: boolean;
   decompressed_size: number;
   /**
    * The raw DECOMPRESSED patch body (`decodeRawPatch(...).body`). Carried so
@@ -710,7 +713,9 @@ function rawPatchName(rawPatch: Uint8Array): string {
  * the raw patch (CRC-checked), and decode the body into structured params. Pass
  * the dump bytes (an exported `.syx` or a stored-preset dump) and optionally the
  * expected model byte. Throws if the dump framing is invalid; a CRC mismatch is
- * reported via `crc_valid` (the body is still decoded best-effort).
+ * reported via `crc_valid` (the body is still decoded best-effort). An unused
+ * slot decodes to an empty result (`empty: true`, no blocks, no grid) rather
+ * than throwing.
  */
 export function decodeGen3PresetDump(bytes: Uint8Array, expectedModelId?: number): Gen3DecodedPreset {
   const parsed = parsePresetDump(bytes, 0, expectedModelId);
@@ -721,6 +726,7 @@ export function decodeGen3PresetDump(bytes: Uint8Array, expectedModelId?: number
     model_name: modelName(parsed.modelId),
     preset_name: rawPatchName(decoded.rawPatch),
     crc_valid: decoded.crcValid,
+    empty: decoded.empty,
     decompressed_size: decoded.decompSize,
     decompressed_body: decoded.body,
     ...body,

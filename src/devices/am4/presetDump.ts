@@ -220,7 +220,9 @@ export interface Am4DecodedPreset extends Am4ContainerDecode {
  * the AMP block param values. Pure — no MIDI I/O.
  *
  * CRC / footer-XOR / Huffman-termination outcomes are reported via flags on
- * the result (never thrown) so a caller can surface a corrupt dump usefully.
+ * the result so a caller can surface a corrupt dump usefully. A malformed
+ * container still throws (see `decodeAm4Container`): a wrong raw_patch size, or
+ * a compressed body too short / malformed to hold its Huffman code tree.
  */
 export function decodeAm4PresetDump(parsed: ParsedPresetDump): Am4DecodedPreset {
   const container = decodeAm4Container(parsed.chunkPayloads, parsed.footerPayload);

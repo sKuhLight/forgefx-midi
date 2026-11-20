@@ -58,7 +58,7 @@ import {
  *  enum label overrides, clean type/model rosters, and the effectId→family map. */
 export interface Gen3BlockParamTables {
   paramsByFamily: Record<string, readonly Pick<Param, 'paramId' | 'name' | 'displayLabel' | 'unit'>[]>;
-  ranges: Record<string, Record<number, Gen3TaperRow & { kind?: string }>>;
+  ranges: Record<string, Record<number, Gen3TaperRow & { kind?: string; enumCount?: number }>>;
   enumOverrides: Record<string, Record<string, readonly string[]>>;
   /** Per UI slug: clean model roster ({ value: ordinal, name }) for TYPE params. */
   rosters: Record<string, readonly { value: number; name: string }[]>;
@@ -267,6 +267,30 @@ function typeParamFor(tables: Gen3BlockParamTables, family: string): number | nu
   if (model) return model.paramId;
   const exact = params?.find((p) => p.name === `${family}_TYPE`);
   return exact ? exact.paramId : null;
+}
+
+/**
+ * Enum shape of one param from the device tables: the ordinal count (`enumCount` of its range row,
+ * else the override list length) and the ordered labels (index = ordinal) when the device's
+ * cache-mined `enumOverrides` hold a complete vocabulary for it. Both are `undefined` when unknown;
+ * a vocabulary shorter than the count is treated as no clean labels.
+ */
+export function enumInfoFor(
+  tables: Gen3BlockParamTables,
+  family: string,
+  paramId: number,
+): { count?: number; options?: readonly string[] } {
+  const list = tables.enumOverrides[family]?.[String(paramId)];
+  const count = tables.ranges[family]?.[paramId]?.enumCount ?? list?.length;
+  if (count === undefined || !(count > 0)) return {};
+  if (!list || list.length < count) return { count };
+  const options: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const label = list[i];
+    if (typeof label !== 'string') return { count }; // a hole: not a complete vocabulary
+    options.push(label);
+  }
+  return { count, options };
 }
 
 /** Resolve an enum ordinal to a label: device enum overrides first, then a clean model roster

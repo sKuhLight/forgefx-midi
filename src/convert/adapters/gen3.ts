@@ -20,12 +20,14 @@ import {
   gen3BlockParamModel,
   typeParamForFamily,
   hasBlockParamModel,
+  enumInfoFor,
   type DecodedBlock,
   type Gen3BlockParamTables,
 } from '../../devices/gen3/blockParams.js';
 import type { ConverterFamily, Gen3DeviceId } from '../families.js';
 import { resolveFamily } from '../families.js';
 import { conceptKeyForLocal } from '../conceptLookup.js';
+import { resolveEnumOptionsByParamId } from '../targetRanges.js';
 import type {
   ConverterPreset,
   ConverterBlock,
@@ -90,6 +92,7 @@ function liftParams(
   family: ConverterFamily,
   decoded: DecodedBlock,
   typePid: number | null,
+  tables: Gen3BlockParamTables | undefined,
 ): ConverterParam[] {
   const out: ConverterParam[] = [];
   for (const p of decoded.params) {
@@ -97,6 +100,18 @@ function liftParams(
     if (p.paramId >= SYNTHETIC_PARAM_ID_FLOOR) continue; // UI-only pseudo param, not a writable body slot
     const nativeName = localParamName(p.name, decoded.family);
     const conceptKey = conceptKeyForLocal(device, family, nativeName);
+    const kind = p.kind === 'enum' || p.kind === 'float' ? p.kind : undefined;
+    // An enum is a discrete ordinal: carry its span (0..N-1) and, when the device has a complete label
+    // list for it, the options — device overrides first (the same source `enumLabel` reads), then the
+    // curated overlay by param id. Without these an editor renders the ordinal as a 0..65534 knob.
+    let enumSpan: { min: number; max: number } | undefined;
+    let enumOptions: readonly string[] | undefined;
+    if (kind === 'enum') {
+      const info = tables ? enumInfoFor(tables, decoded.family, p.paramId) : {};
+      enumOptions = info.options ?? resolveEnumOptionsByParamId(device, family, p.paramId);
+      const count = enumOptions?.length ?? info.count;
+      if (count !== undefined) enumSpan = { min: 0, max: count - 1 };
+    }
     out.push({
       paramId: p.paramId,
       nativeName,
@@ -105,8 +120,11 @@ function liftParams(
       sharedName: p.name,
       ...(conceptKey ? { conceptKey } : {}),
       value: p.value ?? p.raw,
+      ...(kind ? { kind } : {}),
       normalized: p.raw / VALUE_MODEL_MAX,
       ...(p.enumLabel ? { displayValue: p.enumLabel } : {}),
+      ...(enumSpan ? enumSpan : {}),
+      ...(enumOptions ? { enumOptions } : {}),
     });
   }
   return out;
@@ -146,8 +164,9 @@ function liftBlockDetail(
   family: ConverterFamily,
   decoded: DecodedBlock | undefined,
   typePid: number | null,
+  tables: Gen3BlockParamTables | undefined,
 ): Pick<ConverterBlock, 'typeName' | 'typeValue' | 'params' | 'channels' | 'bypassPerScene' | 'liftedFrom'> {
-  const params: ConverterParam[] = decoded ? liftParams(device, family, decoded, typePid) : [];
+  const params: ConverterParam[] = decoded ? liftParams(device, family, decoded, typePid, tables) : [];
 
   if (body === undefined) {
     return { params, liftedFrom: params.length > 0 ? 'full-decode' : 'partial-decode' };
@@ -306,7 +325,7 @@ export function liftGen3Preset(body: Gen3BodyLike, device: Gen3DeviceId): Conver
   const blocks: ConverterBlock[] = blockInfos.map((ci) => {
     const decoded = decodedByEid.get(ci.cell.effect_id);
     const typePid = paramTables && decoded ? typeParamForFamily(paramTables, decoded.family) : null;
-    const detail = liftBlockDetail(device, matched.get(ci), ci.family!, decoded, typePid);
+    const detail = liftBlockDetail(device, matched.get(ci), ci.family!, decoded, typePid, paramTables);
     return {
       key: ci.key!,
       family: ci.family!,

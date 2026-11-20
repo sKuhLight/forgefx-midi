@@ -66,7 +66,22 @@ export interface ConverterParam {
   conceptKey?: string;
   /** The raw numeric value as decoded from the source. */
   value: number;
-  /** Normalized 0..1 value, when the source scale is known. */
+  /**
+   * How the owning device classifies this param: `'enum'` = a discrete ordinal
+   * (`value` is the ordinal, `enumOptions` its labels when known, `min..max` the
+   * ordinal span `0..N-1`), `'float'` = a continuous param, `'int'` = reserved
+   * for integer counts. Absent when the device gives no classification (an
+   * un-ranged param). Editors should render an `'enum'` as a selector or stepper,
+   * never as a knob.
+   */
+  kind?: 'enum' | 'float' | 'int';
+  /**
+   * Normalized 0..1 value, when the source scale is known. For a gen-3 param
+   * this is the device WIRE position (`raw / 65534`): the knob position for a
+   * linear param, the geometric position for a log-taper param, and
+   * `ordinal / 65534` for an enum, so `valueToRaw` writes exactly the stored
+   * value. Other targets use the position within `min..max`.
+   */
   normalized?: number;
   /** Human-facing display string (e.g. `"5.1"`, `"USA MK IIC+"`), when known. */
   displayValue?: string;

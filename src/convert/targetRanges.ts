@@ -47,6 +47,9 @@ import { FM9_RANGES } from '../gen3/fm9/ranges.generated.js';
 import { VP4_PARAMS_BY_FAMILY } from '../gen3/vp4/params.js';
 import { resolveEnumValues } from '../gen3/axe-fx-iii/enumOverlay.js';
 import { gen3TaperIsLog } from '../devices/gen3/taper.js';
+import { AXE3_ENUM_OVERRIDES } from '../gen3/axe-fx-iii/index.js';
+import { FM3_ENUM_OVERRIDES } from '../gen3/fm3/index.js';
+import { FM9_ENUM_OVERRIDES } from '../gen3/fm9/index.js';
 
 /** A validated target range in the device's DISPLAY units. */
 export interface TargetRange {
@@ -56,6 +59,11 @@ export interface TargetRange {
   readonly unit?: string;
   /** Logarithmic taper (e.g. frequency / time knobs) — interpolate geometrically. */
   readonly log?: boolean;
+  /**
+   * `'enum'` when the target param is a discrete ordinal: the range is then the
+   * ordinal span `0..N-1`, not a continuous display range. Absent for continuous params.
+   */
+  readonly kind?: 'enum';
 }
 
 /**
@@ -137,19 +145,21 @@ export interface Gen3RangeRow {
   readonly taper?: 'linear' | 'log' | 'flat' | 'custom';
 }
 type Gen3RangeTable = Readonly<Record<string, Readonly<Record<number, Gen3RangeRow>>>>;
+/** Device-true enum label lists: family → paramId (string) → labels indexed by ordinal. */
+type Gen3EnumOverrides = Readonly<Record<string, Readonly<Record<string, readonly string[]>>>>;
 type Gen3ParamTable = Readonly<Record<string, readonly Gen3Param[]>>;
 
 /** Per-device gen-3 tables: name→paramId catalog + (optional) device-true ranges. */
 function gen3Tables(
   device: ConverterDeviceId,
-): { params: Gen3ParamTable; ranges?: Gen3RangeTable } | undefined {
+): { params: Gen3ParamTable; ranges?: Gen3RangeTable; enumOverrides?: Gen3EnumOverrides } | undefined {
   switch (device) {
     case 'axe-fx-iii':
-      return { params: AXE3_PARAMS_BY_FAMILY, ranges: AXE3_RANGES as Gen3RangeTable };
+      return { params: AXE3_PARAMS_BY_FAMILY, ranges: AXE3_RANGES as Gen3RangeTable, enumOverrides: AXE3_ENUM_OVERRIDES };
     case 'fm9':
-      return { params: FM9_PARAMS_BY_FAMILY, ranges: FM9_RANGES as Gen3RangeTable };
+      return { params: FM9_PARAMS_BY_FAMILY, ranges: FM9_RANGES as Gen3RangeTable, enumOverrides: FM9_ENUM_OVERRIDES };
     case 'fm3':
-      return { params: FM3_PARAMS_BY_FAMILY, ranges: FM3_RANGES as Gen3RangeTable };
+      return { params: FM3_PARAMS_BY_FAMILY, ranges: FM3_RANGES as Gen3RangeTable, enumOverrides: FM3_ENUM_OVERRIDES };
     case 'vp4':
       return { params: VP4_PARAMS_BY_FAMILY };
     default:
@@ -411,7 +421,13 @@ export function resolveTargetRange(
       const hi = Math.max(rec.displayMin!, rec.displayMax!);
       const unit = unitSymbol(rec.unit);
       const log = rec.scaling === 'log10';
-      return { min: lo, max: hi, ...(unit ? { unit } : {}), ...(log ? { log } : {}) };
+      return {
+        min: lo,
+        max: hi,
+        ...(unit ? { unit } : {}),
+        ...(log ? { log } : {}),
+        ...(rec.unit === 'enum' ? { kind: 'enum' as const } : {}),
+      };
     }
     return undefined;
   }
@@ -434,7 +450,13 @@ export function resolveTargetRange(
       if (lo !== undefined && hi !== undefined) {
         const unit = unitSymbol(param.unit);
         const log = gen3TaperIsLog(range);
-        return { min: lo, max: hi, ...(unit ? { unit } : {}), ...(log ? { log } : {}) };
+        return {
+          min: lo,
+          max: hi,
+          ...(unit ? { unit } : {}),
+          ...(log ? { log } : {}),
+          ...(range?.kind === 'enum' ? { kind: 'enum' as const } : {}),
+        };
       }
     }
     // Amp tone knobs: the decoder scales them to 0..10 — guarantee a range even
@@ -471,15 +493,58 @@ export function resolveTargetEnumOptions(
   }
 
   if (port === 'axe-fx-iii') {
-    const hit = gen3Hit(device, family, nativeName);
-    // The device-true table is the authoritative enum signal (the FM3/FM9
-    // catalogs tag every param 'unverified'); only trust an enum row.
-    if (hit?.range?.kind === 'enum' && typeof hit.range.enumCount === 'number') {
-      const entry = resolveEnumValues(hit.param.name);
-      if (entry) return denseOptions(entry.values, hit.range.enumCount);
-    }
-    return undefined;
+    return gen3OverlayEnumOptions(gen3Hit(device, family, nativeName));
   }
 
   return undefined;
+}
+
+/** Enum labels from the name-keyed curated overlay, or `undefined` unless the device range row is a cleanly-labelled enum. */
+function gen3OverlayEnumOptions(hit: Gen3Hit | undefined): readonly string[] | undefined {
+  // The device-true table is the authoritative enum signal (the FM3/FM9
+  // catalogs tag every param 'unverified'); only trust an enum row.
+  if (hit?.range?.kind === 'enum' && typeof hit.range.enumCount === 'number') {
+    const entry = resolveEnumValues(hit.param.name);
+    if (entry) return denseOptions(entry.values, hit.range.enumCount);
+  }
+  return undefined;
+}
+
+/** `${device}|${FAMILY}` → (paramId → Param), for resolving a param by its device address. */
+const GEN3_ID_INDEX = new Map<string, Map<number, Gen3Param>>();
+
+/**
+ * Enum labels for the gen-3 param at the device `paramId` (the form a lifted or re-addressed IR param
+ * carries), or `undefined` for a non-gen-3 device, an unknown id, a non-enum param, or a vocabulary
+ * that does not densely cover its ordinals. Unlike `resolveTargetEnumOptions` (which uses the curated
+ * name-keyed overlay), the device's own mined label list wins here — the list the body decoder labels
+ * with, so a lifted preset's options agree with its `displayValue` — and the overlay is the fallback
+ * for params the device tables carry no list for.
+ */
+export function resolveEnumOptionsByParamId(
+  device: ConverterDeviceId,
+  family: ConverterFamily,
+  paramId: number,
+): readonly string[] | undefined {
+  if (normalizeConceptPort(device) !== 'axe-fx-iii') return undefined;
+  const tables = gen3Tables(device);
+  const fam = GEN3_FAMILY[family];
+  if (tables === undefined || fam === undefined) return undefined;
+  const cacheKey = `${device}|${fam}`;
+  let idx = GEN3_ID_INDEX.get(cacheKey);
+  if (idx === undefined) {
+    idx = new Map<number, Gen3Param>();
+    for (const p of tables.params[fam] ?? []) if (!idx.has(p.paramId)) idx.set(p.paramId, p);
+    GEN3_ID_INDEX.set(cacheKey, idx);
+  }
+  const param = idx.get(paramId);
+  if (param === undefined) return undefined;
+  const hit: Gen3Hit = { param, range: tables.ranges?.[fam]?.[paramId] };
+  const count = hit.range?.kind === 'enum' ? hit.range.enumCount : undefined;
+  const mined = tables.enumOverrides?.[fam]?.[String(paramId)];
+  if (mined !== undefined && typeof count === 'number') {
+    const dense = denseOptions({ ...mined }, count);
+    if (dense !== undefined) return dense;
+  }
+  return gen3OverlayEnumOptions(hit);
 }

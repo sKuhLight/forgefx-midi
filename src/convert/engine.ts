@@ -35,7 +35,14 @@ import type {
   ConverterGridCell,
 } from './ir.js';
 import { matchModel, modelOnDevice, type LineageMatch } from './lineageIndex.js';
-import { resolveTargetRange, resolveTargetEnumOptions, targetParamId, targetParamIdByName, type TargetRange } from './targetRanges.js';
+import {
+  resolveTargetRange,
+  resolveTargetEnumOptions,
+  resolveEnumOptionsByParamId,
+  targetParamId,
+  targetParamIdByName,
+  type TargetRange,
+} from './targetRanges.js';
 import {
   resolveConceptKey,
   normalizeConceptPort,
@@ -328,12 +335,15 @@ export function convertPreset(
         const tgtName = resolved.localName;
         const range = resolveTargetRange(targetDevice, b.family, tgtName);
         const enumOptions = resolveTargetEnumOptions(targetDevice, b.family, tgtName);
+        // An enum target is a discrete ordinal: labelled options, or an enum range row without a clean vocabulary.
+        const isEnum = enumOptions !== undefined || range?.kind === 'enum';
         if (range === undefined) {
           events.push({ kind: 'param-unverified', blockKey: b.key, nativeName: tgtName, value: p.value });
           mapped.push({
             nativeName: tgtName,
             conceptKey: p.conceptKey,
             value: p.value,
+            ...(isEnum ? { kind: 'enum' as const } : {}),
             displayValue: p.displayValue,
             ...(enumOptions ? { enumOptions } : {}),
           });
@@ -357,12 +367,13 @@ export function convertPreset(
           nativeName: tgtName,
           conceptKey: p.conceptKey,
           value: clamped,
+          kind: isEnum ? 'enum' : 'float',
           min: range.min,
           max: range.max,
           ...(range.unit !== undefined ? { unit: range.unit } : {}),
           ...(range.log ? { log: true } : {}),
           ...(normalized !== undefined ? { normalized } : {}),
-          displayValue: String(clamped),
+          displayValue: enumOptions?.[clamped] ?? String(clamped),
           ...(enumOptions ? { enumOptions } : {}),
         });
       }
@@ -402,8 +413,22 @@ export function convertPreset(
         const tid =
           targetParamId(targetDevice, b.family, p.conceptKey) ??
           targetParamIdByName(targetDevice, b.family, p.sharedName);
-        if (tid != null) p.paramId = tid;
-        else if (p.paramId !== undefined) delete p.paramId;
+        if (tid != null) {
+          p.paramId = tid;
+          // Lossless: an enum carries the SOURCE's ordinal verbatim, and what gets written is an ordinal
+          // into the TARGET's list — so offer the target's labels, not the source's (an edit must stay
+          // inside the list the device will actually index). The mapped path already resolved the
+          // target's own options above.
+          if (lossless && p.kind === 'enum') {
+            const options = resolveEnumOptionsByParamId(targetDevice, b.family, tid);
+            if (options) {
+              p.enumOptions = options;
+              p.min = 0;
+              p.max = options.length - 1;
+              if (Number.isInteger(p.value) && options[p.value] !== undefined) p.displayValue = options[p.value];
+            }
+          }
+        } else if (p.paramId !== undefined) delete p.paramId;
       }
     }
   }

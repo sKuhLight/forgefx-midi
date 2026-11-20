@@ -35,7 +35,7 @@ import type {
   ConverterGridCell,
 } from './ir.js';
 import { matchModel, modelOnDevice, type LineageMatch } from './lineageIndex.js';
-import { resolveTargetRange, resolveTargetEnumOptions, targetParamId, targetParamIdByName } from './targetRanges.js';
+import { resolveTargetRange, resolveTargetEnumOptions, targetParamId, targetParamIdByName, type TargetRange } from './targetRanges.js';
 import {
   resolveConceptKey,
   normalizeConceptPort,
@@ -126,6 +126,22 @@ function signalOrder(preset: ConverterPreset): string[] {
     }
   }
   return out;
+}
+
+/**
+ * Knob position (0..1) of `value` inside the target `range`: geometric for a
+ * log-taper range (which needs a positive `min`), linear otherwise. This is the
+ * same scale as the device wire fraction (`wireToDisplay` / `valueToRaw`), so a
+ * log param's `normalized` stays the wire position, not a linear fraction of the
+ * display span. `value` is expected to be clamped into `[min, max]` already.
+ * Undefined for a degenerate (`min === max`) range.
+ */
+function normalizedInRange(value: number, range: TargetRange): number | undefined {
+  if (range.max === range.min) return undefined;
+  if (range.log && range.min > 0 && range.max > 0) {
+    return Math.log(value / range.min) / Math.log(range.max / range.min);
+  }
+  return (value - range.min) / (range.max - range.min);
 }
 
 /** True when two devices share one concept-key param vocabulary column. */
@@ -336,7 +352,7 @@ export function convertPreset(
             targetMax: range.max,
           });
         }
-        const normalized = range.max !== range.min ? (clamped - range.min) / (range.max - range.min) : undefined;
+        const normalized = normalizedInRange(clamped, range);
         mapped.push({
           nativeName: tgtName,
           conceptKey: p.conceptKey,

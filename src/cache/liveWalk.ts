@@ -79,9 +79,14 @@
  * output is {enum,float}: `int` maps to `float` (the cache grammar has no integer
  * kind).
  *
- * Empty slots: the device answers an unused or absent slot with an empty-slot
- * definition (typecode 0, all-zero body). Inner empty slots become the all-zero
- * float placeholder rows the `.cache` carries; trailing ones are trimmed (see
+ * Empty slots: the device answers an unused slot with an empty-slot definition
+ * (typecode 0, all-zero body). Inner empty slots become the all-zero float
+ * placeholder rows the `.cache` carries. Past the end of an effect table the
+ * device answers a NO-PAYLOAD definition reply instead (payload count 0, FM3
+ * fw 13.0), so a run of empty slots (symbol id 0) right after the last real
+ * definition that ends in such a reply is the table's unused tail and is kept
+ * too; a run with no such end (more empty slots up to the stop run, an end
+ * marker, a sentinel-tagged or junk answer, silence) is trimmed (see
  * `liveWalkDetailed`).
  *
  * ── Coverage ────────────────────────────────────────────────────────────────
@@ -172,8 +177,10 @@
  *      (Assumed: it answers. Silence is handled: re-read of a known definition,
  *      then counted as `silentAddresses`, not as loss.)
  *   2. Do unused slots INSIDE a table answer with the empty-slot definition
- *      (typecode 0, all-zero body)? The placeholder rows rest on this, and a
- *      trailing unused slot is indistinguishable from the table end.
+ *      (typecode 0, all-zero body)? The placeholder rows rest on this. A trailing
+ *      unused slot can be told from the table end only where the end answers
+ *      differently (a no-payload reply, as on an FM3 at fw 13.0); a table whose
+ *      end answers empty-slot definitions keeps its trailing unused slots hidden.
  *   3. Does the end of a label list always answer with a no-payload reply?
  *   4. Can a reply arrive later than `lostReplyDrainMs` (500 ms), and does the
  *      host buffer frames between requests (then it must implement `drain`)?
@@ -466,12 +473,30 @@ function isFillerDefinition(d: LiveDefinition): boolean {
 }
 
 /**
- * The record an INNER empty slot becomes: the all-zero float placeholder row the editor `.cache`
- * byte source carries for the same slot, so both sources agree on a section's slot count (and
- * thus its channel-block stride). Only emitted retroactively, once a later real definition proves
- * the slot lies inside the parameter table — never for trailing empty slots, which a walk cannot
- * tell apart from the end of the table. Flagged `placeholder` so `buildDeviceCache` can refuse it
- * where the section is a sparse id space rather than a parameter table.
+ * A well-formed self-describe reply echoing `view` whose payload count is 0 (under an ordinary tag).
+ * Under the definition view this is how an effect table answers past its end (FM3 fw 13.0), as
+ * opposed to the empty-slot definition of an unused slot inside it. A sentinel-tagged reply (0x01 /
+ * 0x03) is NOT taken as a table end: it was never seen there, so it keeps its old meaning (a
+ * non-slot answer that ends a run as a gap).
+ */
+function isNoPayloadReply(frame: Uint8Array, view: number): boolean {
+  const n = frame.length;
+  if (n < 10 || frame[0] !== 0xf0 || frame[1] !== 0x00 || frame[2] !== 0x01 || frame[3] !== 0x74 || frame[5] !== FN_SELFDESCRIBE || frame[n - 1] !== 0xf7) {
+    return false;
+  }
+  const inner = frame.subarray(6, n - 2);
+  if (inner.length < 15 || inner[0] !== view || TAG_SENTINELS.has(inner[6]!)) return false;
+  return (inner[13]! | (inner[14]! << 8)) === 0;
+}
+
+/**
+ * The record an unused slot INSIDE a table becomes: the all-zero float placeholder row the editor
+ * `.cache` byte source carries for the same slot, so both sources agree on a section's slot count
+ * (and thus its channel-block stride). Only emitted retroactively, once the slot is proven to lie
+ * inside the parameter table: by a later real definition, or — for the unused tail of a table —
+ * by the no-payload reply that ends the run of empty slots (see "Empty slots"). Flagged
+ * `placeholder` so `buildDeviceCache` can refuse it where the section is a sparse id space rather
+ * than a parameter table.
  */
 function placeholderRecord(block: number, param: number): FloatRecord {
   return { kind: 'float', section: block, offset: 0, id: param, tc: 0, min: 0, max: 0, def: 0, step: 0, t1: 0, t2: 0, placeholder: true };
@@ -831,7 +856,8 @@ export interface LiveWalkResult {
    *  reads always count here (a cut-short label list stays visible); definitions count unless a
    *  liveness check explained their silent run. Non-zero means the profile may be incomplete. */
   unresolvedReplies: number;
-  /** Inner empty slots emitted as placeholder records (flagged `placeholder`). */
+  /** Empty slots inside a table (inner ones, and a table's unused tail that a no-payload reply
+   *  ended) emitted as placeholder records (flagged `placeholder`). */
   placeholderSlots: number;
   /**
    * Slots inside a parameter table whose definition was LOST (never answered, not explained as a
@@ -1017,8 +1043,9 @@ export interface LiveWalkOptions {
   lostReplyDrainMs?: number;
   /**
    * Longest run of empty slots between real definitions (or before the first one) that is kept
-   * as inner placeholder records (default 32). Trailing empty slots are always trimmed — they
-   * cannot be told apart from the end of the table. 0 keeps none (the pre-placeholder behaviour).
+   * as inner placeholder records (default 32); the same limit applies to the unused tail of a table
+   * that a no-payload reply ends. Other trailing empty slots are always trimmed — they cannot be
+   * told apart from the end of the table. 0 keeps none (the pre-placeholder behaviour).
    */
   placeholderRunLimit?: number;
   /**
@@ -1176,8 +1203,10 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
  * Empty slots: an empty-slot definition between two real definitions (or before the first one)
  * is an unused slot INSIDE the parameter table — the editor cache keeps it as an all-zero float
  * placeholder, so the walk emits the same placeholder once the next real definition proves it is
- * inner. Trailing empty slots are trimmed (indistinguishable from the end of the table), and a run
- * longer than `placeholderRunLimit` is an id-space gap, not placeholders.
+ * inner. Trailing empty slots (symbol id 0) are kept the same way when the next answer is a
+ * no-payload reply — the way an effect table answers past its end — and trimmed otherwise
+ * (indistinguishable from the end of the table). A run longer than `placeholderRunLimit` is an
+ * id-space gap, not placeholders.
  */
 export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkOptions): Promise<LiveWalkResult> {
   const model = opts.model;
@@ -1385,6 +1414,10 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
     let pendingEmpty: number[] = [];
     let pendingUnknown = 0;
     let pendingIntact = true;
+    let pendingId0 = true; // every pending empty slot carried symbol id 0 (no end marker among them)
+    // The unused tail of the table: the pending empty slots that a no-payload reply ended (see
+    // "Empty slots"), kept once the block ends without a further real definition.
+    let tableTail: number[] | undefined;
     let lastReal = -1;
     // Symbol ids already seen in this block (real definitions + end markers): real params carry
     // unique ids, so a definition repeating one is a pseudo definition.
@@ -1410,9 +1443,18 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       const verdict = def ? judgeDefinition(def, seenIds) : undefined;
 
       if (!def || verdict !== 'real') {
-        if (verdict === 'empty' || verdict === 'end-marker') pendingEmpty.push(param);
-        else if (reply) pendingIntact = false; // a sentinel / pseudo / junk answer: not a table slot
-        else pendingUnknown += 1; // unanswered: the slot is simply unknown
+        if (verdict === 'empty' || verdict === 'end-marker') {
+          pendingEmpty.push(param);
+          if (verdict === 'end-marker') pendingId0 = false;
+        } else if (reply) {
+          // The first answer after the run that is not an empty slot. A no-payload reply there is
+          // the end of the table, so a fully answered run of id-0 empty slots before it is the
+          // table's unused tail (kept below unless a later real definition turns it inner).
+          if (pendingIntact && pendingId0 && pendingUnknown === 0 && lastReal >= 0 && isNoPayloadReply(reply, VIEW_DEFINITION)) {
+            tableTail = [...pendingEmpty];
+          }
+          pendingIntact = false; // a sentinel / pseudo / junk answer: not a table slot
+        } else pendingUnknown += 1; // unanswered: the slot is simply unknown
         if (def) {
           // Answered, but not a parameter: counted so a build can report what it ignored.
           if (verdict === 'end-marker') {
@@ -1442,6 +1484,8 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       pendingEmpty = [];
       pendingUnknown = 0;
       pendingIntact = true;
+      pendingId0 = true;
+      tableTail = undefined;
       lastReal = param;
 
       const labels: string[] = [];
@@ -1507,9 +1551,14 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
 
       records.push(buildRecord(block, param, def, labels, unit, taper, emptyList));
     }
-    // Empty slots still pending here are TRAILING and dropped: a walk cannot tell them apart
-    // from the end of the table, so a section ending in unused slots yields a SHORTER stride
-    // than the editor cache (a lower bound).
+    // Empty slots still pending here are TRAILING. Those a no-payload reply ended are the table's
+    // unused tail and kept (the editor cache carries them as well); any others are dropped — they
+    // cannot be told apart from the end of the table, so a section ending in such slots yields a
+    // SHORTER stride than the editor cache (a lower bound).
+    if (tableTail && tableTail.length > 0 && tableTail.length <= placeholderRunLimit) {
+      for (const p of tableTail) records.push(placeholderRecord(block, p));
+      placeholderSlots += tableTail.length;
+    }
 
     // A block whose definition sweep ENDED in a silent run: check the device is alive. An answer
     // re-books that run's definition queries as silent addresses; no answer ends the walk. With

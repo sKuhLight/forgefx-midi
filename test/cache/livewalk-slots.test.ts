@@ -8,16 +8,18 @@
  * an unused slot; channel B-D slices computed from it read the wrong params.
  *
  * Pinned here:
- *   - inner (and leading) empty slots come back as placeholder rows; trailing ones are trimmed;
- *     a run longer than `placeholderRunLimit`, or one containing a sentinel/junk answer, is an
- *     id-space gap and stays empty;
+ *   - inner (and leading) empty slots come back as placeholder rows; trailing ones are trimmed
+ *     unless a no-payload reply (the way an effect table answers past its end) ends them, which
+ *     makes them the table's unused tail; a run longer than `placeholderRunLimit`, or one
+ *     containing a sentinel/junk answer, is an id-space gap and stays empty;
  *   - an empty slot carrying a non-zero symbol id (the high-region past-the-end answer) is still
  *     empty: never label- or value-probed;
  *   - the committed FM3 fw 12.0 fixture, served by the shared fake device (`cacheDevice.ts`:
  *     unused slots, id gaps and the past-the-end region all answer empty-slot definitions),
  *     reproduces the shipped FM3 section strides for 38/39 families (was 20/39) and still clears
- *     the equivalence oracle; the one exception (VOLUME) ends in an unused slot, which no walk can
- *     see; the sparse GLOBAL section's gap rows are refused, so it stays at 186;
+ *     the equivalence oracle; the one exception (VOLUME) ends in an unused slot, which a walk
+ *     cannot see where the table end answers like an empty slot (the shared fake's model); the
+ *     sparse GLOBAL section's gap rows are refused, so it stays at 186;
  *   - a label walk the device answers as EMPTY classifies the param as float (the cache rule:
  *     enum only with labels); an unanswered first label query is no evidence.
  */
@@ -32,7 +34,7 @@ import { assertFm3Equivalence } from './oracle.js';
 import { definitionBlockScaled, endOfRangeFrame, labelReply, replyFrame, sentinelFrame } from './livewalk.test.js';
 import { cacheDevice, emptySlotFrame, isEmptyRow } from './cacheDevice.js';
 
-export const LIVEWALK_SLOTS_CASE_COUNT = 7;
+export const LIVEWALK_SLOTS_CASE_COUNT = 8;
 
 const FM3 = 0x11;
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
@@ -58,10 +60,11 @@ function realDef(param: number, block: number): Uint8Array {
 const isPlaceholderRow = (r: CacheRecord): boolean => r.kind === 'float' && isEmptyRow(r);
 
 /**
- * Serve one block from a slot map: 'R' real, 'E' empty slot, 'S' sentinel, 'J' junk definition;
- * past the map → empty slot (the device's past-the-end answer).
+ * Serve one block from a slot map: 'R' real, 'E' empty slot, 'S' sentinel, 'J' junk definition,
+ * 'N' no-payload definition reply (count 0), 'M' end marker (empty body, non-zero id), 'U' no
+ * reply at all; past the map → `past` (default: empty slot, the shared fake's past-the-end answer).
  */
-function slotDevice(block: number, map: string): LiveTransport & { probes: number } {
+function slotDevice(block: number, map: string, past = 'E'): LiveTransport & { probes: number } {
   const t = {
     probes: 0,
     request(query: Uint8Array): Promise<Uint8Array | null> {
@@ -70,9 +73,12 @@ function slotDevice(block: number, map: string): LiveTransport & { probes: numbe
         t.probes += 1;
         return Promise.resolve(sentinelFrame(view, param));
       }
-      const c = map[param] ?? 'E';
+      const c = map[param] ?? past;
       if (c === 'R') return Promise.resolve(realDef(param, block));
       if (c === 'S') return Promise.resolve(sentinelFrame(VIEW_DEFINITION, param));
+      if (c === 'N') return Promise.resolve(replyFrame(VIEW_DEFINITION, param, 0x4d, new Uint8Array(0)));
+      if (c === 'M') return Promise.resolve(emptySlot(param, 21000));
+      if (c === 'U') return Promise.resolve(null);
       if (c === 'J') {
         const body = new Uint8Array(36);
         new DataView(body.buffer).setUint32(4, 0x7fff_0000, true); // implausible typecode = junk
@@ -137,6 +143,42 @@ export async function runLiveWalkSlots(): Promise<void> {
     if (valueReads !== 1) fail(`only the real param may get a value read, saw ${valueReads}`);
   }
   console.log('  cache/livewalk-slots: an empty slot with a non-zero symbol id is empty — no 0x1f/0x00 probes, trimmed');
+
+  // ---- Case 8: a table's unused tail, ended by a no-payload reply, is kept --------------------
+  // Past the end of an effect table the device answers a no-payload definition reply, an unused
+  // slot an empty-slot definition: the empty slots between the last real definition and that reply
+  // lie inside the table (the editor cache carries them), so the stride counts them.
+  {
+    const tail = await liveWalkDetailed(slotDevice(70, 'RRE', 'N'), base);
+    if (ids(tail.records) !== '0,1,2p' || tail.placeholderSlots !== 1) fail(`tail ended by a no-payload reply: ${ids(tail.records)} / ${tail.placeholderSlots}`);
+    const two = await liveWalkDetailed(slotDevice(70, 'ERREE', 'N'), base);
+    if (ids(two.records) !== '0p,1,2,3p,4p' || two.placeholderSlots !== 3) fail(`leading + two-slot tail: ${ids(two.records)} / ${two.placeholderSlots}`);
+    // Nothing to keep when the table ends right after its last real definition.
+    const none = await liveWalkDetailed(slotDevice(70, 'RR', 'N'), base);
+    if (ids(none.records) !== '0,1' || none.placeholderSlots !== 0) fail(`no tail: ${ids(none.records)}`);
+    // Still trimmed: no no-payload end (the run reaches the stop run, or a sentinel-tagged reply or a
+    // junk definition follows it), an end marker in the run, a slot nobody answered, a run longer
+    // than the placeholder limit, or the limit 0.
+    const cases: Array<[string, string, Partial<LiveWalkOptions>]> = [
+      ['RRE', 'E', {}],
+      // A sentinel-tagged reply or a junk definition after the run is no table end.
+      ['RRE', 'S', {}],
+      ['RRE', 'J', {}],
+      ['RREM', 'N', {}],
+      ['RREU', 'N', { lostReplyRetries: 0 }],
+      ['RREEE', 'N', { placeholderRunLimit: 2 }],
+      ['RRE', 'N', { placeholderRunLimit: 0 }],
+    ];
+    for (const [map, past, extra] of cases) {
+      const r = await liveWalkDetailed(slotDevice(70, map, past), { ...base, ...extra });
+      if (ids(r.records) !== '0,1') fail(`map ${map} past ${past} ${JSON.stringify(extra)}: tail must be trimmed, gave ${ids(r.records)}`);
+    }
+    // A no-payload reply INSIDE a table (a later real definition follows) leaves that run a gap, as
+    // any other non-slot answer does — the tail rule only applies where the block ends.
+    const inner = await liveWalkDetailed(slotDevice(70, 'RRENR', 'N'), base);
+    if (ids(inner.records) !== '0,1,4') fail(`a no-payload reply inside the table: ${ids(inner.records)}`);
+  }
+  console.log('  cache/livewalk-slots: the unused tail of a table ended by a no-payload reply is kept; without that end, or with a marker, silence or an over-long run, it is trimmed');
 
   // ---- Case 4/5: FM3 fixture through the shared fake device — strides vs the shipped table --
   // The shared device model: unused slots, id gaps of sparse sections and everything past the end

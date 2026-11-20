@@ -11,7 +11,8 @@
  *
  * Two gates per device:
  *   1. field-exact equality against the frozen golden decode
- *      (devs-gift-of-tone.params.expected.json);
+ *      (devs-gift-of-tone.params.expected.json; the decoded `value` of the
+ *      typecode-0x52 knob params was refreshed to their linear 0..10 display);
  *   2. the cross-device `modelsFromBlocks` projections must agree exactly
  *      (amp 'Herbie CH3', drive 'T808 OD', delay 'Stereo BBD', …).
  */

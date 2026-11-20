@@ -28,6 +28,7 @@ import type {
   BuiltCacheData,
   CacheRecord,
   DeviceParam,
+  FloatTaper,
   RangeDef,
   RangeSectionMeta,
   TypeModel,
@@ -66,15 +67,28 @@ function displayOf(raw: number, scale: number): number {
 /**
  * Typecode 0x52 marks a dimensionless knob parameter. The device displays it on a
  * LINEAR 0..10 scale whatever the definition's own min/max are (0.05..50, 0.5..500,
- * 20..2000, ...): those bound the stored value, they are not the display range. Every
- * float record with this typecode therefore derives display bounds 0..10, a linear
- * taper and the `knob_0_10` unit, instead of `(min, max) * scale`. The shipped catalogs
- * carry the same rule, so a freshly built profile agrees with them.
+ * 20..2000, ...): those bound the stored value, they are not the display range. A
+ * float record with this typecode therefore derives display bounds 0..10 and a linear
+ * taper instead of `(min, max) * scale` (and no unit: a knob has none to show). The
+ * shipped catalogs carry the same rule, so a freshly built profile agrees with them.
+ *
+ * Observation beats the premise: if the walk read a unit off the device or measured a
+ * non-linear taper, the row is not a dimensionless linear knob after all and the rule is
+ * skipped for it entirely. A sweep that carries no information (flat / too few samples /
+ * unreliable) does not count as an observation.
  */
 export const KNOB_TYPECODE = 0x52;
 export const KNOB_DISPLAY_MIN = 0;
 export const KNOB_DISPLAY_MAX = 10;
-export const KNOB_UNIT = 'knob_0_10';
+
+type MeasuredTaper = FloatTaper & { shape: 'linear' | 'log' | 'custom' };
+
+/** The reliable fit of a full-mode taper sweep; 'flat' / 'unknown' / unreliable carry none. */
+function measuredTaper(r: CacheRecord): MeasuredTaper | undefined {
+  if (r.kind !== 'float' || !r.taper || !r.taper.reliable) return undefined;
+  const { shape } = r.taper;
+  return shape === 'linear' || shape === 'log' || shape === 'custom' ? (r.taper as MeasuredTaper) : undefined;
+}
 
 /** Relative-tolerance float compare (default 2%), or absolute < 1e-6. */
 function close(a: number, b: number, tol = 0.02): boolean {
@@ -444,7 +458,9 @@ export function buildDeviceCache(
     const rg: Record<number, RangeDef> = {};
     for (const pid of [...sec.keys()].sort((a, b) => a - b)) {
       const r = sec.get(pid)!;
-      const knob = r.kind === 'float' && r.tc === KNOB_TYPECODE;
+      const measured = measuredTaper(r);
+      const knob =
+        r.kind === 'float' && r.tc === KNOB_TYPECODE && !r.unit && (measured === undefined || measured.shape === 'linear');
       const entry: RangeDef = {
         kind: r.kind,
         displayMin: knob ? KNOB_DISPLAY_MIN : displayOf(r.min, r.def),
@@ -458,15 +474,14 @@ export function buildDeviceCache(
         eo[String(pid)] = cleanLabels(r.values);
       }
       if (r.unit) entry.unit = r.unit; // device-true unit from the live-walk (view 0x00)
-      else if (knob) entry.unit = KNOB_UNIT; // typecode 0x52: dimensionless knob (an observed unit wins)
       // device-true taper from a FULL-mode live-walk sweep (reliable fits only;
       // 'flat'/'unknown' are unreliable and carry no taper). 'custom' also keeps
       // its sample points. Same threading pattern as `unit` above.
-      if (r.kind === 'float' && r.taper && r.taper.reliable && r.taper.shape !== 'flat' && r.taper.shape !== 'unknown') {
-        entry.taper = r.taper.shape;
-        if (r.taper.shape === 'custom') entry.taperPoints = r.taper.points.map(([n, v]) => [n, v] as const);
+      if (measured) {
+        entry.taper = measured.shape;
+        if (measured.shape === 'custom') entry.taperPoints = measured.points.map(([n, v]) => [n, v] as const);
       } else if (knob) {
-        entry.taper = 'linear'; // typecode 0x52: linear 0..10 (a reliably measured taper wins)
+        entry.taper = 'linear'; // typecode-0x52 knob: linear 0..10 (no measured taper to prefer)
       }
       rg[pid] = entry;
     }

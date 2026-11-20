@@ -4,28 +4,34 @@
  * A float parameter with typecode 0x52 is a dimensionless knob that the device
  * displays on a LINEAR 0..10 scale, whatever its definition's own min/max are.
  * These cases pin the rule end to end with SYNTHETIC records only:
- *   1. a 0x52 float record derives displayMin 0 / displayMax 10 / taper 'linear' /
- *      unit 'knob_0_10' (scale, step and typecode untouched);
+ *   1. a 0x52 float record derives displayMin 0 / displayMax 10 / taper 'linear' and
+ *      NO unit (scale, step and typecode untouched);
  *   2. non-0x52 records are unchanged (a different typecode with the same low byte,
  *      an enum row carrying 0x52, an ordinary Hz float);
- *   3. an observed unit and a reliably measured taper win over the rule's defaults,
- *      an unreliable taper does not;
+ *   3. observation beats the premise: a row with an observed unit or a measured
+ *      non-linear taper is skipped by the rule entirely, a measured linear taper is
+ *      kept, and a sweep without information (flat / unknown / unreliable) is not an
+ *      observation;
  *   4. the editor-cache byte import and the live walk agree on the rule;
- *   5. CACHE_SCHEMA is 2, so profiles built under the old derivation are rebuilt;
- *   6. every shipped 0x52 float row of FM3 / FM9 / Axe-Fx III carries the rule, and a
- *      profile built from the committed FM3 walk fixture agrees with the shipped
- *      FM3 rows field for field;
+ *   5. the built profile carries the current CACHE_SCHEMA stamp;
+ *   6. every shipped 0x52 float row of FM3 / FM9 / Axe-Fx III carries the rule (and no
+ *      unit), the wire default of five known knobs is the LOG normalisation, and a
+ *      profile built from the committed FM3 walk fixture agrees with the shipped FM3
+ *      rows field for field;
  *   7. the catalog calibration lets a device-true linear taper override the
  *      catalog's log10 scaling hint (without it these knobs would lose calibration
- *      once their display range becomes 0..10).
+ *      once their display range becomes 0..10);
+ *   8. the FM3 descriptor maps the 0x52 knobs linearly (encode(5) = mid wire,
+ *      decode(mid wire) = 5, range 0..10), like FM9 / Axe-Fx III.
  */
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildCache, buildDeviceCache, CACHE_SCHEMA, HW_SEEDS } from '../../src/cache/index.js';
-import { KNOB_TYPECODE, KNOB_UNIT } from '../../src/cache/assign.js';
+import { KNOB_TYPECODE } from '../../src/cache/assign.js';
 import type { CacheRecord, DeviceParam } from '../../src/cache/types.js';
 import { createModernCatalog, type DeviceRangeTable } from '../../src/devices/gen3/catalog.js';
+import { FM3_DESCRIPTOR } from '../../src/devices/gen3/index.js';
 import { AXE_FX_III_BLOCKS, AXE3_RANGES } from '../../src/gen3/axe-fx-iii/index.js';
 import { FM3_PARAMS, FM3_RANGES } from '../../src/gen3/fm3/index.js';
 import { FM9_RANGES } from '../../src/gen3/fm9/index.js';
@@ -33,7 +39,7 @@ import { encodeCache } from './buildprofile.test.js';
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 
-export const KNOBRULE_CASE_COUNT = 7;
+export const KNOBRULE_CASE_COUNT = 8;
 
 const fail = (msg: string): never => {
   throw new Error(`[cache/knobrule] ${msg}`);
@@ -49,13 +55,16 @@ const en = (id: number, tc: number, values: string[]): CacheRecord => ({
 // One family 'AMP' seeded to section 10; the catalog only needs kinds to vote.
 const PARAMS: DeviceParam[] = [
   { family: 'AMP', paramId: 0, name: 'AMP_TYPE', unit: 'enum' },
-  ...[1, 2, 3, 4, 5, 7, 8].map((paramId) => ({ family: 'AMP', paramId, name: `AMP_P${paramId}` })),
+  ...[1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12].map((paramId) => ({ family: 'AMP', paramId, name: `AMP_P${paramId}` })),
   { family: 'AMP', paramId: 6, name: 'AMP_P6', unit: 'enum' },
 ];
 const SEEDS = { AMP: 10 };
 
+type Row = { kind: string; typecode: number; displayMin: number; displayMax: number; defaultRaw?: number; unit?: string; taper?: string };
+type Table = Readonly<Record<string, Readonly<Record<number, Row>>>>;
+
 export async function runKnobRule(): Promise<void> {
-  const taper = (shape: 'linear' | 'log' | 'flat', reliable: boolean) =>
+  const sweep = (shape: 'linear' | 'log' | 'flat' | 'unknown', reliable: boolean) =>
     ({ shape, err: reliable ? 0 : null, reliable, points: [[0, 1], [1, 10]] as const });
 
   const records: CacheRecord[] = [
@@ -66,8 +75,12 @@ export async function runKnobRule(): Promise<void> {
     fl(4, 0x82, 20, 2000, 1, 0.1),
     fl(5, 0x152, 0, 1, 10, 0.001),
     en(6, KNOB_TYPECODE, ['X', 'Y', 'Z']),
-    fl(7, KNOB_TYPECODE, 1, 20, 10, 0, { unit: 'dB', taper: taper('log', true) }),
-    fl(8, KNOB_TYPECODE, 1, 20, 10, 0, { taper: taper('flat', false) }),
+    fl(7, KNOB_TYPECODE, 1, 20, 10, 0, { unit: 'dB' }),
+    fl(8, KNOB_TYPECODE, 1, 20, 10, 0, { taper: sweep('log', true) }),
+    fl(9, KNOB_TYPECODE, 1, 20, 10, 0, { taper: sweep('linear', true) }),
+    fl(10, KNOB_TYPECODE, 1, 20, 10, 0, { taper: sweep('flat', false) }),
+    fl(11, KNOB_TYPECODE, 1, 20, 10, 0, { taper: sweep('unknown', false) }),
+    fl(12, KNOB_TYPECODE, 1, 20, 10, 0, { taper: sweep('log', false) }),
   ];
 
   // ---- Case 1: a 0x52 float record derives the linear 0..10 knob ------------
@@ -79,15 +92,14 @@ export async function runKnobRule(): Promise<void> {
     if (r.kind !== 'float' || r.displayMin !== 0 || r.displayMax !== 10) {
       fail(`pid ${pid} (definition ${min}..${max}): display ${r.displayMin}..${r.displayMax}, expected 0..10`);
     }
-    if (r.taper !== 'linear' || r.unit !== KNOB_UNIT || r.unit !== 'knob_0_10') {
-      fail(`pid ${pid}: taper=${r.taper} unit=${r.unit}, expected linear / knob_0_10`);
-    }
+    if (r.taper !== 'linear') fail(`pid ${pid}: taper=${r.taper}, expected linear`);
+    if (r.unit !== undefined) fail(`pid ${pid}: a knob row must not carry a unit token, got ${JSON.stringify(r.unit)}`);
     if (r.taperPoints !== undefined) fail(`pid ${pid}: linear rule row must not carry taperPoints`);
     if (r.scale !== 10 || r.step !== step || r.typecode !== KNOB_TYPECODE) {
       fail(`pid ${pid}: scale/step/typecode touched (${r.scale}/${r.step}/0x${r.typecode.toString(16)})`);
     }
   }
-  console.log('  cache/knobrule: typecode 0x52 floats (0.05..50, 0.5..500, 20..2000) derive display 0..10, linear, knob_0_10');
+  console.log('  cache/knobrule: typecode 0x52 floats (0.05..50, 0.5..500, 20..2000) derive display 0..10, linear, no unit');
 
   // ---- Case 2: non-0x52 records are unchanged ------------------------------
   {
@@ -106,17 +118,32 @@ export async function runKnobRule(): Promise<void> {
   }
   console.log('  cache/knobrule: ordinary floats, a 0x152 float and a 0x52-typed enum row are unchanged');
 
-  // ---- Case 3: observation beats the rule's defaults -----------------------
+  // ---- Case 3: observation beats the premise --------------------------------
   {
+    // An observed unit or a measured non-linear taper: the rule is skipped for the row entirely
+    // (derived as an ordinary float: (min, max) * scale = 10..200), nothing is half-applied.
     const seen = amp[7]!;
-    if (seen.displayMin !== 0 || seen.displayMax !== 10) fail(`observed-unit row display ${seen.displayMin}..${seen.displayMax}`);
-    if (seen.unit !== 'dB' || seen.taper !== 'log') fail(`observed unit/taper replaced: unit=${seen.unit} taper=${seen.taper}`);
-    const flat = amp[8]!;
-    if (flat.taper !== 'linear' || flat.unit !== 'knob_0_10') {
-      fail(`unreliable taper must not block the rule: taper=${flat.taper} unit=${flat.unit}`);
+    if (seen.displayMin !== 10 || seen.displayMax !== 200 || seen.unit !== 'dB' || seen.taper !== undefined) {
+      fail(`observed-unit row must skip the rule: ${JSON.stringify(seen)}`);
+    }
+    const log = amp[8]!;
+    if (log.displayMin !== 10 || log.displayMax !== 200 || log.taper !== 'log' || log.unit !== undefined) {
+      fail(`measured-log row must skip the rule: ${JSON.stringify(log)}`);
+    }
+    // A measured LINEAR taper is consistent with the premise: the rule applies, the measurement is kept.
+    const lin = amp[9]!;
+    if (lin.displayMin !== 0 || lin.displayMax !== 10 || lin.taper !== 'linear' || lin.unit !== undefined) {
+      fail(`measured-linear row: ${JSON.stringify(lin)}`);
+    }
+    // Sweeps without information (flat, unknown, or an unreliable fit of any shape) are not observations.
+    for (const pid of [10, 11, 12]) {
+      const r = amp[pid]!;
+      if (r.displayMin !== 0 || r.displayMax !== 10 || r.taper !== 'linear' || r.unit !== undefined) {
+        fail(`pid ${pid}: an uninformative sweep must not block the rule: ${JSON.stringify(r)}`);
+      }
     }
   }
-  console.log('  cache/knobrule: an observed unit and a reliable measured taper win; an unreliable taper does not');
+  console.log('  cache/knobrule: an observed unit or non-linear taper skips the rule whole; linear / uninformative sweeps do not');
 
   // ---- Case 4: byte import and live walk agree -----------------------------
   const plain = records.filter((r) => !(r.kind === 'float' && (r.unit !== undefined || r.taper !== undefined)));
@@ -124,50 +151,65 @@ export async function runKnobRule(): Promise<void> {
   const fromLive = await buildCache({ kind: 'live', walk: async () => plain }, PARAMS, SEEDS);
   if (JSON.stringify(fromBytes.ranges) !== JSON.stringify(fromLive.ranges)) fail('bytes and live ranges diverge');
   const b2 = fromBytes.ranges['AMP']![2]!;
-  if (b2.displayMin !== 0 || b2.displayMax !== 10 || b2.taper !== 'linear' || b2.unit !== 'knob_0_10') {
+  if (b2.displayMin !== 0 || b2.displayMax !== 10 || b2.taper !== 'linear' || b2.unit !== undefined) {
     fail(`byte-imported 0x52 row: ${JSON.stringify(b2)}`);
   }
   console.log('  cache/knobrule: editor-cache byte import and live walk derive the same knob rows');
 
-  // ---- Case 5: schema ------------------------------------------------------
-  if (CACHE_SCHEMA !== 2) fail(`CACHE_SCHEMA is ${CACHE_SCHEMA}, expected 2`);
-  if (fromBytes.meta.schema !== 2 || fromLive.meta.schema !== 2) {
-    fail(`built meta.schema ${fromBytes.meta.schema}/${fromLive.meta.schema}, expected 2`);
+  // ---- Case 5: schema stamp -------------------------------------------------
+  if (!Number.isInteger(CACHE_SCHEMA) || CACHE_SCHEMA < 1) fail(`CACHE_SCHEMA is ${CACHE_SCHEMA}`);
+  if (fromBytes.meta.schema !== CACHE_SCHEMA || fromLive.meta.schema !== CACHE_SCHEMA) {
+    fail(`built meta.schema ${fromBytes.meta.schema}/${fromLive.meta.schema}, expected ${CACHE_SCHEMA}`);
   }
-  console.log('  cache/knobrule: CACHE_SCHEMA 2 stamped on bytes and live builds');
+  console.log(`  cache/knobrule: CACHE_SCHEMA ${CACHE_SCHEMA} stamped on bytes and live builds`);
 
-  // ---- Case 6: shipped rows carry the rule; a fresh FM3 build agrees -------
-  type Row = { kind: string; typecode: number; displayMin: number; displayMax: number; unit?: string; taper?: string };
-  type Table = Readonly<Record<string, Readonly<Record<number, Row>>>>;
-  const shipped: Array<[string, Table]> = [
-    ['FM3', FM3_RANGES as unknown as Table],
-    ['FM9', FM9_RANGES as unknown as Table],
-    ['AXE3', AXE3_RANGES as unknown as Table],
-  ];
-  for (const [dev, table] of shipped) {
+  // ---- Case 6: shipped rows carry the rule; defaults are log; a fresh FM3 build agrees
+  const byDev: Record<string, Table> = {
+    FM3: FM3_RANGES as unknown as Table,
+    FM9: FM9_RANGES as unknown as Table,
+    AXE3: AXE3_RANGES as unknown as Table,
+  };
+  for (const [dev, table] of Object.entries(byDev)) {
     let knobs = 0;
     for (const [fam, rows] of Object.entries(table)) {
       for (const [pid, r] of Object.entries(rows)) {
         if (r.typecode === KNOB_TYPECODE && r.kind === 'float') {
           knobs += 1;
-          if (r.displayMin !== 0 || r.displayMax !== 10 || r.unit !== 'knob_0_10' || r.taper !== 'linear') {
+          if (r.displayMin !== 0 || r.displayMax !== 10 || r.taper !== 'linear' || r.unit !== undefined) {
             fail(`${dev} ${fam}.${pid}: shipped 0x52 row is ${r.displayMin}..${r.displayMax} unit=${r.unit} taper=${r.taper}`);
           }
         } else if (r.unit === 'knob_0_10') {
-          fail(`${dev} ${fam}.${pid}: knob_0_10 on a non-0x52 row (typecode 0x${r.typecode.toString(16)})`);
+          fail(`${dev} ${fam}.${pid}: a knob_0_10 unit token leaked into the range tables`);
         }
       }
     }
     if (knobs === 0) fail(`${dev}: no typecode-0x52 rows found`);
   }
   // Known parameters (device-specific paramIds): amp Clarity, wah Drive, fuzz Slew.
-  const byDev = Object.fromEntries(shipped) as Record<string, Table>;
   for (const [dev, fam, pid] of [
     ['FM3', 'DISTORT', 72], ['FM9', 'DISTORT', 76], ['AXE3', 'DISTORT', 70],
     ['FM3', 'WAH', 10], ['FM3', 'FUZZ', 6],
   ] as const) {
     const r = byDev[dev]?.[fam]?.[pid];
     if (!r || r.typecode !== KNOB_TYPECODE || r.displayMax !== 10 || r.displayMin !== 0) fail(`${dev} ${fam}.${pid}: ${JSON.stringify(r)}`);
+  }
+  // The wire position of a 0x52 knob is log-normalised between the definition's min and max, so the
+  // stored default is 65534 * ln(def/min) / ln(max/min) (0 when def <= min), not the linear fraction.
+  // Pinned for five knobs whose definition (min, max, default) sits strictly inside its range:
+  //   Delay Q (0.2..20, def 0.5) 13039, Amp Power-Amp Hardness (0.25..4, def 1) 32767,
+  //   Reverb Drive (0.01..1, def 0.033) 16990, Filter EV Freq 39196 and Filter Sens 32767.
+  const PINNED: Record<string, ReadonlyArray<readonly [string, number, number]>> = {
+    FM3: [['DELAY', 58, 13039], ['DISTORT', 90, 32767], ['REVERB', 32, 16990], ['FILTER', 25, 39196], ['FILTER', 28, 32767]],
+    FM9: [['DELAY', 62, 13039], ['DISTORT', 94, 32767], ['REVERB', 36, 16990], ['FILTER', 25, 39196], ['FILTER', 28, 32767]],
+    AXE3: [['DELAY', 58, 13039], ['DISTORT', 88, 32767], ['REVERB', 32, 16990], ['FILTER', 25, 39196], ['FILTER', 28, 32767]],
+  };
+  for (const [dev, pins] of Object.entries(PINNED)) {
+    for (const [fam, pid, want] of pins) {
+      const r = byDev[dev]?.[fam]?.[pid];
+      if (!r || r.typecode !== KNOB_TYPECODE || r.defaultRaw !== want) {
+        fail(`${dev} ${fam}.${pid}: defaultRaw ${r?.defaultRaw}, expected ${want} (log normalisation of the definition default)`);
+      }
+    }
   }
   const walk = JSON.parse(readFileSync(join(FIXTURES, 'fm3-12p0.walk.json'), 'utf8')) as { records: CacheRecord[] };
   const fresh = await buildCache({ kind: 'live', walk: async () => walk.records }, FM3_PARAMS, HW_SEEDS, { model: 0x11 });
@@ -183,7 +225,7 @@ export async function runKnobRule(): Promise<void> {
     }
   }
   if (agreed === 0) fail('no FM3 knob row was compared');
-  console.log(`  cache/knobrule: shipped FM3/FM9/Axe-Fx III 0x52 rows carry the rule; ${agreed} fresh FM3 rows match the shipped ones exactly`);
+  console.log(`  cache/knobrule: shipped 0x52 rows carry the rule with no unit and log defaults (15 pinned); ${agreed} fresh FM3 rows match exactly`);
 
   // ---- Case 7: a device-true linear taper overrides the catalog's log10 hint
   {
@@ -206,4 +248,27 @@ export async function runKnobRule(): Promise<void> {
     if (Math.abs(hint.encode(5) - 55670) > 2) fail(`row without a taper must keep the catalog's log10 hint: encode(5)=${hint.encode(5)}`);
   }
   console.log('  cache/knobrule: device-true linear taper beats the log10 hint; log and untapered rows keep it');
+
+  // ---- Case 8: the FM3 descriptor maps the 0x52 knobs linearly ----------------
+  {
+    // Chorus / Rotary Drive carried the AM4's log 0.5..500 hint (encode(5) = 21845, decode(mid) = 15.81)
+    // and Amp Clarity / Flanger / Wah Drive passed the raw wire through before FM3 wired its knob rows.
+    for (const [slug, key] of [
+      ['chorus', 'drive'], ['rotary', 'drive'], ['amp', 'clarity'], ['flanger', 'drive'],
+      ['wah', 'drive'], ['reverb', 'drive'], ['delay', 'drive'], ['cab', 'drive'],
+    ] as const) {
+      const s = FM3_DESCRIPTOR.blocks[slug]?.params[key];
+      if (!s) { fail(`FM3 ${slug}.${key} is missing from the descriptor`); continue; }
+      if (s.display_min !== 0 || s.display_max !== 10) fail(`FM3 ${slug}.${key}: schema range ${s.display_min}..${s.display_max}, expected 0..10`);
+      const e5 = s.encode(5);
+      const d = Number(s.decode(32767));
+      if (Math.abs(e5 - 32767) > 1 || Math.abs(d - 5) > 0.01) {
+        fail(`FM3 ${slug}.${key}: encode(5)=${e5}, decode(32767)=${d}, expected 32767 / 5`);
+      }
+      if (Math.abs(Number(s.decode(0))) > 0.01 || Math.abs(Number(s.decode(65534)) - 10) > 0.01) {
+        fail(`FM3 ${slug}.${key}: decode(0)=${s.decode(0)} decode(65534)=${s.decode(65534)}, expected 0 / 10`);
+      }
+    }
+  }
+  console.log('  cache/knobrule: FM3 descriptor maps the 0x52 knobs linearly (encode(5) = mid wire, decode(mid) = 5)');
 }

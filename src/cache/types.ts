@@ -134,8 +134,10 @@ export interface DeviceParam {
  * `Fm3ParamRange` shape (kind + display bounds + scale/step + raw typecode,
  * plus `enumCount` on enum-kind rows). `displayMin`/`displayMax` are the cache
  * `min`/`max` multiplied by `scale`, except typecode-0x52 float rows (dimensionless
- * knobs), which are shown on a linear 0..10 scale: they derive 0..10, `taper:
- * 'linear'` and `unit: 'knob_0_10'` whatever their definition's min/max are.
+ * knobs), which are shown on a linear 0..10 scale: they derive displayMin 0,
+ * displayMax 10 and `taper: 'linear'` whatever their definition's min/max are (and
+ * `display = value * scale` does not hold for them). Such a row carries no `unit`, and a
+ * row whose walk observed a unit or a non-linear taper is not derived this way at all.
  * Placeholder (unused) wire slots carry an all-zero float row.
  */
 export interface RangeDef {
@@ -147,14 +149,17 @@ export interface RangeDef {
   typecode: number;
   enumCount?: number;
   /** Device-true unit token from the live-walk (view 0x00), e.g. 'Hz'|'ms'|'dB'.
-   * Present only when the walk read values; absent for byte-source/`.cache` walks
-   * and enum params. Consumers should prefer this over the AM4-name-overlay unit. */
+   * Consumers show it verbatim next to the value, so it is only ever a token the
+   * device itself displayed: present only when the walk read values and a unit came
+   * back; absent for byte-source/`.cache` walks, enum params and dimensionless knobs.
+   * Consumers should prefer this over the AM4-name-overlay unit. */
   unit?: string;
-  /** Device-true value taper from a FULL-mode live-walk sweep (reliable fits
-   * only): 'linear'|'log' emitted bare, 'custom' also carries `taperPoints`.
+  /** Device-true value taper: from a FULL-mode live-walk sweep (reliable fits
+   * only) 'linear'|'log' emitted bare, 'custom' also carries `taperPoints`; typecode-0x52
+   * knob rows (see `KNOB_TYPECODE`) also get 'linear' by rule when no sweep measured one.
    * ('flat' is in the union for schema uniformity with the shipped catalogs but
-   * is never emitted here — a flat sweep is unreliable.) Absent when no reliable
-   * taper was captured (read-only walks, byte-source walks, unreliable sweeps).
+   * is never emitted here — a flat sweep is unreliable.) Absent otherwise (read-only
+   * walks, byte-source walks, unreliable sweeps on ordinary rows).
    * Same naming/shape as the generated catalog range fields. */
   taper?: 'linear' | 'log' | 'flat' | 'custom';
   /** Sample points `[normalized 0..1, display value]` for a 'custom' taper only,

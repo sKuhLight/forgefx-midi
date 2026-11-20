@@ -9,6 +9,12 @@
  * decodeGen3Body grid → readBlockParams) and requires field-exact equality —
  * it validates BOTH the upstreamed extraction logic and the package grid
  * decode's placed-block set against the live implementation.
+ *
+ * One deliberate deviation from the original capture: the decoded `value` of the
+ * typecode-0x52 knob params (dimensionless, shown on a linear 0..10 scale) was
+ * refreshed when their display range became 0..10 (see cache/knobrule). The old
+ * server derived those values from the cache's (min, max) * scale bounds, which
+ * is not what the device displays. Every other field is still the original capture.
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';

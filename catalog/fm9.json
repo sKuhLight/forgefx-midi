@@ -15156,7 +15156,6 @@
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
-          "unit": "knob_0_10",
           "taper": "linear"
         },
         "34": {
@@ -16414,7 +16413,6 @@
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
-          "unit": "knob_0_10",
           "taper": "linear"
         },
         "21": {
@@ -18507,7 +18505,6 @@
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
-          "unit": "knob_0_10",
           "taper": "linear"
         },
         "27": {
@@ -18848,8 +18845,7 @@
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 993,
-          "unit": "knob_0_10",
+          "defaultRaw": 13039,
           "taper": "linear"
         },
         "63": {
@@ -19911,7 +19907,6 @@
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
-          "unit": "knob_0_10",
           "taper": "linear"
         },
         "77": {
@@ -20095,8 +20090,7 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 13107,
-          "unit": "knob_0_10",
+          "defaultRaw": 32767,
           "taper": "linear"
         },
         "95": {
@@ -21002,8 +20996,7 @@
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 17246,
-          "unit": "knob_0_10",
+          "defaultRaw": 39196,
           "taper": "linear"
         },
         "26": {
@@ -21031,8 +21024,7 @@
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 3121,
-          "unit": "knob_0_10",
+          "defaultRaw": 32767,
           "taper": "linear"
         },
         "29": {
@@ -21304,8 +21296,7 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 984,
-          "unit": "knob_0_10",
+          "defaultRaw": 26304,
           "taper": "linear"
         },
         "21": {
@@ -21364,7 +21355,6 @@
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
-          "unit": "knob_0_10",
           "taper": "linear"
         },
         "27": {
@@ -21463,8 +21453,7 @@
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 7282,
-          "unit": "knob_0_10",
+          "defaultRaw": 19728,
           "taper": "linear"
         },
         "4": {
@@ -21606,8 +21595,7 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 2648,
-          "unit": "knob_0_10",
+          "defaultRaw": 22903,
           "taper": "linear"
         },
         "7": {
@@ -26813,7 +26801,6 @@
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
-          "unit": "knob_0_10",
           "taper": "linear"
         },
         "66": {
@@ -31352,8 +31339,7 @@
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 1523,
-          "unit": "knob_0_10",
+          "defaultRaw": 16990,
           "taper": "linear"
         },
         "37": {
@@ -32008,7 +31994,6 @@
           "step": 0.001,
           "typecode": 82,
           "defaultRaw": 0,
-          "unit": "knob_0_10",
           "taper": "linear"
         },
         "18": {
@@ -33163,8 +33148,7 @@
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 20024,
-          "unit": "knob_0_10",
+          "defaultRaw": 37619,
           "taper": "linear"
         },
         "4": {
@@ -33230,7 +33214,6 @@
           "step": 0,
           "typecode": 82,
           "defaultRaw": 0,
-          "unit": "knob_0_10",
           "taper": "linear"
         },
         "11": {

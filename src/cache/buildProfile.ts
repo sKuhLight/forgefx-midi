@@ -40,14 +40,15 @@ import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam } from '.
  * per-block ceiling (never the whole 14-bit id space), and an end marker, a definition repeating a non-zero
  * id already seen in its block, or an implausible one (junk floats, `min > max`) is treated as an absent
  * slot, so none of them ever becomes a record (`meta.walk.pseudoReplies` counts them). A cache built by a
- * walk that probed past a table's end can carry junk records from far ids; rebuild it.
+ * walk that probed past a table's end can carry junk records from far ids; rebuild it. Schema 1 also covers the
+ * typecode-0x52 knob rule: such float records (dimensionless knobs) derive a linear 0..10 display (displayMin 0,
+ * displayMax 10, taper 'linear', no unit) instead of the definition's `(min, max) * scale`, matching the shipped
+ * catalogs.
  *
- * 2 = typecode-0x52 float records (dimensionless knobs) derive a linear 0..10 display (displayMin 0,
- * displayMax 10, taper 'linear', unit 'knob_0_10') instead of the definition's `(min, max) * scale`, matching
- * the shipped catalogs. A cache built with schema 1 carries the old, wrong display bounds for these rows
- * (e.g. 0.5..500 for a drive knob that reads 0..10); rebuild it.
+ * Policy: Schema stays 1 until the first release that carries it; after a release, every change to derived
+ * output bumps it. (No bump while unreleased: the consuming runtime's schema gate lands in the same bundle.)
  */
-export const CACHE_SCHEMA = 2;
+export const CACHE_SCHEMA = 1;
 
 /**
  * Where the decoded cache records come from.

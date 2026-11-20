@@ -29,6 +29,7 @@ export type { ParsedPresetDump } from './presetDump.js';
 
 export {
   decodeRawPatch,
+  isEmptyRawPatch,
   computeRawPatchCrc,
   computeRawPatchXor,
   crc16ccitt,

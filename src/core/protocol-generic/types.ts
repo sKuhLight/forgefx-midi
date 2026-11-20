@@ -1077,6 +1077,9 @@ export interface Gen3WholePresetView {
   preset_name: string;
   /** True when the patch CRC validated (the device's own validity gate). */
   crc_valid: boolean;
+  /** Present (true) only for an unused preset slot: an all-zero patch with no name,
+   *  grid, scenes or blocks, and `crc_valid` false. Omitted for every populated preset. */
+  empty?: boolean;
   scene_names?: readonly string[];
   grid?: readonly Gen3GridCellView[];
   blocks?: readonly Gen3BlockView[];

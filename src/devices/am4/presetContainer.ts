@@ -126,7 +126,9 @@ export interface Am4ContainerDecode {
  * decompress; CRC / footer-XOR / Huffman-termination are REPORTED via flags
  * (not thrown) so a caller can surface a corrupt dump usefully.
  *
- * Throws only on a raw_patch size other than 8,192 B (wrong chunk count).
+ * Throws on a raw_patch size other than 8,192 B (wrong chunk count), and a plain
+ * `Error` when the compressed body is too short to hold its Huffman code tree
+ * (or the tree cannot be a byte-symbol tree) — e.g. an all-zero / unused patch.
  */
 export function decodeAm4Container(
   chunkPayloads: readonly Uint8Array[],

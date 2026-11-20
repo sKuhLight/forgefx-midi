@@ -46,6 +46,7 @@ import { FM9_PARAMS_BY_FAMILY } from '../gen3/fm9/params.js';
 import { FM9_RANGES } from '../gen3/fm9/ranges.generated.js';
 import { VP4_PARAMS_BY_FAMILY } from '../gen3/vp4/params.js';
 import { resolveEnumValues } from '../gen3/axe-fx-iii/enumOverlay.js';
+import { gen3TaperIsLog } from '../devices/gen3/taper.js';
 
 /** A validated target range in the device's DISPLAY units. */
 export interface TargetRange {
@@ -245,27 +246,10 @@ interface Gen3Hit {
   range?: Gen3RangeRow;
 }
 
-/**
- * gen-3 taper decision, MIRRORING the live server (`ForgeFX/server/src/
- * drivers/gen3.ts` `#display`): a device-true explicit `range.taper` wins
- * ('log' → log10; 'linear' | 'flat' | 'custom' → linear), otherwise fall back
- * to the typecode-nibble heuristic: only `(typecode >> 4) & 0xf === 4` means
- * log10, every other nibble is linear. Nibble 5 is deliberately NOT log: the
- * explicit tapers in the FM9 and Axe-Fx III catalogs have it linear every
- * time, and the server dropped it from the log set for that reason.
- * A log sweep requires a positive `displayMin` (the live `wireToDisplay` throws
- * on log10 with a non-positive min) — the same guard the live nibble branch
- * uses. Without a range row the taper is unknown → linear (matches the live
- * fall-through). `param.scaling` is deliberately NOT consulted: the live path
- * does not read it, and most FM3 catalog rows do not carry it.
- */
-// Exported (not re-exported by the package barrel) so the rule can be pinned on synthetic rows.
-export function gen3TaperIsLog(range: Gen3RangeRow | undefined): boolean {
-  if (range === undefined || !(range.displayMin > 0)) return false;
-  if (range.taper !== undefined) return range.taper === 'log';
-  const nib = ((range.typecode ?? 0) >> 4) & 0xf;
-  return nib === 4;
-}
+// The gen-3 taper rule lives in `devices/gen3/taper.ts` (shared with the body decoder so a param
+// decodes and converts on one scale). Re-exported here so the rule can still be pinned on synthetic
+// rows from this module; not re-exported by the package barrel.
+export { gen3TaperIsLog };
 
 function gen3Hit(
   device: ConverterDeviceId,

@@ -22,7 +22,7 @@
           "label": "Ratio",
           "kind": "float",
           "raw": 21876,
-          "value": 7.3424176763206885,
+          "value": 2.7183083426110497,
           "unit": "numeric"
         },
         {
@@ -31,7 +31,7 @@
           "label": "Release",
           "kind": "float",
           "raw": 32767,
-          "value": 505,
+          "value": 100,
           "unit": "numeric"
         },
         {
@@ -40,7 +40,7 @@
           "label": "Attack",
           "kind": "float",
           "raw": 9864,
-          "value": 15.901211584826196,
+          "value": 2.000021100113472,
           "unit": "numeric"
         },
         {
@@ -367,7 +367,7 @@
           "label": "Ratio",
           "kind": "float",
           "raw": 8870,
-          "value": 3.5716422009949036,
+          "value": 1.5000090381981819,
           "unit": "ratio"
         },
         {
@@ -385,7 +385,7 @@
           "label": "Release Time",
           "kind": "float",
           "raw": 19115,
-          "value": 584.7779473250527,
+          "value": 14.999333401190324,
           "unit": "ms"
         },
         {
@@ -564,7 +564,7 @@
           "label": "Frequency",
           "kind": "float",
           "raw": 42631,
-          "value": 6540.121158482621,
+          "value": 2000.0211001134726,
           "unit": "numeric"
         },
         {
@@ -573,7 +573,7 @@
           "label": "Q",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -637,7 +637,7 @@
           "label": "Ratio",
           "kind": "float",
           "raw": 39455,
-          "value": 6.418485061189611,
+          "value": 3.9999438574727186,
           "unit": "numeric"
         },
         {
@@ -646,7 +646,7 @@
           "label": "Time",
           "kind": "float",
           "raw": 21845,
-          "value": 334.0050813318278,
+          "value": 10.000351363497572,
           "unit": "numeric"
         },
         {
@@ -664,7 +664,7 @@
           "label": "Emphasis Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 5050,
+          "value": 1000,
           "unit": "numeric"
         },
         {
@@ -710,7 +710,7 @@
           "label": "Frequency 1",
           "kind": "float",
           "raw": 18809,
-          "value": 588.2824182866909,
+          "value": 74.9985108765293,
           "unit": "numeric"
         },
         {
@@ -719,7 +719,7 @@
           "label": "Frequency 2",
           "kind": "float",
           "raw": 19728,
-          "value": 3080.2423169652393,
+          "value": 400.0084400899103,
           "unit": "numeric"
         },
         {
@@ -728,7 +728,7 @@
           "label": "Frequency 3",
           "kind": "float",
           "raw": 29592,
-          "value": 4570.363475447859,
+          "value": 800.0253204032962,
           "unit": "numeric"
         },
         {
@@ -737,7 +737,7 @@
           "label": "Frequency 4",
           "kind": "float",
           "raw": 39455,
-          "value": 6060.333567308572,
+          "value": 1599.9550862933731,
           "unit": "numeric"
         },
         {
@@ -746,7 +746,7 @@
           "label": "Frequency 5",
           "kind": "float",
           "raw": 46301,
-          "value": 14189.071321756646,
+          "value": 5176.872904538895,
           "unit": "numeric"
         },
         {
@@ -755,7 +755,7 @@
           "label": "Q1",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -764,7 +764,7 @@
           "label": "Q2",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -773,7 +773,7 @@
           "label": "Q3",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -782,7 +782,7 @@
           "label": "Q4",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -791,7 +791,7 @@
           "label": "Q5",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -1123,7 +1123,7 @@
           "label": "Low Cut Frequency",
           "kind": "float",
           "raw": 47470,
-          "value": 727.1132541886653,
+          "value": 281.0047394569956,
           "unit": "numeric"
         },
         {
@@ -1132,7 +1132,7 @@
           "label": "High Cut Frequency",
           "kind": "float",
           "raw": 26637,
-          "value": 16495.846430860314,
+          "value": 2600.0489734530966,
           "unit": "numeric"
         },
         {
@@ -1141,7 +1141,7 @@
           "label": "Tonestack Freq",
           "kind": "float",
           "raw": 24318,
-          "value": 867.9342020935698,
+          "value": 470.0072448866626,
           "unit": "numeric"
         },
         {
@@ -1159,7 +1159,7 @@
           "label": "Bright Cap",
           "kind": "float",
           "raw": 30538,
-          "value": 4665.211340678122,
+          "value": 250.01229316793678,
           "unit": "pf"
         },
         {
@@ -1177,7 +1177,7 @@
           "label": "XFormer Low Freq",
           "kind": "float",
           "raw": 39455,
-          "value": 303.0166783654286,
+          "value": 79.99775431466865,
           "unit": "numeric"
         },
         {
@@ -1186,7 +1186,7 @@
           "label": "XFormer Hi Freq",
           "kind": "float",
           "raw": 52157,
-          "value": 32651.57017731254,
+          "value": 24999.82339382759,
           "unit": "numeric"
         },
         {
@@ -1270,7 +1270,7 @@
           "label": "Presence Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "hz"
         },
         {
@@ -1279,7 +1279,7 @@
           "label": "Low Freq",
           "kind": "float",
           "raw": 13818,
-          "value": 115.90685750907926,
+          "value": 64.99985282482241,
           "unit": "numeric"
         },
         {
@@ -1297,7 +1297,7 @@
           "label": "Depth Frequency",
           "kind": "float",
           "raw": 45806,
-          "value": 364.53444013794365,
+          "value": 249.99736251364163,
           "unit": "hz"
         },
         {
@@ -1325,7 +1325,7 @@
           "label": "DISTORT_WSHPF",
           "kind": "float",
           "raw": 15269,
-          "value": 467.52113406781217,
+          "value": 10.00024586033637,
           "unit": "unverified"
         },
         {
@@ -1353,7 +1353,7 @@
           "label": "B+ Time Constant",
           "kind": "float",
           "raw": 22903,
-          "value": 35.5987884151738,
+          "value": 4.999947250272832,
           "unit": "numeric"
         },
         {
@@ -1410,7 +1410,7 @@
           "label": "LF Q",
           "kind": "float",
           "raw": 36501,
-          "value": 5.614082766197699,
+          "value": 1.3000382020586418,
           "unit": "numeric"
         },
         {
@@ -1428,7 +1428,7 @@
           "label": "High Freq",
           "kind": "float",
           "raw": 35655,
-          "value": 2358.647419660024,
+          "value": 1400.0022028072713,
           "unit": "numeric"
         },
         {
@@ -1456,7 +1456,7 @@
           "label": "XFormer Drive",
           "kind": "float",
           "raw": 47536,
-          "value": 7.256385692922758,
+          "value": 1.500001867239333,
           "unit": "numeric"
         },
         {
@@ -1465,7 +1465,7 @@
           "label": "Input Trim",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -1502,7 +1502,7 @@
           "label": "XFormer Matching",
           "kind": "float",
           "raw": 32767,
-          "value": 1.25,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -1511,7 +1511,7 @@
           "label": "Screen Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 50.5,
+          "value": 10,
           "unit": "numeric"
         },
         {
@@ -1520,7 +1520,7 @@
           "label": "Screen Q",
           "kind": "float",
           "raw": 22903,
-          "value": 3.5598788415173805,
+          "value": 0.49999472502728326,
           "unit": "numeric"
         },
         {
@@ -1620,7 +1620,7 @@
           "label": "Excursion Time",
           "kind": "float",
           "raw": 33967,
-          "value": 13.07819986571856,
+          "value": 2.7199581382764952,
           "unit": "numeric"
         },
         {
@@ -1629,7 +1629,7 @@
           "label": "Recovery Time",
           "kind": "float",
           "raw": 27279,
-          "value": 21.104731894894254,
+          "value": 3.4000431156825033,
           "unit": "numeric"
         },
         {
@@ -1685,7 +1685,7 @@
           "label": "Q",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -1694,7 +1694,7 @@
           "label": "Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 5050,
+          "value": 1000,
           "unit": "numeric"
         },
         {
@@ -1739,7 +1739,7 @@
           "label": "Master Vol Trim",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -1849,7 +1849,7 @@
           "label": "Frequency",
           "kind": "float",
           "raw": 45806,
-          "value": 14.039515366069521,
+          "value": 4.9998945011021725,
           "unit": "db"
         },
         {
@@ -1896,7 +1896,7 @@
           "label": "Cathode Time Const",
           "kind": "float",
           "raw": 31268,
-          "value": 48.23551133762627,
+          "value": 9.00021230938171,
           "unit": "numeric"
         },
         {
@@ -1951,7 +1951,7 @@
           "label": "HF Slope",
           "kind": "float",
           "raw": 33980,
-          "value": 5.666585283974731,
+          "value": 3.2999660812393365,
           "unit": "numeric"
         },
         {
@@ -2016,7 +2016,7 @@
           "label": "DISTORT_TRIODE2EXTIME",
           "kind": "float",
           "raw": 43689,
-          "value": 66.69949186681723,
+          "value": 9.99964864884763,
           "unit": "ms"
         },
         {
@@ -2025,7 +2025,7 @@
           "label": "DISTORT_TRIODE2RECTIME",
           "kind": "float",
           "raw": 43689,
-          "value": 133.39898373363445,
+          "value": 19.99929729769526,
           "unit": "ms"
         },
         {
@@ -2100,7 +2100,7 @@
           "label": "Speaker Time Const",
           "kind": "float",
           "raw": 42631,
-          "value": 6540.121158482621,
+          "value": 2000.0211001134726,
           "unit": "numeric"
         },
         {
@@ -2202,7 +2202,7 @@
           "label": "Speaker Impedance",
           "kind": "float",
           "raw": 32767,
-          "value": 1.25,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -2454,7 +2454,7 @@
           "label": "Low Cut Frequency",
           "kind": "float",
           "raw": 47470,
-          "value": 727.1132541886653,
+          "value": 281.0047394569956,
           "unit": "numeric"
         },
         {
@@ -2463,7 +2463,7 @@
           "label": "High Cut Frequency",
           "kind": "float",
           "raw": 26637,
-          "value": 16495.846430860314,
+          "value": 2600.0489734530966,
           "unit": "numeric"
         },
         {
@@ -2472,7 +2472,7 @@
           "label": "Tonestack Freq",
           "kind": "float",
           "raw": 24318,
-          "value": 867.9342020935698,
+          "value": 470.0072448866626,
           "unit": "numeric"
         },
         {
@@ -2490,7 +2490,7 @@
           "label": "Bright Cap",
           "kind": "float",
           "raw": 30538,
-          "value": 4665.211340678122,
+          "value": 250.01229316793678,
           "unit": "pf"
         },
         {
@@ -2508,7 +2508,7 @@
           "label": "XFormer Low Freq",
           "kind": "float",
           "raw": 39455,
-          "value": 303.0166783654286,
+          "value": 79.99775431466865,
           "unit": "numeric"
         },
         {
@@ -2517,7 +2517,7 @@
           "label": "XFormer Hi Freq",
           "kind": "float",
           "raw": 52157,
-          "value": 32651.57017731254,
+          "value": 24999.82339382759,
           "unit": "numeric"
         },
         {
@@ -2601,7 +2601,7 @@
           "label": "Presence Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "hz"
         },
         {
@@ -2610,7 +2610,7 @@
           "label": "Low Freq",
           "kind": "float",
           "raw": 13818,
-          "value": 115.90685750907926,
+          "value": 64.99985282482241,
           "unit": "numeric"
         },
         {
@@ -2628,7 +2628,7 @@
           "label": "Depth Frequency",
           "kind": "float",
           "raw": 45806,
-          "value": 364.53444013794365,
+          "value": 249.99736251364163,
           "unit": "hz"
         },
         {
@@ -2656,7 +2656,7 @@
           "label": "DISTORT_WSHPF",
           "kind": "float",
           "raw": 15269,
-          "value": 467.52113406781217,
+          "value": 10.00024586033637,
           "unit": "unverified"
         },
         {
@@ -2684,7 +2684,7 @@
           "label": "B+ Time Constant",
           "kind": "float",
           "raw": 22903,
-          "value": 35.5987884151738,
+          "value": 4.999947250272832,
           "unit": "numeric"
         },
         {
@@ -2741,7 +2741,7 @@
           "label": "LF Q",
           "kind": "float",
           "raw": 36501,
-          "value": 5.614082766197699,
+          "value": 1.3000382020586418,
           "unit": "numeric"
         },
         {
@@ -2759,7 +2759,7 @@
           "label": "High Freq",
           "kind": "float",
           "raw": 35655,
-          "value": 2358.647419660024,
+          "value": 1400.0022028072713,
           "unit": "numeric"
         },
         {
@@ -2787,7 +2787,7 @@
           "label": "XFormer Drive",
           "kind": "float",
           "raw": 47536,
-          "value": 7.256385692922758,
+          "value": 1.500001867239333,
           "unit": "numeric"
         },
         {
@@ -2796,7 +2796,7 @@
           "label": "Input Trim",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -2833,7 +2833,7 @@
           "label": "XFormer Matching",
           "kind": "float",
           "raw": 32767,
-          "value": 1.25,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -2842,7 +2842,7 @@
           "label": "Screen Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 50.5,
+          "value": 10,
           "unit": "numeric"
         },
         {
@@ -2851,7 +2851,7 @@
           "label": "Screen Q",
           "kind": "float",
           "raw": 22903,
-          "value": 3.5598788415173805,
+          "value": 0.49999472502728326,
           "unit": "numeric"
         },
         {
@@ -2951,7 +2951,7 @@
           "label": "Excursion Time",
           "kind": "float",
           "raw": 33967,
-          "value": 13.07819986571856,
+          "value": 2.7199581382764952,
           "unit": "numeric"
         },
         {
@@ -2960,7 +2960,7 @@
           "label": "Recovery Time",
           "kind": "float",
           "raw": 27279,
-          "value": 21.104731894894254,
+          "value": 3.4000431156825033,
           "unit": "numeric"
         },
         {
@@ -3016,7 +3016,7 @@
           "label": "Q",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -3025,7 +3025,7 @@
           "label": "Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 5050,
+          "value": 1000,
           "unit": "numeric"
         },
         {
@@ -3070,7 +3070,7 @@
           "label": "Master Vol Trim",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -3180,7 +3180,7 @@
           "label": "Frequency",
           "kind": "float",
           "raw": 45806,
-          "value": 14.039515366069521,
+          "value": 4.9998945011021725,
           "unit": "db"
         },
         {
@@ -3227,7 +3227,7 @@
           "label": "Cathode Time Const",
           "kind": "float",
           "raw": 31268,
-          "value": 48.23551133762627,
+          "value": 9.00021230938171,
           "unit": "numeric"
         },
         {
@@ -3282,7 +3282,7 @@
           "label": "HF Slope",
           "kind": "float",
           "raw": 33980,
-          "value": 5.666585283974731,
+          "value": 3.2999660812393365,
           "unit": "numeric"
         },
         {
@@ -3347,7 +3347,7 @@
           "label": "DISTORT_TRIODE2EXTIME",
           "kind": "float",
           "raw": 43689,
-          "value": 66.69949186681723,
+          "value": 9.99964864884763,
           "unit": "ms"
         },
         {
@@ -3356,7 +3356,7 @@
           "label": "DISTORT_TRIODE2RECTIME",
           "kind": "float",
           "raw": 43689,
-          "value": 133.39898373363445,
+          "value": 19.99929729769526,
           "unit": "ms"
         },
         {
@@ -3431,7 +3431,7 @@
           "label": "Speaker Time Const",
           "kind": "float",
           "raw": 42631,
-          "value": 6540.121158482621,
+          "value": 2000.0211001134726,
           "unit": "numeric"
         },
         {
@@ -3533,7 +3533,7 @@
           "label": "Speaker Impedance",
           "kind": "float",
           "raw": 32767,
-          "value": 1.25,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -3785,7 +3785,7 @@
           "label": "Low Cut Frequency",
           "kind": "float",
           "raw": 47470,
-          "value": 727.1132541886653,
+          "value": 281.0047394569956,
           "unit": "numeric"
         },
         {
@@ -3794,7 +3794,7 @@
           "label": "High Cut Frequency",
           "kind": "float",
           "raw": 26637,
-          "value": 16495.846430860314,
+          "value": 2600.0489734530966,
           "unit": "numeric"
         },
         {
@@ -3803,7 +3803,7 @@
           "label": "Tonestack Freq",
           "kind": "float",
           "raw": 24318,
-          "value": 867.9342020935698,
+          "value": 470.0072448866626,
           "unit": "numeric"
         },
         {
@@ -3821,7 +3821,7 @@
           "label": "Bright Cap",
           "kind": "float",
           "raw": 30538,
-          "value": 4665.211340678122,
+          "value": 250.01229316793678,
           "unit": "pf"
         },
         {
@@ -3839,7 +3839,7 @@
           "label": "XFormer Low Freq",
           "kind": "float",
           "raw": 39455,
-          "value": 303.0166783654286,
+          "value": 79.99775431466865,
           "unit": "numeric"
         },
         {
@@ -3848,7 +3848,7 @@
           "label": "XFormer Hi Freq",
           "kind": "float",
           "raw": 52157,
-          "value": 32651.57017731254,
+          "value": 24999.82339382759,
           "unit": "numeric"
         },
         {
@@ -3932,7 +3932,7 @@
           "label": "Presence Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "hz"
         },
         {
@@ -3941,7 +3941,7 @@
           "label": "Low Freq",
           "kind": "float",
           "raw": 13818,
-          "value": 115.90685750907926,
+          "value": 64.99985282482241,
           "unit": "numeric"
         },
         {
@@ -3959,7 +3959,7 @@
           "label": "Depth Frequency",
           "kind": "float",
           "raw": 45806,
-          "value": 364.53444013794365,
+          "value": 249.99736251364163,
           "unit": "hz"
         },
         {
@@ -3987,7 +3987,7 @@
           "label": "DISTORT_WSHPF",
           "kind": "float",
           "raw": 15269,
-          "value": 467.52113406781217,
+          "value": 10.00024586033637,
           "unit": "unverified"
         },
         {
@@ -4015,7 +4015,7 @@
           "label": "B+ Time Constant",
           "kind": "float",
           "raw": 22903,
-          "value": 35.5987884151738,
+          "value": 4.999947250272832,
           "unit": "numeric"
         },
         {
@@ -4072,7 +4072,7 @@
           "label": "LF Q",
           "kind": "float",
           "raw": 36501,
-          "value": 5.614082766197699,
+          "value": 1.3000382020586418,
           "unit": "numeric"
         },
         {
@@ -4090,7 +4090,7 @@
           "label": "High Freq",
           "kind": "float",
           "raw": 35655,
-          "value": 2358.647419660024,
+          "value": 1400.0022028072713,
           "unit": "numeric"
         },
         {
@@ -4118,7 +4118,7 @@
           "label": "XFormer Drive",
           "kind": "float",
           "raw": 47536,
-          "value": 7.256385692922758,
+          "value": 1.500001867239333,
           "unit": "numeric"
         },
         {
@@ -4127,7 +4127,7 @@
           "label": "Input Trim",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -4164,7 +4164,7 @@
           "label": "XFormer Matching",
           "kind": "float",
           "raw": 32767,
-          "value": 1.25,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -4173,7 +4173,7 @@
           "label": "Screen Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 50.5,
+          "value": 10,
           "unit": "numeric"
         },
         {
@@ -4182,7 +4182,7 @@
           "label": "Screen Q",
           "kind": "float",
           "raw": 22903,
-          "value": 3.5598788415173805,
+          "value": 0.49999472502728326,
           "unit": "numeric"
         },
         {
@@ -4282,7 +4282,7 @@
           "label": "Excursion Time",
           "kind": "float",
           "raw": 33967,
-          "value": 13.07819986571856,
+          "value": 2.7199581382764952,
           "unit": "numeric"
         },
         {
@@ -4291,7 +4291,7 @@
           "label": "Recovery Time",
           "kind": "float",
           "raw": 27279,
-          "value": 21.104731894894254,
+          "value": 3.4000431156825033,
           "unit": "numeric"
         },
         {
@@ -4347,7 +4347,7 @@
           "label": "Q",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -4356,7 +4356,7 @@
           "label": "Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 5050,
+          "value": 1000,
           "unit": "numeric"
         },
         {
@@ -4401,7 +4401,7 @@
           "label": "Master Vol Trim",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -4511,7 +4511,7 @@
           "label": "Frequency",
           "kind": "float",
           "raw": 45806,
-          "value": 14.039515366069521,
+          "value": 4.9998945011021725,
           "unit": "db"
         },
         {
@@ -4558,7 +4558,7 @@
           "label": "Cathode Time Const",
           "kind": "float",
           "raw": 31268,
-          "value": 48.23551133762627,
+          "value": 9.00021230938171,
           "unit": "numeric"
         },
         {
@@ -4613,7 +4613,7 @@
           "label": "HF Slope",
           "kind": "float",
           "raw": 33980,
-          "value": 5.666585283974731,
+          "value": 3.2999660812393365,
           "unit": "numeric"
         },
         {
@@ -4678,7 +4678,7 @@
           "label": "DISTORT_TRIODE2EXTIME",
           "kind": "float",
           "raw": 43689,
-          "value": 66.69949186681723,
+          "value": 9.99964864884763,
           "unit": "ms"
         },
         {
@@ -4687,7 +4687,7 @@
           "label": "DISTORT_TRIODE2RECTIME",
           "kind": "float",
           "raw": 43689,
-          "value": 133.39898373363445,
+          "value": 19.99929729769526,
           "unit": "ms"
         },
         {
@@ -4762,7 +4762,7 @@
           "label": "Speaker Time Const",
           "kind": "float",
           "raw": 42631,
-          "value": 6540.121158482621,
+          "value": 2000.0211001134726,
           "unit": "numeric"
         },
         {
@@ -4864,7 +4864,7 @@
           "label": "Speaker Impedance",
           "kind": "float",
           "raw": 32767,
-          "value": 1.25,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -5125,7 +5125,7 @@
           "label": "High Cut Frequency",
           "kind": "float",
           "raw": 41901,
-          "value": 25719.370097964416,
+          "value": 7600.043129767919,
           "unit": "numeric"
         },
         {
@@ -5134,7 +5134,7 @@
           "label": "Tonestack Freq",
           "kind": "float",
           "raw": 31268,
-          "value": 1058.827478865932,
+          "value": 600.0070769376545,
           "unit": "numeric"
         },
         {
@@ -5152,7 +5152,7 @@
           "label": "Bright Cap",
           "kind": "float",
           "raw": 30538,
-          "value": 4665.211340678122,
+          "value": 250.01229316793678,
           "unit": "pf"
         },
         {
@@ -5170,7 +5170,7 @@
           "label": "XFormer Low Freq",
           "kind": "float",
           "raw": 15151,
-          "value": 119.44051942503128,
+          "value": 14.499597324887246,
           "unit": "numeric"
         },
         {
@@ -5179,7 +5179,7 @@
           "label": "XFormer Hi Freq",
           "kind": "float",
           "raw": 45806,
-          "value": 29162.75521103549,
+          "value": 19999.78900109133,
           "unit": "numeric"
         },
         {
@@ -5263,7 +5263,7 @@
           "label": "Presence Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "hz"
         },
         {
@@ -5272,7 +5272,7 @@
           "label": "Low Freq",
           "kind": "float",
           "raw": 27737,
-          "value": 192.36854152043216,
+          "value": 106.00001823991161,
           "unit": "numeric"
         },
         {
@@ -5290,7 +5290,7 @@
           "label": "Depth Frequency",
           "kind": "float",
           "raw": 45806,
-          "value": 364.53444013794365,
+          "value": 249.99736251364163,
           "unit": "hz"
         },
         {
@@ -5318,7 +5318,7 @@
           "label": "DISTORT_WSHPF",
           "kind": "float",
           "raw": 19115,
-          "value": 584.7779473250527,
+          "value": 14.999333401190324,
           "unit": "unverified"
         },
         {
@@ -5346,7 +5346,7 @@
           "label": "B+ Time Constant",
           "kind": "float",
           "raw": 32767,
-          "value": 50.5,
+          "value": 10,
           "unit": "numeric"
         },
         {
@@ -5403,7 +5403,7 @@
           "label": "LF Q",
           "kind": "float",
           "raw": 46364,
-          "value": 7.104052858058412,
+          "value": 2.5999211283848833,
           "unit": "numeric"
         },
         {
@@ -5421,7 +5421,7 @@
           "label": "High Freq",
           "kind": "float",
           "raw": 45806,
-          "value": 2916.275521103549,
+          "value": 1999.978900109133,
           "unit": "numeric"
         },
         {
@@ -5449,7 +5449,7 @@
           "label": "XFormer Drive",
           "kind": "float",
           "raw": 45419,
-          "value": 6.93367030854213,
+          "value": 1.1999973109184656,
           "unit": "numeric"
         },
         {
@@ -5458,7 +5458,7 @@
           "label": "Input Trim",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -5495,7 +5495,7 @@
           "label": "XFormer Matching",
           "kind": "float",
           "raw": 32767,
-          "value": 1.25,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -5504,7 +5504,7 @@
           "label": "Screen Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 50.5,
+          "value": 10,
           "unit": "numeric"
         },
         {
@@ -5513,7 +5513,7 @@
           "label": "Screen Q",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -5613,7 +5613,7 @@
           "label": "Excursion Time",
           "kind": "float",
           "raw": 52998,
-          "value": 20.265572069460127,
+          "value": 10.360005211596532,
           "unit": "numeric"
         },
         {
@@ -5622,7 +5622,7 @@
           "label": "Recovery Time",
           "kind": "float",
           "raw": 57181,
-          "value": 43.69070253608813,
+          "value": 27.800262370828364,
           "unit": "numeric"
         },
         {
@@ -5640,7 +5640,7 @@
           "label": "Triode 1 Plate Freq",
           "kind": "float",
           "raw": 30029,
-          "value": 18545.51835688345,
+          "value": 3299.896452682448,
           "unit": "numeric"
         },
         {
@@ -5678,7 +5678,7 @@
           "label": "Q",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -5687,7 +5687,7 @@
           "label": "Frequency",
           "kind": "float",
           "raw": 32767,
-          "value": 5050,
+          "value": 1000,
           "unit": "numeric"
         },
         {
@@ -5732,7 +5732,7 @@
           "label": "Master Vol Trim",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -5842,7 +5842,7 @@
           "label": "Frequency",
           "kind": "float",
           "raw": 45806,
-          "value": 14.039515366069521,
+          "value": 4.9998945011021725,
           "unit": "db"
         },
         {
@@ -5889,7 +5889,7 @@
           "label": "Cathode Time Const",
           "kind": "float",
           "raw": 22903,
-          "value": 35.5987884151738,
+          "value": 4.999947250272832,
           "unit": "numeric"
         },
         {
@@ -5944,7 +5944,7 @@
           "label": "HF Slope",
           "kind": "float",
           "raw": 35655,
-          "value": 5.896618549150059,
+          "value": 3.5000055070181784,
           "unit": "numeric"
         },
         {
@@ -6009,7 +6009,7 @@
           "label": "DISTORT_TRIODE2EXTIME",
           "kind": "float",
           "raw": 39470,
-          "value": 60.26805017242958,
+          "value": 6.409857188099398,
           "unit": "ms"
         },
         {
@@ -6018,7 +6018,7 @@
           "label": "DISTORT_TRIODE2RECTIME",
           "kind": "float",
           "raw": 34384,
-          "value": 105.02990813928648,
+          "value": 7.499851087652927,
           "unit": "ms"
         },
         {
@@ -6093,7 +6093,7 @@
           "label": "Speaker Time Const",
           "kind": "float",
           "raw": 42631,
-          "value": 6540.121158482621,
+          "value": 2000.0211001134726,
           "unit": "numeric"
         },
         {
@@ -6195,7 +6195,7 @@
           "label": "Speaker Impedance",
           "kind": "float",
           "raw": 32767,
-          "value": 1.25,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -6684,7 +6684,7 @@
           "label": "Room Size",
           "kind": "float",
           "raw": 29126,
-          "value": 14.999908444471572,
+          "value": 8.347613028700632,
           "unit": "numeric"
         },
         {
@@ -6729,7 +6729,7 @@
           "label": "Proximity Frequency",
           "kind": "float",
           "raw": 50995,
-          "value": 160.0662251655629,
+          "value": 119.99846510123155,
           "unit": "numeric"
         },
         {
@@ -6858,7 +6858,7 @@
           "label": "Frequency",
           "kind": "float",
           "raw": 26079,
-          "value": 9163.029877620778,
+          "value": 5000.070179144111,
           "unit": "numeric"
         },
         {
@@ -7350,7 +7350,7 @@
           "label": "High Decay",
           "kind": "float",
           "raw": 40318,
-          "value": 0.6190704062013611,
+          "value": 0.1699985687761124,
           "unit": "numeric"
         },
         {
@@ -7413,7 +7413,7 @@
           "label": "Low Cut Frequency",
           "kind": "float",
           "raw": 48401,
-          "value": 1482.3551133762626,
+          "value": 600.0070769376545,
           "unit": "hz"
         },
         {
@@ -7431,7 +7431,7 @@
           "label": "Rate",
           "kind": "float",
           "raw": 43987,
-          "value": 0.6744967497787409,
+          "value": 0.2199974648906761,
           "unit": "hz"
         },
         {
@@ -7558,7 +7558,7 @@
           "label": "Freq 1",
           "kind": "float",
           "raw": 32767,
-          "value": 1010,
+          "value": 200,
           "unit": "hz"
         },
         {
@@ -7567,7 +7567,7 @@
           "label": "Freq 2",
           "kind": "float",
           "raw": 29592,
-          "value": 4570.363475447859,
+          "value": 800.0253204032962,
           "unit": "hz"
         },
         {
@@ -7576,7 +7576,7 @@
           "label": "Q 1",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "count"
         },
         {
@@ -7585,7 +7585,7 @@
           "label": "Q 2",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "count"
         },
         {
@@ -7621,7 +7621,7 @@
           "label": "Low Decay",
           "kind": "float",
           "raw": 58846,
-          "value": 1.7979332865382855,
+          "value": 1.250035089818311,
           "unit": "numeric"
         },
         {
@@ -7630,7 +7630,7 @@
           "label": "Crossover Frequency",
           "kind": "float",
           "raw": 28673,
-          "value": 4431.533249916074,
+          "value": 749.9930211507415,
           "unit": "numeric"
         },
         {
@@ -7957,7 +7957,7 @@
           "label": "Low Q",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -7966,7 +7966,7 @@
           "label": "High Q",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         }
       ]
@@ -8132,7 +8132,7 @@
           "label": "Low Cut",
           "kind": "float",
           "raw": 13039,
-          "value": 413.9515366069521,
+          "value": 49.99894501102172,
           "unit": "hz"
         },
         {
@@ -8141,7 +8141,7 @@
           "label": "High Cut",
           "kind": "float",
           "raw": 31221,
-          "value": 9632.902005066073,
+          "value": 1794.1071625242469,
           "unit": "hz"
         },
         {
@@ -8150,7 +8150,7 @@
           "label": "Rate",
           "kind": "float",
           "raw": 22903,
-          "value": 3.5598788415173805,
+          "value": 0.49999472502728326,
           "unit": "numeric"
         },
         {
@@ -8159,7 +8159,7 @@
           "label": "Rate",
           "kind": "float",
           "raw": 44620,
-          "value": 13.681185338908048,
+          "value": 4.600085337557269,
           "unit": "numeric"
         },
         {
@@ -8391,7 +8391,7 @@
           "label": "Release Time",
           "kind": "float",
           "raw": 21845,
-          "value": 334.0050813318278,
+          "value": 10.000351363497572,
           "unit": "numeric"
         },
         {
@@ -8533,7 +8533,7 @@
           "label": "Q",
           "kind": "float",
           "raw": 27456,
-          "value": 4.247685171056245,
+          "value": 0.6885194230693406,
           "unit": "numeric"
         },
         {
@@ -8551,7 +8551,7 @@
           "label": "Freq 1",
           "kind": "float",
           "raw": 42631,
-          "value": 1308.024231696524,
+          "value": 400.00422002269454,
           "unit": "numeric"
         },
         {
@@ -8560,7 +8560,7 @@
           "label": "Freq 2",
           "kind": "float",
           "raw": 29592,
-          "value": 4570.363475447859,
+          "value": 800.0253204032962,
           "unit": "numeric"
         },
         {
@@ -8569,7 +8569,7 @@
           "label": "Q 1",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -8578,7 +8578,7 @@
           "label": "Q 2",
           "kind": "float",
           "raw": 27833,
-          "value": 4.304637287514877,
+          "value": 0.7070036798562649,
           "unit": "numeric"
         },
         {
@@ -8615,7 +8615,7 @@
           "label": "Motor Speed",
           "kind": "float",
           "raw": 32767,
-          "value": 1.25,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -8653,7 +8653,7 @@
           "label": "Time",
           "kind": "float",
           "raw": 32767,
-          "value": 50.5,
+          "value": 10,
           "unit": "numeric"
         },
         {
@@ -8671,7 +8671,7 @@
           "label": "Master Time",
           "kind": "float",
           "raw": 32767,
-          "value": 212.5,
+          "value": 100,
           "unit": "percent"
         },
         {
@@ -8708,7 +8708,7 @@
           "label": "Rate",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -8832,7 +8832,7 @@
           "label": "Rate",
           "kind": "float",
           "raw": 27420,
-          "value": 4.242246772667623,
+          "value": 0.686779826721856,
           "unit": "hz"
         },
         {
@@ -8879,7 +8879,7 @@
           "label": "Min Frequency",
           "kind": "float",
           "raw": 48775,
-          "value": 373.4137241737114,
+          "value": 153.996306263687,
           "unit": "numeric"
         },
         {
@@ -8888,7 +8888,7 @@
           "label": "Max Frequency",
           "kind": "float",
           "raw": 47538,
-          "value": 14562.81014435255,
+          "value": 5647.0144511787985,
           "unit": "numeric"
         },
         {
@@ -9008,7 +9008,7 @@
           "label": "Filter Q",
           "kind": "float",
           "raw": 22903,
-          "value": 3.5598788415173805,
+          "value": 0.49999472502728326,
           "unit": "count"
         },
         {
@@ -9047,7 +9047,7 @@
           "label": "Exponent",
           "kind": "float",
           "raw": 32767,
-          "value": 5.05,
+          "value": 1,
           "unit": "numeric"
         },
         {
@@ -9065,7 +9065,7 @@
           "label": "High Cut",
           "kind": "float",
           "raw": 29592,
-          "value": 22.851817377239296,
+          "value": 4.000126602016481,
           "unit": "numeric"
         },
         {
@@ -9074,7 +9074,7 @@
           "label": "Attack",
           "kind": "float",
           "raw": 22903,
-          "value": 355.98788415173806,
+          "value": 49.999472502728324,
           "unit": "ms"
         },
         {
@@ -9083,7 +9083,7 @@
           "label": "Release",
           "kind": "float",
           "raw": 17827,
-          "value": 27.930646687215795,
+          "value": 3.499882533921358,
           "unit": "ms"
         },
         {
@@ -9158,7 +9158,7 @@
           "label": "Frequency Min",
           "kind": "float",
           "raw": 42808,
-          "value": 687.8963591418195,
+          "value": 450.00586788164776,
           "unit": "numeric"
         },
         {
@@ -9167,7 +9167,7 @@
           "label": "Frequency Max",
           "kind": "float",
           "raw": 44644,
-          "value": 3565.553758354442,
+          "value": 2399.960936396049,
           "unit": "numeric"
         },
         {
@@ -9277,7 +9277,7 @@
           "label": "Low Cut Frequency",
           "kind": "float",
           "raw": 33663,
-          "value": 1037.0711386455887,
+          "value": 212.9975363413427,
           "unit": "numeric"
         },
         {
@@ -9461,7 +9461,7 @@
           "label": "Low Cut",
           "kind": "float",
           "raw": 38537,
-          "value": 1184.330881679739,
+          "value": 300.00037344786665,
           "unit": "numeric"
         },
         {
@@ -9516,7 +9516,7 @@
           "label": "Mid Frequency",
           "kind": "float",
           "raw": 32926,
-          "value": 1104.3671987060152,
+          "value": 635.9986842260114,
           "unit": "numeric"
         },
         {

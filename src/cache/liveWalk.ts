@@ -153,9 +153,14 @@
  *                    becomes a placeholder). An empty slot with `id` 0 is not
  *                    counted.
  *        duplicateId a definition whose NON-ZERO `id` was already seen in the same
- *                    block on a real definition or an end marker (non-zero ids
- *                    are unique per real param). Id 0 means "no symbol id" and
- *                    is shared by many real params — never a duplicate.
+ *                    block on an end marker, or on a real definition with the
+ *                    SAME body (a copy). A reused id with a DIFFERENT body is a
+ *                    copy too, except for the param right after the last real
+ *                    definition inside a known table size: some tables reuse a
+ *                    symbol id for two real params (an FM3 mixer's first two
+ *                    balance rows carry the ids of its last two level rows,
+ *                    fw 12.0 and 13.0). Id 0 means "no symbol id" and is shared
+ *                    by many real params — never a duplicate.
  *        implausible junk the typecode / float checks flag (`isGarbageDefinition`,
  *                    incl. non-zero magnitudes below 1e-9) or bounds in the
  *                    wrong order (`min > max`). NOT a size
@@ -539,15 +544,35 @@ function isImplausibleDefinition(d: LiveDefinition): boolean {
 type DefinitionVerdict = 'real' | 'empty' | 'end-marker' | 'garbage' | 'duplicate-id' | 'implausible';
 
 /**
+ * Non-zero symbol ids already seen in a block: the bodies of the real definitions that carried
+ * each, or `null` once an end marker carried it.
+ */
+type SeenIds = Map<number, LiveDefinition[] | null>;
+
+/** Same numeric body (typecode and every float field). */
+function sameBody(a: LiveDefinition, b: LiveDefinition): boolean {
+  return a.tc === b.tc && a.min === b.min && a.max === b.max && a.scale === b.scale && a.def === b.def && a.step === b.step;
+}
+
+/**
  * Judge one decoded definition against the ids already seen in its block. Only `real` becomes a
  * record; every other verdict is an ABSENT slot (never label-walked, value-read or swept). `empty`
  * is the ordinary unused slot (symbol id 0); `end-marker` is the same empty body under a non-zero id,
- * the answer a table gives past its last real parameter.
+ * the answer a table gives past its last real parameter. A reused non-zero id is a copy when an end
+ * marker carried it or a real definition carried it with the same body; with a different body it is
+ * a copy too unless `continuesKnownTable`: the param lies below the block's known table size AND
+ * directly follows the last real definition. There a table reusing a symbol id for two real params
+ * is the observed reality, not junk; anywhere else (outside a known table, after a gap) it stays a
+ * copy.
  */
-function judgeDefinition(d: LiveDefinition, seenIds: ReadonlySet<number>): DefinitionVerdict {
+function judgeDefinition(d: LiveDefinition, seen: ReadonlyMap<number, readonly LiveDefinition[] | null>, continuesKnownTable: boolean): DefinitionVerdict {
   if (isFillerDefinition(d)) return d.id === 0 ? 'empty' : 'end-marker';
   if (isGarbageDefinition(d)) return 'garbage';
-  if (d.id !== 0 && seenIds.has(d.id)) return 'duplicate-id'; // id 0 = no symbol id, shared by real params
+  if (d.id !== 0 && seen.has(d.id)) {
+    // id 0 = no symbol id, shared by real params — never a duplicate
+    const bodies = seen.get(d.id);
+    if (!bodies || !continuesKnownTable || bodies.some((b) => sameBody(b, d))) return 'duplicate-id';
+  }
   if (isImplausibleDefinition(d)) return 'implausible';
   return 'real';
 }
@@ -888,7 +913,9 @@ export interface PseudoReplyStats {
   /** Empty body under a non-zero symbol id: the answer a table gives past its last real param. Also
    *  counts an INNER unused slot that answers with a non-zero id (it still becomes a placeholder). */
   endMarker: number;
-  /** A definition whose non-zero symbol id repeated one already seen in the same block. */
+  /** A definition whose non-zero symbol id repeated one already seen in the same block: on an end
+   *  marker, on a real definition with the same body, or with any body unless the param directly
+   *  follows the last real definition inside a known table size. */
   duplicateId: number;
   /** Junk-shaped definitions (system-selector junk the float / typecode checks flag, `min > max`). */
   implausible: number;
@@ -988,7 +1015,11 @@ export interface LiveWalkOptions {
    * appends to the table are found. With no `paramBoundByBlock` entry the block's ceiling is
    * min(`maxParamId`, size - 1 + `paramAbsentRunLimit`) — never further. `blockProbeDepth` still
    * skips a block whose first params are all absent; raise it for a table that starts with a long
-   * gap. Blocks without an entry keep the stop run and the `maxParamId` ceiling.
+   * gap. Blocks without an entry keep the stop run and the `maxParamId` ceiling. Below the known
+   * size, a definition right after the last real one that reuses a symbol id with a new body is kept
+   * as a real param (see `PseudoReplyStats.duplicateId`) — and like any real param it then gets its
+   * read-only value read and, in FULL mode, its taper sweep (writes); without a known size it is
+   * dropped as a copy, as before.
    *
    * Pass ONLY the exact table size of the attached firmware (from a catalog or a byte-exact
    * cache). An over-large size removes the stop run up to it: junk that a unit answers past a
@@ -1196,7 +1227,7 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
  * and pause sequence is exactly the one the walk always sent.
  *
  * Table end: a block ends a small run past its last real definition and never above its ceiling;
- * end markers, repeated non-zero ids and implausible junk are absent slots, never swept — see the
+ * end markers, copies under a repeated non-zero id and implausible junk are absent slots, never swept — see the
  * header section "Table end, bounds and pseudo definitions" (`paramAbsentRunLimit`, `maxParamId`,
  * `paramKnownSizeByBlock`, `paramBoundByBlock`, `LiveWalkResult.pseudoReplies`).
  *
@@ -1419,9 +1450,9 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
     // "Empty slots"), kept once the block ends without a further real definition.
     let tableTail: number[] | undefined;
     let lastReal = -1;
-    // Symbol ids already seen in this block (real definitions + end markers): real params carry
-    // unique ids, so a definition repeating one is a pseudo definition.
-    const seenIds = new Set<number>();
+    // Symbol ids already seen in this block (real definitions + end markers): a definition repeating
+    // one is a pseudo definition, except a new body inside the known table (see `judgeDefinition`).
+    const seenIds: SeenIds = new Map();
     const { ceiling: bound, knownSize } = planOf(block);
     blockSilenceProven = false;
     blockSilentRun = 0;
@@ -1440,7 +1471,7 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       const dec = reply ? decodeReply(reply) : null;
       const def = dec && dec.view === 'definition' ? dec : null;
 
-      const verdict = def ? judgeDefinition(def, seenIds) : undefined;
+      const verdict = def ? judgeDefinition(def, seenIds, param < knownSize && param === lastReal + 1) : undefined;
 
       if (!def || verdict !== 'real') {
         if (verdict === 'empty' || verdict === 'end-marker') {
@@ -1459,7 +1490,7 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
           // Answered, but not a parameter: counted so a build can report what it ignored.
           if (verdict === 'end-marker') {
             pseudoReplies.endMarker += 1;
-            seenIds.add(def.id); // (non-zero by definition) a later definition reusing it is a copy
+            seenIds.set(def.id, null); // (non-zero by definition) a later definition reusing it is a copy
           } else if (verdict === 'duplicate-id') pseudoReplies.duplicateId += 1;
           else if (verdict === 'garbage' || verdict === 'implausible') pseudoReplies.implausible += 1;
         }
@@ -1472,7 +1503,11 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       }
       absentRun = 0;
       found += 1;
-      if (def.id !== 0) seenIds.add(def.id);
+      if (def.id !== 0) {
+        const bodies = seenIds.get(def.id);
+        if (bodies) bodies.push(def);
+        else seenIds.set(def.id, [def]);
+      }
 
       // This real definition proves the empty slots before it are INNER: keep them as the
       // all-zero placeholders the editor cache carries, unless the run is an id-space gap.

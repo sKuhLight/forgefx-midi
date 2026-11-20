@@ -21,7 +21,7 @@ import type { LiveTransport, LiveWalkOptions, LiveWalkResult, LiveWalkWriteHooks
 import type { DeviceParam } from '../../src/cache/types.js';
 import { endOfRangeFrame, replyFrame, sentinelFrame, valueReply } from './livewalk.test.js';
 
-export const LIVEWALK_BOUNDS_CASE_COUNT = 14;
+export const LIVEWALK_BOUNDS_CASE_COUNT = 15;
 
 const FM3 = 0x11;
 const noSleep = (): Promise<void> => Promise.resolve();
@@ -618,4 +618,61 @@ export async function runLiveWalkBounds(): Promise<void> {
     if (!sameList(paramsOf(ru, BLOCK), [0, 1, 2, 3, 4]) || unknown.maxParam(BLOCK) !== 4 + 32) fail(`no known size: records ${paramsOf(ru, BLOCK).join(',')}, highest query ${unknown.maxParam(BLOCK)} (want 0..4 / 36)`);
   }
   console.log('  cache/livewalk-bounds: the stop run counts afresh at a known size — a table ending in empty slots gets a full lookahead (highest query size - 1 + 32) and an appended row at size + 4 is found');
+
+  // ---- Case 15: a reused symbol id with a new body continuing a known table is real ----------
+  {
+    const BLOCK = 9;
+    // A mixer-shaped table: six level rows under ids 600, 604, ... 620; the first two balance rows
+    // reuse the ids of the last two level rows with a DIFFERENT body; then rows under fresh ids.
+    const level = (id: number): Def => ({ id, tc: 1329, min: 0, max: 1, scale: 1, def: 100, step: 0.001 });
+    const balance = (id: number): Def => ({ id, tc: 50, min: -1, max: 1, scale: 0.5, def: 100, step: 0.002 });
+    const mixer = (extra?: (p: number) => Def | undefined) => ({
+      [BLOCK]: {
+        real: 0,
+        extra: (p: number): Def | undefined => {
+          const x = extra?.(p);
+          if (x) return x;
+          if (p <= 5) return level(600 + 4 * p);
+          if (p <= 11) return balance(616 + 4 * (p - 6)); // 6 -> 616 (= p4's id), 7 -> 620 (= p5's id), 8.. fresh
+          if (p <= 13) return realFloat(700 + p);
+          return endMarker(128);
+        },
+      },
+    });
+    const known = { ...base, blocks: [BLOCK], paramKnownSizeByBlock: { [BLOCK]: 14 } };
+    const rk = await liveWalkDetailed(tableDevice(mixer()), known);
+    if (!sameList(paramsOf(rk, BLOCK), range(0, 13)) || rk.pseudoReplies.duplicateId !== 0) {
+      fail(`reused ids inside a known table: records ${paramsOf(rk, BLOCK).join(',')}, ${JSON.stringify(rk.pseudoReplies)} (want 0..13, no duplicates)`);
+    }
+    // Without a known size the walk stays conservative: both reuses are copies.
+    const ru = await liveWalkDetailed(tableDevice(mixer()), { ...base, blocks: [BLOCK] });
+    if (!sameList(paramsOf(ru, BLOCK), [...range(0, 5), ...range(8, 13)]) || ru.pseudoReplies.duplicateId !== 2) {
+      fail(`reused ids without a known size: records ${paramsOf(ru, BLOCK).join(',')}, ${JSON.stringify(ru.pseudoReplies)}`);
+    }
+    // Inside the known table a reuse with the SAME body is still a copy, and so is a reuse of an end
+    // marker's id; a reuse past the known size is a copy whatever its body.
+    const copies = tableDevice(mixer((p) => {
+      if (p === 12) return level(600); // same body as param 0
+      if (p === 9) return { ...endMarker(0) }; // an inner slot answering the marker body
+      if (p === 10) return { id: END_MARKER_ID, tc: 50, min: -1, max: 1, scale: 0, def: 100, step: 0.002 }; // reuses the marker id
+      return undefined;
+    }));
+    const rc = await liveWalkDetailed(copies, known);
+    // (9 is no placeholder: the run it opens holds the pseudo answer at 10, so it is a gap.)
+    if (!sameList(paramsOf(rc, BLOCK), [...range(0, 8), 11, 13]) || rc.pseudoReplies.duplicateId !== 2) {
+      fail(`copies inside a known table: records ${paramsOf(rc, BLOCK).join(',')}, ${JSON.stringify(rc.pseudoReplies)} (want 0..8, 11, 13; 2 duplicates)`);
+    }
+    // A reuse with a new body that does NOT directly follow the last real definition (an empty slot
+    // in between) stays a copy even inside the known table.
+    const gap = tableDevice(mixer((p) => (p === 6 ? { id: 0, tc: 0, min: 0, max: 0, scale: 0, def: 0, step: 0 } : undefined)));
+    const rgap = await liveWalkDetailed(gap, known);
+    if (paramsOf(rgap, BLOCK).includes(7) || !paramsOf(rgap, BLOCK).includes(8) || rgap.pseudoReplies.duplicateId !== 1) {
+      fail(`a reuse after a gap: records ${paramsOf(rgap, BLOCK).join(',')}, ${JSON.stringify(rgap.pseudoReplies)}`);
+    }
+    const past = await liveWalkDetailed(tableDevice(mixer()), { ...base, blocks: [BLOCK], paramKnownSizeByBlock: { [BLOCK]: 7 } });
+    if (paramsOf(past, BLOCK).includes(7) || !paramsOf(past, BLOCK).includes(6) || past.pseudoReplies.duplicateId !== 1) {
+      fail(`a reuse past the known size: records ${paramsOf(past, BLOCK).join(',')}, ${JSON.stringify(past.pseudoReplies)}`);
+    }
+  }
+  console.log('  cache/livewalk-bounds: a reused symbol id with a new body right after the last real param of a known table is a real param; same-body and end-marker reuses, reuses after a gap and outside a known size stay copies');
 }

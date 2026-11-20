@@ -14,6 +14,7 @@ export {
   DEVICE_MODELS,
   buildIdentifyBroadcast,
   isFractalHeaderFrame,
+  sysexFunctionByte,
   parseIdentifyResponse,
   modelFromPortName,
 } from './identify.js';
@@ -25,6 +26,19 @@ export {
   formatFirmwareVersion,
 } from './firmware.js';
 export type { FirmwareVersion } from './firmware.js';
+export {
+  FIRMWARE_TRANSFER_FUNCTIONS,
+  isFirmwareTransferFunction,
+  isFirmwareTransferFrame,
+  findFirmwareTransferFrame,
+} from './firmwareTransfer.js';
+export type { FirmwareTransferFrameHit } from './firmwareTransfer.js';
+export {
+  QUERY_FUNCTIONS_BY_GEN,
+  BROADCAST_QUERY_FUNCTIONS,
+  queryFunctionsForModel,
+  isQueryFrame,
+} from './queryFunctions.js';
 export { resolveEffectId, FRACTAL_MODEL_BYTES } from './effectId.js';
 export { encode14, decode14, packValue16, unpackValue16 } from './septet16.js';
 export { displayToWire, wireToDisplay, displayQuantum, withinDisplayQuantum } from './displayScale.js';

@@ -249,7 +249,10 @@ interface Gen3Hit {
  * gen-3 taper decision, MIRRORING the live server (`ForgeFX/server/src/
  * drivers/gen3.ts` `#display`): a device-true explicit `range.taper` wins
  * ('log' → log10; 'linear' | 'flat' | 'custom' → linear), otherwise fall back
- * to the typecode-nibble heuristic `(typecode >> 4) & 0xf ∈ {4,5}` ⇒ log10.
+ * to the typecode-nibble heuristic: only `(typecode >> 4) & 0xf === 4` means
+ * log10, every other nibble is linear. Nibble 5 is deliberately NOT log: the
+ * explicit tapers in the FM9 and Axe-Fx III catalogs have it linear every
+ * time, and the server dropped it from the log set for that reason.
  * A log sweep requires a positive `displayMin` (the live `wireToDisplay` throws
  * on log10 with a non-positive min) — the same guard the live nibble branch
  * uses. Without a range row the taper is unknown → linear (matches the live
@@ -260,7 +263,7 @@ function gen3TaperIsLog(range: Gen3RangeRow | undefined): boolean {
   if (range === undefined || !(range.displayMin > 0)) return false;
   if (range.taper !== undefined) return range.taper === 'log';
   const nib = ((range.typecode ?? 0) >> 4) & 0xf;
-  return nib === 4 || nib === 5;
+  return nib === 4;
 }
 
 function gen3Hit(

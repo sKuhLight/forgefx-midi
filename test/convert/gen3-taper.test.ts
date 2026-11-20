@@ -3,8 +3,9 @@
  *
  * The live server (ForgeFX/server/src/drivers/gen3.ts #display) decides the
  * taper from the DEVICE-TRUE range row: an explicit `range.taper` wins
- * ('log' → log10), otherwise the typecode-nibble heuristic
- * `(typecode >> 4) & 0xf ∈ {4,5}` ⇒ log10 (guarded by displayMin > 0).
+ * ('log' → log10), otherwise the typecode-nibble heuristic: only
+ * `(typecode >> 4) & 0xf === 4` ⇒ log10 (guarded by displayMin > 0); every other
+ * nibble, including 5, is linear.
  *
  * The convert resolver instead read `param.scaling === 'log10'`, which most
  * FM3 catalog rows do not carry — so `delay.locut` (typecode 0x241, nibble 4,
@@ -16,7 +17,7 @@ function assert(cond: boolean, msg: string): void {
   if (!cond) throw new Error(`gen3-taper: ${msg}`);
 }
 
-export const GEN3_TAPER_CASE_COUNT = 5;
+export const GEN3_TAPER_CASE_COUNT = 6;
 
 export function runGen3TaperTests(): void {
   // delay.locut: FM3 device-true typecode 0x241 → nibble 4 → log10.
@@ -52,5 +53,19 @@ export function runGen3TaperTests(): void {
   assert(
     brightCap !== undefined && brightCap.log === true,
     `fm3 amp brightcap (typecode 0x841 → nibble 4) must report log === true; got ${JSON.stringify(brightCap)}`,
+  );
+
+  // Nibble 5 is NOT log: delay.drive (typecode 0x52 → nibble 5) has a positive
+  // displayMin (0.5..500), so only the nibble — not the range guard — keeps it
+  // linear, exactly as the live server serves it.
+  const drive = resolveTargetRange('fm3', 'delay', 'drive');
+  assert(drive !== undefined, 'fm3 delay drive range missing');
+  assert(
+    drive!.min === 0.5 && drive!.max === 500,
+    `fm3 delay drive expected 0.5..500, got ${JSON.stringify(drive)}`,
+  );
+  assert(
+    drive!.log !== true,
+    `fm3 delay drive (typecode 0x52 → nibble 5) must stay linear like the server; got ${JSON.stringify(drive)}`,
   );
 }

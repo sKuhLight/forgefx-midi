@@ -11,13 +11,13 @@
  * FM3 catalog rows do not carry — so `delay.locut` (typecode 0x241, nibble 4,
  * displayMin 20) rendered linear offline but log live.
  */
-import { resolveTargetRange } from '../../src/convert/targetRanges.js';
+import { gen3TaperIsLog, resolveTargetRange, type Gen3RangeRow } from '../../src/convert/targetRanges.js';
 
 function assert(cond: boolean, msg: string): void {
   if (!cond) throw new Error(`gen3-taper: ${msg}`);
 }
 
-export const GEN3_TAPER_CASE_COUNT = 6;
+export const GEN3_TAPER_CASE_COUNT = 7;
 
 export function runGen3TaperTests(): void {
   // delay.locut: FM3 device-true typecode 0x241 → nibble 4 → log10.
@@ -55,17 +55,30 @@ export function runGen3TaperTests(): void {
     `fm3 amp brightcap (typecode 0x841 → nibble 4) must report log === true; got ${JSON.stringify(brightCap)}`,
   );
 
-  // Nibble 5 is NOT log: delay.drive (typecode 0x52 → nibble 5) has a positive
-  // displayMin (0.5..500), so only the nibble — not the range guard — keeps it
-  // linear, exactly as the live server serves it.
+  // delay.drive is a typecode-0x52 knob: the device shows it on a linear 0..10 scale (the shipped
+  // row carries displayMin 0, displayMax 10 and an explicit linear taper), not the definition's
+  // 0.5..500 bounds, and it is never log.
   const drive = resolveTargetRange('fm3', 'delay', 'drive');
   assert(drive !== undefined, 'fm3 delay drive range missing');
   assert(
-    drive!.min === 0.5 && drive!.max === 500,
-    `fm3 delay drive expected 0.5..500, got ${JSON.stringify(drive)}`,
+    drive!.min === 0 && drive!.max === 10,
+    `fm3 delay drive expected 0..10 (typecode-0x52 knob), got ${JSON.stringify(drive)}`,
   );
   assert(
     drive!.log !== true,
-    `fm3 delay drive (typecode 0x52 → nibble 5) must stay linear like the server; got ${JSON.stringify(drive)}`,
+    `fm3 delay drive (typecode 0x52 knob) must be linear; got ${JSON.stringify(drive)}`,
   );
+
+  // The nibble rule itself, on synthetic rows (no shipped FM3 float row with a positive displayMin
+  // and nibble 5 exists besides the 0x52 knobs, whose explicit taper now decides): nibble 5 is
+  // linear while nibble 4 is log, an explicit taper wins either way, and a log sweep needs a
+  // positive displayMin.
+  const row = (typecode: number, extra: Partial<Gen3RangeRow> = {}): Gen3RangeRow =>
+    ({ kind: 'float', displayMin: 0.5, displayMax: 500, typecode, ...extra });
+  assert(!gen3TaperIsLog(row(0x52)), 'synthetic nibble-5 row (0x52, no taper) must be linear');
+  assert(gen3TaperIsLog(row(0x42)), 'synthetic nibble-4 row (0x42) must be log');
+  assert(gen3TaperIsLog(row(0x52, { taper: 'log' })), 'an explicit log taper must win over nibble 5');
+  assert(!gen3TaperIsLog(row(0x42, { taper: 'linear' })), 'an explicit linear taper must win over nibble 4');
+  assert(!gen3TaperIsLog(row(0x42, { displayMin: 0 })), 'a log sweep needs a positive displayMin');
+  assert(!gen3TaperIsLog(undefined), 'no range row means linear');
 }

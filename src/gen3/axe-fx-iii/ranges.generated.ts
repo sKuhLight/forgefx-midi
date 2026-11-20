@@ -21,7 +21,7 @@
 //   taper / taperPoints   = device-true value taper from the CaptureRig v2 curve
 //                           fit (reliable fits only): 'linear'|'log'|'flat' direct,
 //                           or 'custom' with taperPoints = [normalized, raw] samples;
-//                           typecode-0x52 rows always carry 'linear' (see below)
+//                           typecode-0x52 rows carry 'linear' unless skipped (see below)
 // Typecode 0x52 rows (dimensionless knob parameters) are the exception to the
 // min/max * scale rule above (display = value * scale does not hold for them):
 // the device displays them on a linear 0..10 knob scale whatever the definition's
@@ -69,7 +69,7 @@ export interface Axe3ParamRange {
   /** Device-true value taper from the CaptureRig v2 curve fit (reliable fits
    *  only): 'linear' | 'log' | 'flat' emitted as the bare shape; 'custom' also
    *  carries `taperPoints`. Absent when no reliable taper was captured; typecode-
-   *  0x52 knob rows always carry 'linear'. */
+   *  0x52 knob rows carry 'linear' unless the rule was skipped for the row. */
   readonly taper?: 'linear' | 'log' | 'flat' | 'custom';
   /** Sample points [normalized 0..1, raw value] for a 'custom' taper only. */
   readonly taperPoints?: ReadonlyArray<readonly [number, number]>;

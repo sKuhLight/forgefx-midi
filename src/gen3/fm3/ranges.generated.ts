@@ -71,7 +71,7 @@ export interface Fm3ParamRange {
   /** Device-true value taper from the CaptureRig v2 curve fit (reliable fits
    *  only): 'linear' | 'log' | 'flat' emitted bare; 'custom' also carries
    *  `taperPoints`. Absent when no reliable taper was captured; typecode-0x52
-   *  knob rows always carry 'linear'. */
+   *  knob rows carry 'linear' unless the rule was skipped for the row. */
   readonly taper?: 'linear' | 'log' | 'flat' | 'custom';
   /** Sample points [normalized 0..1, raw value] for a 'custom' taper only. */
   readonly taperPoints?: ReadonlyArray<readonly [number, number]>;

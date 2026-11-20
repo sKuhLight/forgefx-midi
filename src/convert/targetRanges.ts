@@ -125,7 +125,7 @@ const GEN3_FAMILY: Partial<Record<ConverterFamily, string>> = {
 };
 
 /** One device-true gen-3 range row (structural shape shared by III/FM9/FM3). */
-interface Gen3RangeRow {
+export interface Gen3RangeRow {
   readonly kind: 'enum' | 'float';
   readonly displayMin: number;
   readonly displayMax: number;
@@ -259,7 +259,8 @@ interface Gen3Hit {
  * fall-through). `param.scaling` is deliberately NOT consulted: the live path
  * does not read it, and most FM3 catalog rows do not carry it.
  */
-function gen3TaperIsLog(range: Gen3RangeRow | undefined): boolean {
+// Exported (not re-exported by the package barrel) so the rule can be pinned on synthetic rows.
+export function gen3TaperIsLog(range: Gen3RangeRow | undefined): boolean {
   if (range === undefined || !(range.displayMin > 0)) return false;
   if (range.taper !== undefined) return range.taper === 'log';
   const nib = ((range.typecode ?? 0) >> 4) & 0xf;

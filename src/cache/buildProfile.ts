@@ -30,6 +30,13 @@ import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam } from '.
  * History: 1 (first versioned schema) = a continuous unit or an answered-but-empty label list
  * vetoes the enum heuristic; a live walk keeps inner empty slots as (flagged) placeholder records,
  * counted as slots only in table-shaped sections; empty slots are recognised by their empty body.
+ * Schema 1 also covers a later tightening of the live walk's reply decoding: a value reply whose
+ * display string is followed by interior NUL padding now decodes, so units come back where the device
+ * pads that way (and such a unit keeps a continuous param off the enum list); a 36-byte label or value
+ * is no longer misread as a definition; and full-mode taper sweeps gain samples, because their display
+ * read-back no longer drops those replies. A cache built before this may lack units and, for affected
+ * params, carry the old kind (enum instead of float); rebuild it. No bump, because schema 1 is not
+ * released yet.
  */
 export const CACHE_SCHEMA = 1;
 

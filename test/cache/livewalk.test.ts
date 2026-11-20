@@ -30,6 +30,7 @@ import type { BuiltCache, LiveTransport } from '../../src/cache/index.js';
 import {
   buildDefQuery,
   buildEnumQuery,
+  buildValueQuery,
   decodeReply,
   decodeSeptetStream,
   liveWalk,
@@ -47,7 +48,7 @@ import { assertFm3Equivalence } from './oracle.js';
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const FM3 = 0x11;
 
-export const LIVEWALK_CASE_COUNT = 21;
+export const LIVEWALK_CASE_COUNT = 23;
 
 // ===========================================================================
 // Test-only wire ENCODER (inverse of the liveWalk codec)
@@ -817,8 +818,9 @@ export async function runLiveWalk(): Promise<void> {
     // The side effect follows from the same decode: the walk's per-param unit
     // read uses view 0x00 and previously got null for this frame, so the
     // served record carried NO `unit`. A decoded value recovers it.
-    if (parseUnit(dInterior.value) !== 'Hz') fail(`interior-padding unit not recovered: ${parseUnit(dInterior.value)}`);
-    if (parseUnit(dShort.value) !== 'dB') fail(`single-NUL interior unit not recovered: ${parseUnit(dShort.value)}`);
+    const valueText = (d: ReturnType<typeof decodeReply>): string => (d && d.view === 'value' ? d.value : '');
+    if (parseUnit(valueText(dInterior)) !== 'Hz') fail(`interior-padding unit not recovered: ${parseUnit(valueText(dInterior))}`);
+    if (parseUnit(valueText(dShort)) !== 'dB') fail(`single-NUL interior unit not recovered: ${parseUnit(valueText(dShort))}`);
     const defRec: CacheRecord = { kind: 'float', section: DELAY, offset: 0, id: LOWCUT, tc: 0x241, min: 0, max: 100, def: 0, step: 0, t1: 0, t2: 0 };
     const t: LiveTransport = {
       request(q) {
@@ -839,7 +841,29 @@ export async function runLiveWalk(): Promise<void> {
     });
     const got = recs.find((r) => r.id === LOWCUT);
     if (!got || got.kind !== 'float') fail(`unit-read walk did not reach the interior-padding param (got ${JSON.stringify(got)})`);
-    if (got.unit !== 'Hz') fail(`interior-padding record unit=${JSON.stringify(got.unit)} (interior-NUL value frame dropped the unit)`);
+    if (got?.unit !== 'Hz') fail(`interior-padding record unit=${JSON.stringify(got?.unit)} (interior-NUL value frame dropped the unit)`);
+
+    // An ENUM-SHAPED definition (scale 0, step 0, integral 20..200 bounds) whose label
+    // query gets NO answer at all: the unit read is then the only thing that can tell it
+    // from a real enum. With interior padding in the value reply the unit comes back, and
+    // the continuous unit keeps the record a float. (An answered-but-empty label list would
+    // veto the enum on its own, so the label reply is a lost one here.)
+    const SECTION = 96;
+    const enumShaped: CacheRecord = { kind: 'float', section: SECTION, offset: 0, id: 0, tc: 2, min: 20, max: 200, def: 20, step: 0, t1: 0, t2: 0 };
+    const t2: LiveTransport = {
+      request(q) {
+        const view = q[6]!;
+        const param = q[10]! | (q[11]! << 7);
+        if (view === VIEW_DEFINITION && param === 0) return Promise.resolve(replyFrame(VIEW_DEFINITION, 0, 0x3a, definitionBlockScaled(enumShaped, 0)));
+        if (view === VIEW_ENUM_LABEL) return Promise.resolve(null);
+        if (view === VIEW_VALUE && param === 0) return Promise.resolve(valueFrame('200.0 Hz', 0, { gap: 2, text: 'sec' }));
+        return Promise.resolve(sentinelFrame(view, param));
+      },
+    };
+    const recs2 = await liveWalk(t2, { model: FM3, blocks: [SECTION], maxParamId: 0, lostReplyDrainMs: 0 });
+    if (recs2.length !== 1) fail(`enum-shaped interior-padding walk produced ${recs2.length} records (must be 1)`);
+    if (recs2[0]!.kind !== 'float') fail(`enum-shaped param with an interior-padding unit became '${recs2[0]!.kind}' (must stay float)`);
+    if (recs2[0]!.unit !== 'Hz') fail(`enum-shaped interior-padding record unit=${JSON.stringify(recs2[0]!.unit)} (must be 'Hz')`);
   }
   console.log('  cache/livewalk: view-0x00 value frames (incl. interior-NUL padding) decode and recover the unit');
 
@@ -859,13 +883,21 @@ export async function runLiveWalk(): Promise<void> {
     // decode as a definition. 36 ASCII 'A' (0x41) bytes — every f32 field is
     // finite (0x41414141 ≈ 12.078), which is exactly the misclassification.
     const text36 = Uint8Array.from(Array.from({ length: 36 }, () => 0x41));
+    // It falls through to the string branch: a value under view 0x00, a label under 0x1f.
+    const text36Str = 'A'.repeat(36);
     const underValue = decodeReply(replyFrame(VIEW_VALUE, 0, 0x3a, text36));
     if (underValue && underValue.view === 'definition') {
       fail('36-byte ASCII payload under view 0x00 mis-decoded as a definition');
     }
+    if (!underValue || underValue.view !== 'value' || underValue.value !== text36Str) {
+      fail(`36-byte ASCII payload under view 0x00 decoded ${JSON.stringify(underValue)} (expected the 36-char value)`);
+    }
     const underLabel = decodeReply(replyFrame(VIEW_ENUM_LABEL, 0, 0x3a, text36));
     if (underLabel && underLabel.view === 'definition') {
       fail('36-byte ASCII payload under view 0x1f mis-decoded as a definition');
+    }
+    if (!underLabel || underLabel.view !== 'enum_label' || underLabel.label !== text36Str) {
+      fail(`36-byte ASCII payload under view 0x1f decoded ${JSON.stringify(underLabel)} (expected the 36-char label)`);
     }
   }
   console.log('  cache/livewalk: decodeReply returns a definition ONLY under the view-0x1c echo');
@@ -944,4 +976,68 @@ export async function runLiveWalk(): Promise<void> {
     }
   }
   console.log('  cache/livewalk: only the value view tolerates bytes after the first NUL — other views stay strict');
+
+  // ---- Case 21: buildValueQuery frame bytes; the walk's value reads use it ----
+  // The view-0x00 query is laid out like the definition / label queries: F0 00 01 74 <model> 01,
+  // a 15-byte body (view, 0, block lo/hi, param lo/hi, sub lo/hi — zero for a value query — then
+  // zero padding), the checksum (XOR of everything before it, & 0x7f) and F7. The walk's unit
+  // read goes through this builder, so every view-0x00 frame it sends is byte-identical to it.
+  {
+    const hex = (b: Uint8Array) => Array.from(b, (x) => x.toString(16).padStart(2, '0')).join(' ');
+    const layout = (model: number, block: number, param: number): Uint8Array => {
+      const body = new Array<number>(15).fill(0);
+      body[0] = VIEW_VALUE;
+      body[2] = block & 0x7f;
+      body[3] = (block >> 7) & 0x7f;
+      body[4] = param & 0x7f;
+      body[5] = (param >> 7) & 0x7f;
+      const core = [0xf0, 0x00, 0x01, 0x74, model & 0x7f, 0x01, ...body];
+      return Uint8Array.from([...core, fractalCksum(core), 0xf7]);
+    };
+    // A literal frame (FM3, block 70, param 16) pins the layout independently of the helper above.
+    const literal = 'f0 00 01 74 11 01 00 00 46 00 10 00 00 00 00 00 00 00 00 00 00 43 f7';
+    if (hex(buildValueQuery(FM3, 70, 16)) !== literal) fail(`buildValueQuery(FM3, 70, 16) = ${hex(buildValueQuery(FM3, 70, 16))}`);
+    for (const [block, param] of [[70, 16], [0, 0], [96, 127], [130, 128], [129, 300]] as const) {
+      const got = buildValueQuery(FM3, block, param);
+      if (hex(got) !== hex(layout(FM3, block, param))) fail(`buildValueQuery(FM3, ${block}, ${param}) layout mismatch: ${hex(got)}`);
+      // Same frame as the definition query apart from the view byte (and thus the checksum).
+      const def = buildDefQuery(FM3, block, param);
+      if (got.length !== def.length) fail('value and definition queries differ in length');
+      for (let i = 0; i < got.length - 2; i++) {
+        if (i !== 6 && got[i] !== def[i]) fail(`value query differs from the definition query at byte ${i}`);
+      }
+      if (got[6] !== VIEW_VALUE) fail(`value query view byte is ${got[6]}`);
+    }
+
+    // The walk's unit read sends exactly buildValueQuery's frame.
+    const DELAY = 70;
+    const LOWCUT = 16;
+    const defRec: CacheRecord = { kind: 'float', section: DELAY, offset: 0, id: LOWCUT, tc: 0x241, min: 0, max: 100, def: 0, step: 0, t1: 0, t2: 0 };
+    const sent: Uint8Array[] = [];
+    const t: LiveTransport = {
+      request(q) {
+        const view = q[6]!;
+        const param = q[10]! | (q[11]! << 7);
+        if (view === VIEW_VALUE) {
+          sent.push(Uint8Array.from(q));
+          return Promise.resolve(valueReply('20.0 Hz', param));
+        }
+        if (view === VIEW_DEFINITION && param === LOWCUT) return Promise.resolve(definitionReply(defRec, LOWCUT));
+        if (view === VIEW_ENUM_LABEL) return Promise.resolve(endOfRangeFrame(VIEW_ENUM_LABEL, param));
+        return Promise.resolve(sentinelFrame(view, param));
+      },
+    };
+    const recs = await liveWalk(t, {
+      model: FM3,
+      blocks: [DELAY],
+      maxParamId: LOWCUT,
+      paramAbsentRunLimit: LOWCUT + 4,
+      blockProbeDepth: LOWCUT + 2,
+    });
+    if (sent.length === 0) fail('the walk sent no view-0x00 unit read');
+    const want = hex(buildValueQuery(FM3, DELAY, LOWCUT));
+    for (const q of sent) if (hex(q) !== want) fail(`the walk's unit read ${hex(q)} != buildValueQuery ${want}`);
+    if (recs.find((r) => r.id === LOWCUT)?.unit !== 'Hz') fail('the walk did not record the unit read through buildValueQuery');
+  }
+  console.log('  cache/livewalk: buildValueQuery frame bytes are pinned and the walk\'s unit read sends exactly that frame');
 }

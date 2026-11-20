@@ -885,7 +885,7 @@ const DEFAULT_TAPER_POINTS = 9;
 
 /** Read the device's formatted-value string (view 0x00), or `null`. */
 async function readDisplay(transport: LiveTransport, model: number, block: number, param: number): Promise<string | null> {
-  const vr = await transport.request(buildQuery(model, VIEW_VALUE, block, param, 0));
+  const vr = await transport.request(buildValueQuery(model, block, param));
   const vd = vr ? decodeReply(vr) : null;
   return vd && vd.view === 'value' ? vd.value : null;
 }
@@ -1242,7 +1242,7 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       // opts out or for enum/label params whose value carries no unit.
       let unit: string | undefined;
       if (readValues && labels.length === 0) {
-        const vr = await ask(buildQuery(model, VIEW_VALUE, block, param, 0), true);
+        const vr = await ask(buildValueQuery(model, block, param), true);
         const vd = vr ? decodeReply(vr) : null;
         if (vd && vd.view === 'value') unit = parseUnit(vd.value);
       }

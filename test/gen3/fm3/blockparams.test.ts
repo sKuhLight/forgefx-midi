@@ -17,7 +17,12 @@
  * is not what the device displays. Likewise the decoded `value` of the log-taper params
  * (frequency / time style knobs) was refreshed when the decode became taper-aware: it is the
  * true display value now (a 20..2000 Hz cut at mid sweep reads 200 Hz, not the linear 1010 Hz).
- * Raw words and every other field are unchanged.
+ * The `unit` token of the params whose params-table row was reconciled to the device range row
+ * (see gen3/params-ranges-agree.test.ts) was refreshed too: e.g. the amp "Out Compression" is a
+ * 0..10 knob (was `percent`), the interval params read `semitones` (were `numeric`), the compressor
+ * emphasis is `knob_0_10` (was `knob_0_20`), the discrete selectors (pole count, mode / curve
+ * pickers, DynaCab type and mic) read `enum` (were `count`). Raw words, decoded values and every
+ * other field are unchanged.
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';

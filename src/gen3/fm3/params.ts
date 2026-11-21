@@ -19,6 +19,12 @@
  * (inherited from the AM4 symbol-name overlay — the same resolver the III
  * catalog uses; join by name, not paramId). The rest stay 'unverified' and pass
  * the raw 16-bit wire integer through, same as the III's uncalibrated path.
+ *
+ * Device-true reconcile: a row whose device range row (the sibling ranges.generated.ts) is
+ * informative carries THAT row's display bounds, and the unit its scale implies, instead of
+ * the AM4-inferred values; a row whose device row is an enum is a discrete `enum` selector.
+ * Such rows end with `// device-true ... (was: ...)`. Applied by the data generator in
+ * lockstep with ranges.generated.ts; where the two disagree the range row is the authority.
  */
 import type { Param } from '../types.js';
 
@@ -108,10 +114,10 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'CABINET', paramId: 82, name: 'CABINET_PRELOSLOPE', displayLabel: 'Low Cut Slope', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'CABINET', paramId: 83, name: 'CABINET_PREHISLOPE', displayLabel: 'High Cut Slope', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'CABINET', paramId: 84, name: 'CABINET_SCENEIGNORE', displayLabel: 'Scene Ignore', unit: 'enum' }, // inferred from Fractal convention
-  { family: 'CABINET', paramId: 85, name: 'CABINET_DYNACAB_TYPE1', unit: 'count', displayMin: 0, displayMax: 31 }, // inferred from AM4
-  { family: 'CABINET', paramId: 86, name: 'CABINET_DYNACAB_TYPE2', unit: 'count', displayMin: 0, displayMax: 31 }, // inferred from AM4
-  { family: 'CABINET', paramId: 89, name: 'CABINET_DYNACAB_MIC1', unit: 'count', displayMin: 0, displayMax: 31 }, // inferred from AM4
-  { family: 'CABINET', paramId: 90, name: 'CABINET_DYNACAB_MIC2', unit: 'count', displayMin: 0, displayMax: 31 }, // inferred from AM4
+  { family: 'CABINET', paramId: 85, name: 'CABINET_DYNACAB_TYPE1', unit: 'enum' }, // device-true enum, 45 ordinals (was: count 0..31)
+  { family: 'CABINET', paramId: 86, name: 'CABINET_DYNACAB_TYPE2', unit: 'enum' }, // device-true enum, 45 ordinals (was: count 0..31)
+  { family: 'CABINET', paramId: 89, name: 'CABINET_DYNACAB_MIC1', unit: 'enum' }, // device-true enum, 4 ordinals (was: count 0..31)
+  { family: 'CABINET', paramId: 90, name: 'CABINET_DYNACAB_MIC2', unit: 'enum' }, // device-true enum, 4 ordinals (was: count 0..31)
   { family: 'CABINET', paramId: 92, name: 'CABINET_DYNACAB_MIC4', unit: 'unverified' },
   { family: 'CABINET', paramId: 93, name: 'CABINET_DYNACAB_R1', displayLabel: 'DynaCab', unit: 'unverified' },
   { family: 'CABINET', paramId: 94, name: 'CABINET_DYNACAB_R2', displayLabel: 'DynaCab', unit: 'unverified' },
@@ -129,7 +135,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'CABINET', paramId: 65288, name: 'CABINET_BTN_SOLO1', displayLabel: 'S', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 65288 (III 65296 would mis-address)
   { family: 'CABINET', paramId: 65289, name: 'CABINET_BTN_SOLO2', displayLabel: 'S', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 65289 (III 65297 would mis-address)
   { family: 'CHORUS', paramId: 0, name: 'CHORUS_TYPE', unit: 'enum' }, // inferred from AM4
-  { family: 'CHORUS', paramId: 1, name: 'CHORUS_VOICES', displayLabel: 'Number of Voices', unit: 'count', displayMin: 1, displayMax: 4 }, // inferred from AM4
+  { family: 'CHORUS', paramId: 1, name: 'CHORUS_VOICES', displayLabel: 'Number of Voices', unit: 'count', displayMin: 2, displayMax: 8 }, // device-true range (was: count 1..4)
   { family: 'CHORUS', paramId: 2, name: 'CHORUS_RATE', displayLabel: 'Rate', unit: 'hz', displayMin: 0.1, displayMax: 10 }, // inferred from AM4
   { family: 'CHORUS', paramId: 3, name: 'CHORUS_TEMPO', displayLabel: 'Tempo', unit: 'enum' }, // inferred from AM4
   { family: 'CHORUS', paramId: 4, name: 'CHORUS_DEPTH', displayLabel: 'Depth', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4
@@ -148,7 +154,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'CHORUS', paramId: 17, name: 'CHORUS_WIDTH', displayLabel: 'Width', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4
   { family: 'CHORUS', paramId: 18, name: 'CHORUS_RATE2', displayLabel: 'LFO2 Rate', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'CHORUS', paramId: 19, name: 'CHORUS_DEPTH2', displayLabel: 'LFO2 Depth', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'CHORUS', paramId: 20, name: 'CHORUS_DRIVE', displayLabel: 'Drive', unit: 'knob_0_10', displayMin: 0.5, displayMax: 500, scaling: 'log10' }, // inferred from AM4
+  { family: 'CHORUS', paramId: 20, name: 'CHORUS_DRIVE', displayLabel: 'Drive', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // device-true range (was: knob_0_10 0.5..500, log10)
   { family: 'CHORUS', paramId: 21, name: 'CHORUS_LOWCUT', displayLabel: 'Low Cut', unit: 'hz', displayMin: 20, displayMax: 2000 }, // inferred from AM4
   { family: 'CHORUS', paramId: 22, name: 'CHORUS_SPREAD', displayLabel: 'Stereo Spread', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'CHORUS', paramId: 23, name: 'CHORUS_MODE', displayLabel: 'Dimension Mode', unit: 'enum' }, // inferred from AM4
@@ -161,7 +167,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'COMP', paramId: 1, name: 'COMP_RATIO', displayLabel: 'Ratio', unit: 'ratio', displayMin: 1, displayMax: 20, scaling: 'log10' }, // inferred from AM4
   { family: 'COMP', paramId: 2, name: 'COMP_ATTACK', displayLabel: 'Attack Time', unit: 'ms', displayMin: 0.1, displayMax: 100, scaling: 'log10' }, // inferred from AM4
   { family: 'COMP', paramId: 3, name: 'COMP_RELEASE', displayLabel: 'Release Time', unit: 'ms', displayMin: 2, displayMax: 2000, scaling: 'log10' }, // inferred from AM4
-  { family: 'COMP', paramId: 4, name: 'COMP_LEVEL', displayLabel: 'Level', unit: 'db', displayMin: -80, displayMax: 20 }, // inferred from AM4
+  { family: 'COMP', paramId: 4, name: 'COMP_LEVEL', displayLabel: 'Level', unit: 'db', displayMin: -20, displayMax: 20 }, // device-true range (was: db -80..20)
   { family: 'COMP', paramId: 5, name: 'COMP_KNEE', displayLabel: 'Knee Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'COMP', paramId: 6, name: 'COMP_AUTO', displayLabel: 'Auto Makeup', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'COMP', paramId: 7, name: 'COMP_PEAKRMS', displayLabel: 'Detector Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType
@@ -174,8 +180,8 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'COMP', paramId: 14, name: 'COMP_BYPASSMODE', displayLabel: 'Bypass Mode', unit: 'enum' }, // inferred from AM4
   { family: 'COMP', paramId: 15, name: 'COMP_DELAYTIME', displayLabel: 'Look-Ahead Time', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'COMP', paramId: 16, name: 'COMP_AUTOMODE', displayLabel: 'Auto Att/Rel', unit: 'enum' }, // inferred from AxeEdit III XML controlType
-  { family: 'COMP', paramId: 17, name: 'COMP_EMPHASIS', displayLabel: 'Emphasis', unit: 'knob_0_20', displayMin: 0, displayMax: 20 }, // inferred from AM4
-  { family: 'COMP', paramId: 18, name: 'COMP_DYNAMICS', displayLabel: 'Dynamics', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // inferred from AM4
+  { family: 'COMP', paramId: 17, name: 'COMP_EMPHASIS', displayLabel: 'Emphasis', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // device-true range (was: knob_0_20 0..20)
+  { family: 'COMP', paramId: 18, name: 'COMP_DYNAMICS', displayLabel: 'Dynamics', unit: 'numeric', displayMin: -10, displayMax: 10 }, // device-true range (was: knob_0_10 0..10)
   { family: 'COMP', paramId: 19, name: 'COMP_INPUTSWITCH', displayLabel: 'Input Level', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'COMP', paramId: 20, name: 'COMP_HIGHCUT', displayLabel: 'High Cut', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'COMP', paramId: 21, name: 'COMP_GAIN', displayLabel: 'Gain', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
@@ -358,7 +364,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'DELAY', paramId: 5, name: 'DELAY_BYPASS', displayLabel: 'Bypass', unit: 'enum' }, // inferred from Fractal convention; device-true 5 (III 22 would mis-address)
   { family: 'DELAY', paramId: 6, name: 'DELAY_MODEL', unit: 'unverified' }, // device-true 6 (III 0 would mis-address)
   { family: 'DELAY', paramId: 7, name: 'DELAY_TYPE', unit: 'enum' }, // inferred from AM4; device-true 7 (III 1 would mis-address)
-  { family: 'DELAY', paramId: 8, name: 'DELAY_TIME', displayLabel: 'Time', unit: 'ms', displayMin: 0, displayMax: 8000 }, // inferred from AM4; device-true 8 (III 2 would mis-address)
+  { family: 'DELAY', paramId: 8, name: 'DELAY_TIME', displayLabel: 'Time', unit: 'ms', displayMin: 1, displayMax: 16000 }, // device-true range (was: ms 0..8000); device-true 8 (III 2 would mis-address)
   { family: 'DELAY', paramId: 9, name: 'DELAY_RATIO', displayLabel: 'L/R Time Ratio', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 9 (III 3 would mis-address)
   { family: 'DELAY', paramId: 10, name: 'DELAY_FEED', displayLabel: 'Feedback', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 10 (III 4 would mis-address)
   { family: 'DELAY', paramId: 11, name: 'DELAY_FEEDL', unit: 'unverified' }, // device-true 11 (III 5 would mis-address)
@@ -474,7 +480,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'DISTORT', paramId: 35, name: 'DISTORT_CFCLIP', displayLabel: 'Harmonics', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 35 (III 33 would mis-address)
   { family: 'DISTORT', paramId: 36, name: 'DISTORT_TONETYPE', displayLabel: 'Tonestack Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 36 (III 34 would mis-address)
   { family: 'DISTORT', paramId: 37, name: 'DISTORT_TIMECONST', displayLabel: 'B+ Time Constant', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 37 (III 35 would mis-address)
-  { family: 'DISTORT', paramId: 38, name: 'DISTORT_BIAS', displayLabel: 'Grid Bias', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // inferred from AM4; device-true 38 (III 36 would mis-address)
+  { family: 'DISTORT', paramId: 38, name: 'DISTORT_BIAS', displayLabel: 'Grid Bias', unit: 'percent', displayMin: 0, displayMax: 100 }, // device-true range (was: knob_0_10 0..10); device-true 38 (III 36 would mis-address)
   { family: 'DISTORT', paramId: 39, name: 'DISTORT_FBTYPE', unit: 'unverified' }, // device-true 39 (III 37 would mis-address)
   { family: 'DISTORT', paramId: 40, name: 'DISTORT_PI_RATIO', unit: 'unverified' }, // device-true 40 (III 38 would mis-address)
   { family: 'DISTORT', paramId: 41, name: 'DISTORT_BRIGHT', displayLabel: 'Bright', unit: 'enum' }, // inferred from AM4; device-true 41 (III 39 would mis-address)
@@ -508,12 +514,12 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'DISTORT', paramId: 69, name: 'DISTORT_FEEDFWDFREQ1', displayLabel: 'Triode 1 Plate Freq', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 69 (III 67 would mis-address)
   { family: 'DISTORT', paramId: 70, name: 'DISTORT_TUBETYPE', displayLabel: 'Power Tube Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 70 (III 68 would mis-address)
   { family: 'DISTORT', paramId: 71, name: 'DISTORT_PRETUBETYPE', displayLabel: 'Preamp Tube Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 71 (III 69 would mis-address)
-  { family: 'DISTORT', paramId: 72, name: 'DISTORT_CLARITY', displayLabel: 'Out Comp Clarity', unit: 'knob_0_10', displayMin: 0, displayMax: 10, scaling: 'log10' }, // inferred from AM4; device-true 72 (III 70 would mis-address)
+  { family: 'DISTORT', paramId: 72, name: 'DISTORT_CLARITY', displayLabel: 'Out Comp Clarity', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // device-true linear taper (was: knob_0_10 0..10, log10); device-true 72 (III 70 would mis-address)
   { family: 'DISTORT', paramId: 73, name: 'DISTORT_INEQQ', displayLabel: 'Q', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 73 (III 71 would mis-address)
   { family: 'DISTORT', paramId: 74, name: 'DISTORT_INEQFREQ', displayLabel: 'Frequency', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 74 (III 72 would mis-address)
   { family: 'DISTORT', paramId: 75, name: 'DISTORT_INEQGAIN', displayLabel: 'Gain', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 75 (III 73 would mis-address)
   { family: 'DISTORT', paramId: 76, name: 'DISTORT_DRIVE2', displayLabel: 'Overdrive', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 76 (III 74 would mis-address)
-  { family: 'DISTORT', paramId: 77, name: 'DISTORT_COMPRESSION', displayLabel: 'Out Compression', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4; device-true 77 (III 75 would mis-address)
+  { family: 'DISTORT', paramId: 77, name: 'DISTORT_COMPRESSION', displayLabel: 'Out Compression', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // device-true range (was: percent 0..100); device-true 77 (III 75 would mis-address)
   { family: 'DISTORT', paramId: 78, name: 'DISTORT_THRESHOLD', displayLabel: 'Out Comp Threshold', unit: 'db', displayMin: -60, displayMax: 0 }, // inferred from AM4; device-true 78 (III 76 would mis-address)
   { family: 'DISTORT', paramId: 79, name: 'DISTORT_MVTRIM', displayLabel: 'Master Vol Trim', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 79 (III 77 would mis-address)
   { family: 'DISTORT', paramId: 80, name: 'DISTORT_FAT', displayLabel: 'Fat', unit: 'enum' }, // inferred from AM4; device-true 80 (III 78 would mis-address)
@@ -522,7 +528,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'DISTORT', paramId: 83, name: 'DISTORT_CFGRID', displayLabel: 'Grid Clipping', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4; device-true 83 (III 81 would mis-address)
   { family: 'DISTORT', paramId: 84, name: 'DISTORT_VERSION', unit: 'unverified' }, // device-true 84 (III 82 would mis-address)
   { family: 'DISTORT', paramId: 85, name: 'DISTORT_HICUT', displayLabel: 'High Cut', unit: 'hz', displayMin: 200, displayMax: 20000 }, // inferred from AM4; device-true 85 (III 83 would mis-address)
-  { family: 'DISTORT', paramId: 86, name: 'DISTORT_DYNPRES', displayLabel: 'Dynamic Presence', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // inferred from AM4; device-true 86 (III 84 would mis-address)
+  { family: 'DISTORT', paramId: 86, name: 'DISTORT_DYNPRES', displayLabel: 'Dynamic Presence', unit: 'numeric', displayMin: -10, displayMax: 10 }, // device-true range (was: knob_0_10 0..10); device-true 86 (III 84 would mis-address)
   { family: 'DISTORT', paramId: 87, name: 'DISTORT_DYNDEPTH', displayLabel: 'Dynamic Depth', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // inferred from AM4; device-true 87 (III 85 would mis-address)
   { family: 'DISTORT', paramId: 88, name: 'DISTORT_SUPPLYTYPE', displayLabel: 'Power Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 88 (III 86 would mis-address)
   { family: 'DISTORT', paramId: 89, name: 'DISTORT_LINEFREQ', displayLabel: 'AC Line Frequency', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 89 (III 87 would mis-address)
@@ -537,20 +543,20 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'DISTORT', paramId: 98, name: 'DISTORT_PRESAG', displayLabel: 'Preamp Sag', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 98 (III 96 would mis-address)
   { family: 'DISTORT', paramId: 99, name: 'DISTORT_HITREBLE', displayLabel: 'High Treble', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 99 (III 97 would mis-address)
   { family: 'DISTORT', paramId: 100, name: 'DISTORT_PAOFFSET', displayLabel: 'Mismatch', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 100 (III 98 would mis-address)
-  { family: 'DISTORT', paramId: 101, name: 'DISTORT_INDYNAMICS', displayLabel: 'Input Dynamics', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // inferred from AM4; device-true 101 (III 99 would mis-address)
+  { family: 'DISTORT', paramId: 101, name: 'DISTORT_INDYNAMICS', displayLabel: 'Input Dynamics', unit: 'numeric', displayMin: -10, displayMax: 10 }, // device-true range (was: knob_0_10 0..10); device-true 101 (III 99 would mis-address)
   { family: 'DISTORT', paramId: 102, name: 'DISTORT_SPKRHFQ', displayLabel: 'HF Slope', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 102 (III 100 would mis-address)
-  { family: 'DISTORT', paramId: 103, name: 'DISTORT_VARIAC', displayLabel: 'Variac', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4; device-true 103 (III 101 would mis-address)
+  { family: 'DISTORT', paramId: 103, name: 'DISTORT_VARIAC', displayLabel: 'Variac', unit: 'percent', displayMin: 50, displayMax: 150 }, // device-true range (was: percent 0..100); device-true 103 (III 101 would mis-address)
   { family: 'DISTORT', paramId: 104, name: 'DISTORT_INEQTYPE', displayLabel: 'Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 104 (III 102 would mis-address)
-  { family: 'DISTORT', paramId: 105, name: 'DISTORT_GRIDHARDNESS', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4; device-true 105 (III 103 would mis-address)
+  { family: 'DISTORT', paramId: 105, name: 'DISTORT_GRIDHARDNESS', unit: 'percent', displayMin: 10, displayMax: 100 }, // device-true range (was: percent 0..100); device-true 105 (III 103 would mis-address)
   { family: 'DISTORT', paramId: 106, name: 'DISTORT_PRESSHIFT', displayLabel: 'Pres. Shift', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 106 (III 104 would mis-address)
   { family: 'DISTORT', paramId: 107, name: 'DISTORT_SATDRIVE', displayLabel: 'Saturation Drive', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 107 (III 105 would mis-address)
   { family: 'DISTORT', paramId: 108, name: 'DISTORT_TRIODE2RATIO', displayLabel: 'Preamp Bias Excursion', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 108 (III 106 would mis-address)
-  { family: 'DISTORT', paramId: 109, name: 'DISTORT_TRIODE2EXTIME', unit: 'ms', displayMin: 0, displayMax: 100, scaling: 'log10' }, // inferred from AM4; device-true 109 (III 107 would mis-address)
-  { family: 'DISTORT', paramId: 110, name: 'DISTORT_TRIODE2RECTIME', unit: 'ms', displayMin: 0, displayMax: 200, scaling: 'log10' }, // inferred from AM4; device-true 110 (III 108 would mis-address)
+  { family: 'DISTORT', paramId: 109, name: 'DISTORT_TRIODE2EXTIME', unit: 'ms', displayMin: 0.1, displayMax: 100, scaling: 'log10' }, // device-true range (was: ms 0..100, log10); device-true 109 (III 107 would mis-address)
+  { family: 'DISTORT', paramId: 110, name: 'DISTORT_TRIODE2RECTIME', unit: 'ms', displayMin: 0.2, displayMax: 200, scaling: 'log10' }, // device-true range (was: ms 0..200, log10); device-true 110 (III 108 would mis-address)
   { family: 'DISTORT', paramId: 111, name: 'DISTORT_COMPTYPE', displayLabel: 'Out Comp Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 111 (III 109 would mis-address)
   { family: 'DISTORT', paramId: 112, name: 'DISTORT_EQPOSITION', displayLabel: 'Location', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 112 (III 110 would mis-address)
   { family: 'DISTORT', paramId: 113, name: 'DISTORT_PRECOMPTYPE', displayLabel: 'Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType; device-true 113 (III 111 would mis-address)
-  { family: 'DISTORT', paramId: 114, name: 'DISTORT_TRIODE1RATIO', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4; device-true 114 (III 112 would mis-address)
+  { family: 'DISTORT', paramId: 114, name: 'DISTORT_TRIODE1RATIO', unit: 'bipolar_percent', displayMin: -200, displayMax: 200 }, // device-true range (was: percent 0..100); device-true 114 (III 112 would mis-address)
   { family: 'DISTORT', paramId: 115, name: 'DISTORT_CFHARDNESS', displayLabel: 'Hardness', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // inferred from AM4; device-true 115 (III 113 would mis-address)
   { family: 'DISTORT', paramId: 116, name: 'DISTORT_PIEXCURSION', displayLabel: 'PI Bias Excursion', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 116 (III 114 would mis-address)
   { family: 'DISTORT', paramId: 117, name: 'DISTORT_MOTORDRIVE', displayLabel: 'Speaker Compress.', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 117 (III 115 would mis-address)
@@ -636,7 +642,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'FILTER', paramId: 4, name: 'FILTER_LEVEL', displayLabel: 'Level', unit: 'db', displayMin: -80, displayMax: 20 }, // inferred from AM4
   { family: 'FILTER', paramId: 5, name: 'FILTER_BAL', displayLabel: 'Balance', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'FILTER', paramId: 6, name: 'FILTER_BYPASSMODE', displayLabel: 'Bypass Mode', unit: 'enum' }, // inferred from Fractal convention
-  { family: 'FILTER', paramId: 7, name: 'FILTER_ORDER', displayLabel: 'Order', unit: 'count', displayMin: 1, displayMax: 12 }, // inferred from AM4
+  { family: 'FILTER', paramId: 7, name: 'FILTER_ORDER', displayLabel: 'Order', unit: 'enum' }, // device-true enum, 2 ordinals (was: count 1..12)
   { family: 'FILTER', paramId: 8, name: 'FILTER_BYPASS', displayLabel: 'Bypass', unit: 'enum' }, // inferred from Fractal convention
   { family: 'FILTER', paramId: 9, name: 'FILTER_PANL', displayLabel: 'Left Pan', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'FILTER', paramId: 10, name: 'FILTER_PANR', displayLabel: 'Right Pan', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
@@ -704,7 +710,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'FLANGER', paramId: 18, name: 'OLD_FLANGER_THRUZERO', displayLabel: 'Thru-Zero', unit: 'unverified' },
   { family: 'FLANGER', paramId: 19, name: 'FLANGER_LPFREQ', displayLabel: 'High Cut', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'FLANGER', paramId: 19, name: 'OLD_FLANGER_HICUT', displayLabel: 'High Cut', unit: 'unverified' },
-  { family: 'FLANGER', paramId: 20, name: 'FLANGER_DRIVE', displayLabel: 'Drive', unit: 'knob_0_10', displayMin: 0, displayMax: 10, scaling: 'log10' }, // inferred from AM4
+  { family: 'FLANGER', paramId: 20, name: 'FLANGER_DRIVE', displayLabel: 'Drive', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // device-true linear taper (was: knob_0_10 0..10, log10)
   { family: 'FLANGER', paramId: 20, name: 'OLD_FLANGER_DRIVE', displayLabel: 'Drive', unit: 'unverified' },
   { family: 'FLANGER', paramId: 21, name: 'FLANGER_HPFREQ', displayLabel: 'Low Cut', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'FLANGER', paramId: 21, name: 'OLD_FLANGER_LOWCUT', displayLabel: 'Low Cut', unit: 'unverified' },
@@ -716,8 +722,8 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'FLANGER', paramId: 25, name: 'FLANGER_HPF_ORDER', displayLabel: 'Low Cut Order', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'FLANGER', paramId: 26, name: 'FLANGER_FOCUS', displayLabel: 'Bass Focus', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'FLANGER', paramId: 27, name: 'FLANGER_VCO_CURVE', displayLabel: 'VCO Response', unit: 'enum' }, // inferred from AxeEdit III XML controlType
-  { family: 'FLANGER', paramId: 28, name: 'FLANGER_TMIN', displayLabel: 'Min Time', unit: 'ms', displayMin: 0, displayMax: 2 }, // inferred from AM4
-  { family: 'FLANGER', paramId: 29, name: 'FLANGER_TMAX', displayLabel: 'Max Time', unit: 'ms', displayMin: 0, displayMax: 20 }, // inferred from AM4
+  { family: 'FLANGER', paramId: 28, name: 'FLANGER_TMIN', displayLabel: 'Min Time', unit: 'ms', displayMin: 0.34, displayMax: 2 }, // device-true range (was: ms 0..2)
+  { family: 'FLANGER', paramId: 29, name: 'FLANGER_TMAX', displayLabel: 'Max Time', unit: 'ms', displayMin: 2, displayMax: 20 }, // device-true range (was: ms 0..20)
   { family: 'FLANGER', paramId: 30, name: 'FLANGER_LFOQUANTIZE', displayLabel: 'Quantize', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'FLANGER', paramId: 31, name: 'FLANGER_VCOK', displayLabel: 'Exponent', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'FLANGER', paramId: 32, name: 'FLANGER_SCENEIGNORE', displayLabel: 'Scene Ignore', unit: 'enum' }, // inferred from Fractal convention
@@ -777,9 +783,9 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'FUZZ', paramId: 41, name: 'FUZZ_TONESWITCH', displayLabel: 'Tone', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'FUZZ', paramId: 42, name: 'FUZZ_DRIVE2', displayLabel: 'Drive', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'GATE', paramId: 0, name: 'GATE_THRESH', displayLabel: 'Threshold', unit: 'db', displayMin: -100, displayMax: 0 }, // inferred from AM4
-  { family: 'GATE', paramId: 1, name: 'GATE_ATTACK', displayLabel: 'Attack Time', unit: 'ms', displayMin: 0, displayMax: 1000, scaling: 'log10' }, // inferred from AM4
-  { family: 'GATE', paramId: 2, name: 'GATE_HOLD', displayLabel: 'Hold Time', unit: 'ms', displayMin: 0, displayMax: 1000, scaling: 'log10' }, // inferred from AM4
-  { family: 'GATE', paramId: 3, name: 'GATE_RELEASE', displayLabel: 'Release Time', unit: 'ms', displayMin: 0, displayMax: 1000, scaling: 'log10' }, // inferred from AM4
+  { family: 'GATE', paramId: 1, name: 'GATE_ATTACK', displayLabel: 'Attack Time', unit: 'ms', displayMin: 1, displayMax: 1000, scaling: 'log10' }, // device-true range (was: ms 0..1000, log10)
+  { family: 'GATE', paramId: 2, name: 'GATE_HOLD', displayLabel: 'Hold Time', unit: 'ms', displayMin: 1, displayMax: 1000, scaling: 'log10' }, // device-true range (was: ms 0..1000, log10)
+  { family: 'GATE', paramId: 3, name: 'GATE_RELEASE', displayLabel: 'Release Time', unit: 'ms', displayMin: 1, displayMax: 1000, scaling: 'log10' }, // device-true range (was: ms 0..1000, log10)
   { family: 'GATE', paramId: 4, name: 'GATE_RATIO', displayLabel: 'Ratio', unit: 'ratio', displayMin: 1, displayMax: 20, scaling: 'log10' }, // inferred from AM4
   { family: 'GATE', paramId: 5, name: 'GATE_KEY', displayLabel: 'Sidechain Source', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'GATE', paramId: 6, name: 'GATE_LOWCUT', displayLabel: 'Low Cut', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
@@ -1354,35 +1360,35 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'PEQ', paramId: 31, name: 'PEQ_HIGHSLOPE', displayLabel: 'Slope 5', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'PEQ', paramId: 32, name: 'PEQ_SCENEIGNORE', displayLabel: 'Scene Ignore', unit: 'enum' }, // inferred from Fractal convention
   { family: 'PHASER', paramId: 0, name: 'PHASER_TYPE', unit: 'enum' }, // inferred from AM4
-  { family: 'PHASER', paramId: 1, name: 'PHASER_ORDER', displayLabel: 'Order', unit: 'count', displayMin: 1, displayMax: 12 }, // inferred from AM4
+  { family: 'PHASER', paramId: 1, name: 'PHASER_ORDER', displayLabel: 'Order', unit: 'enum' }, // device-true enum, 6 ordinals (was: count 1..12)
   { family: 'PHASER', paramId: 2, name: 'PHASER_RATE', displayLabel: 'Rate', unit: 'hz', displayMin: 0.1, displayMax: 10 }, // inferred from AM4
   { family: 'PHASER', paramId: 3, name: 'PHASER_LFOTYPE', displayLabel: 'Type', unit: 'enum' }, // inferred from AM4
   { family: 'PHASER', paramId: 4, name: 'PHASER_TEMPO', displayLabel: 'Tempo', unit: 'enum' }, // inferred from AM4
   { family: 'PHASER', paramId: 5, name: 'PHASER_DEPTH', displayLabel: 'Depth', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // inferred from AM4
-  { family: 'PHASER', paramId: 6, name: 'PHASER_FEEDBACK', displayLabel: 'Feedback', unit: 'bipolar_percent', displayMin: -90, displayMax: 90 }, // inferred from AM4
+  { family: 'PHASER', paramId: 6, name: 'PHASER_FEEDBACK', displayLabel: 'Feedback', unit: 'bipolar_percent', displayMin: -99.99, displayMax: 99.99 }, // device-true range (was: bipolar_percent -90..90)
   { family: 'PHASER', paramId: 7, name: 'PHASER_FMIN', displayLabel: 'Min Frequency', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PHASER', paramId: 8, name: 'PHASER_FMAX', displayLabel: 'Max Frequency', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PHASER', paramId: 9, name: 'PHASER_LFOPHASE', displayLabel: 'LFO Phase', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PHASER', paramId: 10, name: 'PHASER_BIAS', displayLabel: 'Bias', unit: 'bipolar_percent', displayMin: -100, displayMax: 100 }, // inferred from AM4
+  { family: 'PHASER', paramId: 10, name: 'PHASER_BIAS', displayLabel: 'Bias', unit: 'numeric', displayMin: -1, displayMax: 1 }, // device-true range (was: bipolar_percent -100..100)
   { family: 'PHASER', paramId: 11, name: 'PHASER_MIX', displayLabel: 'Mix', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4
   { family: 'PHASER', paramId: 12, name: 'PHASER_LEVEL', displayLabel: 'Level', unit: 'db', displayMin: -80, displayMax: 20 }, // inferred from AM4
   { family: 'PHASER', paramId: 13, name: 'PHASER_PAN', displayLabel: 'Balance', unit: 'bipolar_percent', displayMin: -100, displayMax: 100 }, // inferred from Fractal convention
   { family: 'PHASER', paramId: 14, name: 'PHASER_BYPASSMODE', displayLabel: 'Bypass Mode', unit: 'enum' }, // inferred from Fractal convention
   { family: 'PHASER', paramId: 15, name: 'PHASER_GLOBALMIX', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from Fractal convention
   { family: 'PHASER', paramId: 16, name: 'PHASER_BYPASS', displayLabel: 'Bypass', unit: 'enum' }, // inferred from Fractal convention
-  { family: 'PHASER', paramId: 17, name: 'PHASER_MODE', displayLabel: 'Phaser Mode', unit: 'count', displayMin: 0, displayMax: 3 }, // inferred from AM4
+  { family: 'PHASER', paramId: 17, name: 'PHASER_MODE', displayLabel: 'Phaser Mode', unit: 'enum' }, // device-true enum, 3 ordinals (was: count 0..3)
   { family: 'PHASER', paramId: 18, name: 'PHASER_FBTAP', displayLabel: 'Feedback Point', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PHASER', paramId: 19, name: 'PHASER_TONE', displayLabel: 'Tone', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // inferred from AM4
-  { family: 'PHASER', paramId: 20, name: 'PHASER_DIRECTION', displayLabel: 'Sweep Direction', unit: 'count', displayMin: 0, displayMax: 2 }, // inferred from AM4
+  { family: 'PHASER', paramId: 19, name: 'PHASER_TONE', displayLabel: 'Tone', unit: 'numeric', displayMin: -10, displayMax: 10 }, // device-true range (was: knob_0_10 0..10)
+  { family: 'PHASER', paramId: 20, name: 'PHASER_DIRECTION', displayLabel: 'Sweep Direction', unit: 'enum' }, // device-true enum, 2 ordinals (was: count 0..2)
   { family: 'PHASER', paramId: 21, name: 'PHASER_Q', displayLabel: 'Filter Q', unit: 'count', displayMin: 0.1, displayMax: 10, scaling: 'log10' }, // inferred from AM4
   { family: 'PHASER', paramId: 22, name: 'PHASER_LFORESET', displayLabel: 'Reset on Bypass', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'PHASER', paramId: 23, name: 'PHASER_LFOQUANTIZE', displayLabel: 'Quantize', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PHASER', paramId: 24, name: 'PHASER_VCR_CURVE', displayLabel: 'Type', unit: 'count', displayMin: 0, displayMax: 3 }, // inferred from AM4
+  { family: 'PHASER', paramId: 24, name: 'PHASER_VCR_CURVE', displayLabel: 'Type', unit: 'enum' }, // device-true enum, 4 ordinals (was: count 0..3)
   { family: 'PHASER', paramId: 25, name: 'PHASER_VCRK', displayLabel: 'Exponent', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PHASER', paramId: 26, name: 'PHASER_LFOBETA', displayLabel: 'Shape', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PHASER', paramId: 27, name: 'PHASER_LFOLPF', displayLabel: 'High Cut', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PHASER', paramId: 28, name: 'PHASER_ATTACK', displayLabel: 'Attack', unit: 'ms', displayMin: 0, displayMax: 1000, scaling: 'log10' }, // inferred from AM4
-  { family: 'PHASER', paramId: 29, name: 'PHASER_RELEASE', displayLabel: 'Release', unit: 'ms', displayMin: 0, displayMax: 100, scaling: 'log10' }, // inferred from AM4
+  { family: 'PHASER', paramId: 28, name: 'PHASER_ATTACK', displayLabel: 'Attack', unit: 'ms', displayMin: 10, displayMax: 1000, scaling: 'log10' }, // device-true range (was: ms 0..1000, log10)
+  { family: 'PHASER', paramId: 29, name: 'PHASER_RELEASE', displayLabel: 'Release', unit: 'ms', displayMin: 1, displayMax: 100, scaling: 'log10' }, // device-true range (was: ms 0..100, log10)
   { family: 'PHASER', paramId: 30, name: 'PHASER_MANUAL', displayLabel: 'Manual', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // inferred from AM4
   { family: 'PHASER', paramId: 31, name: 'PHASER_SCENEIGNORE', displayLabel: 'Scene Ignore', unit: 'enum' }, // inferred from Fractal convention
   { family: 'PHASER', paramId: 32, name: 'PHASER_HPF', displayLabel: 'Low Cut', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
@@ -1403,10 +1409,10 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'PITCH', paramId: 12, name: 'PITCH_DETUNE2', displayLabel: 'Detune 2', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PITCH', paramId: 13, name: 'PITCH_DETUNE3', displayLabel: 'Detune 3', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PITCH', paramId: 14, name: 'PITCH_DETUNE4', displayLabel: 'Detune 4', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 15, name: 'PITCH_SHIFT1', displayLabel: 'Shift 1', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 16, name: 'PITCH_SHIFT2', displayLabel: 'Shift 2', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 17, name: 'PITCH_SHIFT3', displayLabel: 'Shift 3', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 18, name: 'PITCH_SHIFT4', displayLabel: 'Shift 4', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
+  { family: 'PITCH', paramId: 15, name: 'PITCH_SHIFT1', displayLabel: 'Shift 1', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 16, name: 'PITCH_SHIFT2', displayLabel: 'Shift 2', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 17, name: 'PITCH_SHIFT3', displayLabel: 'Shift 3', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 18, name: 'PITCH_SHIFT4', displayLabel: 'Shift 4', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
   { family: 'PITCH', paramId: 19, name: 'PITCH_LEVEL1', displayLabel: 'Level 1', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PITCH', paramId: 20, name: 'PITCH_LEVEL2', displayLabel: 'Level 2', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PITCH', paramId: 21, name: 'PITCH_LEVEL3', displayLabel: 'Level 3', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
@@ -1465,22 +1471,22 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'PITCH', paramId: 74, name: 'PITCH_NUMREPEATS', displayLabel: 'Repeats', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PITCH', paramId: 75, name: 'PITCH_ARPRUN', displayLabel: 'Run', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'PITCH', paramId: 76, name: 'PITCH_TEMPO', displayLabel: 'Tempo', unit: 'enum' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 77, name: 'PITCH_STEP1', displayLabel: 'Step 1 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 78, name: 'PITCH_STEP2', displayLabel: 'Step 2 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 79, name: 'PITCH_STEP3', displayLabel: 'Step 3 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 80, name: 'PITCH_STEP4', displayLabel: 'Step 4 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 81, name: 'PITCH_STEP5', displayLabel: 'Step 5 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 82, name: 'PITCH_STEP6', displayLabel: 'Step 6 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 83, name: 'PITCH_STEP7', displayLabel: 'Step 7 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 84, name: 'PITCH_STEP8', displayLabel: 'Step 8 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 85, name: 'PITCH_STEP9', displayLabel: 'Step 9 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 86, name: 'PITCH_STEP10', displayLabel: 'Step 10 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 87, name: 'PITCH_STEP11', displayLabel: 'Step 11 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 88, name: 'PITCH_STEP12', displayLabel: 'Step 12 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 89, name: 'PITCH_STEP13', displayLabel: 'Step 13 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 90, name: 'PITCH_STEP14', displayLabel: 'Step 14 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 91, name: 'PITCH_STEP15', displayLabel: 'Step 15 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PITCH', paramId: 92, name: 'PITCH_STEP16', displayLabel: 'Step 16 Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
+  { family: 'PITCH', paramId: 77, name: 'PITCH_STEP1', displayLabel: 'Step 1 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 78, name: 'PITCH_STEP2', displayLabel: 'Step 2 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 79, name: 'PITCH_STEP3', displayLabel: 'Step 3 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 80, name: 'PITCH_STEP4', displayLabel: 'Step 4 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 81, name: 'PITCH_STEP5', displayLabel: 'Step 5 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 82, name: 'PITCH_STEP6', displayLabel: 'Step 6 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 83, name: 'PITCH_STEP7', displayLabel: 'Step 7 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 84, name: 'PITCH_STEP8', displayLabel: 'Step 8 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 85, name: 'PITCH_STEP9', displayLabel: 'Step 9 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 86, name: 'PITCH_STEP10', displayLabel: 'Step 10 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 87, name: 'PITCH_STEP11', displayLabel: 'Step 11 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 88, name: 'PITCH_STEP12', displayLabel: 'Step 12 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 89, name: 'PITCH_STEP13', displayLabel: 'Step 13 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 90, name: 'PITCH_STEP14', displayLabel: 'Step 14 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 91, name: 'PITCH_STEP15', displayLabel: 'Step 15 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PITCH', paramId: 92, name: 'PITCH_STEP16', displayLabel: 'Step 16 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
   { family: 'PITCH', paramId: 93, name: 'PITCH_AMPSHAPE', displayLabel: 'Amplitude Shape', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'PITCH', paramId: 94, name: 'PITCH_AMPALPHA', displayLabel: 'Amplitude Alpha', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PITCH', paramId: 95, name: 'PITCH_PANSHAPE', displayLabel: 'Pan Shape', unit: 'enum' }, // inferred from AxeEdit III XML controlType
@@ -1504,14 +1510,14 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'PITCH', paramId: 113, name: 'PITCH_THRESH', displayLabel: 'Trigger Threshold', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PLEX', paramId: 0, name: 'PLEX_BASETYPE', unit: 'unverified' },
   { family: 'PLEX', paramId: 1, name: 'PLEX_NUMDLINES', displayLabel: 'Number of Delays', unit: 'enum' }, // inferred from AxeEdit III XML controlType
-  { family: 'PLEX', paramId: 2, name: 'PLEX_SHIFT1', displayLabel: 'Shift 1', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PLEX', paramId: 3, name: 'PLEX_SHIFT2', displayLabel: 'Shift 2', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PLEX', paramId: 4, name: 'PLEX_SHIFT3', displayLabel: 'Shift 3', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PLEX', paramId: 5, name: 'PLEX_SHIFT4', displayLabel: 'Shift 4', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PLEX', paramId: 6, name: 'PLEX_SHIFT5', displayLabel: 'Shift 5', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PLEX', paramId: 7, name: 'PLEX_SHIFT6', displayLabel: 'Shift 6', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PLEX', paramId: 8, name: 'PLEX_SHIFT7', displayLabel: 'Shift 7', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'PLEX', paramId: 9, name: 'PLEX_SHIFT8', displayLabel: 'Shift 8', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
+  { family: 'PLEX', paramId: 2, name: 'PLEX_SHIFT1', displayLabel: 'Shift 1', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PLEX', paramId: 3, name: 'PLEX_SHIFT2', displayLabel: 'Shift 2', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PLEX', paramId: 4, name: 'PLEX_SHIFT3', displayLabel: 'Shift 3', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PLEX', paramId: 5, name: 'PLEX_SHIFT4', displayLabel: 'Shift 4', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PLEX', paramId: 6, name: 'PLEX_SHIFT5', displayLabel: 'Shift 5', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PLEX', paramId: 7, name: 'PLEX_SHIFT6', displayLabel: 'Shift 6', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PLEX', paramId: 8, name: 'PLEX_SHIFT7', displayLabel: 'Shift 7', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
+  { family: 'PLEX', paramId: 9, name: 'PLEX_SHIFT8', displayLabel: 'Shift 8', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
   { family: 'PLEX', paramId: 10, name: 'PLEX_DETUNE1', displayLabel: 'Detune 1', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PLEX', paramId: 11, name: 'PLEX_DETUNE2', displayLabel: 'Detune 2', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'PLEX', paramId: 12, name: 'PLEX_DETUNE3', displayLabel: 'Detune 3', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
@@ -1693,11 +1699,11 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'REVERB', paramId: 2, name: 'REVERB_HICUT', displayLabel: 'High Cut Frequency', unit: 'hz', displayMin: 200, displayMax: 20000 }, // inferred from AM4
   { family: 'REVERB', paramId: 3, name: 'REVERB_HFRATIO', displayLabel: 'High Decay', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'REVERB', paramId: 4, name: 'REVERB_DIFFUSION', displayLabel: 'Wall Diffusion', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4
-  { family: 'REVERB', paramId: 5, name: 'REVERB_SIZE', displayLabel: 'Size', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4
+  { family: 'REVERB', paramId: 5, name: 'REVERB_SIZE', displayLabel: 'Size', unit: 'percent', displayMin: 1, displayMax: 100 }, // device-true range (was: percent 0..100)
   { family: 'REVERB', paramId: 6, name: 'REVERB_REVERBDELAY', unit: 'ms', displayMin: 0, displayMax: 250 }, // inferred from AM4
   { family: 'REVERB', paramId: 7, name: 'REVERB_EARLYLEVEL', displayLabel: 'Early Level', unit: 'db', displayMin: -40, displayMax: 10 }, // inferred from AM4
   { family: 'REVERB', paramId: 8, name: 'REVERB_REVERBLEVEL', displayLabel: 'Late Level', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'REVERB', paramId: 9, name: 'REVERB_PREDELAY', displayLabel: 'Pre-Delay', unit: 'ms', displayMin: 0, displayMax: 250 }, // inferred from AM4
+  { family: 'REVERB', paramId: 9, name: 'REVERB_PREDELAY', displayLabel: 'Pre-Delay', unit: 'ms', displayMin: 0, displayMax: 1000 }, // device-true range (was: ms 0..250)
   { family: 'REVERB', paramId: 10, name: 'REVERB_LOWCUT', displayLabel: 'Low Cut Frequency', unit: 'hz', displayMin: 20, displayMax: 2000 }, // inferred from AM4
   { family: 'REVERB', paramId: 11, name: 'REVERB_DEPTH', displayLabel: 'Depth', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4
   { family: 'REVERB', paramId: 12, name: 'REVERB_RATE', displayLabel: 'Rate', unit: 'hz', displayMin: 0.01, displayMax: 1 }, // inferred from AM4
@@ -1745,9 +1751,9 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'REVERB', paramId: 54, name: 'REVERB_SHIFT1', displayLabel: 'Voice 1 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // inferred from AM4; device-true 54 (III 52 would mis-address)
   { family: 'REVERB', paramId: 55, name: 'REVERB_SHIFT2', displayLabel: 'Voice 2 Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // inferred from AM4; device-true 55 (III 53 would mis-address)
   { family: 'REVERB', paramId: 56, name: 'REVERB_PITCHFDBK', displayLabel: 'Feedback', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 56 (III 54 would mis-address)
-  { family: 'REVERB', paramId: 57, name: 'REVERB_PITCHDIR', displayLabel: 'Direction', unit: 'count', displayMin: 0, displayMax: 3 }, // inferred from AM4; device-true 57 (III 55 would mis-address)
+  { family: 'REVERB', paramId: 57, name: 'REVERB_PITCHDIR', displayLabel: 'Direction', unit: 'enum' }, // device-true enum, 4 ordinals (was: count 0..3); device-true 57 (III 55 would mis-address)
   { family: 'REVERB', paramId: 58, name: 'REVERB_PITCHTIME', displayLabel: 'Splice Time', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 58 (III 56 would mis-address)
-  { family: 'REVERB', paramId: 59, name: 'REVERB_PITCHPOS', displayLabel: 'Position', unit: 'count', displayMin: 0, displayMax: 2 }, // inferred from AM4; device-true 59 (III 57 would mis-address)
+  { family: 'REVERB', paramId: 59, name: 'REVERB_PITCHPOS', displayLabel: 'Position', unit: 'enum' }, // device-true enum, 3 ordinals (was: count 0..2); device-true 59 (III 57 would mis-address)
   { family: 'REVERB', paramId: 60, name: 'REVERB_PITCHMOD', displayLabel: 'Modulation', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 60 (III 58 would mis-address)
   { family: 'REVERB', paramId: 61, name: 'REVERB_PITCHBAL', displayLabel: 'Voice Balance', unit: 'numeric' }, // inferred from AxeEdit III XML controlType; device-true 61 (III 59 would mis-address)
   { family: 'REVERB', paramId: 62, name: 'REVERB_PREDLYTEMPO', displayLabel: 'Tempo', unit: 'enum' }, // inferred from AM4; device-true 62 (III 61 would mis-address)
@@ -1789,7 +1795,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'ROTARY', paramId: 14, name: 'ROTARY_LOWTIME', displayLabel: 'Low Time Constant', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'ROTARY', paramId: 15, name: 'ROTARY_HIGHTIME', displayLabel: 'Hi Time Constant', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'ROTARY', paramId: 16, name: 'ROTARY_SPREAD', displayLabel: 'Stereo Spread', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
-  { family: 'ROTARY', paramId: 17, name: 'ROTARY_DRIVE', displayLabel: 'Drive', unit: 'knob_0_10', displayMin: 0.5, displayMax: 500, scaling: 'log10' }, // inferred from AM4
+  { family: 'ROTARY', paramId: 17, name: 'ROTARY_DRIVE', displayLabel: 'Drive', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // device-true range (was: knob_0_10 0.5..500, log10)
   { family: 'ROTARY', paramId: 18, name: 'ROTARY_MICDIST', displayLabel: 'Mic Distance', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'ROTARY', paramId: 19, name: 'ROTARY_INPUTSELECT', displayLabel: 'Input Select', unit: 'enum' }, // inferred from AM4
   { family: 'ROTARY', paramId: 20, name: 'ROTARY_SCENEIGNORE', displayLabel: 'Scene Ignore', unit: 'enum' }, // inferred from Fractal convention
@@ -1802,7 +1808,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'SYNTH', paramId: 0, name: 'SYNTH_TYPE1', displayLabel: 'Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 1, name: 'SYNTH_FREQ1', displayLabel: 'Frequency', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 2, name: 'SYNTH_TRACK1', displayLabel: 'Track', unit: 'enum' }, // inferred from AxeEdit III XML controlType
-  { family: 'SYNTH', paramId: 3, name: 'SYNTH_SHIFT1', displayLabel: 'Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
+  { family: 'SYNTH', paramId: 3, name: 'SYNTH_SHIFT1', displayLabel: 'Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
   { family: 'SYNTH', paramId: 4, name: 'SYNTH_DETUNE1', displayLabel: 'Tune', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 5, name: 'SYNTH_DUTY1', displayLabel: 'Duty Cycle', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 6, name: 'SYNTH_LEVEL1', displayLabel: 'Voice 1 Level', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
@@ -1813,7 +1819,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'SYNTH', paramId: 11, name: 'SYNTH_TYPE2', displayLabel: 'Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 12, name: 'SYNTH_FREQ2', displayLabel: 'Frequency', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 13, name: 'SYNTH_TRACK2', displayLabel: 'Track', unit: 'enum' }, // inferred from AxeEdit III XML controlType
-  { family: 'SYNTH', paramId: 14, name: 'SYNTH_SHIFT2', displayLabel: 'Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
+  { family: 'SYNTH', paramId: 14, name: 'SYNTH_SHIFT2', displayLabel: 'Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
   { family: 'SYNTH', paramId: 15, name: 'SYNTH_DETUNE2', displayLabel: 'Tune', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 16, name: 'SYNTH_DUTY2', displayLabel: 'Duty Cycle', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 17, name: 'SYNTH_LEVEL2', displayLabel: 'Voice 2 Level', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
@@ -1831,7 +1837,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'SYNTH', paramId: 29, name: 'SYNTH_TYPE3', displayLabel: 'Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 30, name: 'SYNTH_FREQ3', displayLabel: 'Frequency', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 31, name: 'SYNTH_TRACK3', displayLabel: 'Track', unit: 'enum' }, // inferred from AxeEdit III XML controlType
-  { family: 'SYNTH', paramId: 32, name: 'SYNTH_SHIFT3', displayLabel: 'Shift', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
+  { family: 'SYNTH', paramId: 32, name: 'SYNTH_SHIFT3', displayLabel: 'Shift', unit: 'semitones', displayMin: -24, displayMax: 24 }, // device-true range (was: numeric (no bounds))
   { family: 'SYNTH', paramId: 33, name: 'SYNTH_DETUNE3', displayLabel: 'Tune', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 34, name: 'SYNTH_DUTY3', displayLabel: 'Duty Cycle', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
   { family: 'SYNTH', paramId: 35, name: 'SYNTH_LEVEL3', displayLabel: 'Voice 3 Level', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
@@ -1919,7 +1925,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'TREMOLO', paramId: 1, name: 'TREMOLO_LFOTYPE', displayLabel: 'LFO Type', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'TREMOLO', paramId: 2, name: 'TREMOLO_RATE', displayLabel: 'Rate', unit: 'hz', displayMin: 0.2, displayMax: 20 }, // inferred from AM4
   { family: 'TREMOLO', paramId: 3, name: 'TREMOLO_DEPTH', displayLabel: 'Depth', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4
-  { family: 'TREMOLO', paramId: 4, name: 'TREMOLO_DUTY', displayLabel: 'LFO Duty Cycle', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4
+  { family: 'TREMOLO', paramId: 4, name: 'TREMOLO_DUTY', displayLabel: 'LFO Duty Cycle', unit: 'percent', displayMin: 1, displayMax: 99 }, // device-true range (was: percent 0..100)
   { family: 'TREMOLO', paramId: 5, name: 'TREMOLO_TEMPO', displayLabel: 'Tempo', unit: 'enum' }, // inferred from AM4
   { family: 'TREMOLO', paramId: 6, name: 'TREMOLO_MIX', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4
   { family: 'TREMOLO', paramId: 7, name: 'TREMOLO_LEVEL', displayLabel: 'Level', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
@@ -1927,7 +1933,7 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'TREMOLO', paramId: 9, name: 'TREMOLO_BYPASSMODE', displayLabel: 'Bypass Mode', unit: 'enum' }, // inferred from Fractal convention
   { family: 'TREMOLO', paramId: 10, name: 'TREMOLO_GLOBALMIX', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from Fractal convention
   { family: 'TREMOLO', paramId: 11, name: 'TREMOLO_PHASE', displayLabel: 'LFO Phase', unit: 'degrees', displayMin: 0, displayMax: 180 }, // inferred from AM4
-  { family: 'TREMOLO', paramId: 12, name: 'TREMOLO_WIDTH', displayLabel: 'Width', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4
+  { family: 'TREMOLO', paramId: 12, name: 'TREMOLO_WIDTH', displayLabel: 'Width', unit: 'percent', displayMin: 0, displayMax: 400 }, // device-true range (was: percent 0..100)
   { family: 'TREMOLO', paramId: 13, name: 'TREMOLO_CENTER', displayLabel: 'Pan Center', unit: 'bipolar_percent', displayMin: -100, displayMax: 100 }, // inferred from AM4
   { family: 'TREMOLO', paramId: 14, name: 'TREMOLO_BYPASS', displayLabel: 'Bypass', unit: 'enum' }, // inferred from Fractal convention
   { family: 'TREMOLO', paramId: 15, name: 'TREMOLO_STARTPHASE', displayLabel: 'Start Phase', unit: 'numeric' }, // inferred from AxeEdit III XML controlType
@@ -2014,9 +2020,9 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'VOLUME', paramId: 7, name: 'VOLUME_BYPASSMODE', displayLabel: 'Bypass Mode', unit: 'enum' }, // inferred from AM4
   { family: 'VOLUME', paramId: 8, name: 'VOLUME_INPUTSELECT', displayLabel: 'Input Select', unit: 'enum' }, // inferred from AM4
   { family: 'VOLUME', paramId: 9, name: 'VOLUME_TYPE', unit: 'unverified' },
-  { family: 'VOLUME', paramId: 10, name: 'VOLUME_THRESHOLD', displayLabel: 'Threshold', unit: 'db', displayMin: -100, displayMax: 0 }, // inferred from AM4
-  { family: 'VOLUME', paramId: 11, name: 'VOLUME_ATTACK', displayLabel: 'Attack', unit: 'ms', displayMin: 1, displayMax: 5000, scaling: 'log10' }, // inferred from AM4
-  { family: 'VOLUME', paramId: 12, name: 'VOLUME_RELEASE', displayLabel: 'Release', unit: 'ms', displayMin: 1, displayMax: 5000, scaling: 'log10' }, // inferred from AM4
+  { family: 'VOLUME', paramId: 10, name: 'VOLUME_THRESHOLD', displayLabel: 'Threshold', unit: 'db', displayMin: -80, displayMax: 0 }, // device-true range (was: db -100..0)
+  { family: 'VOLUME', paramId: 11, name: 'VOLUME_ATTACK', displayLabel: 'Attack', unit: 'ms', displayMin: 10, displayMax: 1000, scaling: 'log10' }, // device-true range (was: ms 1..5000, log10)
+  { family: 'VOLUME', paramId: 12, name: 'VOLUME_RELEASE', displayLabel: 'Release', unit: 'ms', displayMin: 1, displayMax: 100, scaling: 'log10' }, // device-true range (was: ms 1..5000, log10)
   { family: 'VOLUME', paramId: 13, name: 'VOLUME_HYSTERESIS', displayLabel: 'Hysteresis', unit: 'db', displayMin: 0, displayMax: 12 }, // inferred from AM4
   { family: 'VOLUME', paramId: 14, name: 'VOLUME_METER', unit: 'unverified' },
   { family: 'WAH', paramId: 0, name: 'WAH_TYPE', unit: 'enum' }, // inferred from AM4
@@ -2028,8 +2034,8 @@ export const FM3_PARAMS: readonly Param[] = [
   { family: 'WAH', paramId: 6, name: 'WAH_LEVEL', displayLabel: 'Level', unit: 'db', displayMin: -80, displayMax: 20 }, // inferred from AM4
   { family: 'WAH', paramId: 7, name: 'WAH_PAN', displayLabel: 'Balance', unit: 'bipolar_percent', displayMin: -100, displayMax: 100 }, // inferred from Fractal convention
   { family: 'WAH', paramId: 8, name: 'WAH_BYPASSMODE', displayLabel: 'Bypass Mode', unit: 'enum' }, // inferred from AM4
-  { family: 'WAH', paramId: 9, name: 'WAH_MIX', displayLabel: 'Fat', unit: 'percent', displayMin: 0, displayMax: 100 }, // inferred from AM4
-  { family: 'WAH', paramId: 10, name: 'WAH_DRIVE', displayLabel: 'Drive', unit: 'knob_0_10', displayMin: 0, displayMax: 10, scaling: 'log10' }, // inferred from AM4
+  { family: 'WAH', paramId: 9, name: 'WAH_MIX', displayLabel: 'Fat', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // device-true range (was: percent 0..100)
+  { family: 'WAH', paramId: 10, name: 'WAH_DRIVE', displayLabel: 'Drive', unit: 'knob_0_10', displayMin: 0, displayMax: 10 }, // device-true linear taper (was: knob_0_10 0..10, log10)
   { family: 'WAH', paramId: 11, name: 'WAH_TAPER', displayLabel: 'Control Taper', unit: 'enum' }, // inferred from AxeEdit III XML controlType
   { family: 'WAH', paramId: 12, name: 'WAH_BYPASS', displayLabel: 'Bypass', unit: 'enum' }, // inferred from Fractal convention
   { family: 'WAH', paramId: 13, name: 'WAH_BIAS', displayLabel: 'Inductor Bias', unit: 'numeric' }, // inferred from AxeEdit III XML controlType

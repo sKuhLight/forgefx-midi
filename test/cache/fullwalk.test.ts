@@ -23,7 +23,7 @@ import type { LiveTransport, LiveWalkProgress, LiveWalkWriteHooks } from '../../
 import type { CacheRecord, DeviceParam, FloatRecord } from '../../src/cache/types.js';
 import { VIEW_DEFINITION, VIEW_ENUM_LABEL, VIEW_VALUE } from '../../src/cache/index.js';
 
-export const FULLWALK_CASE_COUNT = 12;
+export const FULLWALK_CASE_COUNT = 14;
 
 const MFR = [0xf0, 0x00, 0x01, 0x74] as const;
 const MODEL = 0x12; // FM9
@@ -441,26 +441,128 @@ export async function runFullWalk(): Promise<void> {
   }
   console.log('  cache/fullwalk: a param whose original display is a word or unanswered gets no SET (no restore possible); numeric neighbours are still swept');
 
-  // ---- Case 12: the modifier-table copies (blocks 3..34) are walked but never written --------
-  // Every gen-3 model answers 32 identical modifier tables at 3..34. Nothing shows that a preset
-  // reload restores them, so a full walk reads them (record, unit) and writes nothing there: no SET,
-  // no preset reload. Block 35, just past the range, is still swept.
+  // ---- Case 12: full mode writes only to the roster's placeable effect blocks --------------
+  // An ALLOW-list: the blocks the model's roster classifies as placeable effect blocks, expanded by
+  // the family's instance count. Everything else is read (record, unit) but never written — no SET,
+  // no preset reload: the system selector 0, the modifier tables 3..34, Tuner 35, IR Capture 36,
+  // Scene MIDI 190, the foot controller 199 / 200, and an instance past the family's count.
   {
-    const MODS = [3, 4, 17, 33, 34];
-    const specs: Spec[] = [...MODS, 35].map((block) => ({ block, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.3, respond: (n: number) => 10 * n, unit: 'Hz' }));
-    const mods = new FullFakeTransport(specs);
-    const recs = await liveWalk(mods, fullWalkOpts({ blocks: [...MODS, 35], maxParamId: 0, mode: 'full', write: mods.hooks() }));
-    const written = [...new Set(mods.sends.map((s) => s.eid))];
-    if (written.join(',') !== '35') fail(`modifier tables written: SETs went to blocks ${written.join(',')} (want only 35)`);
-    if (mods.reloads !== 1) fail(`${mods.reloads} preset reloads (want 1, for block 35 only)`);
-    for (const block of MODS) {
+    const NEVER = [0, 3, 4, 17, 33, 34, 35, 36, 190, 199, 200];
+    const PAST_COUNT = [194]; // a fourth multiplexer: the FM3/FM9 roster has three (191..193)
+    const SWEPT = [37, 58, 191]; // Input 1, Amp 1, Multiplexer 1
+    const blocks = [...NEVER, ...PAST_COUNT, ...SWEPT];
+    const spec = (block: number): Spec => ({ block, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.3, respond: (n: number) => 10 * n, unit: 'Hz' });
+    const dev = new FullFakeTransport(blocks.map(spec));
+    const recs = await liveWalk(dev, fullWalkOpts({ blocks, maxParamId: 0, mode: 'full', write: dev.hooks() }));
+    const written = [...new Set(dev.sends.map((s) => s.eid))].sort((a, b) => a - b);
+    if (written.join(',') !== SWEPT.join(',')) fail(`allow-list: SETs went to blocks ${written.join(',')} (want only ${SWEPT.join(',')})`);
+    if (dev.reloads !== SWEPT.length) fail(`${dev.reloads} preset reloads (want ${SWEPT.length}, one per swept block)`);
+    for (const block of [...NEVER, ...PAST_COUNT]) {
       const r = recs.find((x) => x.section === block && x.id === 0);
-      if (!r || r.kind !== 'float' || r.taper !== undefined || r.unit !== 'Hz') fail(`modifier block ${block}: record ${JSON.stringify(r)} (want a float with its unit and no taper)`);
+      if (!r || r.kind !== 'float' || r.taper !== undefined || r.unit !== 'Hz') fail(`read-only block ${block}: record ${JSON.stringify(r)} (want a float with its unit and no taper)`);
     }
-    // A walk of modifier blocks only: no write and no reload at all.
-    const only = new FullFakeTransport(specs.filter((s) => s.block !== 35));
-    await liveWalk(only, fullWalkOpts({ blocks: MODS, maxParamId: 0, mode: 'full', write: only.hooks() }));
-    if (only.sends.length !== 0 || only.reloads !== 0) fail(`modifier-only full walk: ${only.sends.length} SETs, ${only.reloads} reloads (want none)`);
+    // A walk of read-only blocks only: no write and no reload at all.
+    const only = new FullFakeTransport(NEVER.map(spec));
+    await liveWalk(only, fullWalkOpts({ blocks: NEVER, maxParamId: 0, mode: 'full', write: only.hooks() }));
+    if (only.sends.length !== 0 || only.reloads !== 0) fail(`read-only blocks: ${only.sends.length} SETs, ${only.reloads} reloads (want none)`);
+    // Per model: the Axe-Fx III roster has five inputs (37..41), the FM3/FM9 roster one — block 41 is
+    // swept on the III only; Tuner 35 never.
+    const iii = new FullFakeTransport([35, 41].map(spec));
+    await liveWalk(iii, fullWalkOpts({ model: 0x10, blocks: [35, 41], maxParamId: 0, mode: 'full', write: iii.hooks() }));
+    if ([...new Set(iii.sends.map((s) => s.eid))].join(',') !== '41') fail(`Axe-Fx III: SETs went to blocks ${[...new Set(iii.sends.map((s) => s.eid))].join(',')} (want only 41)`);
+    const fm9 = new FullFakeTransport([41].map(spec));
+    await liveWalk(fm9, fullWalkOpts({ blocks: [41], maxParamId: 0, mode: 'full', write: fm9.hooks() }));
+    if (fm9.sends.length !== 0) fail('FM9: block 41 (a fifth input, past the roster count of one) was written');
+    // A model without a roster in the codec: nothing is written anywhere.
+    const other = new FullFakeTransport([58].map(spec));
+    await liveWalk(other, fullWalkOpts({ model: 0x14, blocks: [58], maxParamId: 0, mode: 'full', write: other.hooks() }));
+    if (other.sends.length !== 0 || other.reloads !== 0) fail('a model without a roster was written');
   }
-  console.log('  cache/fullwalk: the modifier-table copies (blocks 3..34) are walked read-only — no SET, no reload — while block 35 is swept');
+  console.log('  cache/fullwalk: full mode writes only the roster\'s placeable effect blocks (per model, by instance count); 0, 3..34, 35, 36, 190, 199, 200, past-count instances and roster-less models are read-only');
+
+  // ---- Case 13: a sweep that is cut short still reloads the preset ------------------------
+  // The per-block preset reload is the safety net for writes the restore did not undo. Once any
+  // SET has gone out in a block, the reload runs even when the walk ends there — an abort in the
+  // middle of a sweep, a failing write, a failing query after a sweep — and the walk still reports
+  // its own error (a reload that fails on that path is best effort and never hides it). A block
+  // that wrote nothing gets no reload.
+  {
+    const specs = (): Spec[] => [
+      { param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.3, respond: (n: number) => 10 * n, unit: 'Hz' },
+      { param: 1, kind: 'float', min: 0, max: 10, origNorm: 0.6, respond: (n: number) => 10 * n, unit: 'Hz' },
+    ];
+    const run = async (
+      opts: { abortAfterSets?: number; failSendAt?: number; failReload?: boolean; failQueryParam?: number },
+    ): Promise<{ error: string; sets: number; reloads: number }> => {
+      const t = new FullFakeTransport(specs());
+      const inner = t.hooks();
+      const ac = new AbortController();
+      let sets = 0;
+      let reloads = 0;
+      const write: LiveWalkWriteHooks = {
+        send: (frame) => {
+          sets += 1;
+          if (opts.failSendAt === sets) return Promise.reject(new Error('send failed'));
+          const r = inner.send(frame);
+          if (opts.abortAfterSets === sets) ac.abort(new Error('walk aborted by the caller'));
+          return r;
+        },
+        reloadPreset: () => {
+          reloads += 1;
+          return opts.failReload ? Promise.reject(new Error('reload failed')) : inner.reloadPreset();
+        },
+      };
+      const transport: LiveTransport = {
+        request: (q) => {
+          const param = q[10]! | (q[11]! << 7);
+          if (q[6] === VIEW_DEFINITION && param === opts.failQueryParam) return Promise.reject(new Error('transport failed'));
+          return t.request(q);
+        },
+      };
+      let error = '';
+      try {
+        await liveWalk(transport, fullWalkOpts({ maxParamId: 1, mode: 'full', write, signal: ac.signal }));
+      } catch (e) {
+        error = (e as Error).message;
+      }
+      return { error, sets, reloads };
+    };
+    const aborted = await run({ abortAfterSets: 3 });
+    if (aborted.error !== 'walk aborted by the caller' || aborted.sets !== 3 || aborted.reloads !== 1) fail(`abort mid-sweep: ${JSON.stringify(aborted)} (want the abort error, 3 SETs, 1 reload)`);
+    const failedSend = await run({ failSendAt: 2 });
+    if (failedSend.error !== 'send failed' || failedSend.reloads !== 1) fail(`failing SET: ${JSON.stringify(failedSend)} (want 'send failed' and 1 reload)`);
+    const failedQuery = await run({ failQueryParam: 1 });
+    if (failedQuery.error !== 'transport failed' || failedQuery.reloads !== 1) fail(`failing query after a sweep: ${JSON.stringify(failedQuery)} (want 'transport failed' and 1 reload)`);
+    const bothFail = await run({ abortAfterSets: 3, failReload: true });
+    if (bothFail.error !== 'walk aborted by the caller' || bothFail.reloads !== 1) fail(`failing reload on abort: ${JSON.stringify(bothFail)} (the abort error must win)`);
+    const nothingWritten = await run({ failQueryParam: 0 });
+    if (nothingWritten.error !== 'transport failed' || nothingWritten.sets !== 0 || nothingWritten.reloads !== 0) fail(`failure before any SET: ${JSON.stringify(nothingWritten)} (want no reload)`);
+    // On the normal path a failing reload is still the walk's error, as before.
+    const reloadOnly = await run({ failReload: true });
+    if (reloadOnly.error !== 'reload failed' || reloadOnly.reloads !== 1) fail(`failing reload after a complete block: ${JSON.stringify(reloadOnly)}`);
+  }
+  console.log('  cache/fullwalk: once a SET went out, the block reload runs even on abort, a failing SET or a failing query (best effort; the walk keeps its own error); no SET, no reload');
+
+  // ---- Case 14: the action blocks stay read-only, also with blocks above 160 opted in -------
+  // Looper (166..169), Tone Match (170..173), the Real-Time Analyzer (174..177) and the IR Player
+  // (195..198) are placeable roster blocks, but their parameters drive actions or device-side state:
+  // no SET, no reload, whatever the model. Ordinary effect blocks above 160 that a host opts in
+  // (Resonator 162, Plex Delay 178, Send 182, Return 186) are swept as usual.
+  {
+    const ACTION = [166, 169, 170, 173, 174, 177, 195, 198];
+    const ORDINARY = [162, 178, 182, 186];
+    const spec = (block: number): Spec => ({ block, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.3, respond: (n: number) => 10 * n, unit: 'Hz' });
+    for (const model of [0x10, 0x11, 0x12]) {
+      const dev = new FullFakeTransport([...ACTION, ...ORDINARY].map(spec));
+      const recs = await liveWalk(dev, fullWalkOpts({ model, blocks: [...ACTION, ...ORDINARY], maxParamId: 0, mode: 'full', write: dev.hooks() }));
+      const written = [...new Set(dev.sends.map((s) => s.eid))].sort((a, b) => a - b);
+      if (written.join(',') !== ORDINARY.join(',')) fail(`model 0x${model.toString(16)}: SETs went to blocks ${written.join(',')} (want only ${ORDINARY.join(',')})`);
+      if (dev.reloads !== ORDINARY.length) fail(`model 0x${model.toString(16)}: ${dev.reloads} reloads (want ${ORDINARY.length})`);
+      for (const block of ACTION) {
+        const r = recs.find((x) => x.section === block && x.id === 0);
+        if (!r || r.kind !== 'float' || r.taper !== undefined || r.unit !== 'Hz') fail(`model 0x${model.toString(16)} action block ${block}: ${JSON.stringify(r)} (want a read-only float)`);
+      }
+    }
+  }
+  console.log('  cache/fullwalk: Looper, Tone Match, RTA and IR Player blocks stay read-only in full mode (blocks above 160 opted in); Resonator, Plex, Send and Return are swept');
 }

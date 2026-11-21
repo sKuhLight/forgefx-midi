@@ -55,6 +55,13 @@ import {
   resolveGen3EnumOrdinal,
   createModernFractalCodec,
 } from '../../../src/gen3/axe-fx-iii/index.js';
+import { FM3_ENUM_OVERRIDES } from '../../../src/gen3/fm3/index.js';
+import { FM9_ENUM_OVERRIDES } from '../../../src/gen3/fm9/index.js';
+import { AXE3_ENUM_OVERRIDES } from '../../../src/gen3/axe-fx-iii/index.js';
+import { createModernFractalDescriptor } from '../../../src/devices/gen3/factory.js';
+import { AXE_FX_III_CONFIG } from '../../../src/devices/gen3/configs/axe-fx-iii.js';
+import { FM3_CONFIG } from '../../../src/devices/gen3/configs/fm3.js';
+import { FM9_CONFIG } from '../../../src/devices/gen3/configs/fm9.js';
 
 function hex(bytes: readonly number[]): string {
   return bytes.map((b) => b.toString(16).padStart(2, '0')).join('');
@@ -430,36 +437,34 @@ export function runAxeFxIIISetParamTests(): void {
 
   // ── Enum overlay + set-by-name ordinal goldens ─────────────────────────────
   //
-  // FUZZ_TYPE (eff=118, drive/fuzz pedal type selector) is in the family-shared
-  // EFFECT_TYPE_OVERRIDES (enumOverlay.ts) from AM4's DRIVE_TYPES. Byte-anchored:
-  // FM9 hw capture confirmed ordinals 15 (Blues OD) and 36 (Blackglass 7K). The
-  // read ordinal IS the set value: set-by-name resolves name → ordinal directly.
+  // FUZZ_TYPE (eff=118, drive/fuzz pedal type selector). Byte-anchored: FM9 hw
+  // capture confirmed ordinals 15 (Blues OD) and 36 (Blackglass 7K). The AM4-heritage
+  // drive table that used to label it from the shared overlay disagrees with every
+  // gen-3 device list from ordinal 31 on, so it is RETIRED from the overlay; the
+  // anchors now live on the device lists, and set-by-name resolves off those (the
+  // read ordinal IS the set value: name -> ordinal directly, no raw-id space).
 
-  // FUZZ_TYPE family overlay coverage.
-  const fuzzOverlay = resolveEnumValues('FUZZ_TYPE');
-  if (fuzzOverlay === undefined) {
-    failed.push('resolveEnumValues("FUZZ_TYPE") returned undefined — FUZZ_TYPE missing from family overlay');
-  } else {
-    if (fuzzOverlay.values[15] !== 'Blues OD') {
-      failed.push(`FUZZ_TYPE ordinal 15: expected "Blues OD", got "${fuzzOverlay.values[15]}"`);
-    }
-    if (fuzzOverlay.values[36] !== 'Blackglass 7K') {
-      failed.push(`FUZZ_TYPE ordinal 36: expected "Blackglass 7K", got "${fuzzOverlay.values[36]}"`);
-    }
-    if (fuzzOverlay.provenance !== 'am4-shared') {
-      failed.push(`FUZZ_TYPE provenance: expected "am4-shared", got "${fuzzOverlay.provenance}"`);
+  // 1. The shared overlay no longer labels FUZZ_TYPE (nor the set-by-name helper).
+  if (resolveEnumValues('FUZZ_TYPE') !== undefined) {
+    failed.push('resolveEnumValues("FUZZ_TYPE") must be undefined: the AM4-heritage drive table is retired');
+  }
+  // 2. The anchors hold on the FM3 / FM9 / III device lists.
+  for (const [label, table] of [['FM3', FM3_ENUM_OVERRIDES], ['FM9', FM9_ENUM_OVERRIDES], ['III', AXE3_ENUM_OVERRIDES]] as const) {
+    const fuzz = table['FUZZ']?.['0'];
+    if (fuzz?.[15] !== 'Blues OD' || fuzz?.[36] !== 'Blackglass 7K') {
+      failed.push(`${label} FUZZ_TYPE device list: expected 15 = "Blues OD", 36 = "Blackglass 7K", got ${fuzz?.[15]} / ${fuzz?.[36]}`);
     }
   }
-
-  // Set-by-name = read-roster ORDINAL (the float32(ordinal) set value). Blues
-  // OD resolves to ordinal 15; Blackglass 7K to 36. No raw-id space.
-  const bluesOrd = resolveGen3EnumOrdinal('FUZZ_TYPE', 'Blues OD');
-  if (!('ordinal' in bluesOrd) || bluesOrd.ordinal !== 15) {
-    failed.push(`resolveGen3EnumOrdinal("FUZZ_TYPE","Blues OD"): expected ordinal 15, got ${JSON.stringify(bluesOrd)}`);
+  // 3. Set-by-name through the descriptor (the device list is the vocabulary).
+  for (const [label, cfg] of [['FM3', FM3_CONFIG], ['FM9', FM9_CONFIG], ['III', AXE_FX_III_CONFIG]] as const) {
+    const type = createModernFractalDescriptor(cfg).blocks['drive']?.params['type'];
+    if (type === undefined || type.encode('Blues OD') !== 15 || type.encode('Blackglass 7K') !== 36) {
+      failed.push(`${label} drive.type set-by-name: expected "Blues OD" -> 15, "Blackglass 7K" -> 36`);
+    }
   }
-  const bgOrd = resolveGen3EnumOrdinal('FUZZ_TYPE', 'Blackglass 7K');
-  if (!('ordinal' in bgOrd) || bgOrd.ordinal !== 36) {
-    failed.push(`resolveGen3EnumOrdinal("FUZZ_TYPE","Blackglass 7K"): expected ordinal 36, got ${JSON.stringify(bgOrd)}`);
+  // 4. The legacy name -> ordinal helper reads the overlay only: nothing to resolve for a retired symbol.
+  if (!('noEnum' in resolveGen3EnumOrdinal('FUZZ_TYPE', 'Blues OD'))) {
+    failed.push('resolveGen3EnumOrdinal("FUZZ_TYPE", ...) must report noEnum (overlay retired)');
   }
 
   // ── BoodieTraps 2026-06-08 byte-exact oracle frames (FM3 fw 12.00 + FM9) ────

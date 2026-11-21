@@ -27,12 +27,37 @@
  * it only drops EMPTY mapped families, and these are non-empty in the mine).
  */
 import { VP4_PARAMS_BY_FAMILY } from '../../../gen3/vp4/index.js';
+import {
+  REVERB_TYPES_VALUES,
+  CHORUS_TYPES_VALUES,
+  FLANGER_TYPES_VALUES,
+  COMPRESSOR_TYPES_VALUES,
+  DRIVE_TYPES_VALUES,
+} from '../../../am4/cacheEnums.js';
 import type { FractalModernConfig } from '../factory.js';
 import type { PresetSpec } from '../../../core/protocol-generic/types.js';
 import {
   MODERN_AGENT_GUIDANCE,
   MODERN_BLOCK_PARAMS_SUMMARY,
 } from './shared.js';
+
+// The VP4 has no device label lists (unlike the FM3 / FM9 / Axe-Fx III, whose lists
+// replace any fallback). These tables are an UNVERIFIED fallback that lives only here
+// (`enum_fallbacks`: merged under the overlay, always 'partial', ordinals never bounded):
+//   - the AM4's effect-type tables, which disagree with all three gen-3 device lists
+//     (naming, model counts, inserted models) and are therefore not shared with them;
+//   - the delay ROUTING list on DELAY_TYPE (the symbol is the routing selector on every
+//     gen-3 device; the AM4 delay-model list that used to sit on it is not carried over).
+//     The VP4 allows set_param, and an unlabelled discrete selector would otherwise go
+//     out as a continuous SET.
+const VP4_UNVERIFIED_ENUM_FALLBACKS: Readonly<Record<string, Readonly<Record<number, string>>>> = {
+  REVERB_TYPE: REVERB_TYPES_VALUES,
+  CHORUS_TYPE: CHORUS_TYPES_VALUES,
+  FLANGER_TYPE: FLANGER_TYPES_VALUES,
+  COMP_TYPE: COMPRESSOR_TYPES_VALUES,
+  FUZZ_TYPE: DRIVE_TYPES_VALUES,
+  DELAY_TYPE: { 0: 'MONO', 1: 'STEREO', 2: 'PING-PONG', 3: 'DUAL', 4: 'REVERSE', 5: 'SWEEP', 6: 'TAPE', 7: 'SURROUND' },
+};
 
 // VP4 is a serial 4-slot chain (AM4-shape), so the example places blocks by
 // 1-based slot index, not grid cell. Writes are gated, so this spec is
@@ -109,6 +134,7 @@ export const VP4_CONFIG: FractalModernConfig = {
     'Param catalog ' +
     'is VP4-true (mined from VP4-Edit; paramIds device-specific). No amp/cab.',
   params_by_family: VP4_PARAMS_BY_FAMILY,
+  enum_fallbacks: VP4_UNVERIFIED_ENUM_FALLBACKS,
   device_true_roster: true,
   // The mined catalog carries DISTORT (amp) + CABINET params from the shared
   // gen-3 editor binary, but the physical VP4 has neither block. Drop both.

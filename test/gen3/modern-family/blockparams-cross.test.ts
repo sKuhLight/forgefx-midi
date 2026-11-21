@@ -10,7 +10,7 @@
  * table and enum vocabulary.
  *
  * Two gates per device:
- *   1. field-exact equality against the frozen golden decode
+ *   1. field-exact equality (decoded floats within 1e-12 relative, see ../goldenCompare.ts) against the frozen golden decode
  *      (devs-gift-of-tone.params.expected.json; the decoded `value` of the
  *      typecode-0x52 knob params was refreshed to their linear 0..10 display,
  *      and that of the log-taper params to their true log display value; the `unit` token of
@@ -31,33 +31,11 @@ import {
   modelsFromBlocks,
   type DecodedBlock,
 } from '../../../src/devices/gen3/blockParams.js';
+import { assertDeepEqual } from '../goldenCompare.js';
 
 const GEN3 = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 export const CROSS_BLOCKPARAMS_CASE_COUNT = 2;
-
-function assertDeepEqual(actual: unknown, expected: unknown, path: string): void {
-  const a = JSON.parse(JSON.stringify(actual ?? null));
-  const e = JSON.parse(JSON.stringify(expected ?? null));
-  diff(a, e, path);
-}
-function diff(a: unknown, e: unknown, path: string): void {
-  if (Array.isArray(e)) {
-    if (!Array.isArray(a)) throw new Error(`${path}: expected array, got ${typeof a}`);
-    if (a.length !== e.length) throw new Error(`${path}: length ${a.length} !== expected ${e.length}`);
-    for (let i = 0; i < e.length; i++) diff(a[i], e[i], `${path}[${i}]`);
-    return;
-  }
-  if (e !== null && typeof e === 'object') {
-    if (a === null || typeof a !== 'object') throw new Error(`${path}: expected object, got ${JSON.stringify(a)}`);
-    const ak = Object.keys(a as object).sort();
-    const ek = Object.keys(e as object).sort();
-    if (ak.join(',') !== ek.join(',')) throw new Error(`${path}: keys [${ak.join(',')}] !== expected [${ek.join(',')}]`);
-    for (const k of ek) diff((a as Record<string, unknown>)[k], (e as Record<string, unknown>)[k], `${path}.${k}`);
-    return;
-  }
-  if (a !== e) throw new Error(`${path}: ${JSON.stringify(a)} !== expected ${JSON.stringify(e)}`);
-}
 
 function decodeFixture(dir: string, model: number): DecodedBlock[] {
   const syx = new Uint8Array(readFileSync(join(GEN3, dir, 'fixtures', 'devs-gift-of-tone.syx')));

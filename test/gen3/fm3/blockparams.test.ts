@@ -6,7 +6,7 @@
  * raw 0x77/0x78/0x79 dump, `preset-<n>.params.expected.json` is the exact
  * decode its live-validated implementation produced. This suite re-decodes
  * every dump through the package pipeline (parsePresetDump → decodeRawPatch →
- * decodeGen3Body grid → readBlockParams) and requires field-exact equality —
+ * decodeGen3Body grid → readBlockParams) and requires field-exact equality (decoded floats within 1e-12 relative, see gen3/goldenCompare.ts) —
  * it validates BOTH the upstreamed extraction logic and the package grid
  * decode's placed-block set against the live implementation.
  *
@@ -36,6 +36,7 @@ import {
   hasBlockParamModel,
   modelsFromBlocks,
 } from '../../../src/devices/gen3/blockParams.js';
+import { assertDeepEqual } from '../goldenCompare.js';
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const FM3 = 0x11;
@@ -49,32 +50,6 @@ function listPresetFixtures(): number[] {
 }
 
 export const FM3_BLOCKPARAMS_CASE_COUNT = listPresetFixtures().length;
-
-/** Deep equality with a path-reporting error, JSON-normalized (undefined keys drop). */
-function assertDeepEqual(actual: unknown, expected: unknown, path: string): void {
-  const a = JSON.parse(JSON.stringify(actual ?? null));
-  const e = JSON.parse(JSON.stringify(expected ?? null));
-  diff(a, e, path);
-}
-function diff(a: unknown, e: unknown, path: string): void {
-  if (Array.isArray(e)) {
-    if (!Array.isArray(a)) throw new Error(`${path}: expected array, got ${typeof a}`);
-    if (a.length !== e.length) throw new Error(`${path}: length ${a.length} !== expected ${e.length}`);
-    for (let i = 0; i < e.length; i++) diff(a[i], e[i], `${path}[${i}]`);
-    return;
-  }
-  if (e !== null && typeof e === 'object') {
-    if (a === null || typeof a !== 'object') throw new Error(`${path}: expected object, got ${JSON.stringify(a)}`);
-    const ak = Object.keys(a as object).sort();
-    const ek = Object.keys(e as object).sort();
-    if (ak.join(',') !== ek.join(',')) {
-      throw new Error(`${path}: keys [${ak.join(',')}] !== expected [${ek.join(',')}]`);
-    }
-    for (const k of ek) diff((a as Record<string, unknown>)[k], (e as Record<string, unknown>)[k], `${path}.${k}`);
-    return;
-  }
-  if (a !== e) throw new Error(`${path}: ${JSON.stringify(a)} !== expected ${JSON.stringify(e)}`);
-}
 
 export function runFm3BlockParamsTests(): void {
   // model gating: FM3 verified; VP4 refused (no calibration ground truth).

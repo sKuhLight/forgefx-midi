@@ -189,9 +189,12 @@
  *   4. WRITES — a FULL-mode taper sweep runs only on a definition that passed
  *      all of the above and sits at or below its block's bound. Far-id safety
  *      for a caller that passes a wide ceiling rests on the stop run (2). It
- *      never runs in a system / virtual block (`NO_SWEEP_BLOCKS`): their
- *      settings persist outside the preset, so the per-block preset reload
- *      would not undo a write that the restore missed.
+ *      runs ONLY in a placeable effect block of the model's roster
+ *      (`sweepableBlocks`, an allow-list); every other address — the system
+ *      selector, Global, Controllers, the modifier tables, Tuner, IR Capture,
+ *      Scene MIDI, the foot controller, instances past a family's count, any
+ *      model without a roster here — is walked read-only, because the per-block
+ *      preset reload is not known to undo a write there that the restore missed.
  *
  * ── Reply assumptions (open hardware questions) ─────────────────────────────
  * The reply handling below rests on assumptions not yet verified on hardware;
@@ -218,6 +221,7 @@ import { fractalChecksum } from '../shared/checksum.js';
 import { buildSetParameterContinuous } from '../gen3/axe-fx-iii/setParam.js';
 import { AXE_FX_III_BLOCKS } from '../gen3/axe-fx-iii/blockTypes.js';
 import { FM3_EFFECT_ID_TABLE } from '../gen3/fm3/effectIds.js';
+import { FM9_EFFECT_ID_TABLE } from '../gen3/fm9/effectIds.js';
 import type { RecordSource } from './buildProfile.js';
 import type { CacheRecord, EnumRecord, FloatRecord, FloatTaper } from './types.js';
 
@@ -1086,10 +1090,11 @@ export interface LiveWalkOptions {
    * back to recover the knob taper (linear/log/custom), records it on the
    * `FloatRecord`, then RESTORES the original value (non-destructive). Full mode
    * REQUIRES `write` hooks — the walk throws at start when they are absent. It
-   * never writes to a system / virtual block (Global, Controllers, the modifier
-   * tables 3..34, IR Capture, Scene MIDI, foot controller — see
-   * `NO_SWEEP_BLOCKS`): those are
-   * walked read-only only. Nor does it write to a param whose current display
+   * writes ONLY to the placeable effect blocks of the model's roster (see
+   * `sweepableBlocks`): the system selector, Global, Controllers, the modifier
+   * tables 3..34, Tuner, IR Capture, Scene MIDI, the foot controller and every
+   * block of a model without a roster in the codec are walked read-only. Nor
+   * does it write to a param whose current display
    * (read just before the sweep) is not a number: it could not be restored.
    */
   mode?: 'read-only' | 'full';
@@ -1267,34 +1272,38 @@ async function pace(ms: number, signal: AbortSignal | undefined, sleep?: (ms: nu
 // Full-mode taper sweep (write + restore) — port of CaptureRig v2's Gen3Profile
 // ---------------------------------------------------------------------------
 
-/** First and last block address that answer with the modifier table (see `modifierTableBlocks`). */
-const MODIFIER_TABLE_FIRST = 3;
-const MODIFIER_TABLE_LAST = 34;
+/** Gen-3 model bytes whose effect-id roster the codec carries. */
+const MODEL_AXE_FX_III = 0x10;
+const MODEL_FM3 = 0x11;
+const MODEL_FM9 = 0x12;
 
 /**
- * Block addresses a FULL-mode sweep never writes to: the system / virtual blocks of the gen-3
- * effect-id roster (shared by the Axe-Fx III, FM3 and FM9) — the FM3/FM9 family table's 'virtual'
- * entries (Global 1, Controllers 2, Modifier 3, IR Capture 36, Scene MIDI 190, Foot Controller 199)
- * plus the roster blocks the third-party surface cannot address (`addressable: false`, adding
- * Preset FC 200), and the modifier-table copies (`modifierTableBlocks`, 3..34). Their settings are
- * persistent device state, or not shown to be preset data: the per-block preset reload that backs up
- * the restore is not known to bring them back. They are still walked read-only.
+ * The block addresses a FULL-mode sweep may write to on `model` — an ALLOW-list: the placeable
+ * signal-chain blocks of the model's effect-id roster, i.e. every family its family table classifies
+ * `addressing: 'block'`, expanded by the instance count (FM3 / FM9: the table's own counts; Axe-Fx
+ * III: the gen-3 roster is shared, so the same families with the III block roster's counts for the
+ * same first ids). Everything else is walked read-only:
+ *   - block 0, the system selector (on an Axe-Fx III it answers hundreds of definitions, many of
+ *     them passing the junk checks);
+ *   - Global 1, Controllers 2 and the modifier tables 3..34 (every gen-3 model answers 32 identical
+ *     copies there; the roster names only 3);
+ *   - Tuner 35 and IR Capture 36 (global functions), Scene MIDI 190, the foot controller 199 / 200;
+ *   - instances past a family's count, and every block of a model without a roster here.
+ * Their settings are persistent device state, or not shown to be preset data: the per-block preset
+ * reload that backs up the restore is not known to bring them back.
  */
-const NO_SWEEP_BLOCKS: ReadonlySet<number> = new Set<number>([
-  ...FM3_EFFECT_ID_TABLE.filter((e) => e.addressing === 'virtual' && e.firstId !== null).map((e) => e.firstId as number),
-  ...AXE_FX_III_BLOCKS.filter((b) => b.addressable === false && b.firstId !== null).map((b) => b.firstId as number),
-  ...modifierTableBlocks(),
-]);
-
-/**
- * The block addresses that answer with the modifier table: 3 (the roster's Modifier) through 34. The
- * roster leaves 4..34 unenumerated ("reserved"), so this range is a documented list, not a roster
- * class — it is the same on every gen-3 model walked so far (Axe-Fx III, FM3, FM9: 32 identical
- * modifier tables at 3..34). Nothing shows that a preset reload restores what a write there changes,
- * so a sweep never writes to them; they are walked read-only like the other system blocks.
- */
-function modifierTableBlocks(): number[] {
-  return Array.from({ length: MODIFIER_TABLE_LAST - MODIFIER_TABLE_FIRST + 1 }, (_, i) => MODIFIER_TABLE_FIRST + i);
+function sweepableBlocks(model: number): ReadonlySet<number> {
+  const out = new Set<number>();
+  const table = model === MODEL_FM3 ? FM3_EFFECT_ID_TABLE : model === MODEL_FM9 ? FM9_EFFECT_ID_TABLE : model === MODEL_AXE_FX_III ? FM3_EFFECT_ID_TABLE : undefined;
+  if (!table) return out;
+  const iiiInstances = new Map<number, number>();
+  for (const b of AXE_FX_III_BLOCKS) if (b.firstId !== null) iiiInstances.set(b.firstId, b.instances);
+  for (const e of table) {
+    if (e.addressing !== 'block' || e.firstId === null) continue;
+    const n = model === MODEL_AXE_FX_III ? (iiiInstances.get(e.firstId) ?? e.instances) : e.instances;
+    for (let i = 0; i < n; i++) out.add(e.firstId + i);
+  }
+  return out;
 }
 
 /** CaptureRig v2's ≥20ms floor between a sweep SET and the display read-back. */
@@ -1474,6 +1483,8 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
   const sweepCtx: SweepContext | undefined = full
     ? { transport, write: opts.write!, model, points: taperPoints, settleMs: sweepSettleMs, signal, sleep }
     : undefined;
+  // FULL mode writes only to the model's placeable effect blocks (an allow-list, see `sweepableBlocks`).
+  const sweepable = full ? sweepableBlocks(model) : new Set<number>();
 
   const records: CacheRecord[] = [];
   let queries = 0;
@@ -1778,7 +1789,7 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       // block's ceiling) already guarantees it; it stays so a later change to the loop cannot let a
       // sweep write above the ceiling.
       let taper: FloatTaper | undefined;
-      if (sweepCtx && !NO_SWEEP_BLOCKS.has(block) && labels.length === 0 && !hintEntry && def.kind === 'float' && def.max !== def.min && param <= bound) {
+      if (sweepCtx && sweepable.has(block) && labels.length === 0 && !hintEntry && def.kind === 'float' && def.max !== def.min && param <= bound) {
         await pace(interQueryMs, signal, sleep);
         const swept = await sweepTaper(sweepCtx, block, param);
         queries += swept.reads;

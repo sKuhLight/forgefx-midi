@@ -28,6 +28,7 @@ import type {
   BuiltCacheData,
   CacheRecord,
   DeviceParam,
+  FloatTaper,
   RangeDef,
   RangeSectionMeta,
   TypeModel,
@@ -61,6 +62,32 @@ function snapShort(d: number): number {
 function displayOf(raw: number, scale: number): number {
   if (scale === 0) return f32clean(raw);
   return snapShort(f32clean(raw) * f32clean(scale));
+}
+
+/**
+ * Typecode 0x52 marks a dimensionless knob parameter. The device displays it on a
+ * LINEAR 0..10 scale whatever the definition's own min/max are (0.05..50, 0.5..500,
+ * 20..2000, ...): those bound the stored value, they are not the display range. A
+ * float record with this typecode therefore derives display bounds 0..10 and a linear
+ * taper instead of `(min, max) * scale` (and no unit: a knob has none to show). The
+ * shipped catalogs carry the same rule, so a freshly built profile agrees with them.
+ *
+ * Observation beats the premise: if the walk read a unit off the device or measured a
+ * non-linear taper, the row is not a dimensionless linear knob after all and the rule is
+ * skipped for it entirely. A sweep that carries no information (flat / too few samples /
+ * unreliable) does not count as an observation.
+ */
+export const KNOB_TYPECODE = 0x52;
+export const KNOB_DISPLAY_MIN = 0;
+export const KNOB_DISPLAY_MAX = 10;
+
+type MeasuredTaper = FloatTaper & { shape: 'linear' | 'log' | 'custom' };
+
+/** The reliable fit of a full-mode taper sweep; 'flat' / 'unknown' / unreliable carry none. */
+function measuredTaper(r: CacheRecord): MeasuredTaper | undefined {
+  if (r.kind !== 'float' || !r.taper || !r.taper.reliable) return undefined;
+  const { shape } = r.taper;
+  return shape === 'linear' || shape === 'log' || shape === 'custom' ? (r.taper as MeasuredTaper) : undefined;
 }
 
 /** Relative-tolerance float compare (default 2%), or absolute < 1e-6. */
@@ -97,6 +124,19 @@ type Sec = Map<number, CacheRecord>; // paramId -> record (ordinary ids only)
 
 function isPlaceholder(r: CacheRecord): boolean {
   return r.kind === 'float' && r.min === 0 && r.max === 0 && r.def === 0;
+}
+
+/**
+ * A section is a parameter TABLE (rather than a sparse id space of system data) when its records
+ * fill at least a quarter of their id span. Effect tables are dense — the sparsest, CABINET, still
+ * fills ~60% — while the sparse system sections (GLOBAL / PRESET style) fill under 5%.
+ */
+const TABLE_SPAN_FACTOR = 4;
+
+function isTableShaped(sec: Sec): boolean {
+  let maxId = -1;
+  for (const id of sec.keys()) if (id > maxId) maxId = id;
+  return sec.size > 0 && maxId + 1 <= TABLE_SPAN_FACTOR * sec.size;
 }
 
 function informativeSize(sec: Sec): number {
@@ -284,10 +324,21 @@ function assignSections(
   // else VOTE-ONLY (live block-id space): no pre-mapping — the vote decides
   // every family (seeds are enforced only as existence checks below).
 
-  // Stable sort by descending score (ties keep pairScores insertion order).
+  /** Catalog params of `fam` with no record at all in section `t` (absent ids, not placeholders). */
+  const absentIds = (fam: string, t: number): number => {
+    const sec = bySec.get(t)!;
+    let n = 0;
+    for (const p of famParams.get(fam) ?? []) if (!sec.has(p.paramId)) n += 1;
+    return n;
+  };
+
+  // Stable sort by descending score. A tie goes to the pair whose section holds more of the family's
+  // catalog ids: the score only counts the ids a section HAS, so a smaller sibling table that matches
+  // the shared rows equally well (an FM3 output table's level/pan rows also open its mixer table) must
+  // not win by section order. Remaining ties keep pairScores insertion order.
   const ordered = pairScores
-    .map((p, i) => [p, i] as const)
-    .sort((a, b) => b[0][2] - a[0][2] || a[1] - b[1])
+    .map((p, i) => [p, i, absentIds(p[0], p[1])] as const)
+    .sort((a, b) => b[0][2] - a[0][2] || a[2] - b[2] || a[1] - b[1])
     .map(([p]) => p);
 
   for (const [fam, t, sc] of ordered) {
@@ -370,7 +421,17 @@ export function buildDeviceCache(
   // by_sec: ordinary records only (id < 0xff00), first occurrence per id wins.
   const bySec = new Map<number, Sec>();
   const declared = new Map<number, number>(); // section tag -> total record count
+  // Live-walk placeholder rows (flagged inner empty slots) are provisional: they become slots only
+  // in a table-shaped section. In a sparse id space an id nobody defines is a gap, not a slot —
+  // counting it would inflate that section's stride far beyond the editor cache's.
+  const provisional = new Map<number, CacheRecord[]>();
   for (const r of records) {
+    if (r.kind === 'float' && r.placeholder) {
+      let rows = provisional.get(r.section);
+      if (!rows) provisional.set(r.section, (rows = []));
+      rows.push(r);
+      continue;
+    }
     declared.set(r.section, (declared.get(r.section) ?? 0) + 1);
     if (r.id >= 0xff00) continue;
     let sec = bySec.get(r.section);
@@ -379,6 +440,15 @@ export function buildDeviceCache(
       bySec.set(r.section, sec);
     }
     if (!sec.has(r.id)) sec.set(r.id, r);
+  }
+  for (const [tag, rows] of provisional) {
+    const sec = bySec.get(tag);
+    if (!sec || !isTableShaped(sec)) continue;
+    for (const r of rows) {
+      if (sec.has(r.id)) continue;
+      sec.set(r.id, r);
+      declared.set(tag, (declared.get(tag) ?? 0) + 1);
+    }
   }
 
   const famParams = paramsByFamily(params);
@@ -399,10 +469,13 @@ export function buildDeviceCache(
     const rg: Record<number, RangeDef> = {};
     for (const pid of [...sec.keys()].sort((a, b) => a - b)) {
       const r = sec.get(pid)!;
+      const measured = measuredTaper(r);
+      const knob =
+        r.kind === 'float' && r.tc === KNOB_TYPECODE && !r.unit && (measured === undefined || measured.shape === 'linear');
       const entry: RangeDef = {
         kind: r.kind,
-        displayMin: displayOf(r.min, r.def),
-        displayMax: displayOf(r.max, r.def),
+        displayMin: knob ? KNOB_DISPLAY_MIN : displayOf(r.min, r.def),
+        displayMax: knob ? KNOB_DISPLAY_MAX : displayOf(r.max, r.def),
         scale: f32clean(r.def),
         step: f32clean(r.step),
         typecode: r.tc,
@@ -415,9 +488,11 @@ export function buildDeviceCache(
       // device-true taper from a FULL-mode live-walk sweep (reliable fits only;
       // 'flat'/'unknown' are unreliable and carry no taper). 'custom' also keeps
       // its sample points. Same threading pattern as `unit` above.
-      if (r.kind === 'float' && r.taper && r.taper.reliable && r.taper.shape !== 'flat' && r.taper.shape !== 'unknown') {
-        entry.taper = r.taper.shape;
-        if (r.taper.shape === 'custom') entry.taperPoints = r.taper.points.map(([n, v]) => [n, v] as const);
+      if (measured) {
+        entry.taper = measured.shape;
+        if (measured.shape === 'custom') entry.taperPoints = measured.points.map(([n, v]) => [n, v] as const);
+      } else if (knob) {
+        entry.taper = 'linear'; // typecode-0x52 knob: linear 0..10 (no measured taper to prefer)
       }
       rg[pid] = entry;
     }
@@ -427,6 +502,11 @@ export function buildDeviceCache(
     const grp = groupOf.get(tag) ?? [tag];
     const meta: RangeSectionMeta = {
       sectionTag: tag,
+      // Slot count incl. placeholder slots. A live walk keeps inner empty slots as placeholders
+      // (table-shaped sections only, see above) but cannot see trailing ones, so for a live source
+      // this is a lower bound whenever the table ends in unused slots or `missingSlots > 0` (see
+      // RangeSectionMeta.stride). Not maxId + 1: sparse system sections span far more ids than
+      // they have slots.
       stride: sec.size,
       recordCount: declared.get(tag) ?? sec.size,
     };

@@ -167,6 +167,18 @@ function humanize(snake: string): string {
     .join(' ');
 }
 
+/**
+ * True for a complete ordinal table: exactly the keys 0..n-1 (n >= 1). The device
+ * label lists are arrays, so the symbol-keyed tables built from them have this
+ * shape; a sparse table (captured points only) does not.
+ */
+function isContiguousOrdinalTable(table: Readonly<Record<number, string>>): boolean {
+  const n = Object.keys(table).length;
+  if (n === 0) return false;
+  for (let i = 0; i < n; i++) if (typeof table[i] !== 'string') return false;
+  return true;
+}
+
 function makePassthroughEncode(family: string, paramKey: string): ParamSchema['encode'] {
   return (value: number | string): number => {
     const num = typeof value === 'number' ? value : Number(value);
@@ -192,7 +204,9 @@ function makePassthroughEncode(family: string, paramKey: string): ParamSchema['e
  * FM9). Resolves against the SAME merged `enum_values` table the read leg
  * decodes with (case + word-order tolerant), so amp/drive/reverb names from the
  * shared rosters AND device-captured overrides all set by name. A number (or
- * numeric string) passes through as the ordinal directly.
+ * numeric string) passes through as the ordinal directly (bounded only by the
+ * 16-bit wire field: a static table is dated to one firmware and a newer one
+ * appends entries, so a number past the last label is never refused here).
  */
 function makeEnumEncode(
   family: string,
@@ -289,6 +303,14 @@ export interface DeviceParamRange {
    * type/mode selectors the overlay missed were stored wrong as continuous).
    */
   readonly enumCount?: number;
+  /**
+   * Float rows only: the device-true value taper, when a reliable one is known
+   * (`'linear' | 'log' | 'flat' | 'custom'`). A `'linear'` taper takes
+   * precedence over the catalog's AM4-inferred `scaling: 'log10'` hint when the
+   * display↔wire calibration is resolved (the dimensionless 0..10 knobs, typecode
+   * 0x52, are linear on the device but carry the AM4's log hint in the catalog).
+   */
+  readonly taper?: 'linear' | 'log' | 'flat' | 'custom';
 }
 
 /** Device-true ranges keyed family → paramId → range (e.g. `FM9_RANGES`). */
@@ -378,7 +400,9 @@ function resolveCalibration(
   if (displayMin === undefined || displayMax === undefined) return undefined;
   if (!Number.isFinite(displayMin) || !Number.isFinite(displayMax)) return undefined;
   if (displayMin >= displayMax) return undefined;
-  const displayScale: 'linear' | 'log10' = scaling === 'log10' ? 'log10' : 'linear';
+  // A device-true LINEAR taper beats the catalog's AM4-inferred log10 hint.
+  const deviceLinear = deviceRange !== undefined && deviceRange.kind === 'float' && deviceRange.taper === 'linear';
+  const displayScale: 'linear' | 'log10' = scaling === 'log10' && !deviceLinear ? 'log10' : 'linear';
   if (displayScale === 'log10' && (displayMin <= 0 || displayMax <= 0)) return undefined;
   return { displayMin, displayMax, displayScale };
 }
@@ -460,8 +484,25 @@ function buildParamSchema(
   // spellings. Layered precedence (later spread wins):
   //   shared roster < family overlay < device-captured (hardware truth).
   const sharedRoster = sharedEnumRosters?.[param.name];
-  const enumValues =
-    deviceOverlayValues !== undefined || overlay?.values !== undefined || sharedRoster !== undefined
+  // A COMPLETE device table (contiguous 0..n-1, the shape of the mined label
+  // lists, and n equal to the device range row's enumCount where the row says) is
+  // the whole vocabulary: the overlay and the shared roster never add LABELS to
+  // it (a longer overlay list would leak names past the device's own end, e.g.
+  // delay models under the 8-entry routing selector). The table is still dated to
+  // ONE firmware (a newer one appends models: FM3 fw 13 has amp 336 / drive 87 /
+  // chorus 27 where older caches list 331 / 86 / 18), so numeric ordinals past its
+  // last label are NOT refused and the vocabulary stays 'partial'; the codec
+  // cannot tell a static table from the connected unit's own cache, so it never
+  // bounds. A sparse or short table (captured points only) is merged over the
+  // overlay as before.
+  const deviceCount = deviceOverlayValues === undefined ? 0 : Object.keys(deviceOverlayValues).length;
+  const deviceComplete =
+    deviceOverlayValues !== undefined &&
+    isContiguousOrdinalTable(deviceOverlayValues) &&
+    (deviceRange?.kind !== 'enum' || deviceRange.enumCount === undefined || deviceRange.enumCount === deviceCount);
+  const enumValues = deviceComplete
+    ? { ...deviceOverlayValues }
+    : deviceOverlayValues !== undefined || overlay?.values !== undefined || sharedRoster !== undefined
       ? { ...(sharedRoster ?? {}), ...(overlay?.values ?? {}), ...(deviceOverlayValues ?? {}) }
       : undefined;
 
@@ -543,10 +584,11 @@ function buildParamSchema(
     key,
     schema: {
       display_name: humanize(key),
-      // A count-known device-cache enum (and a roundtrip-derived discrete
-      // selector) reports 'enum' even though its catalog entry was 'unverified' —
-      // the device's own behaviour is the authority on kind.
-      unit: deviceEnumNoNames || roundtripDiscrete ? 'enum' : param.unit,
+      // A parameter with an enum vocabulary, a count-known device-cache enum and
+      // a roundtrip-derived discrete selector all report 'enum' even though the
+      // catalog entry was 'unverified' / 'count' — the device's own behaviour is
+      // the authority on kind.
+      unit: enumValues !== undefined || deviceEnumNoNames || roundtripDiscrete ? 'enum' : param.unit,
       display_min: displayMin,
       display_max: displayMax,
       enum_values: enumValues,
@@ -559,10 +601,12 @@ function buildParamSchema(
           ? 'discrete'
           : 'continuous',
       // A captured/correlated table is partial (only some ordinals named), so
-      // numeric ordinals outside it must pass through, not error. A pure family
-      // overlay (no device/shared contribution) stays a complete vocab. A
-      // count-known enum (or roundtrip-derived selector) with NO names is partial
-      // by definition (numeric only).
+      // numeric ordinals outside it must pass through, not error — and a static
+      // device table, complete for the firmware it was read from, is partial too: a
+      // newer firmware appends entries. A pure family overlay (no device/shared
+      // contribution) stays a complete vocab. A count-known enum (or
+      // roundtrip-derived selector) with NO names is partial by definition
+      // (numeric only).
       enum_partial:
         (deviceOverlayValues !== undefined || sharedRoster !== undefined || deviceEnumNoNames || roundtripDiscrete)
           ? true

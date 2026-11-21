@@ -334,7 +334,11 @@ export function liveGridView(frame: number[], modelByte: number): Gen3GridCellVi
   return parseGen3GridLayout(frame, modelByte).map((c) =>
     c.isShunt
       ? {
-          effect_id: c.shuntIndex ?? 0,
+          // Shunt: carry the SAME `effect_id` convention as the dump grid
+          // (`presetBody.parseGrid`: effect_id > 1000 = shunt, `Shunt <eid-1023>`),
+          // so a consumer keying shunts by effect_id sees one id across both
+          // representations. `shuntIndex` is the device's sequential 1-based index.
+          effect_id: 1023 + (c.shuntIndex ?? 0),
           row: c.row,
           col: c.col,
           route_flag: c.cableInputMask,
@@ -362,6 +366,7 @@ function wholePresetView(
     model_id: decoded.model_id,
     preset_name: decoded.preset_name,
     crc_valid: decoded.crc_valid,
+    ...(decoded.empty ? { empty: true } : {}),
     scene_names: decoded.scene_names,
     grid: decoded.grid,
     blocks: decoded.blocks,
@@ -384,6 +389,7 @@ function snapshotFromDecoded(
   source: Gen3WholePresetView['source'],
   deviceLabel: string,
   readStartedMs: number,
+  location?: number,
 ): PresetSnapshot {
   const placed = decoded.blocks ?? [];
   // Unique id per block (family, with _N suffix when a family repeats), so
@@ -414,14 +420,19 @@ function snapshotFromDecoded(
     scenes.push({ scene: s + 1, channels, bypassed, name: sceneNames[s] });
   }
 
-  const warnings = [
-    `gen-3 whole-preset decode (${source}): the patch body was Huffman-decompressed and ` +
-      `structurally decoded (CRC ${decoded.crc_valid ? 'valid' : 'INVALID — values may be unreliable'}). ` +
-      `'slots'/'scenes' are a summary; the full routing grid, per-channel (A/B/C/D) block types, ` +
-      `scene controllers, and modifiers are in 'whole_preset'. This snapshot is informational — ` +
-      `it is NOT a positioned grid that round-trips through apply_preset by slot. Named knob VALUES ` +
-      `beyond amp are not yet decoded (the body word->knob map awaits a value-scale ground truth).`,
-  ];
+  const warnings = decoded.empty
+    ? [
+        `${location !== undefined ? `slot ${location}` : 'this preset'} is unused (empty preset slot): ` +
+          `the dump carries an all-zero patch, so there is no name, grid, scene or block data to decode.`,
+      ]
+    : [
+        `gen-3 whole-preset decode (${source}): the patch body was Huffman-decompressed and ` +
+          `structurally decoded (CRC ${decoded.crc_valid ? 'valid' : 'INVALID — values may be unreliable'}). ` +
+          `'slots'/'scenes' are a summary; the full routing grid, per-channel (A/B/C/D) block types, ` +
+          `scene controllers, and modifiers are in 'whole_preset'. This snapshot is informational — ` +
+          `it is NOT a positioned grid that round-trips through apply_preset by slot. Named knob VALUES ` +
+          `beyond amp are not yet decoded (the body word->knob map awaits a value-scale ground truth).`,
+      ];
 
   return {
     name: decoded.preset_name,
@@ -694,7 +705,7 @@ export function makeReader(opts: {
               `gen-3 preset (${err instanceof Error ? err.message : String(err)}).`,
           );
         }
-        return snapshotFromDecoded(decoded, 'stored-dump', deviceLabel, readStartedMs);
+        return snapshotFromDecoded(decoded, 'stored-dump', deviceLabel, readStartedMs, loc);
       }
 
       // ACTIVE BUFFER. The whole-patch body (amp/scenes/modifiers) still isn't

@@ -10,13 +10,38 @@
  * paramIds are FM3's own (reusing the III's mis-addresses 6.9% of shared
  * params; see `docs/_private/MINING-FINDINGS-FM-VP4.md`). community-beta.
  */
-import { FM3_PARAMS_BY_FAMILY } from '../../../gen3/fm3/index.js';
+import { FM3_PARAMS_BY_FAMILY, FM3_ENUM_OVERRIDES, FM3_RANGES } from '../../../gen3/fm3/index.js';
+import { toSymbolEnumOverrides } from '../catalog.js';
+import type { DeviceParamRange, DeviceRangeTable } from '../catalog.js';
 import type { FractalModernConfig, } from '../factory.js';
 import type { PresetSpec } from '../../../core/protocol-generic/types.js';
 import {
   MODERN_AGENT_GUIDANCE,
   MODERN_BLOCK_PARAMS_SUMMARY,
 } from './shared.js';
+
+// FM3 does not wire its whole device-true range table into the catalog (unlike FM9 / III);
+// it keeps the params-table bounds for everything else. The one exception is the
+// typecode-0x52 knobs: the device shows them on a linear 0..10 scale, so their float rows
+// are passed as device ranges (same behaviour as FM9 / III: display 0..10, linear taper
+// overriding the params table's AM4 log hint), instead of the AM4-derived 0.5..500 / raw
+// passthrough the params table would give.
+const FM3_KNOB_RANGES: DeviceRangeTable = (() => {
+  const out: Record<string, Record<number, DeviceParamRange>> = {};
+  for (const [family, rows] of Object.entries(FM3_RANGES)) {
+    for (const [paramId, row] of Object.entries(rows)) {
+      if (row.kind === 'float' && row.typecode === 0x52) (out[family] ??= {})[Number(paramId)] = row;
+    }
+  }
+  return out;
+})();
+
+// The FM3's device-true label lists (one complete list per enum parameter, the same shape the
+// FM9 / III ship) are the vocabulary of its enum parameters. Without them the descriptor fell
+// back to the shared overlay and rosters, which disagree with the unit for some parameters (amp
+// input select, delay type = routing, reverb type naming, ...). Param names are unique, so the
+// family-shaped lists re-key losslessly to symbols.
+const FM3_SYMBOL_ENUM_OVERRIDES = toSymbolEnumOverrides(FM3_PARAMS_BY_FAMILY, FM3_ENUM_OVERRIDES);
 
 // FM3's grid is 4×12 (wire-confirmed 4 rows; 12 cols per FM3-Edit). The
 // example below keeps every slot within cols 1..4, which is valid.
@@ -94,6 +119,8 @@ export const FM3_CONFIG: FractalModernConfig = {
     'confirmed: set_block placement, save_preset, and the Windows serial-driver path ' +
     '(untested, not falsified).',
   params_by_family: FM3_PARAMS_BY_FAMILY,
+  enum_overrides: FM3_SYMBOL_ENUM_OVERRIDES,
+  device_ranges: FM3_KNOB_RANGES,
   device_true_roster: true,
   canonical_terms: {
     block: 'block',

@@ -6,9 +6,11 @@
  * the Axe-Fx III (0x10) — the root cause of the "wrong codec / frames ignored
  * by the device" bug class. This suite smoke-invokes every frame-emitting
  * member of a codec bound to 0x10 / 0x11 / 0x12 and asserts byte f[4] of every
- * produced frame equals the bound model byte.
+ * produced frame equals the bound model byte, and that no produced frame carries
+ * a firmware-transfer function byte (shared/firmwareTransfer.ts).
  */
 import { createModernFractalCodec } from '../../../src/gen3/axe-fx-iii/setParam.js';
+import { findFirmwareTransferFrame } from '../../../src/shared/firmwareTransfer.js';
 
 const MODEL_BYTES = [0x10, 0x11, 0x12] as const;
 
@@ -60,6 +62,10 @@ export function runBoundCodecTests(): void {
         if (frame[0] !== 0xf0) throw new Error(`[boundcodec] ${name}@0x${mb.toString(16)}: not a SysEx frame`);
         if (frame[4] !== mb) {
           throw new Error(`[boundcodec] ${name}@0x${mb.toString(16)}: frame carries model byte 0x${frame[4]?.toString(16)} — the wrong-codec bug class`);
+        }
+        const fw = findFirmwareTransferFrame(frame);
+        if (fw) {
+          throw new Error(`[boundcodec] ${name}@0x${mb.toString(16)}: frame carries firmware-transfer function 0x${fw.fn.toString(16)}`);
         }
       }
     }

@@ -9,6 +9,8 @@ import { runLineageTests } from './shared/lineage.test.js';
 import { runEffectIdTests, EFFECTID_CASE_COUNT } from './shared/effectid.test.js';
 import { runIdentifyTests, IDENTIFY_CASE_COUNT } from './shared/identify.test.js';
 import { runFirmwareTests, FIRMWARE_CASE_COUNT } from './shared/firmware.test.js';
+import { runFirmwareTransferTests, FIRMWARE_TRANSFER_CASE_COUNT } from './shared/firmwaretransfer.test.js';
+import { runQueryFunctionsTests, QUERY_FUNCTIONS_CASE_COUNT } from './shared/queryfunctions.test.js';
 import { runAm4SetParamTests, AM4_GOLDEN_CASE_COUNT } from './am4/setparam.test.js';
 import { runAm4BlockLayoutTests, AM4_BLOCK_LAYOUT_CASE_COUNT } from './am4/blocklayout.test.js';
 import { runAm4DecodeTests, AM4_DECODE_CASE_COUNT } from './am4/decode.test.js';
@@ -46,6 +48,7 @@ import { runAxeFxIIISetParamTests, AXEFX3_GOLDEN_CASE_COUNT } from './gen3/axe-f
 import { runAxeFxIIICalibrationTest } from './gen3/axe-fx-iii/calibration.test.js';
 import { runGen3RoutingTests, GEN3_ROUTING_CASE_COUNT } from './gen3/axe-fx-iii/routing.test.js';
 import { runGen3SubactionTests, GEN3_SUBACTION_CASE_COUNT } from './gen3/axe-fx-iii/subactions.test.js';
+import { runGen3ReadPollsTests, GEN3_READPOLLS_CASE_COUNT } from './gen3/axe-fx-iii/readpolls.test.js';
 import { runGen3GridLayoutTests, GEN3_GRIDLAYOUT_CASE_COUNT } from './gen3/axe-fx-iii/gridlayout.test.js';
 import { runModernFamilyTests, MODERN_FAMILY_CASE_COUNT } from './gen3/modern-family/catalog.test.js';
 import { runBoundCodecTests, BOUNDCODEC_CASE_COUNT } from './gen3/modern-family/boundcodec.test.js';
@@ -53,6 +56,7 @@ import { runFm3MetersTests, FM3_METERS_CASE_COUNT } from './gen3/fm3/meters.test
 import { runFm3BlockParamsTests, FM3_BLOCKPARAMS_CASE_COUNT } from './gen3/fm3/blockparams.test.js';
 import { runPresetAuthorIrTests, PRESET_AUTHOR_IR_CASE_COUNT } from './gen3/fm3/preset-author-ir.test.js';
 import { runPresetSynthIrTests, PRESET_SYNTH_IR_CASE_COUNT } from './gen3/fm3/preset-synth-ir.test.js';
+import { runWalkBlocksCountTests, WALKBLOCKS_COUNT_CASE_COUNT } from './gen3/fm3/walkblocks-count.test.js';
 import { runDefaultRawRoundTripTests, DEFAULT_RAW_ROUNDTRIP_CASE_COUNT } from './gen3/default-raw-roundtrip.test.js';
 import { runPresetSynthCatalogTests, PRESET_SYNTH_CATALOG_CASE_COUNT } from './gen3/fm3/preset-synth-catalog.test.js';
 import { runGen3SynthNonFm3Tests, GEN3_SYNTH_NONFM3_CASE_COUNT } from './gen3/gen3-synth-nonfm3.test.js';
@@ -62,6 +66,7 @@ import { runCrossBlockParamsTests, CROSS_BLOCKPARAMS_CASE_COUNT } from './gen3/m
 import { runFm3TelemetryTests, FM3_TELEMETRY_CASE_COUNT } from './gen3/fm3/telemetry.test.js';
 import { runGen3RosterTests, FM3_ROSTER_CASE_COUNT } from './gen3/fm3/roster.test.js';
 import { runPresetValidateTests, PRESET_VALIDATE_CASE_COUNT } from './gen3/preset-validate.test.js';
+import { runEmptySlotTests, EMPTY_SLOT_CASE_COUNT } from './gen3/empty-slot.test.js';
 import { runFm9MetersTests, FM9_METERS_CASE_COUNT } from './gen3/fm9/meters.test.js';
 import { runFm9FootControllerTests, FM9_FOOTCONTROLLER_CASE_COUNT } from './gen3/fm9/footcontroller.test.js';
 import { runFm9ModifierTests, FM9_MODIFIER_CASE_COUNT } from './gen3/fm9/modifiers.test.js';
@@ -75,13 +80,20 @@ import { runGen3TypeNameTests, GEN3_TYPENAME_CASE_COUNT } from './gen3/axe-fx-ii
 import { runAm4InternalFromDisplayTests, AM4_INTERNAL_FROM_DISPLAY_CASE_COUNT } from './am4/internalfromdisplay.test.js';
 import { runAxeFxIIApplicabilityTests, AXEFX2_APPLICABILITY_CASE_COUNT } from './gen2/axe-fx-ii/applicability.test.js';
 import { runSharedDisplayScaleTests, SHARED_DISPLAYSCALE_CASE_COUNT } from './shared/displayscale.test.js';
+import { runSysExAssemblerTests, SYSEX_ASSEMBLER_CASE_COUNT } from './shared/sysexassembler.test.js';
 import { runDevicesSmokeTests, DEVICES_SMOKE_CASE_COUNT } from './devices-smoke.test.js';
 import { runRecords, RECORDS_CASE_COUNT } from './cache/records.test.js';
 import { runAssign, runAssignLive, ASSIGN_CASE_COUNT, ASSIGN_LIVE_CASE_COUNT } from './cache/assign.test.js';
 import { runBuildProfile, BUILDPROFILE_CASE_COUNT } from './cache/buildprofile.test.js';
 import { runAm4Cache, AM4_CACHE_CASE_COUNT } from './cache/am4-cache.test.js';
 import { runLiveWalk, LIVEWALK_CASE_COUNT } from './cache/livewalk.test.js';
+import { runLiveWalkReplies, LIVEWALK_REPLIES_CASE_COUNT } from './cache/livewalk-replies.test.js';
+import { runLiveWalkSlots, LIVEWALK_SLOTS_CASE_COUNT } from './cache/livewalk-slots.test.js';
+import { runLiveWalkTraffic, LIVEWALK_TRAFFIC_CASE_COUNT } from './cache/livewalk-traffic.test.js';
+import { runLiveWalkBounds, LIVEWALK_BOUNDS_CASE_COUNT } from './cache/livewalk-bounds.test.js';
+import { runLiveWalkHints, LIVEWALK_HINTS_CASE_COUNT } from './cache/livewalk-hints.test.js';
 import { runFullWalk, FULLWALK_CASE_COUNT } from './cache/fullwalk.test.js';
+import { runKnobRule, KNOBRULE_CASE_COUNT } from './cache/knobrule.test.js';
 import { runRigV2Replay, RIGV2REPLAY_CASE_COUNT } from './cache/rigv2replay.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
 import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
@@ -91,6 +103,14 @@ import { runConceptCoverageTests, CONCEPT_COVERAGE_CASE_COUNT } from './convert/
 import { runLineageIndexTests, LINEAGE_INDEX_CASE_COUNT } from './convert/lineage-index.test.js';
 import { runEngineTests, ENGINE_CASE_COUNT } from './convert/engine.test.js';
 import { runTargetRangesTests, TARGET_RANGES_CASE_COUNT } from './convert/target-ranges.test.js';
+import { runGen3TaperTests, GEN3_TAPER_CASE_COUNT } from './convert/gen3-taper.test.js';
+import { runEnumParamsTests, ENUM_PARAMS_CASE_COUNT } from './convert/enum-params.test.js';
+import { runSerialCloseTests, SERIAL_CLOSE_CASE_COUNT } from './shared/serial-close.test.js';
+import { runGridGuardTests, GRID_GUARD_CASE_COUNT } from './gen3/presetbody-grid-guard.test.js';
+import { runLiveGridShuntTests, LIVE_GRID_SHUNT_CASE_COUNT } from './gen3/live-grid-shunt.test.js';
+import { runTaperDecodeTests, TAPER_DECODE_CASE_COUNT } from './gen3/taper-decode.test.js';
+import { runParamsRangesAgreeTests, PARAMS_RANGES_AGREE_CASE_COUNT } from './gen3/params-ranges-agree.test.js';
+import { runEnumOverlayDeviceTruthTests, ENUM_OVERLAY_DEVICE_TRUTH_CASE_COUNT } from './gen3/enum-overlay-device-truth.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -107,6 +127,8 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `shared/effectid (${EFFECTID_CASE_COUNT} goldens)`, run: runEffectIdTests },
   { name: `shared/identify (${IDENTIFY_CASE_COUNT} goldens)`, run: runIdentifyTests },
   { name: `shared/firmware (${FIRMWARE_CASE_COUNT} cases)`, run: runFirmwareTests },
+  { name: `shared/firmwareTransfer (${FIRMWARE_TRANSFER_CASE_COUNT} cases)`, run: runFirmwareTransferTests },
+  { name: `shared/queryFunctions (${QUERY_FUNCTIONS_CASE_COUNT} cases)`, run: runQueryFunctionsTests },
   { name: `am4/setparam (${AM4_GOLDEN_CASE_COUNT} goldens)`, run: runAm4SetParamTests },
   { name: `am4/blocklayout (${AM4_BLOCK_LAYOUT_CASE_COUNT} cases)`, run: runAm4BlockLayoutTests },
   { name: `am4/decode (${AM4_DECODE_CASE_COUNT} cases)`, run: runAm4DecodeTests },
@@ -144,12 +166,14 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: 'axe-fx-iii/calibration', run: runAxeFxIIICalibrationTest },
   { name: `axe-fx-iii/routing (${GEN3_ROUTING_CASE_COUNT} goldens)`, run: runGen3RoutingTests },
   { name: `axe-fx-iii/subactions (${GEN3_SUBACTION_CASE_COUNT} goldens)`, run: runGen3SubactionTests },
+  { name: `axe-fx-iii/readPolls (${GEN3_READPOLLS_CASE_COUNT} byte-identity cases)`, run: runGen3ReadPollsTests },
   { name: `axe-fx-iii/gridlayout (${GEN3_GRIDLAYOUT_CASE_COUNT} goldens)`, run: runGen3GridLayoutTests },
   { name: `modern-family/catalog (${MODERN_FAMILY_CASE_COUNT} goldens)`, run: runModernFamilyTests },
   { name: `modern-family/boundcodec (${BOUNDCODEC_CASE_COUNT} model bytes, full surface)`, run: runBoundCodecTests },
   { name: `fm3/meters (${FM3_METERS_CASE_COUNT} cases)`, run: runFm3MetersTests },
   { name: `fm3/blockparams (${FM3_BLOCKPARAMS_CASE_COUNT} live-FM3 preset goldens)`, run: runFm3BlockParamsTests },
   { name: `fm3/preset-author-ir (${PRESET_AUTHOR_IR_CASE_COUNT} offline round-trip)`, run: runPresetAuthorIrTests },
+  { name: `fm3/walkblocks-count (${WALKBLOCKS_COUNT_CASE_COUNT} placed-block completeness cases)`, run: runWalkBlocksCountTests },
   { name: `fm3/preset-synth-ir (${PRESET_SYNTH_IR_CASE_COUNT} full-body synthesis round-trip)`, run: runPresetSynthIrTests },
   { name: `fm3/preset-synth-catalog (${PRESET_SYNTH_CATALOG_CASE_COUNT} geometry families, catalog/defaults build)`, run: runPresetSynthCatalogTests },
   { name: `gen3-synth-nonfm3 (${GEN3_SYNTH_NONFM3_CASE_COUNT} devices: FM9 + Axe-Fx III full-body synthesis round-trip)`, run: runGen3SynthNonFm3Tests },
@@ -159,6 +183,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `fm3/telemetry (${FM3_TELEMETRY_CASE_COUNT} live-FM3 frame goldens)`, run: runFm3TelemetryTests },
   { name: `gen3/roster (${FM3_ROSTER_CASE_COUNT} projection goldens)`, run: runGen3RosterTests },
   { name: `gen3/preset-validate (${PRESET_VALIDATE_CASE_COUNT} cases)`, run: runPresetValidateTests },
+  { name: `gen3/empty-slot (${EMPTY_SLOT_CASE_COUNT} cases: empty preset slot + bounded Huffman tree)`, run: runEmptySlotTests },
   { name: `fm9/meters (${FM9_METERS_CASE_COUNT} cases)`, run: runFm9MetersTests },
   { name: `fm9/footcontroller (${FM9_FOOTCONTROLLER_CASE_COUNT} cases)`, run: runFm9FootControllerTests },
   { name: `fm9/modifiers (${FM9_MODIFIER_CASE_COUNT} cases)`, run: runFm9ModifierTests },
@@ -169,9 +194,12 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `vp4/structureblob (${VP4_STRUCTUREBLOB_CASE_COUNT} goldens)`, run: runVp4StructureBlobTests },
   { name: `gen3/discrete-overlay (${DISCRETE_OVERLAY_CASE_COUNT} cases)`, run: runDiscreteOverlayTests },
   { name: `gen3/typename (${GEN3_TYPENAME_CASE_COUNT} goldens)`, run: runGen3TypeNameTests },
+  { name: `gen3/params-ranges-agree (${PARAMS_RANGES_AGREE_CASE_COUNT} cases)`, run: runParamsRangesAgreeTests },
+  { name: `gen3/enum-overlay-device-truth (${ENUM_OVERLAY_DEVICE_TRUTH_CASE_COUNT} cases)`, run: runEnumOverlayDeviceTruthTests },
   { name: `am4/internalFromDisplay (${AM4_INTERNAL_FROM_DISPLAY_CASE_COUNT} cases)`, run: runAm4InternalFromDisplayTests },
   { name: `axe-fx-ii/applicability (${AXEFX2_APPLICABILITY_CASE_COUNT} cases)`, run: runAxeFxIIApplicabilityTests },
   { name: `shared/displayScale (${SHARED_DISPLAYSCALE_CASE_COUNT} cases)`, run: runSharedDisplayScaleTests },
+  { name: `shared/sysexAssembler (${SYSEX_ASSEMBLER_CASE_COUNT} inbound-fragment cases)`, run: runSysExAssemblerTests },
   { name: `devices/smoke (${DEVICES_SMOKE_CASE_COUNT} descriptors, from dist)`, run: runDevicesSmokeTests },
   { name: `cache/records (${RECORDS_CASE_COUNT} cases)`, run: runRecords },
   { name: `cache/assign (${ASSIGN_CASE_COUNT} oracle cases)`, run: runAssign },
@@ -179,7 +207,13 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/buildprofile (${BUILDPROFILE_CASE_COUNT} cases)`, run: runBuildProfile },
   { name: `cache/am4 (${AM4_CACHE_CASE_COUNT} cases)`, run: runAm4Cache },
   { name: `cache/livewalk (${LIVEWALK_CASE_COUNT} cases)`, run: runLiveWalk },
+  { name: `cache/livewalk-replies (${LIVEWALK_REPLIES_CASE_COUNT} cases)`, run: runLiveWalkReplies },
+  { name: `cache/livewalk-slots (${LIVEWALK_SLOTS_CASE_COUNT} cases)`, run: runLiveWalkSlots },
+  { name: `cache/livewalk-traffic (${LIVEWALK_TRAFFIC_CASE_COUNT} cases)`, run: runLiveWalkTraffic },
+  { name: `cache/livewalk-bounds (${LIVEWALK_BOUNDS_CASE_COUNT} cases)`, run: runLiveWalkBounds },
+  { name: `cache/livewalk-hints (${LIVEWALK_HINTS_CASE_COUNT} cases)`, run: runLiveWalkHints },
   { name: `cache/fullwalk (${FULLWALK_CASE_COUNT} cases)`, run: runFullWalk },
+  { name: `cache/knobrule (${KNOBRULE_CASE_COUNT} cases)`, run: runKnobRule },
   { name: `cache/rigv2replay (${RIGV2REPLAY_CASE_COUNT} device captures)`, run: runRigV2Replay },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
   { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },
@@ -190,6 +224,12 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `convert/engine (${ENGINE_CASE_COUNT} conversion cases)`, run: runEngineTests },
   { name: `convert/grid-eid (${CONVERT_GRID_EID_CASE_COUNT} cross-device fm3 eid-assignment)`, run: runConvertGridEidTests },
   { name: `convert/target-ranges (${TARGET_RANGES_CASE_COUNT} cases)`, run: runTargetRangesTests },
+  { name: `convert/gen3-taper (${GEN3_TAPER_CASE_COUNT} cases)`, run: runGen3TaperTests },
+  { name: `convert/enum-params (${ENUM_PARAMS_CASE_COUNT} cases)`, run: runEnumParamsTests },
+  { name: `shared/serial-close (${SERIAL_CLOSE_CASE_COUNT} cases)`, run: runSerialCloseTests },
+  { name: `gen3/presetbody-grid-guard (${GRID_GUARD_CASE_COUNT} cases)`, run: runGridGuardTests },
+  { name: `gen3/live-grid-shunt (${LIVE_GRID_SHUNT_CASE_COUNT} cases)`, run: runLiveGridShuntTests },
+  { name: `gen3/taper-decode (${TAPER_DECODE_CASE_COUNT} cases)`, run: runTaperDecodeTests },
 ];
 
 let failures = 0;

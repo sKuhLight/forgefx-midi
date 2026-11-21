@@ -1708,9 +1708,7 @@
         "family": "GLOBAL",
         "paramId": 14656,
         "name": "GLOBAL_METRONOME_CC",
-        "unit": "numeric",
-        "displayMin": 0,
-        "displayMax": 127
+        "unit": "enum"
       },
       {
         "family": "GLOBAL",
@@ -2500,9 +2498,9 @@
         "family": "CONTROLLERS",
         "paramId": 109,
         "name": "CONTROLLERS_ENV_GAINMONITOR",
-        "unit": "percent",
+        "unit": "numeric",
         "displayMin": 0,
-        "displayMax": 100
+        "displayMax": 1
       },
       {
         "family": "CONTROLLERS",
@@ -3245,7 +3243,7 @@
         "name": "COMP_LEVEL",
         "displayLabel": "Level",
         "unit": "db",
-        "displayMin": -80,
+        "displayMin": -20,
         "displayMax": 20
       },
       {
@@ -3338,17 +3336,17 @@
         "paramId": 17,
         "name": "COMP_EMPHASIS",
         "displayLabel": "Emphasis",
-        "unit": "knob_0_20",
+        "unit": "knob_0_10",
         "displayMin": 0,
-        "displayMax": 20
+        "displayMax": 10
       },
       {
         "family": "COMP",
         "paramId": 18,
         "name": "COMP_DYNAMICS",
         "displayLabel": "Dynamics",
-        "unit": "knob_0_10",
-        "displayMin": 0,
+        "unit": "numeric",
+        "displayMin": -10,
         "displayMax": 10
       },
       {
@@ -3799,9 +3797,7 @@
         "family": "PEQ",
         "paramId": 23,
         "name": "PEQ_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "PEQ",
@@ -3961,8 +3957,8 @@
         "paramId": 11,
         "name": "DISTORT_WSLPF",
         "unit": "hz",
-        "displayMin": 20,
-        "displayMax": 20000,
+        "displayMin": 400,
+        "displayMax": 40000,
         "scaling": "log10"
       },
       {
@@ -4123,8 +4119,8 @@
         "paramId": 32,
         "name": "DISTORT_WSHPF",
         "unit": "hz",
-        "displayMin": 20,
-        "displayMax": 20000,
+        "displayMin": 2,
+        "displayMax": 2000,
         "scaling": "log10"
       },
       {
@@ -4153,9 +4149,9 @@
         "paramId": 36,
         "name": "DISTORT_BIAS",
         "displayLabel": "Grid Bias",
-        "unit": "knob_0_10",
+        "unit": "percent",
         "displayMin": 0,
-        "displayMax": 10
+        "displayMax": 100
       },
       {
         "family": "DISTORT",
@@ -4167,9 +4163,9 @@
         "family": "DISTORT",
         "paramId": 38,
         "name": "DISTORT_PI_RATIO",
-        "unit": "ratio",
-        "displayMin": 1,
-        "displayMax": 50
+        "unit": "numeric",
+        "displayMin": 0,
+        "displayMax": 1
       },
       {
         "family": "DISTORT",
@@ -4397,8 +4393,7 @@
         "displayLabel": "Out Comp Clarity",
         "unit": "knob_0_10",
         "displayMin": 0,
-        "displayMax": 10,
-        "scaling": "log10"
+        "displayMax": 10
       },
       {
         "family": "DISTORT",
@@ -4433,9 +4428,9 @@
         "paramId": 75,
         "name": "DISTORT_COMPRESSION",
         "displayLabel": "Out Compression",
-        "unit": "percent",
+        "unit": "knob_0_10",
         "displayMin": 0,
-        "displayMax": 100
+        "displayMax": 10
       },
       {
         "family": "DISTORT",
@@ -4619,8 +4614,8 @@
         "paramId": 99,
         "name": "DISTORT_INDYNAMICS",
         "displayLabel": "Input Dynamics",
-        "unit": "knob_0_10",
-        "displayMin": 0,
+        "unit": "numeric",
+        "displayMin": -10,
         "displayMax": 10
       },
       {
@@ -4636,8 +4631,8 @@
         "name": "DISTORT_VARIAC",
         "displayLabel": "Variac",
         "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "displayMin": 50,
+        "displayMax": 150
       },
       {
         "family": "DISTORT",
@@ -4651,7 +4646,7 @@
         "paramId": 103,
         "name": "DISTORT_GRIDHARDNESS",
         "unit": "percent",
-        "displayMin": 0,
+        "displayMin": 10,
         "displayMax": 100
       },
       {
@@ -4680,7 +4675,7 @@
         "paramId": 107,
         "name": "DISTORT_TRIODE2EXTIME",
         "unit": "ms",
-        "displayMin": 0,
+        "displayMin": 0.1,
         "displayMax": 100,
         "scaling": "log10"
       },
@@ -4689,7 +4684,7 @@
         "paramId": 108,
         "name": "DISTORT_TRIODE2RECTIME",
         "unit": "ms",
-        "displayMin": 0,
+        "displayMin": 0.2,
         "displayMax": 200,
         "scaling": "log10"
       },
@@ -4718,9 +4713,9 @@
         "family": "DISTORT",
         "paramId": 112,
         "name": "DISTORT_TRIODE1RATIO",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "bipolar_percent",
+        "displayMin": -200,
+        "displayMax": 200
       },
       {
         "family": "DISTORT",
@@ -5544,17 +5539,13 @@
         "family": "CABINET",
         "paramId": 85,
         "name": "CABINET_DYNACAB_TYPE1",
-        "unit": "count",
-        "displayMin": 0,
-        "displayMax": 31
+        "unit": "enum"
       },
       {
         "family": "CABINET",
         "paramId": 86,
         "name": "CABINET_DYNACAB_TYPE2",
-        "unit": "count",
-        "displayMin": 0,
-        "displayMax": 31
+        "unit": "enum"
       },
       {
         "family": "CABINET",
@@ -5572,17 +5563,13 @@
         "family": "CABINET",
         "paramId": 89,
         "name": "CABINET_DYNACAB_MIC1",
-        "unit": "count",
-        "displayMin": 0,
-        "displayMax": 31
+        "unit": "enum"
       },
       {
         "family": "CABINET",
         "paramId": 90,
         "name": "CABINET_DYNACAB_MIC2",
-        "unit": "count",
-        "displayMin": 0,
-        "displayMax": 31
+        "unit": "enum"
       },
       {
         "family": "CABINET",
@@ -5873,7 +5860,7 @@
         "name": "REVERB_SIZE",
         "displayLabel": "Size",
         "unit": "percent",
-        "displayMin": 0,
+        "displayMin": 1,
         "displayMax": 100
       },
       {
@@ -5907,7 +5894,7 @@
         "displayLabel": "Pre-Delay",
         "unit": "ms",
         "displayMin": 0,
-        "displayMax": 250
+        "displayMax": 1000
       },
       {
         "family": "REVERB",
@@ -5972,9 +5959,7 @@
         "family": "REVERB",
         "paramId": 17,
         "name": "REVERB_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "REVERB",
@@ -6275,9 +6260,7 @@
         "paramId": 55,
         "name": "REVERB_PITCHDIR",
         "displayLabel": "Direction",
-        "unit": "count",
-        "displayMin": 0,
-        "displayMax": 3
+        "unit": "enum"
       },
       {
         "family": "REVERB",
@@ -6291,9 +6274,7 @@
         "paramId": 57,
         "name": "REVERB_PITCHPOS",
         "displayLabel": "Position",
-        "unit": "count",
-        "displayMin": 0,
-        "displayMax": 2
+        "unit": "enum"
       },
       {
         "family": "REVERB",
@@ -6405,8 +6386,8 @@
         "name": "DELAY_TIME",
         "displayLabel": "Time",
         "unit": "ms",
-        "displayMin": 0,
-        "displayMax": 8000
+        "displayMin": 1,
+        "displayMax": 16000
       },
       {
         "family": "DELAY",
@@ -6426,8 +6407,8 @@
         "family": "DELAY",
         "paramId": 5,
         "name": "DELAY_FEEDL",
-        "unit": "percent",
-        "displayMin": 0,
+        "unit": "bipolar_percent",
+        "displayMin": -100,
         "displayMax": 100
       },
       {
@@ -6549,9 +6530,7 @@
         "family": "DELAY",
         "paramId": 21,
         "name": "DELAY_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "DELAY",
@@ -6622,8 +6601,8 @@
         "family": "DELAY",
         "paramId": 31,
         "name": "DELAY_FEEDRL",
-        "unit": "percent",
-        "displayMin": 0,
+        "unit": "bipolar_percent",
+        "displayMin": -100,
         "displayMax": 100
       },
       {
@@ -7302,9 +7281,7 @@
         "family": "MULTITAP",
         "paramId": 35,
         "name": "MULTITAP_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "MULTITAP",
@@ -7869,32 +7846,32 @@
         "family": "MULTITAP",
         "paramId": 116,
         "name": "MULTITAP_FEEDBACK12",
-        "unit": "percent",
-        "displayMin": 0,
+        "unit": "bipolar_percent",
+        "displayMin": -100,
         "displayMax": 100
       },
       {
         "family": "MULTITAP",
         "paramId": 117,
         "name": "MULTITAP_FEEDBACK23",
-        "unit": "percent",
-        "displayMin": 0,
+        "unit": "bipolar_percent",
+        "displayMin": -100,
         "displayMax": 100
       },
       {
         "family": "MULTITAP",
         "paramId": 118,
         "name": "MULTITAP_FEEDBACK34",
-        "unit": "percent",
-        "displayMin": 0,
+        "unit": "bipolar_percent",
+        "displayMin": -100,
         "displayMax": 100
       },
       {
         "family": "MULTITAP",
         "paramId": 119,
         "name": "MULTITAP_FEEDBACK41",
-        "unit": "percent",
-        "displayMin": 0,
+        "unit": "bipolar_percent",
+        "displayMin": -100,
         "displayMax": 100
       },
       {
@@ -7922,56 +7899,72 @@
         "paramId": 2,
         "name": "PLEX_SHIFT1",
         "displayLabel": "Shift 1",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PLEX",
         "paramId": 3,
         "name": "PLEX_SHIFT2",
         "displayLabel": "Shift 2",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PLEX",
         "paramId": 4,
         "name": "PLEX_SHIFT3",
         "displayLabel": "Shift 3",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PLEX",
         "paramId": 5,
         "name": "PLEX_SHIFT4",
         "displayLabel": "Shift 4",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PLEX",
         "paramId": 6,
         "name": "PLEX_SHIFT5",
         "displayLabel": "Shift 5",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PLEX",
         "paramId": 7,
         "name": "PLEX_SHIFT6",
         "displayLabel": "Shift 6",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PLEX",
         "paramId": 8,
         "name": "PLEX_SHIFT7",
         "displayLabel": "Shift 7",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PLEX",
         "paramId": 9,
         "name": "PLEX_SHIFT8",
         "displayLabel": "Shift 8",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PLEX",
@@ -8466,9 +8459,9 @@
         "family": "PLEX",
         "paramId": 77,
         "name": "PLEX_GLOBALMIX",
-        "unit": "percent",
+        "unit": "numeric",
         "displayMin": 0,
-        "displayMax": 100
+        "displayMax": 1
       },
       {
         "family": "PLEX",
@@ -8608,8 +8601,8 @@
         "name": "CHORUS_VOICES",
         "displayLabel": "Number of Voices",
         "unit": "count",
-        "displayMin": 1,
-        "displayMax": 4
+        "displayMin": 2,
+        "displayMax": 8
       },
       {
         "family": "CHORUS",
@@ -8713,9 +8706,7 @@
         "family": "CHORUS",
         "paramId": 14,
         "name": "CHORUS_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "CHORUS",
@@ -8760,9 +8751,8 @@
         "name": "CHORUS_DRIVE",
         "displayLabel": "Drive",
         "unit": "knob_0_10",
-        "displayMin": 0.5,
-        "displayMax": 500,
-        "scaling": "log10"
+        "displayMin": 0,
+        "displayMax": 10
       },
       {
         "family": "CHORUS",
@@ -9077,17 +9067,13 @@
         "family": "FLANGER",
         "paramId": 15,
         "name": "FLANGER_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "FLANGER",
         "paramId": 15,
         "name": "FLANGER_OLD_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "FLANGER",
@@ -9152,8 +9138,7 @@
         "displayLabel": "Drive",
         "unit": "knob_0_10",
         "displayMin": 0,
-        "displayMax": 10,
-        "scaling": "log10"
+        "displayMax": 10
       },
       {
         "family": "FLANGER",
@@ -9215,10 +9200,7 @@
         "family": "FLANGER",
         "paramId": 24,
         "name": "FLANGER_OLD_DRY_LPFREQ",
-        "unit": "hz",
-        "displayMin": 20,
-        "displayMax": 20000,
-        "scaling": "log10"
+        "unit": "enum"
       },
       {
         "family": "FLANGER",
@@ -9231,10 +9213,7 @@
         "family": "FLANGER",
         "paramId": 25,
         "name": "FLANGER_OLD_DRY_HPFREQ",
-        "unit": "hz",
-        "displayMin": 20,
-        "displayMax": 20000,
-        "scaling": "log10"
+        "unit": "enum"
       },
       {
         "family": "FLANGER",
@@ -9268,7 +9247,7 @@
         "name": "FLANGER_TMIN",
         "displayLabel": "Min Time",
         "unit": "ms",
-        "displayMin": 0,
+        "displayMin": 0.34,
         "displayMax": 2
       },
       {
@@ -9283,7 +9262,7 @@
         "name": "FLANGER_TMAX",
         "displayLabel": "Max Time",
         "unit": "ms",
-        "displayMin": 0,
+        "displayMin": 2,
         "displayMax": 20
       },
       {
@@ -9388,9 +9367,7 @@
         "family": "ROTARY",
         "paramId": 9,
         "name": "ROTARY_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "ROTARY",
@@ -9447,9 +9424,8 @@
         "name": "ROTARY_DRIVE",
         "displayLabel": "Drive",
         "unit": "knob_0_10",
-        "displayMin": 0.5,
-        "displayMax": 500,
-        "scaling": "log10"
+        "displayMin": 0,
+        "displayMax": 10
       },
       {
         "family": "ROTARY",
@@ -9483,9 +9459,7 @@
         "paramId": 1,
         "name": "PHASER_ORDER",
         "displayLabel": "Order",
-        "unit": "count",
-        "displayMin": 1,
-        "displayMax": 12
+        "unit": "enum"
       },
       {
         "family": "PHASER",
@@ -9525,8 +9499,8 @@
         "name": "PHASER_FEEDBACK",
         "displayLabel": "Feedback",
         "unit": "bipolar_percent",
-        "displayMin": -90,
-        "displayMax": 90
+        "displayMin": -99.99,
+        "displayMax": 99.99
       },
       {
         "family": "PHASER",
@@ -9554,9 +9528,9 @@
         "paramId": 10,
         "name": "PHASER_BIAS",
         "displayLabel": "Bias",
-        "unit": "bipolar_percent",
-        "displayMin": -100,
-        "displayMax": 100
+        "unit": "numeric",
+        "displayMin": -1,
+        "displayMax": 1
       },
       {
         "family": "PHASER",
@@ -9596,9 +9570,7 @@
         "family": "PHASER",
         "paramId": 15,
         "name": "PHASER_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "PHASER",
@@ -9612,9 +9584,7 @@
         "paramId": 17,
         "name": "PHASER_MODE",
         "displayLabel": "Phaser Mode",
-        "unit": "count",
-        "displayMin": 0,
-        "displayMax": 3
+        "unit": "enum"
       },
       {
         "family": "PHASER",
@@ -9628,8 +9598,8 @@
         "paramId": 19,
         "name": "PHASER_TONE",
         "displayLabel": "Tone",
-        "unit": "knob_0_10",
-        "displayMin": 0,
+        "unit": "numeric",
+        "displayMin": -10,
         "displayMax": 10
       },
       {
@@ -9637,9 +9607,7 @@
         "paramId": 20,
         "name": "PHASER_DIRECTION",
         "displayLabel": "Sweep Direction",
-        "unit": "count",
-        "displayMin": 0,
-        "displayMax": 2
+        "unit": "enum"
       },
       {
         "family": "PHASER",
@@ -9670,9 +9638,7 @@
         "paramId": 24,
         "name": "PHASER_VCR_CURVE",
         "displayLabel": "Type",
-        "unit": "count",
-        "displayMin": 0,
-        "displayMax": 3
+        "unit": "enum"
       },
       {
         "family": "PHASER",
@@ -9701,7 +9667,7 @@
         "name": "PHASER_ATTACK",
         "displayLabel": "Attack",
         "unit": "ms",
-        "displayMin": 0,
+        "displayMin": 10,
         "displayMax": 1000,
         "scaling": "log10"
       },
@@ -9711,7 +9677,7 @@
         "name": "PHASER_RELEASE",
         "displayLabel": "Release",
         "unit": "ms",
-        "displayMin": 0,
+        "displayMin": 1,
         "displayMax": 100,
         "scaling": "log10"
       },
@@ -9823,9 +9789,9 @@
         "paramId": 9,
         "name": "WAH_MIX",
         "displayLabel": "Fat",
-        "unit": "percent",
+        "unit": "knob_0_10",
         "displayMin": 0,
-        "displayMax": 100
+        "displayMax": 10
       },
       {
         "family": "WAH",
@@ -9834,8 +9800,7 @@
         "displayLabel": "Drive",
         "unit": "knob_0_10",
         "displayMin": 0,
-        "displayMax": 10,
-        "scaling": "log10"
+        "displayMax": 10
       },
       {
         "family": "WAH",
@@ -10013,9 +9978,7 @@
         "family": "FORMANT",
         "paramId": 10,
         "name": "FORMANT_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "FORMANT",
@@ -10061,8 +10024,8 @@
         "name": "TREMOLO_DUTY",
         "displayLabel": "LFO Duty Cycle",
         "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "displayMin": 1,
+        "displayMax": 99
       },
       {
         "family": "TREMOLO",
@@ -10126,7 +10089,7 @@
         "displayLabel": "Width",
         "unit": "percent",
         "displayMin": 0,
-        "displayMax": 100
+        "displayMax": 400
       },
       {
         "family": "TREMOLO",
@@ -10304,28 +10267,36 @@
         "paramId": 15,
         "name": "PITCH_SHIFT1",
         "displayLabel": "Shift 1",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 16,
         "name": "PITCH_SHIFT2",
         "displayLabel": "Shift 2",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 17,
         "name": "PITCH_SHIFT3",
         "displayLabel": "Shift 3",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 18,
         "name": "PITCH_SHIFT4",
         "displayLabel": "Shift 4",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
@@ -10503,9 +10474,7 @@
         "family": "PITCH",
         "paramId": 42,
         "name": "PITCH_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "PITCH",
@@ -10750,112 +10719,144 @@
         "paramId": 77,
         "name": "PITCH_STEP1",
         "displayLabel": "Step 1 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 78,
         "name": "PITCH_STEP2",
         "displayLabel": "Step 2 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 79,
         "name": "PITCH_STEP3",
         "displayLabel": "Step 3 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 80,
         "name": "PITCH_STEP4",
         "displayLabel": "Step 4 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 81,
         "name": "PITCH_STEP5",
         "displayLabel": "Step 5 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 82,
         "name": "PITCH_STEP6",
         "displayLabel": "Step 6 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 83,
         "name": "PITCH_STEP7",
         "displayLabel": "Step 7 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 84,
         "name": "PITCH_STEP8",
         "displayLabel": "Step 8 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 85,
         "name": "PITCH_STEP9",
         "displayLabel": "Step 9 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 86,
         "name": "PITCH_STEP10",
         "displayLabel": "Step 10 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 87,
         "name": "PITCH_STEP11",
         "displayLabel": "Step 11 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 88,
         "name": "PITCH_STEP12",
         "displayLabel": "Step 12 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 89,
         "name": "PITCH_STEP13",
         "displayLabel": "Step 13 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 90,
         "name": "PITCH_STEP14",
         "displayLabel": "Step 14 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 91,
         "name": "PITCH_STEP15",
         "displayLabel": "Step 15 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
         "paramId": 92,
         "name": "PITCH_STEP16",
         "displayLabel": "Step 16 Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "PITCH",
@@ -11066,9 +11067,7 @@
         "paramId": 7,
         "name": "FILTER_ORDER",
         "displayLabel": "Order",
-        "unit": "count",
-        "displayMin": 1,
-        "displayMax": 12
+        "unit": "enum"
       },
       {
         "family": "FILTER",
@@ -11864,9 +11863,9 @@
         "family": "FDBKSEND",
         "paramId": 0,
         "name": "FDBKSEND_SENDLEVEL",
-        "unit": "db",
-        "displayMin": -80,
-        "displayMax": 20
+        "unit": "percent",
+        "displayMin": 0,
+        "displayMax": 100
       },
       {
         "family": "FDBKSEND",
@@ -11910,9 +11909,9 @@
         "family": "FDBKRET",
         "paramId": 4,
         "name": "FDBKRET_GLOBALMIX",
-        "unit": "percent",
+        "unit": "numeric",
         "displayMin": 0,
-        "displayMax": 100
+        "displayMax": 1
       },
       {
         "family": "FDBKRET",
@@ -11947,7 +11946,9 @@
         "paramId": 3,
         "name": "SYNTH_SHIFT1",
         "displayLabel": "Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "SYNTH",
@@ -12026,7 +12027,9 @@
         "paramId": 14,
         "name": "SYNTH_SHIFT2",
         "displayLabel": "Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "SYNTH",
@@ -12121,9 +12124,7 @@
         "family": "SYNTH",
         "paramId": 27,
         "name": "SYNTH_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "SYNTH",
@@ -12158,7 +12159,9 @@
         "paramId": 32,
         "name": "SYNTH_SHIFT3",
         "displayLabel": "Shift",
-        "unit": "numeric"
+        "unit": "semitones",
+        "displayMin": -24,
+        "displayMax": 24
       },
       {
         "family": "SYNTH",
@@ -12352,9 +12355,7 @@
         "family": "VOCODER",
         "paramId": 17,
         "name": "VOCODER_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "VOCODER",
@@ -12902,9 +12903,7 @@
         "family": "MEGATAP",
         "paramId": 21,
         "name": "MEGATAP_GLOBALMIX",
-        "unit": "percent",
-        "displayMin": 0,
-        "displayMax": 100
+        "unit": "enum"
       },
       {
         "family": "MEGATAP",
@@ -13119,7 +13118,7 @@
         "name": "GATE_ATTACK",
         "displayLabel": "Attack Time",
         "unit": "ms",
-        "displayMin": 0,
+        "displayMin": 0.1,
         "displayMax": 1000,
         "scaling": "log10"
       },
@@ -13129,7 +13128,7 @@
         "name": "GATE_HOLD",
         "displayLabel": "Hold Time",
         "unit": "ms",
-        "displayMin": 0,
+        "displayMin": 1,
         "displayMax": 1000,
         "scaling": "log10"
       },
@@ -13139,7 +13138,7 @@
         "name": "GATE_RELEASE",
         "displayLabel": "Release Time",
         "unit": "ms",
-        "displayMin": 0,
+        "displayMin": 1,
         "displayMax": 1000,
         "scaling": "log10"
       },
@@ -13321,9 +13320,9 @@
         "family": "RINGMOD",
         "paramId": 8,
         "name": "RINGMOD_GLOBALMIX",
-        "unit": "percent",
+        "unit": "numeric",
         "displayMin": 0,
-        "displayMax": 100
+        "displayMax": 1
       },
       {
         "family": "RINGMOD",
@@ -13930,9 +13929,9 @@
         "family": "TENTAP",
         "paramId": 44,
         "name": "TENTAP_GLOBALMIX",
-        "unit": "percent",
+        "unit": "numeric",
         "displayMin": 0,
-        "displayMax": 100
+        "displayMax": 1
       },
       {
         "family": "TENTAP",
@@ -14236,9 +14235,9 @@
         "family": "RESONATOR",
         "paramId": 37,
         "name": "RESONATOR_GLOBALMIX",
-        "unit": "percent",
+        "unit": "numeric",
         "displayMin": 0,
-        "displayMax": 100
+        "displayMax": 1
       },
       {
         "family": "RESONATOR",
@@ -14331,7 +14330,7 @@
         "name": "VOLUME_THRESHOLD",
         "displayLabel": "Threshold",
         "unit": "db",
-        "displayMin": -100,
+        "displayMin": -80,
         "displayMax": 0
       },
       {
@@ -14340,8 +14339,8 @@
         "name": "VOLUME_ATTACK",
         "displayLabel": "Attack",
         "unit": "ms",
-        "displayMin": 1,
-        "displayMax": 5000,
+        "displayMin": 10,
+        "displayMax": 1000,
         "scaling": "log10"
       },
       {
@@ -14351,7 +14350,7 @@
         "displayLabel": "Release",
         "unit": "ms",
         "displayMin": 1,
-        "displayMax": 5000,
+        "displayMax": 100,
         "scaling": "log10"
       },
       {
@@ -29080,7 +29079,7 @@
         },
         "33": {
           "kind": "float",
-          "displayMin": 0.01,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
@@ -30734,8 +30733,8 @@
         },
         "20": {
           "kind": "float",
-          "displayMin": 0.5,
-          "displayMax": 500,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
@@ -33141,8 +33140,8 @@
         },
         "16": {
           "kind": "float",
-          "displayMin": 0.5,
-          "displayMax": 500,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
@@ -33538,12 +33537,12 @@
         },
         "58": {
           "kind": "float",
-          "displayMin": 2,
-          "displayMax": 200,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 993,
+          "defaultRaw": 13039,
           "taper": "linear"
         },
         "59": {
@@ -34510,7 +34509,7 @@
         },
         "70": {
           "kind": "float",
-          "displayMin": 0.1,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
@@ -34694,12 +34693,12 @@
         },
         "88": {
           "kind": "float",
-          "displayMin": 2.5,
-          "displayMax": 40,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 13107,
+          "defaultRaw": 32767,
           "taper": "linear"
         },
         "89": {
@@ -35257,11 +35256,12 @@
         },
         "7": {
           "kind": "float",
-          "displayMin": 1,
-          "displayMax": 1000,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.1,
-          "typecode": 82
+          "typecode": 82,
+          "taper": "linear"
         },
         "8": {
           "kind": "float",
@@ -35741,12 +35741,12 @@
         },
         "25": {
           "kind": "float",
-          "displayMin": 10,
-          "displayMax": 200,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 17246,
+          "defaultRaw": 39196,
           "taper": "linear"
         },
         "26": {
@@ -35769,12 +35769,12 @@
         },
         "28": {
           "kind": "float",
-          "displayMin": 1,
-          "displayMax": 400,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 3121,
+          "defaultRaw": 32767,
           "taper": "linear"
         },
         "29": {
@@ -36045,12 +36045,12 @@
         },
         "20": {
           "kind": "float",
-          "displayMin": 0.05,
-          "displayMax": 50,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 984,
+          "defaultRaw": 26304,
           "taper": "linear"
         },
         "21": {
@@ -36103,8 +36103,8 @@
         },
         "26": {
           "kind": "float",
-          "displayMin": 200,
-          "displayMax": 20000,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
@@ -36203,12 +36203,12 @@
         },
         "3": {
           "kind": "float",
-          "displayMin": 40,
-          "displayMax": 400,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 7282,
+          "defaultRaw": 19728,
           "taper": "linear"
         },
         "4": {
@@ -36349,12 +36349,12 @@
         },
         "6": {
           "kind": "float",
-          "displayMin": 1,
-          "displayMax": 100,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 2648,
+          "defaultRaw": 22903,
           "taper": "linear"
         },
         "7": {
@@ -42010,8 +42010,8 @@
         },
         "65": {
           "kind": "float",
-          "displayMin": 5,
-          "displayMax": 5000,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
@@ -46570,12 +46570,12 @@
         },
         "32": {
           "kind": "float",
-          "displayMin": 0.1,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
-          "defaultRaw": 1523,
+          "defaultRaw": 16990,
           "taper": "linear"
         },
         "33": {
@@ -47245,8 +47245,8 @@
         },
         "17": {
           "kind": "float",
-          "displayMin": 0.5,
-          "displayMax": 500,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0.001,
           "typecode": 82,
@@ -49435,12 +49435,12 @@
         },
         "3": {
           "kind": "float",
-          "displayMin": 20,
-          "displayMax": 200,
+          "displayMin": 0,
+          "displayMax": 10,
           "scale": 10,
           "step": 0,
           "typecode": 82,
-          "defaultRaw": 20024,
+          "defaultRaw": 37619,
           "taper": "linear"
         },
         "4": {
@@ -49504,7 +49504,7 @@
         },
         "10": {
           "kind": "float",
-          "displayMin": 0.1,
+          "displayMin": 0,
           "displayMax": 10,
           "scale": 10,
           "step": 0,

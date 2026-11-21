@@ -5,7 +5,8 @@
  * 0x01. Sweeping that self-describe map yields the SAME `CacheRecord[]` the
  * `.cache` byte-walker (`records.ts`) produces, so either source feeds
  * `buildCache` and the derived device tables are identical (aside from the five
- * special table records — see "Coverage" below).
+ * special table records — see "Coverage" below — and unused slots at the very
+ * END of a table, which a walk cannot see; see "Empty slots").
  *
  * This module has two layers:
  *   1. a PURE codec — `buildDefQuery` / `buildEnumQuery` / `decodeReply` /
@@ -53,7 +54,13 @@
  * emitted record's `id` is the PARAM POSITION that was queried. The `scale`
  * slot is absent from the `.cache` grammar and is dropped here (cache/records.ts
  * has no scale field); the field VALUES min/max/def/step/tc match the cache
- * record byte-for-byte.
+ * record byte-for-byte. Despite its name, `scale` reads like the parameter's
+ * DEFAULT raw value on the units walked so far (it lies inside min..max and
+ * matches the formatted value at factory settings; a type list whose default is
+ * not its first entry reports that ordinal here). The display multiplier is the
+ * `def` slot instead — the value the cache stores under `def` and
+ * `buildDeviceCache` reads as a range's `scale`. So `scale != 0` says nothing
+ * about whether a param has a label list.
  *
  * Enum labels (view 0x1f): one septet-ASCII label per SUB ordinal. The SUB
  * ordinal is the parameter's RAW VALUE (min..max), NOT an index into the value
@@ -73,19 +80,148 @@
  *     int  : step is an integer >= 1
  *     float: otherwise
  * A captured 0x1f label list always wins → enum (a genuine enum whose step is
- * non-zero is still an enum). The walk's 2-way output is {enum,float}: `int`
- * maps to `float` (the cache grammar has no integer kind).
+ * non-zero is still an enum); a list the device answers as empty, or a continuous
+ * unit in the formatted value, vetoes the numeric guess → float. The walk's 2-way
+ * output is {enum,float}: `int` maps to `float` (the cache grammar has no integer
+ * kind).
+ *
+ * Which definitions are label-walked (a 0x1f query against a param WITHOUT a
+ * label list is out of contract, see `couldBeEnum`): those with `scale` 0 and
+ * integral bounds (as always), and — only when the CALLER names the param as a
+ * label list (`enumHintByBlock`, from a catalog or a byte-exact cache) — one
+ * with a non-zero `scale` whose bounds fit that list (see `hintedListFit`).
+ * Many genuine lists have a non-zero default ordinal (an amp's tube type, a
+ * reverb type, every tempo division, the foot-controller assignments), and the
+ * device's own data offers no SAFE sign of a list for them: their formatted
+ * value is often number-like ('12 dB/OCT', '1536', '-10 dBV'), and some
+ * continuous or integer params display words ('OFF', 'INFINITE', a note name).
+ * The formatted value only corroborates a hint whose list has grown.
+ *
+ * Empty slots: the device answers an unused slot with an empty-slot definition
+ * (typecode 0, all-zero body). Inner empty slots become the all-zero float
+ * placeholder rows the `.cache` carries. Past the end of an effect table the
+ * device answers a NO-PAYLOAD definition reply instead (payload count 0, FM3
+ * fw 13.0), so a run of empty slots (symbol id 0) right after the last real
+ * definition that ends in such a reply is the table's unused tail and is kept
+ * too; a run with no such end (more empty slots up to the stop run, an end
+ * marker, a sentinel-tagged or junk answer, silence) is trimmed (see
+ * `liveWalkDetailed`).
  *
  * ── Coverage ────────────────────────────────────────────────────────────────
- * PARAM is 14-bit, so ids up to 16383 are reachable; the special table records
- * (id >= 0xff00: cab/IR bank tables, padded rosters) are NOT param-addressable
- * and are absent from a live walk by design. They affect only a section's
- * declared record count and the cab/IR banks; every other derived table is
- * reproduced exactly. A complete cache pairs the live walk with those few
- * byte-sourced table records.
+ * PARAM is 14-bit, so ids up to 16383 are addressable on the wire, but the walk
+ * only queries up to a per-block ceiling (see "Table end, bounds and pseudo
+ * definitions"). The special table records (id >= 0xff00: cab/IR bank tables,
+ * padded rosters) are NOT param-addressable and are absent from a live walk by
+ * design. They affect only a section's declared record count and the cab/IR
+ * banks; every other derived table is reproduced exactly. A complete cache
+ * pairs the live walk with those few byte-sourced table records.
+ *
+ * ── Table end, bounds and pseudo definitions ────────────────────────────────
+ * A table does not announce its end, and a definition query far outside it is
+ * out of contract. Read-only definition queries on an FM3 (fw 13.0) showed:
+ *   - block 1 holds real params 0..132 (each definition carries its own `id`).
+ *     From 133 on EVERY reply is the same end marker — typecode 0, empty body,
+ *     one fixed non-zero `id`, `scale` 0 (at 133) or 128 (after); checked to 600.
+ *   - much further out the same block answers junk that is shaped like a
+ *     definition (an `id` reused from the end marker, an enum-shaped range of
+ *     65 546 values, ...) or a short non-definition reply.
+ *   - walks of an FM9 and an Axe-Fx III hold junk definitions too: a system block
+ *     repeating one `id` and one near-zero float body over 250 params, rows with
+ *     near-zero float fields, and records with `min > max`, a typecode 0 and a
+ *     float bit pattern as `id`.
+ *   - block 0 answers table-shaped definitions up to param 511. A single
+ *     definition query for param 1000 of block 0 froze the unit: no reply, then
+ *     no reply to anything until a power cycle. Queries inside its table
+ *     (128..300) were fine.
+ * So the walk never probes far past a table's last real definition, and in
+ * FULL mode must not write to a parameter that does not exist:
+ *   1. CEILING — no query above a per-block ceiling, the first that applies:
+ *        - `paramBoundByBlock[block]`: a HARD ceiling (highest id, inclusive),
+ *          never exceeded for any reason. It wins over `maxParamId` in both
+ *          directions — and over a known size, even above n - 1 + the stop
+ *          run, so a host passes it only as a cap tighter than that; a
+ *          negative bound skips the block; a bound above 16383 is clamped
+ *          (the wire field would wrap);
+ *        - `paramKnownSizeByBlock[block]` = n (a table size from a catalog or
+ *          cache): min(`maxParamId`, n - 1 + `paramAbsentRunLimit`) — the known
+ *          table plus room for the params a newer unit appends;
+ *        - `maxParamId`, which defaults to 127 in read-only mode (the validated
+ *          envelope) and 511 in FULL mode (the largest table seen, well below
+ *          the freeze at 1000) — never the whole 14-bit space.
+ *   2. STOP RUN — a block ends once `paramAbsentRunLimit` (default 32, the
+ *      `placeholderRunLimit` default) consecutive params in a row answered
+ *      absent — an empty slot, the end marker, a pseudo definition, a sentinel
+ *      or silence. A run of exactly that many ends the block, so inner empty
+ *      runs are bridged (and kept as placeholders) only up to one less. A
+ *      KNOWN SIZE n suspends the stop run for ids 0..n-1 only, so a sparse
+ *      table keeps its real rows after long id gaps; past it the normal stop
+ *      run applies, counted afresh from id n (the lookahead past the table is
+ *      always a full run), up to the ceiling, which is how params appended by
+ *      a newer unit are found. Pass only the EXACT table size of the attached firmware:
+ *      an over-large known size removes the stop run up to it, and junk past a
+ *      table's end that passes the pseudo checks is then walked and, in FULL
+ *      mode, swept up to it. The stop run is also what holds a caller that
+ *      passes a wide `maxParamId` and no bound away from the far ids.
+ *   3. PSEUDO DEFINITIONS — treated exactly like an absent slot (no record, no
+ *      label walk, no unit read, no sweep) and counted in
+ *      `LiveWalkResult.pseudoReplies`:
+ *        endMarker   typecode 0 + empty body with a non-zero `id` (any scale):
+ *                    the past-the-end answer. It also counts an INNER unused
+ *                    slot that answers with a non-zero `id` (that slot still
+ *                    becomes a placeholder). An empty slot with `id` 0 is not
+ *                    counted.
+ *        duplicateId a definition whose NON-ZERO `id` was already seen in the same
+ *                    block on an end marker, or on a real definition with the
+ *                    SAME body (a copy). A reused id with a DIFFERENT body is a
+ *                    copy too, except for the param right after the last real
+ *                    definition inside a known table size: some tables reuse a
+ *                    symbol id for two real params (an FM3 mixer's first two
+ *                    balance rows carry the ids of its last two level rows,
+ *                    fw 12.0 and 13.0). Id 0 means "no symbol id" and is shared
+ *                    by many real params — never a duplicate.
+ *        implausible junk the typecode / float checks flag (`isGarbageDefinition`,
+ *                    incl. non-zero magnitudes below 1e-9) or bounds in the
+ *                    wrong order (`min > max`). NOT a size
+ *                    limit on an enum-shaped range: real continuous params
+ *                    whose bounds are integers (e.g. 200..20000) look like one,
+ *                    and a range over `enumCountCap` only has its label list
+ *                    clamped.
+ *   4. WRITES — a FULL-mode taper sweep runs only on a definition that passed
+ *      all of the above and sits at or below its block's bound. Far-id safety
+ *      for a caller that passes a wide ceiling rests on the stop run (2). It
+ *      runs ONLY in a placeable effect block of the model's roster
+ *      (`sweepableBlocks`, an allow-list); every other address — the system
+ *      selector, Global, Controllers, the modifier tables, Tuner, IR Capture,
+ *      Scene MIDI, the foot controller, instances past a family's count, any
+ *      model without a roster here — is walked read-only, because the per-block
+ *      preset reload is not known to undo a write there that the restore missed.
+ *
+ * ── Reply assumptions (open hardware questions) ─────────────────────────────
+ * The reply handling below rests on assumptions not yet verified on hardware;
+ * the walk is built to stay correct either way, but what it reports depends on
+ * them:
+ *   1. Does the device answer EVERY definition address — including blocks that
+ *      do not exist, addresses past the end of a table and id gaps of sparse
+ *      sections — with an empty-slot definition, or does it stay silent there?
+ *      (Assumed: it answers. Silence is handled: re-read of a known definition,
+ *      then counted as `silentAddresses`, not as loss.)
+ *   2. Do unused slots INSIDE a table answer with the empty-slot definition
+ *      (typecode 0, all-zero body)? The placeholder rows rest on this. A trailing
+ *      unused slot can be told from the table end only where the end answers
+ *      differently (a no-payload reply, as on an FM3 at fw 13.0); a table whose
+ *      end answers empty-slot definitions keeps its trailing unused slots hidden.
+ *   3. Does the end of a label list always answer with a no-payload reply?
+ *   4. Can a reply arrive later than `lostReplyDrainMs` (500 ms), and does the
+ *      host buffer frames between requests (then it must implement `drain`)?
+ *   5. Does the formatted-value view (0x00) answer for every found param?
+ * The shared test device (`test/cache/cacheDevice.ts`) models "answers
+ * everything"; the suites also replay the opposite (silent addresses).
  */
 import { fractalChecksum } from '../shared/checksum.js';
 import { buildSetParameterContinuous } from '../gen3/axe-fx-iii/setParam.js';
+import { AXE_FX_III_BLOCKS } from '../gen3/axe-fx-iii/blockTypes.js';
+import { FM3_EFFECT_ID_TABLE } from '../gen3/fm3/effectIds.js';
+import { FM9_EFFECT_ID_TABLE } from '../gen3/fm9/effectIds.js';
 import type { RecordSource } from './buildProfile.js';
 import type { CacheRecord, EnumRecord, FloatRecord, FloatTaper } from './types.js';
 
@@ -128,6 +264,17 @@ function buildQuery(model: number, view: number, block: number, param: number, s
 /** Build a DEFINITION query (view 0x1c) for (model, block, param). */
 export function buildDefQuery(model: number, block: number, param: number): Uint8Array {
   return buildQuery(model, VIEW_DEFINITION, block, param, 0);
+}
+
+/**
+ * Build a FORMATTED-VALUE query (view 0x00) for (model, block, param).
+ *
+ * Read-only: the same query the live walk uses to read the device's own display string for a
+ * parameter ('5.00', '0.316', '36.5 %'). Exported so a caller can ask the device what it shows for a
+ * parameter, independent of the range tables.
+ */
+export function buildValueQuery(model: number, block: number, param: number): Uint8Array {
+  return buildQuery(model, VIEW_VALUE, block, param, 0);
 }
 
 /** Build an ENUM-LABEL query (view 0x1f) for (model, block, param, sub). */
@@ -185,7 +332,16 @@ export interface LiveDefinition {
   kind: 'enum' | 'int' | 'float';
   min: number;
   max: number;
+  /**
+   * The f32 at offset 16. Named `scale` for history, but it reads like the parameter's DEFAULT raw
+   * value (inside min..max; equal to the formatted value at factory settings). Not in the cache
+   * grammar. A non-zero value says nothing about a label list — see "Which definitions are
+   * label-walked" in the module header.
+   */
   scale: number;
+  /** The f32 at offset 20: the display multiplier (display = raw value × def; 0 = raw value shown
+   *  as is) — the value the editor cache stores in its `def` slot, which `buildDeviceCache` reads
+   *  as the range's `scale`. */
   def: number;
   step: number;
 }
@@ -246,8 +402,17 @@ export function decodeReply(frame: Uint8Array): LiveReply {
   const raw = decodeSeptetStream(inner, cnt, 15);
   if (raw.length < cnt) return null;
 
-  // DEFINITION record: exactly 36 raw bytes with finite numeric fields.
-  if (cnt === 36 && raw.length === 36) {
+  // DEFINITION record: only under the DEFINITION view (0x1c), exactly 36 raw
+  // bytes with finite numeric fields.
+  //
+  // The view byte MUST be checked: any 36-byte payload whose five f32 fields
+  // are finite satisfies the shape test, and ASCII text always does (a top byte
+  // <= 0x7E can never give an exponent of 0xFF, so the floats are always
+  // finite). Without this the string/value branch is unreachable for a 36-byte
+  // text reply — it would be returned as a bogus `definition`. `selector` is the
+  // view echo (`frame[6]`). A reply that is NOT the definition view falls
+  // through to the string branch below.
+  if (selector === VIEW_DEFINITION && cnt === 36 && raw.length === 36) {
     const dv = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
     const id = dv.getUint32(0, true);
     const tc = dv.getUint32(4, true);
@@ -274,9 +439,41 @@ export function decodeReply(frame: Uint8Array): LiveReply {
   }
 
   // STRING payload: enum label (0x1f) or formatted value (0x00).
-  let end = raw.length;
-  while (end > 0 && raw[end - 1] === 0x00) end -= 1;
-  if (end > 0) {
+  //
+  // The device returns a FIXED-WIDTH buffer whose display string is
+  // NUL-terminated, so the string is the LEADING run of bytes up to the FIRST
+  // NUL. Trimming only TRAILING NULs is not enough: a display string shorter
+  // than the region the device packs ahead of further buffer content leaves
+  // INTERIOR NUL padding (a delay low-cut reply reads "20.0 Hz\0\0sec"), and
+  // that padding byte then fails the printable check, so the reply would decode
+  // to null and the parameter would lose its value and unit. Ending the string
+  // at the first NUL decodes trailing-only padding ("5.00\0\0…") identically,
+  // skips interior padding, and still falls through to null for a payload whose
+  // leading byte is a NUL or non-printable.
+  //
+  // The interior-NUL tolerance is scoped to the VALUE buffer (0x00): it packs
+  // SEVERAL NUL-separated fields, so bytes after the first NUL are structural.
+  // Every other view keeps the strict rule (as before): once the string ends,
+  // only NUL padding may follow. A LABEL buffer (0x1f) holds exactly ONE string,
+  // so any non-NUL content after the terminating NUL means the reply is not a
+  // label (another field in the same fixed-width buffer, or a mis-targeted
+  // read). Accepting it would let a speculative 0x1f probe of a numeric float
+  // that answers with printable bytes, a NUL and then junk decode to a label,
+  // and the `labels.length > 0` test in `buildRecord` would then turn that float
+  // into an enum. A genuine label has no non-NUL byte after the terminator, so
+  // the strict rule still recovers every real label.
+  let end = 0;
+  while (end < raw.length && raw[end] !== 0x00) end += 1;
+  let clean = end > 0;
+  if (clean && selector !== VIEW_VALUE) {
+    for (let i = end; i < raw.length; i++) {
+      if (raw[i] !== 0x00) {
+        clean = false;
+        break;
+      }
+    }
+  }
+  if (clean) {
     let printable = true;
     for (let i = 0; i < end; i++) {
       const c = raw[i]!;
@@ -294,8 +491,9 @@ export function decodeReply(frame: Uint8Array): LiveReply {
     }
   }
 
-  // tag carries payload but it is neither a clean record nor a printable string
-  // (e.g. the 0x2e large value dump). Not a parameter definition.
+  // The tag carries a payload but it is neither a definition record nor a clean
+  // printable string (e.g. the 0x2e large value dump, or any non-value view with
+  // non-NUL bytes after its first NUL): decodes to null. Not a parameter definition.
   return null;
 }
 
@@ -303,17 +501,57 @@ export function decodeReply(frame: Uint8Array): LiveReply {
 // Record synthesis
 // ---------------------------------------------------------------------------
 
-/** The all-zero definition body a device returns for an empty/absent slot. */
+/**
+ * The empty-slot definition a device returns for an unused / absent slot: typecode 0 and an
+ * all-zero numeric body. Keyed on the typecode and the numeric fields, NOT on the symbol id: the
+ * empty slot in the low param region carries id 0, but the past-the-end answer in the high
+ * (param > 127) region carries a non-zero id with the same empty body. A real parameter always
+ * has a non-zero typecode or a non-zero range, so nothing real is lost — and an empty slot is
+ * never label- or value-probed.
+ */
 function isFillerDefinition(d: LiveDefinition): boolean {
-  return d.id === 0 && d.tc === 0 && d.min === 0 && d.max === 0 && d.def === 0 && d.step === 0;
+  return d.tc === 0 && d.min === 0 && d.max === 0 && d.def === 0 && d.step === 0;
+}
+
+/**
+ * A well-formed self-describe reply echoing `view` whose payload count is 0 (under an ordinary tag).
+ * Under the definition view this is how an effect table answers past its end (FM3 fw 13.0), as
+ * opposed to the empty-slot definition of an unused slot inside it. A sentinel-tagged reply (0x01 /
+ * 0x03) is NOT taken as a table end: it was never seen there, so it keeps its old meaning (a
+ * non-slot answer that ends a run as a gap).
+ */
+function isNoPayloadReply(frame: Uint8Array, view: number): boolean {
+  const n = frame.length;
+  if (n < 10 || frame[0] !== 0xf0 || frame[1] !== 0x00 || frame[2] !== 0x01 || frame[3] !== 0x74 || frame[5] !== FN_SELFDESCRIBE || frame[n - 1] !== 0xf7) {
+    return false;
+  }
+  const inner = frame.subarray(6, n - 2);
+  if (inner.length < 15 || inner[0] !== view || TAG_SENTINELS.has(inner[6]!)) return false;
+  return (inner[13]! | (inner[14]! << 8)) === 0;
+}
+
+/**
+ * The record an unused slot INSIDE a table becomes: the all-zero float placeholder row the editor
+ * `.cache` byte source carries for the same slot, so both sources agree on a section's slot count
+ * (and thus its channel-block stride). Only emitted retroactively, once the slot is proven to lie
+ * inside the parameter table: by a later real definition, or — for the unused tail of a table —
+ * by the no-payload reply that ends the run of empty slots (see "Empty slots"). Flagged
+ * `placeholder` so `buildDeviceCache` can refuse it where the section is a sparse id space rather
+ * than a parameter table.
+ */
+function placeholderRecord(block: number, param: number): FloatRecord {
+  return { kind: 'float', section: block, offset: 0, id: param, tc: 0, min: 0, max: 0, def: 0, step: 0, t1: 0, t2: 0, placeholder: true };
 }
 
 /** Largest plausible wire typecode — real catalogs top out ~3200; system-selector junk reads
  *  in the tens of thousands. */
 const MAX_PLAUSIBLE_TC = 0x3fff;
-/** Anything with magnitude below this (but non-zero) is float32 subnormal junk, not a value a
- *  parameter definition would carry. */
-const SUBNORMAL_FLOOR = 1e-37;
+/** Anything with magnitude below this (but non-zero) is junk (near-zero float bit patterns), not a
+ *  value a parameter definition would carry. 1e-9 rather than the float32 subnormal edge: a system
+ *  block fills hundreds of ids with one body of ~1e-36 floats and some effect blocks answer rows of
+ *  1e-19..1e-10 floats, while the smallest non-zero magnitude of any real definition in the fixtures
+ *  and replayed walks is 1e-6. */
+const SUBNORMAL_FLOOR = 1e-9;
 
 /**
  * NOT a real parameter definition (FORGEFX-32): system selectors (e.g. FM3 block 0) answer
@@ -328,13 +566,61 @@ function isGarbageDefinition(d: LiveDefinition): boolean {
 }
 
 /**
- * A definition COULD be an enum worth a 0x1f label walk when its bounds are
- * integral and the value count is within the cap — regardless of `step` (an
- * enum with a non-zero step is still an enum, decided by whether labels exist).
- * Scaled controls (`scale != 0`) are NEVER label-walked: they are continuous by
- * contract, and a 0x1f label query against a param with no label list is
- * out-of-contract for the device — the FM3 hard-freezes on it (power-cycle
- * recovery). Genuine step!=0 enums all report scale == 0.
+ * Structurally implausible even though `isGarbageDefinition` passes it: bounds in the wrong order.
+ * Conservative on purpose — only rules that no definition of the FM3 / AM4 fixtures and no
+ * plausible definition of the FM9 / Axe-Fx III replay walks satisfies are admitted (the replay
+ * and fixture suites pin it). A size limit on an enum-shaped range is NOT one of them: real
+ * integer-bounded continuous params (200..20000) span far more values than `enumCountCap`.
+ */
+function isImplausibleDefinition(d: LiveDefinition): boolean {
+  return d.min > d.max;
+}
+
+/** What a decoded definition reply is, for the walk (see "Table end, bounds and pseudo definitions"). */
+type DefinitionVerdict = 'real' | 'empty' | 'end-marker' | 'garbage' | 'duplicate-id' | 'implausible';
+
+/**
+ * Non-zero symbol ids already seen in a block: the bodies of the real definitions that carried
+ * each, or `null` once an end marker carried it.
+ */
+type SeenIds = Map<number, LiveDefinition[] | null>;
+
+/** Same numeric body (typecode and every float field). */
+function sameBody(a: LiveDefinition, b: LiveDefinition): boolean {
+  return a.tc === b.tc && a.min === b.min && a.max === b.max && a.scale === b.scale && a.def === b.def && a.step === b.step;
+}
+
+/**
+ * Judge one decoded definition against the ids already seen in its block. Only `real` becomes a
+ * record; every other verdict is an ABSENT slot (never label-walked, value-read or swept). `empty`
+ * is the ordinary unused slot (symbol id 0); `end-marker` is the same empty body under a non-zero id,
+ * the answer a table gives past its last real parameter. A reused non-zero id is a copy when an end
+ * marker carried it or a real definition carried it with the same body; with a different body it is
+ * a copy too unless `continuesKnownTable`: the param lies below the block's known table size AND
+ * directly follows the last real definition. There a table reusing a symbol id for two real params
+ * is the observed reality, not junk; anywhere else (outside a known table, after a gap) it stays a
+ * copy.
+ */
+function judgeDefinition(d: LiveDefinition, seen: ReadonlyMap<number, readonly LiveDefinition[] | null>, continuesKnownTable: boolean): DefinitionVerdict {
+  if (isFillerDefinition(d)) return d.id === 0 ? 'empty' : 'end-marker';
+  if (isGarbageDefinition(d)) return 'garbage';
+  if (d.id !== 0 && seen.has(d.id)) {
+    // id 0 = no symbol id, shared by real params — never a duplicate
+    const bodies = seen.get(d.id);
+    if (!bodies || !continuesKnownTable || bodies.some((b) => sameBody(b, d))) return 'duplicate-id';
+  }
+  if (isImplausibleDefinition(d)) return 'implausible';
+  return 'real';
+}
+
+/**
+ * A definition COULD be an enum worth a 0x1f label walk on its own numbers when its bounds are
+ * integral and the value count is within the cap — regardless of `step` (an enum with a non-zero
+ * step is still an enum, decided by whether labels exist). A definition with a non-zero `scale` is
+ * NEVER label-walked on its numbers alone: a 0x1f label query against a param with no label list is
+ * out of contract for the device — the FM3 hard-freezes on it (power-cycle recovery) — and the
+ * numbers cannot tell such a list apart from a continuous or integer param (see "kind" above).
+ * Only a caller hint can (`hintedListFit`).
  */
 function couldBeEnum(d: LiveDefinition, cap: number): boolean {
   if (d.kind === 'enum') return true;
@@ -342,6 +628,78 @@ function couldBeEnum(d: LiveDefinition, cap: number): boolean {
   if (!integral(d.min) || !integral(d.max)) return false;
   const span = Math.round(d.max - d.min + 1);
   return span >= 1 && span <= cap;
+}
+
+/**
+ * A label list the caller knows a param to carry (a catalog row or a byte-exact cache record of the
+ * same device model): its label count and its wire typecode. Every catalog enum row and every
+ * byte-exact cache record carries both; a hint without a typecode is not used.
+ */
+export interface LiveEnumHint {
+  /** Number of labels in the known list (raw values min..min+count-1). */
+  count: number;
+  /** Wire typecode of the known definition; the device's must equal it. */
+  typecode: number;
+}
+
+/**
+ * Enum hints for one block from the range rows of its family — the shipped static catalog's
+ * `ranges[family]` or a BYTE-EXACT built cache's (editor-cache import), never a live-walk profile's —
+ * so a host can fill `LiveWalkOptions.enumHintByBlock`: every enum row with a usable label count
+ * (`enumCount`) and an integer `typecode`.
+ */
+export function enumHintsFromRanges(
+  ranges: Readonly<Record<number, { kind: string; enumCount?: number; typecode?: number }>>,
+): Record<number, LiveEnumHint> {
+  const out: Record<number, LiveEnumHint> = {};
+  for (const [key, r] of Object.entries(ranges)) {
+    const id = Number(key);
+    const count = r.enumCount;
+    const typecode = r.typecode;
+    if (r.kind !== 'enum' || !Number.isInteger(id) || id < 0) continue;
+    if (typeof count !== 'number' || !Number.isInteger(count) || count < 1) continue;
+    if (typeof typecode !== 'number' || !Number.isInteger(typecode)) continue;
+    out[id] = { count, typecode };
+  }
+  return out;
+}
+
+/** A hint is used only when its count is a positive integer and its typecode an integer. */
+function usableHint(h: LiveEnumHint | undefined): LiveEnumHint | undefined {
+  if (!h || typeof h.count !== 'number' || !Number.isInteger(h.count) || h.count < 1) return undefined;
+  if (typeof h.typecode !== 'number' || !Number.isInteger(h.typecode)) return undefined;
+  return h;
+}
+
+/** How many labels a list may have grown past its hint and still be walked (see `hintedListFit`). */
+const HINT_GROWTH_LIMIT = 4;
+
+/**
+ * Does a definition fit the label list a caller hint names? Same envelope as a speculative probe —
+ * integral bounds, first ordinal 0..127, at most `cap` values — plus the hint's typecode, and the
+ * definition's `scale` slot (the default value) an integer inside min..max, as a list's default
+ * ordinal is.
+ *   'exact': the value count equals the hint's — the list as known;
+ *   'grown': 1..`HINT_GROWTH_LIMIT` more values than the hint's — a newer firmware appended labels
+ *            (an amp's tube list grew by one), or the id now means something else; the walk then
+ *            wants a second sign (a label in the formatted value) before it label-walks;
+ *   false:   no fit (fewer values or more than that growth, other bounds, typecode or default):
+ *            never label-walked on the hint.
+ */
+function hintedListFit(d: LiveDefinition, hint: LiveEnumHint, cap: number): 'exact' | 'grown' | false {
+  if (!integral(d.min) || !integral(d.max)) return false;
+  const lo = Math.round(d.min);
+  const span = Math.round(d.max - d.min + 1);
+  if (lo < 0 || lo > 127 || span < 1 || span > cap) return false;
+  if (hint.typecode !== d.tc) return false;
+  if (!integral(d.scale) || d.scale < d.min || d.scale > d.max) return false;
+  if (span === hint.count) return 'exact';
+  return span > hint.count && span <= hint.count + HINT_GROWTH_LIMIT ? 'grown' : false;
+}
+
+/** A formatted value that is a label, not a number (a leading number makes it a value with a unit). */
+function isLabelDisplay(display: string): boolean {
+  return display.trim() !== '' && parseDisplayValue(display) === null;
 }
 
 /** Build one `CacheRecord` from a decoded definition (+ any 0x1f labels). */
@@ -452,8 +810,26 @@ function invertTaper(
   return best[0];
 }
 
-function buildRecord(block: number, param: number, d: LiveDefinition, labels: readonly string[], unit?: string, taper?: FloatTaper): CacheRecord {
-  const enumKind = labels.length > 0 || d.kind === 'enum';
+/**
+ * Kind: a captured label list always makes an enum. Without labels the numeric enum signature
+ * (step 0, scale 0, integral bounds) is only a guess, and two pieces of device evidence veto it:
+ *   - a continuous unit in the formatted value (e.g. a 20..200 Hz low cut);
+ *   - `emptyList`: a label walk was attempted and the device ANSWERED its first query with an
+ *     end-of-list reply — the param has no label list. That is exactly the editor cache's rule
+ *     (a record is an enum only if it carries labels), and it turns integer-valued params
+ *     (e.g. an effect-id or MIDI-number selector) and empty table slots into the float rows the
+ *     cache has. A first query that got NO reply is not evidence and leaves the guess in place.
+ */
+function buildRecord(
+  block: number,
+  param: number,
+  d: LiveDefinition,
+  labels: readonly string[],
+  unit?: string,
+  taper?: FloatTaper,
+  emptyList = false,
+): CacheRecord {
+  const enumKind = labels.length > 0 || (d.kind === 'enum' && !unit && !emptyList);
   if (enumKind) {
     let count = Math.round(d.max - d.min + 1);
     if (count < 1) count = labels.length;
@@ -497,12 +873,172 @@ function buildRecord(block: number, param: number, d: LiveDefinition, labels: re
 // ---------------------------------------------------------------------------
 
 /**
+ * Default extra attempts for a query that got NO reply at all (`request()` resolved `null`).
+ *
+ * Assumed (see "Reply assumptions" above, questions 1-3): the device answers every self-describe
+ * query — an empty slot with an empty-slot definition, the end of a label list with a no-payload
+ * reply — so a `null` means the frame was dropped or is LATE. Where that assumption fails, the
+ * liveness re-read books the silence as `silentAddresses` instead. A genuine end/sentinel reply is
+ * never retried. Observed on a live FM3: the 331-entry amp roster and three other lists came back
+ * short by exactly their tail entries — one dropped reply had ended each list early.
+ */
+const DEFAULT_LOST_REPLY_RETRIES = 2;
+
+/**
+ * Default pause (ms) after a lost reply — before every retry, and after a lost LABEL reply again
+ * before the walk moves on to the next sub.
+ *
+ * A late reply is the dangerous case: a self-describe reply echoes view, block and param but NOT
+ * the label SUB ordinal, so a late answer to sub `i` that is accepted for sub `i+1` would silently
+ * shift every following label (a roster with the wrong model names — worse than a short one). The
+ * pause lets a straggler arrive while no request is listening (and `LiveTransport.drain` discards
+ * it where the host buffers frames). Only spent after a loss, so a clean walk is not slowed.
+ */
+const DEFAULT_LOST_REPLY_DRAIN_MS = 500;
+
+/**
+ * Default longest run of empty slots, bounded by real definitions, kept as inner placeholders.
+ * Effect blocks carry runs of 1-6 unused slots inside their tables; a longer run is an id-space
+ * gap (sparse system sections), which the editor cache does not fill either.
+ */
+const DEFAULT_PLACEHOLDER_RUN_LIMIT = 32;
+
+/**
+ * Default number of CONSECUTIVE absent params (empty slot, end marker, pseudo definition, sentinel
+ * or silence) that end the sweep of a block WITHOUT a caller bound. A run of exactly this many ends
+ * the block, so an inner empty run is bridged (and kept as placeholders) up to one less — the
+ * placeholder run limit has the same value, and a longer inner run is an id-space gap. Small on
+ * purpose — the table's real end is followed by an endless run of end-marker replies, and every
+ * query past it is wasted traffic that moves toward the far ids a device may not survive (see "Table
+ * end, bounds and pseudo definitions"). A block with a caller bound is walked to the bound instead.
+ */
+const DEFAULT_ABSENT_RUN_LIMIT = 32;
+
+/**
+ * Default highest block address swept when `blocks` is omitted: 160, the range walked and verified on
+ * hardware. The gen-3 roster has effect blocks above it — Resonator 162, Looper 166, Plex Delay 178,
+ * Send 182, Return 186, Multiplexer 191 — whose tables the editor cache carries, so a default walk
+ * leaves those families out of a live profile. Reaching them is the HOST's opt-in: pass an explicit
+ * `blocks` list derived from the model's roster once that model has been verified on hardware above
+ * 160, leaving out the virtual and unrostered addresses there (Scene MIDI 190, 194 on a three-
+ * multiplexer unit, the foot-controller blocks 199 / 200). The walk itself handles any block
+ * address up to 16383 (the block field splits lo/hi).
+ */
+const DEFAULT_MAX_BLOCK = 160;
+
+/** Highest param id the 14-bit PARAM field (body[4]/[5]) can carry; one more would wrap to 0. */
+const MAX_WIRE_PARAM_ID = 16383;
+
+/**
+ * Default highest param id queried per block, READ-ONLY mode: the validated envelope (the id
+ * space above 127 was never swept read-only on a unit), the same ceiling the host passes.
+ */
+const DEFAULT_READ_ONLY_MAX_PARAM_ID = 127;
+
+/**
+ * Default highest param id queried per block, FULL mode. The largest table seen on a unit ends at
+ * id 511; a definition query for id 1000 of the same block froze the unit. 511 reaches every table
+ * seen with a wide margin below that; a caller that knows a block's size passes
+ * `paramKnownSizeByBlock` / `paramBoundByBlock` (a larger table than 511 is cut off here, never
+ * over-probed).
+ */
+const DEFAULT_FULL_MAX_PARAM_ID = 511;
+
+/** The effective inclusive param ceiling for a finite requested bound: floored, never above the wire limit. */
+function clampParamBound(requested: number): number {
+  return Math.min(MAX_WIRE_PARAM_ID, Math.floor(requested));
+}
+
+/**
+ * Default number of CONSECUTIVE unanswered queries after which the walk checks the device is
+ * still alive: it re-sends the last definition query that DID get an answer. An answer proves the
+ * silence is specific to those addresses — they are treated as absent and the walk goes on (with
+ * no further retries in that block, as before retries existed). No answer means the device stopped
+ * answering altogether (frozen or gone): the walk rejects rather than keep querying it.
+ */
+const DEFAULT_MAX_SILENT_QUERIES = 8;
+
+/** After proven silence in a block, re-read the known definition every this many further silent
+ *  definitions (no pause) so a device that freezes mid-block is still noticed. */
+const FREEZE_RECHECK_EVERY = 32;
+
+/**
  * Minimal transport the walk drives: send a query frame, resolve with the reply
  * frame (or `null` on timeout/no reply). Deliberately transport-agnostic — a
  * ForgeFX MIDI port, a browser Web-MIDI adapter, or a test fake all satisfy it.
  */
 export interface LiveTransport {
   request(query: Uint8Array): Promise<Uint8Array | null>;
+  /**
+   * Optional: discard any reply frames the host has received but not yet handed out. The walk
+   * calls it after each drain pause (before a retry, and after a lost label reply before the next
+   * sub) so a LATE reply to an earlier query can never be returned for a later one. A host that
+   * only listens while a request is pending may omit it — the drain pause alone lets a straggler
+   * arrive unheard.
+   */
+  drain?(): Promise<void> | void;
+}
+
+/**
+ * Outcome of a live walk: the records plus the reply-loss accounting a caller needs to judge
+ * whether the profile is complete. Any `unresolvedReplies` means a definition may be missing or a
+ * label list / unit cut short; `lostReplies > 0` with everything recovered is complete, but a
+ * caller may still prefer a re-walk (a late reply cannot be matched to its sub — see
+ * `lostReplyDrainMs`).
+ */
+export interface LiveWalkResult {
+  records: CacheRecord[];
+  /** Queries sent, retries included. */
+  queries: number;
+  /** Enum labels collected. */
+  enumLabels: number;
+  /** Attempts that got no reply at all and count as LOSS (dropped or late frames) — attempts at
+   *  silent addresses (see `silentAddresses`) are not included. */
+  lostReplies: number;
+  /** Queries whose lost reply was recovered by a retry. */
+  recoveredReplies: number;
+  /** Queries left unanswered after every allowed retry that are genuine LOSS. Lost labels and unit
+   *  reads always count here (a cut-short label list stays visible); definitions count unless a
+   *  liveness check explained their silent run. Non-zero means the profile may be incomplete. */
+  unresolvedReplies: number;
+  /** Empty slots inside a table (inner ones, and a table's unused tail that a no-payload reply
+   *  ended) emitted as placeholder records (flagged `placeholder`). */
+  placeholderSlots: number;
+  /**
+   * Slots inside a parameter table whose definition was LOST (never answered, not explained as a
+   * silent address): neither a record nor a placeholder is emitted for them (that would invent
+   * data), so the section's slot count — its stride — comes out short by this many. Non-zero
+   * means re-walk before trusting strides.
+   */
+  missingSlots: number;
+  /**
+   * DEFINITION queries at addresses that stayed silent while the device demonstrably kept
+   * answering — a silent run of `maxSilentQueries` in a row, or the silent run a block ends on,
+   * followed by an answered re-read of a known definition: treated as absent, not as loss. Shorter
+   * silent runs that an answer ends stay loss (`unresolvedReplies` / `missingSlots`): they cannot
+   * be told apart from dropped replies. Expected to be 0 if the device answers every address (see
+   * the hardware assumptions above).
+   */
+  silentAddresses: number;
+  /**
+   * Definition replies that were answered but are not real parameter definitions, so the walk
+   * treated them as absent slots (no record, label walk, unit read or sweep) — see "Table end,
+   * bounds and pseudo definitions". Not loss: these replies are the device's own answer.
+   */
+  pseudoReplies: PseudoReplyStats;
+}
+
+/** Breakdown of `LiveWalkResult.pseudoReplies`, counted per query answered. */
+export interface PseudoReplyStats {
+  /** Empty body under a non-zero symbol id: the answer a table gives past its last real param. Also
+   *  counts an INNER unused slot that answers with a non-zero id (it still becomes a placeholder). */
+  endMarker: number;
+  /** A definition whose non-zero symbol id repeated one already seen in the same block: on an end
+   *  marker, on a real definition with the same body, or with any body unless the param directly
+   *  follows the last real definition inside a known table size. */
+  duplicateId: number;
+  /** Junk-shaped definitions (system-selector junk the float / typecode checks flag, `min > max`). */
+  implausible: number;
 }
 
 /**
@@ -540,6 +1076,8 @@ export interface LiveWalkProgress {
   queries: number;
   /** Cumulative FULL-mode taper sweeps completed (present in full mode). */
   tapers?: number;
+  /** Cumulative attempts that got no reply at all (see `LiveWalkResult.lostReplies`). */
+  lostReplies?: number;
 }
 
 export interface LiveWalkOptions {
@@ -551,7 +1089,14 @@ export interface LiveWalkOptions {
    * continuous float param with a normalized CONTINUOUS-SET, reads the display
    * back to recover the knob taper (linear/log/custom), records it on the
    * `FloatRecord`, then RESTORES the original value (non-destructive). Full mode
-   * REQUIRES `write` hooks — the walk throws at start when they are absent.
+   * REQUIRES `write` hooks — the walk throws at start when they are absent. It
+   * writes ONLY to the placeable effect blocks of the model's roster (see
+   * `sweepableBlocks`): the system selector, Global, Controllers, the modifier
+   * tables 3..34, Tuner, IR Capture, Scene MIDI, the foot controller, the action
+   * blocks (Looper, Tone Match, RTA, IR Player) and every block of a model
+   * without a roster in the codec are walked read-only. Nor
+   * does it write to a param whose current display
+   * (read just before the sweep) is not a number: it could not be restored.
    */
   mode?: 'read-only' | 'full';
   /**
@@ -569,10 +1114,11 @@ export interface LiveWalkOptions {
    * 20ms (CaptureRig v2's ≥20ms pacing). Routed through `sleep`. Full mode only.
    */
   sweepSettleMs?: number;
-  /** Explicit block addresses to sweep; defaults to `0..maxBlock`. */
+  /** Explicit block addresses to sweep; defaults to `0..maxBlock`. The way to reach blocks above
+   * the default range (see `DEFAULT_MAX_BLOCK`): a roster-derived list, verified per model. */
   blocks?: number[];
-  /** Highest block address swept when `blocks` is omitted (default 160 — the block
-   * byte splits lo/hi so effectId>=128 blocks are reachable). */
+  /** Highest block address swept when `blocks` is omitted (default 160, `DEFAULT_MAX_BLOCK` — the
+   * hardware-verified range; the block byte splits lo/hi so effect ids >= 128 are reachable). */
   maxBlock?: number;
   /**
    * Read the device's formatted value (self-describe view 0x00) for each found
@@ -581,14 +1127,76 @@ export interface LiveWalkOptions {
    */
   readValues?: boolean;
   /**
-   * Highest PARAM id swept per block (default 16383 = the full 14-bit range).
-   * The reachable id range can be capped here.
+   * Highest PARAM id queried per block, inclusive. Default 127 in read-only mode and 511 in FULL
+   * mode — NOT the whole 14-bit space: a definition query far past a table's end is out of
+   * contract and one such query (block 0, id 1000) froze a unit. Values above 16383 are clamped
+   * (the wire field would wrap); a non-finite value (NaN, +-Infinity) is ignored and the mode
+   * default applies. A block's entry in `paramBoundByBlock` takes precedence; an entry in
+   * `paramKnownSizeByBlock` can only lower it (to size - 1 + `paramAbsentRunLimit`).
    */
   maxParamId?: number;
   /**
-   * Consecutive absent params that end a block's sweep (default 256). Must
-   * exceed a section's largest internal id gap to reach every record; raise it
-   * to reach sparse high-id (param>127) records.
+   * Table size per block (key = block address) known from a catalog or an editor cache: ids
+   * 0..size-1 are walked WITHOUT the `paramAbsentRunLimit` stop, so a sparse table keeps real rows
+   * that follow long id gaps. Past the known size the normal stop run applies, counted afresh from
+   * id `size` (trailing empty slots inside the table do not eat into it), so params a newer unit
+   * appends to the table are found. With no `paramBoundByBlock` entry the block's ceiling is
+   * min(`maxParamId`, size - 1 + `paramAbsentRunLimit`) — never further. `blockProbeDepth` still
+   * skips a block whose first params are all absent; raise it for a table that starts with a long
+   * gap. Blocks without an entry keep the stop run and the `maxParamId` ceiling. Below the known
+   * size, a definition right after the last real one that reuses a symbol id with a new body is kept
+   * as a real param (see `PseudoReplyStats.duplicateId`) — and like any real param it then gets its
+   * read-only value read and, in FULL mode, its taper sweep (writes); without a known size it is
+   * dropped as a copy, as before.
+   *
+   * Pass ONLY the exact table size of the attached firmware (from a catalog or a byte-exact
+   * cache). An over-large size removes the stop run up to it: junk that a unit answers past a
+   * table's end and that passes the pseudo checks is walked there and, in FULL mode, swept (written)
+   * up to it. Only a finite integer >= 0 is used; NaN, Infinity, a fraction or a negative value is
+   * ignored as if the block had no entry.
+   */
+  paramKnownSizeByBlock?: Record<number, number>;
+  /**
+   * HARD ceiling per block (key = block address): the highest PARAM id queried, inclusive. The walk
+   * never queries above it, for any reason; it wins over `maxParamId` in both directions and over
+   * `paramKnownSizeByBlock` (a bound below size - 1 truncates the known table; one above
+   * size - 1 + `paramAbsentRunLimit` is honoured too, so pass a bound only as a cap tighter than
+   * that, e.g. min(size - 1 + `paramAbsentRunLimit`, the mode cap)). It does not change
+   * the stop run: on its own it only caps a walk that would otherwise go on. A negative value skips
+   * the block (no queries); a value above 16383 is clamped. Only a finite integer is used; NaN,
+   * Infinity or a fraction is ignored as if the block had no entry.
+   */
+  paramBoundByBlock?: Record<number, number>;
+  /**
+   * Label lists the caller knows of (key = block address, then param id): the label count and the
+   * wire typecode of each param that carries a label list (`enumHintsFromRanges` builds one block's
+   * entry from a family's range rows). It is the ONLY way a definition with a non-zero `scale` (a
+   * non-zero default ordinal) is label-walked: the device's own data offers no safe sign of a list
+   * there (see "Which definitions are label-walked" in the module header). A hinted definition is
+   * label-walked when it fits the hint: integral bounds, first ordinal 0..127, at most `enumCountCap`
+   * values, the hint's typecode, a `scale` slot (default) that is an integer inside min..max, and
+   * exactly the hint's count — or 1..4 more values (a newer firmware appended labels) when its
+   * formatted value, read first (read-only, needs `readValues`), is a label rather than a number.
+   * Anything else: no label walk on the hint. Definitions the numeric rule label-walks anyway are
+   * unaffected. In FULL mode a param with ANY entry here (even an unusable one) is never swept.
+   *
+   * Sources: hints must come ONLY from the shipped static catalog of the model being walked or from a
+   * byte-exact cache of the attached firmware (an editor-cache import), keyed to blocks through the
+   * static effect-id roster — NEVER from a live-walk profile (its lists may rest on a kind guess, and
+   * a hint is a promise that the param HAS a label list: a label query to a param without one is out
+   * of contract).
+   */
+  enumHintByBlock?: Record<number, Readonly<Record<number, LiveEnumHint>>>;
+  /**
+   * Consecutive absent params that end a block's sweep (default 32, like `placeholderRunLimit`).
+   * Counted from the last real definition (and from the start of the block, until the first one is
+   * found — see `blockProbeDepth`); suspended for ids below a block's `paramKnownSizeByBlock`
+   * entry (and counted afresh from that size). Only a finite integer >= 1 is used; anything else
+   * (NaN, Infinity, a fraction, 0, a negative value) is the default 32. A run of exactly this many ends the block, so an inner run of empty slots is bridged
+   * (and kept as placeholders up to `placeholderRunLimit`) only when it is shorter; a longer one
+   * ends the block. Raise it only for a section known to carry bigger internal id gaps, together
+   * with `maxParamId` — the ceiling still bounds the sweep whatever this is. It also sets how far
+   * past a known size the ceiling reaches (size - 1 + this).
    */
   paramAbsentRunLimit?: number;
   /**
@@ -598,6 +1206,37 @@ export interface LiveWalkOptions {
   blockProbeDepth?: number;
   /** Hard cap on labels collected per enum param (default 1024). */
   enumCountCap?: number;
+  /**
+   * Extra attempts for a query that got no reply at all (default 2). Applies to definition
+   * queries once a block's table has started (the block-probe phase stays one-shot), the unit
+   * read and enum labels AFTER the first one (a list already proven by a label). The FIRST label
+   * query of a param is never repeated: it may be a speculative probe, and those stay one-shot.
+   * A genuine end/sentinel reply is never retried. 0 disables retries.
+   */
+  lostReplyRetries?: number;
+  /**
+   * Pause (ms) before a retry, and after a lost label reply before the next sub, so a late reply
+   * cannot be taken for a later query (default 500; routed through `sleep`). See
+   * `LiveTransport.drain` for hosts that buffer frames.
+   */
+  lostReplyDrainMs?: number;
+  /**
+   * Longest run of empty slots between real definitions (or before the first one) that is kept
+   * as inner placeholder records (default 32); the same limit applies to the unused tail of a table
+   * that a no-payload reply ends. Other trailing empty slots are always trimmed — they cannot be
+   * told apart from the end of the table. 0 keeps none (the pre-placeholder behaviour).
+   */
+  placeholderRunLimit?: number;
+  /**
+   * Consecutive unanswered queries within a block before the walk re-sends the last answered
+   * definition query as a liveness check (default 8; a block that ENDS in unanswered queries is
+   * checked once at its end). If that answers, the silent addresses count as absent
+   * (`silentAddresses`) and the rest of the block runs without retries or further checks; if not,
+   * the walk rejects with a "device stopped answering" error. Also the number of unanswered
+   * queries after which a walk that never got any answer rejects. Bounds the traffic aimed at a
+   * frozen device without failing on addresses that merely do not answer.
+   */
+  maxSilentQueries?: number;
   /** Pause between queries, ms (default 0 = none). */
   interQueryMs?: number;
   /** Pause between blocks, ms (default 0 = none). */
@@ -634,6 +1273,53 @@ async function pace(ms: number, signal: AbortSignal | undefined, sleep?: (ms: nu
 // Full-mode taper sweep (write + restore) — port of CaptureRig v2's Gen3Profile
 // ---------------------------------------------------------------------------
 
+/**
+ * Placeable roster blocks a FULL-mode sweep still never writes to, by family: their parameters start
+ * or steer actions, or hold device-side material, rather than forming a plain preset parameter table —
+ * Looper (record / play / overdub), Tone Match (capture / match), the Real-Time Analyzer and the IR
+ * Player. A continuous-SET there may trigger an action or touch state that is not preset data, so a
+ * preset reload is not known to undo it. The roster marks none of them as an ordinary preset effect
+ * block, so they stay read-only until a full-mode probe on hardware shows otherwise — also when a host
+ * opts blocks above 160 into the walk explicitly.
+ */
+const ACTION_BLOCK_FAMILIES: ReadonlySet<string> = new Set(['LOOPER', 'TONEMATCH', 'RTA', 'IRPLAYER']);
+
+/** Gen-3 model bytes whose effect-id roster the codec carries. */
+const MODEL_AXE_FX_III = 0x10;
+const MODEL_FM3 = 0x11;
+const MODEL_FM9 = 0x12;
+
+/**
+ * The block addresses a FULL-mode sweep may write to on `model` — an ALLOW-list: the placeable
+ * signal-chain blocks of the model's effect-id roster, i.e. every family its family table classifies
+ * `addressing: 'block'`, expanded by the instance count (FM3 / FM9: the table's own counts; Axe-Fx
+ * III: the gen-3 roster is shared, so the same families with the III block roster's counts for the
+ * same first ids). Everything else is walked read-only:
+ *   - block 0, the system selector (on an Axe-Fx III it answers hundreds of definitions, many of
+ *     them passing the junk checks);
+ *   - Global 1, Controllers 2 and the modifier tables 3..34 (every gen-3 model answers 32 identical
+ *     copies there; the roster names only 3);
+ *   - Tuner 35 and IR Capture 36 (global functions), Scene MIDI 190, the foot controller 199 / 200;
+ *   - the placeable blocks whose parameters drive ACTIONS or device-side state rather than a plain
+ *     preset table (`ACTION_BLOCK_FAMILIES`: Looper, Tone Match, Real-Time Analyzer, IR Player);
+ *   - instances past a family's count, and every block of a model without a roster here.
+ * Their settings are persistent device state, or not shown to be preset data: the per-block preset
+ * reload that backs up the restore is not known to bring them back.
+ */
+function sweepableBlocks(model: number): ReadonlySet<number> {
+  const out = new Set<number>();
+  const table = model === MODEL_FM3 ? FM3_EFFECT_ID_TABLE : model === MODEL_FM9 ? FM9_EFFECT_ID_TABLE : model === MODEL_AXE_FX_III ? FM3_EFFECT_ID_TABLE : undefined;
+  if (!table) return out;
+  const iiiInstances = new Map<number, number>();
+  for (const b of AXE_FX_III_BLOCKS) if (b.firstId !== null) iiiInstances.set(b.firstId, b.instances);
+  for (const e of table) {
+    if (e.addressing !== 'block' || e.firstId === null || ACTION_BLOCK_FAMILIES.has(e.family)) continue;
+    const n = model === MODEL_AXE_FX_III ? (iiiInstances.get(e.firstId) ?? e.instances) : e.instances;
+    for (let i = 0; i < n; i++) out.add(e.firstId + i);
+  }
+  return out;
+}
+
 /** CaptureRig v2's ≥20ms floor between a sweep SET and the display read-back. */
 const MIN_SWEEP_SETTLE_MS = 20;
 
@@ -642,7 +1328,7 @@ const DEFAULT_TAPER_POINTS = 9;
 
 /** Read the device's formatted-value string (view 0x00), or `null`. */
 async function readDisplay(transport: LiveTransport, model: number, block: number, param: number): Promise<string | null> {
-  const vr = await transport.request(buildQuery(model, VIEW_VALUE, block, param, 0));
+  const vr = await transport.request(buildValueQuery(model, block, param));
   const vd = vr ? decodeReply(vr) : null;
   return vd && vd.view === 'value' ? vd.value : null;
 }
@@ -662,11 +1348,16 @@ interface SweepContext {
  * 0..1 via CONTINUOUS-SET reading the display back at each step, classify the
  * taper, then RESTORE the original value through the classified curve's analytic
  * inverse. Faithful port of CaptureRig v2's `_sweep_taper`/`_restore`. Returns
- * the classified taper; ALWAYS attempts the restore (the codec builds every
- * SET with `buildSetParameterContinuous` and sends it via the host `write`
- * hook). `reads` counts the display queries issued (folded into `queries`).
+ * the classified taper (`undefined` when nothing was written, see below); the
+ * codec builds every SET with `buildSetParameterContinuous` and sends it via the
+ * host `write` hook. `reads` counts the display queries issued (folded into
+ * `queries`).
+ *
+ * No write at all when the ORIGINAL display does not parse as a number (a word
+ * such as 'OFF', or no answer): the restore inverts the taper at that number, so
+ * without it the original value could not be put back.
  */
-async function sweepTaper(ctx: SweepContext, block: number, param: number): Promise<{ taper: FloatTaper; reads: number }> {
+async function sweepTaper(ctx: SweepContext, block: number, param: number): Promise<{ taper: FloatTaper | undefined; reads: number }> {
   const { transport, write, model, points, settleMs, signal, sleep } = ctx;
   const settle = Math.max(settleMs, MIN_SWEEP_SETTLE_MS);
   let reads = 0;
@@ -674,6 +1365,7 @@ async function sweepTaper(ctx: SweepContext, block: number, param: number): Prom
   const origDisplay = await readDisplay(transport, model, block, param);
   reads += 1;
   const origVal = origDisplay === null ? null : parseDisplayValue(origDisplay);
+  if (origVal === null) return { taper: undefined, reads };
 
   const samples: Array<readonly [number, number | null]> = [];
   const denom = points > 1 ? points - 1 : 1;
@@ -708,29 +1400,93 @@ async function sweepTaper(ctx: SweepContext, block: number, param: number): Prom
 /**
  * Sweep a device's self-describe map into `CacheRecord[]` deep-equivalent to the
  * `.cache` byte-walker's output (minus the unreachable special table records).
+ * Shorthand for `liveWalkDetailed(...).records`.
  *
  * Feed the result straight to `buildCache({ kind: 'live', walk })` — or use
  * `liveSource(transport, opts)` to build that source in one call.
  */
 export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions): Promise<CacheRecord[]> {
+  return (await liveWalkDetailed(transport, opts)).records;
+}
+
+/**
+ * The live walk with its reply-loss accounting (`LiveWalkResult`).
+ *
+ * Reply handling — a NO-REPLY (`null`) is never read as a device answer:
+ *   - definition queries inside a block's table: retried (a lost definition would otherwise
+ *     silently drop a param); still unanswered → the slot is skipped and counted in
+ *     `unresolvedReplies` (and `missingSlots` when it is inner). The block-probe phase stays
+ *     one-shot, as before;
+ *   - enum labels: the FIRST label query of a param is one-shot exactly as before (it may be a
+ *     speculative probe); a lost reply there ends the list. Later labels belong to a list the
+ *     device has already proven, so a lost one is retried instead of truncating the list;
+ *   - the unit read (view 0x00): retried.
+ * A retry follows a drain pause (and `transport.drain`); a lost label is followed by one more
+ * before the next sub — see `lostReplyDrainMs` for why a late reply must never answer a later
+ * sub. After `maxSilentQueries` unanswered queries in a row the walk checks the device is alive
+ * (see there) and either carries on or rejects. On a device that answers every query the query
+ * and pause sequence is exactly the one the walk always sent.
+ *
+ * Table end: a block ends a small run past its last real definition and never above its ceiling;
+ * end markers, copies under a repeated non-zero id and implausible junk are absent slots, never swept — see the
+ * header section "Table end, bounds and pseudo definitions" (`paramAbsentRunLimit`, `maxParamId`,
+ * `paramKnownSizeByBlock`, `paramBoundByBlock`, `LiveWalkResult.pseudoReplies`).
+ *
+ * Empty slots: an empty-slot definition between two real definitions (or before the first one)
+ * is an unused slot INSIDE the parameter table — the editor cache keeps it as an all-zero float
+ * placeholder, so the walk emits the same placeholder once the next real definition proves it is
+ * inner. Trailing empty slots (symbol id 0) are kept the same way when the next answer is a
+ * no-payload reply — the way an effect table answers past its end — and trimmed otherwise
+ * (indistinguishable from the end of the table). A run longer than `placeholderRunLimit` is an
+ * id-space gap, not placeholders.
+ */
+export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkOptions): Promise<LiveWalkResult> {
   const model = opts.model;
   // 160 (not 127): the block byte now splits lo/hi (body[2]/[3]) so effectId>=128
   // blocks are reachable. Empty high blocks are skipped after `blockProbeDepth`
   // params (see the found===0 break below), so the extra range is nearly free.
-  const maxBlock = opts.maxBlock ?? 160;
+  const maxBlock = opts.maxBlock ?? DEFAULT_MAX_BLOCK;
   const blocks = opts.blocks ?? Array.from({ length: maxBlock + 1 }, (_, i) => i);
-  const maxParamId = opts.maxParamId ?? 16383;
-  const absentRunLimit = opts.paramAbsentRunLimit ?? 256;
+  // FULL mode writes, so its default ceiling and the sweep guard below care about the mode early.
+  const mode = opts.mode ?? 'read-only';
+  const full = mode === 'full';
+  const defaultMaxParamId = full ? DEFAULT_FULL_MAX_PARAM_ID : DEFAULT_READ_ONLY_MAX_PARAM_ID;
+  // A non-finite value (NaN, +-Infinity) is no value: the mode default applies. Finite ones are clamped.
+  const requestedMax = opts.maxParamId;
+  const maxParamId = typeof requestedMax === 'number' && Number.isFinite(requestedMax) ? clampParamBound(requestedMax) : defaultMaxParamId;
+  // Only a finite integer >= 1 is a run limit; anything else (NaN, Infinity, 1.5, 0, negative) is the default.
+  const requestedRun = opts.paramAbsentRunLimit;
+  const absentRunLimit = typeof requestedRun === 'number' && Number.isInteger(requestedRun) && requestedRun >= 1 ? requestedRun : DEFAULT_ABSENT_RUN_LIMIT;
+  /**
+   * A block's walk plan. `ceiling`: the highest id queried, inclusive — the caller's HARD bound when
+   * given (wins over `maxParamId` both ways), else a known size's `size - 1 + absentRunLimit` capped
+   * by `maxParamId`, else `maxParamId`. `knownSize`: ids below it are walked without the stop run
+   * (0 = none known); past it the normal stop run applies, so appended params are found.
+   */
+  const planOf = (block: number): { ceiling: number; knownSize: number } => {
+    // Only a finite INTEGER is trusted: NaN, Infinity and 1.5 are ignored (treated as no entry).
+    // A negative bound is a deliberate "skip this block"; a negative size means nothing, so it is ignored.
+    const bound = opts.paramBoundByBlock?.[block];
+    const size = opts.paramKnownSizeByBlock?.[block];
+    const hardBound = bound !== undefined && Number.isInteger(bound) ? bound : undefined;
+    const knownSize = size !== undefined && Number.isInteger(size) && size >= 0 ? Math.min(MAX_WIRE_PARAM_ID + 1, size) : undefined;
+    if (hardBound !== undefined) return { ceiling: clampParamBound(hardBound), knownSize: knownSize ?? 0 };
+    if (knownSize !== undefined) return { ceiling: Math.min(maxParamId, clampParamBound(knownSize - 1 + absentRunLimit)), knownSize };
+    return { ceiling: maxParamId, knownSize: 0 };
+  };
   const probeDepth = opts.blockProbeDepth ?? 4;
   const enumCap = opts.enumCountCap ?? 1024;
   // read view 0x00 per found param to capture the device-true unit (default on).
   const readValues = opts.readValues ?? true;
+  const lostRetries = Math.max(0, opts.lostReplyRetries ?? DEFAULT_LOST_REPLY_RETRIES);
+  const drainMs = opts.lostReplyDrainMs ?? DEFAULT_LOST_REPLY_DRAIN_MS;
+  const placeholderRunLimit = Math.max(0, opts.placeholderRunLimit ?? DEFAULT_PLACEHOLDER_RUN_LIMIT);
+  const maxSilent = Math.max(1, opts.maxSilentQueries ?? DEFAULT_MAX_SILENT_QUERIES);
+  const interQueryMs = opts.interQueryMs ?? 0;
   const { signal, sleep, onProgress } = opts;
 
   // FULL mode: opt-in taper sweep. Requires host write hooks — fail fast at the
   // walk start (before any wire traffic) when they are missing.
-  const mode = opts.mode ?? 'read-only';
-  const full = mode === 'full';
   if (full && !opts.write) {
     throw new Error(
       "liveWalk: mode 'full' requires write hooks (opts.write.{send,reloadPreset}); pass them or use mode 'read-only'",
@@ -738,113 +1494,398 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
   }
   const taperPoints = opts.taperPoints ?? DEFAULT_TAPER_POINTS;
   const sweepSettleMs = opts.sweepSettleMs ?? MIN_SWEEP_SETTLE_MS;
+  // Set as soon as a SET is handed to the host in the current block (before it is awaited: a send
+  // that fails may still have reached the device), so the block's preset reload runs whatever happens.
+  let wroteInBlock = false;
+  const hooks = opts.write;
   const sweepCtx: SweepContext | undefined = full
-    ? { transport, write: opts.write!, model, points: taperPoints, settleMs: sweepSettleMs, signal, sleep }
+    ? {
+        transport,
+        write: {
+          send: (frame: Uint8Array): Promise<void> => {
+            wroteInBlock = true;
+            return hooks!.send(frame);
+          },
+          reloadPreset: (): Promise<void> => hooks!.reloadPreset(),
+        },
+        model,
+        points: taperPoints,
+        settleMs: sweepSettleMs,
+        signal,
+        sleep,
+      }
     : undefined;
+  // FULL mode writes only to the model's placeable effect blocks (an allow-list, see `sweepableBlocks`).
+  const sweepable = full ? sweepableBlocks(model) : new Set<number>();
 
   const records: CacheRecord[] = [];
   let queries = 0;
   let enumLabels = 0;
   let tapers = 0;
+  let lostReplies = 0;
+  let recoveredReplies = 0;
+  let unresolvedReplies = 0;
+  let placeholderSlots = 0;
+  let missingSlots = 0;
+  let silentAddresses = 0;
+  const pseudoReplies: PseudoReplyStats = { endMarker: 0, duplicateId: 0, implausible: 0 };
+  let lastAnsweredDef: Uint8Array | undefined; // liveness probe: a definition query that answered
+  let neverAnswered = 0; // unanswered queries before anything answered at all
+  // Per block: consecutive unanswered queries, and whether the liveness check has shown that
+  // this block's silence is address-specific (the device itself still answers).
+  let blockSilentRun = 0;
+  let blockSilenceProven = false;
+  let trailingSilentDefs = 0; // unanswered definition queries since the block's last answered one
+  let silentSinceProof = 0; // silent definitions since this block's silence was proven
+  // DEFINITION queries booked as loss that a proof of silence may re-book as silent addresses:
+  // the current silent run (reset by every answered query), and the runs of earlier blocks that
+  // ended silent before anything had answered (no liveness check could cover them yet). Lost
+  // labels and unit reads are never re-booked: they stay genuine loss.
+  interface Booked {
+    lost: number;
+    unresolved: number;
+  }
+  let runBooked: Booked = { lost: 0, unresolved: 0 };
+  let deferredBooked: Booked = { lost: 0, unresolved: 0 };
+
+  /** After a lost reply: give a late frame time to arrive unheard, then drop anything buffered. */
+  const settleAfterLoss = async (): Promise<void> => {
+    await pace(drainMs, signal, sleep);
+    throwIfAborted(signal);
+    await transport.drain?.();
+  };
+
+  /**
+   * Send one query (paced). A `null` reply is LOST. With `retry` the same query is re-sent after a
+   * drain pause, up to `lostRetries` times. After a lost LABEL reply the walk drains again before
+   * moving on: the next query is the next sub of the same param, and a straggler (the late answer,
+   * or a duplicate after a successful retry) would be indistinguishable from its reply. Other
+   * views move to a different view or param, which the reply echo tells apart. One-shot queries
+   * that get no reply cost exactly what they always did — no pause, no retry.
+   */
+  const ask = async (query: Uint8Array, retry: boolean, label = false): Promise<Uint8Array | null> => {
+    const attempts = retry ? lostRetries + 1 : 1;
+    let lost = 0;
+    let frame: Uint8Array | null = null;
+    for (let a = 0; a < attempts; a++) {
+      if (a > 0) await settleAfterLoss();
+      throwIfAborted(signal);
+      await pace(interQueryMs, signal, sleep);
+      frame = await transport.request(query);
+      queries += 1;
+      if (frame) break;
+      lost += 1;
+    }
+    const isDef = query[6] === VIEW_DEFINITION;
+    if (isDef) {
+      if (frame) lastAnsweredDef = query;
+      trailingSilentDefs = frame ? 0 : trailingSilentDefs + 1;
+    }
+    if (frame) {
+      blockSilentRun = 0;
+      runBooked = { lost: 0, unresolved: 0 };
+      if (lost > 0) {
+        lostReplies += lost; // a late or dropped frame: the retry got the answer
+        recoveredReplies += 1;
+      }
+    } else if (blockSilenceProven && isDef) {
+      silentAddresses += 1; // this block's definition silence is already explained
+      // Still notice a device that freezes later in the block: a cheap re-read now and then.
+      if (++silentSinceProof % FREEZE_RECHECK_EVERY === 0) await stillAlive();
+    } else {
+      // Genuine loss — unless a later proof re-books it (definitions of the current run only).
+      lostReplies += lost;
+      unresolvedReplies += 1;
+      if (isDef) {
+        runBooked.lost += lost;
+        runBooked.unresolved += 1;
+      }
+      if (!blockSilenceProven) {
+        blockSilentRun += 1;
+        if (!lastAnsweredDef && ++neverAnswered >= maxSilent) stopped(neverAnswered);
+        if (lastAnsweredDef && blockSilentRun >= maxSilent) await proveSilence();
+      }
+    }
+    if (lost > 0 && label) await settleAfterLoss(); // a straggler must not answer the next sub
+    return frame;
+  };
+
+  const stopped = (n: number): never => {
+    throw new Error(`liveWalk: device stopped answering (${n} consecutive queries unanswered, liveness check unanswered); walk aborted`);
+  };
+
+  /**
+   * A silent run in this block: re-send the last definition query that DID answer. An answer
+   * means the silence is specific to those addresses — the run's DEFINITION queries (and any
+   * earlier unchecked block's) are re-booked from the loss counters to `silentAddresses`, and the
+   * rest of the block runs without definition retries. No answer means the device stopped
+   * answering: the walk rejects.
+   */
+  const proveSilence = async (): Promise<void> => {
+    const n = blockSilentRun;
+    await settleAfterLoss();
+    await pace(interQueryMs, signal, sleep);
+    const alive = await transport.request(lastAnsweredDef!);
+    queries += 1;
+    if (!alive) stopped(n);
+    for (const b of [runBooked, deferredBooked]) {
+      lostReplies -= b.lost;
+      unresolvedReplies -= b.unresolved;
+      silentAddresses += b.unresolved;
+    }
+    runBooked = { lost: 0, unresolved: 0 };
+    deferredBooked = { lost: 0, unresolved: 0 };
+    blockSilentRun = 0;
+    silentSinceProof = 0;
+    blockSilenceProven = true;
+  };
+
+  /** After proven silence: re-read the known definition (no pause — nothing is in flight). */
+  const stillAlive = async (): Promise<void> => {
+    await pace(interQueryMs, signal, sleep);
+    const alive = await transport.request(lastAnsweredDef!);
+    queries += 1;
+    if (!alive) stopped(silentSinceProof);
+  };
+
+  type ProgressHead = Omit<LiveWalkProgress, 'records' | 'enumLabels' | 'queries' | 'tapers' | 'lostReplies'>;
+  const progress = (p: ProgressHead): void => {
+    onProgress?.({ ...p, records: records.length, enumLabels, queries, ...(full ? { tapers } : {}), lostReplies });
+  };
 
   for (let bi = 0; bi < blocks.length; bi++) {
     const block = blocks[bi]!;
     throwIfAborted(signal);
-    onProgress?.({ phase: 'block-start', block, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries, ...(full ? { tapers } : {}) });
+    progress({ phase: 'block-start', block, blockIndex: bi, blockCount: blocks.length });
 
     let absentRun = 0;
     let found = 0;
-    let sweptInBlock = false;
-    for (let param = 0; param <= maxParamId; param++) {
-      throwIfAborted(signal);
-      await pace(opts.interQueryMs ?? 0, signal, sleep);
-      const reply = await transport.request(buildDefQuery(model, block, param));
-      queries += 1;
-      const dec = reply ? decodeReply(reply) : null;
-      const def = dec && dec.view === 'definition' ? dec : null;
-
-      if (!def || isFillerDefinition(def) || isGarbageDefinition(def)) {
-        absentRun += 1;
-        // Skip an empty block once its opening params are all absent.
-        if (found === 0 && param + 1 >= probeDepth) break;
-        if (absentRun >= absentRunLimit) break;
-        continue;
-      }
-      absentRun = 0;
-      found += 1;
-
-      let labels: string[] = [];
-      const lo = Math.round(def.min);
-      // SPECULATIVE probes (def not positively enum-kind) never open a list at a
-      // high absolute sub: every hardware-verified enum starts at a small ordinal,
-      // and an out-of-contract high-sub 0x1f (e.g. a 430..450 pitch range) is the
-      // FORGEFX-32 freeze trigger. Positively-classified enums keep the full range.
-      const speculative = def.kind !== 'enum';
-      if (lo >= 0 && (!speculative || lo <= 127) && couldBeEnum(def, enumCap)) {
-        // The SUB ordinal is the parameter's RAW VALUE, not a list index:
-        // values[i] lives at sub = min + i, so the walk covers exactly
-        // min..max. Raw values below min can answer with a label, but they are
-        // outside the value list and are never queried. Bounded by the
-        // declared count (max−min+1), hard-capped at `enumCountCap`.
-        const span = Math.round(def.max - def.min + 1);
-        const bound = Math.max(1, Math.min(span >= 1 ? span : enumCap, enumCap));
-        for (let i = 0; i < bound; i++) {
-          throwIfAborted(signal);
-          await pace(opts.interQueryMs ?? 0, signal, sleep);
-          const er = await transport.request(buildEnumQuery(model, block, param, lo + i));
-          queries += 1;
-          const ed = er ? decodeReply(er) : null;
-          if (!ed || ed.view !== 'enum_label') break; // end sentinel / empty reply ends the list
-          labels.push(ed.label);
-        }
-        enumLabels += labels.length;
-      }
-      // UNIT: read the device's own formatted value (view 0x00) and parse the unit
-      // token. Read-only, one extra query per found param; skipped when the caller
-      // opts out or for enum/label params whose value carries no unit.
-      let unit: string | undefined;
-      if (readValues && labels.length === 0) {
+    // Empty slots seen since the last real definition (candidate inner placeholders), and
+    // whether that run is still placeholder-shaped (no sentinel / junk answer inside it).
+    let pendingEmpty: number[] = [];
+    let pendingUnknown = 0;
+    let pendingIntact = true;
+    let pendingId0 = true; // every pending empty slot carried symbol id 0 (no end marker among them)
+    // The unused tail of the table: the pending empty slots that a no-payload reply ended (see
+    // "Empty slots"), kept once the block ends without a further real definition.
+    let tableTail: number[] | undefined;
+    let lastReal = -1;
+    // Symbol ids already seen in this block (real definitions + end markers): a definition repeating
+    // one is a pseudo definition, except a new body inside the known table (see `judgeDefinition`).
+    const seenIds: SeenIds = new Map();
+    const { ceiling: bound, knownSize } = planOf(block);
+    blockSilenceProven = false;
+    blockSilentRun = 0;
+    trailingSilentDefs = 0;
+    silentSinceProof = 0;
+    runBooked = { lost: 0, unresolved: 0 };
+    // FULL-mode safety net: reload the preset from flash after every block in which any SET was sent,
+    // so an interrupt can never leave unsaved sweep edits behind (CaptureRig v2's per-block
+    // `reload_preset`). In a `finally`, so an abort or error in the middle of a sweep still reloads:
+    // best effort then — a failing reload must not hide the error that ended the walk.
+    wroteInBlock = false;
+    let blockDone = false;
+    try {
+      for (let param = 0; param <= bound; param++) {
         throwIfAborted(signal);
-        await pace(opts.interQueryMs ?? 0, signal, sleep);
-        const vr = await transport.request(buildQuery(model, VIEW_VALUE, block, param, 0));
-        queries += 1;
-        const vd = vr ? decodeReply(vr) : null;
-        if (vd && vd.view === 'value') unit = parseUnit(vd.value);
+        // Crossing a known table size: the stop run counts afresh, so the lookahead past the table is
+        // always a full `absentRunLimit` (trailing empty slots inside the table do not eat into it).
+        if (param === knownSize) absentRun = 0;
+        // The block-probe phase (no definition found yet) stays one-shot, exactly as before:
+        // retries there would multiply the cost of every empty block. So does a block whose
+        // silent addresses the liveness check has already explained.
+        const reply = await ask(buildDefQuery(model, block, param), found > 0 && !blockSilenceProven);
+        const dec = reply ? decodeReply(reply) : null;
+        const def = dec && dec.view === 'definition' ? dec : null;
+
+        const verdict = def ? judgeDefinition(def, seenIds, param < knownSize && param === lastReal + 1) : undefined;
+
+        if (!def || verdict !== 'real') {
+          if (verdict === 'empty' || verdict === 'end-marker') {
+            pendingEmpty.push(param);
+            if (verdict === 'end-marker') pendingId0 = false;
+          } else if (reply) {
+            // The first answer after the run that is not an empty slot. A no-payload reply there is
+            // the end of the table, so a fully answered run of id-0 empty slots before it is the
+            // table's unused tail (kept below unless a later real definition turns it inner).
+            if (pendingIntact && pendingId0 && pendingUnknown === 0 && lastReal >= 0 && isNoPayloadReply(reply, VIEW_DEFINITION)) {
+              tableTail = [...pendingEmpty];
+            }
+            pendingIntact = false; // a sentinel / pseudo / junk answer: not a table slot
+          } else pendingUnknown += 1; // unanswered: the slot is simply unknown
+          if (def) {
+            // Answered, but not a parameter: counted so a build can report what it ignored.
+            if (verdict === 'end-marker') {
+              pseudoReplies.endMarker += 1;
+              seenIds.set(def.id, null); // (non-zero by definition) a later definition reusing it is a copy
+            } else if (verdict === 'duplicate-id') pseudoReplies.duplicateId += 1;
+            else if (verdict === 'garbage' || verdict === 'implausible') pseudoReplies.implausible += 1;
+          }
+          absentRun += 1;
+          // Skip an empty block once its opening params are all absent.
+          if (found === 0 && param + 1 >= probeDepth) break;
+          // The stop run; suspended inside a known table size (ids below it).
+          if (absentRun >= absentRunLimit && param >= knownSize) break;
+          continue;
+        }
+        absentRun = 0;
+        found += 1;
+        if (def.id !== 0) {
+          const bodies = seenIds.get(def.id);
+          if (bodies) bodies.push(def);
+          else seenIds.set(def.id, [def]);
+        }
+
+        // This real definition proves the empty slots before it are INNER: keep them as the
+        // all-zero placeholders the editor cache carries, unless the run is an id-space gap.
+        if (pendingIntact && param - lastReal - 1 <= placeholderRunLimit) {
+          for (const p of pendingEmpty) records.push(placeholderRecord(block, p));
+          placeholderSlots += pendingEmpty.length;
+          if (!blockSilenceProven) missingSlots += pendingUnknown; // inner slots nobody answered for
+        }
+        pendingEmpty = [];
+        pendingUnknown = 0;
+        pendingIntact = true;
+        pendingId0 = true;
+        tableTail = undefined;
+        lastReal = param;
+
+        const labels: string[] = [];
+        let emptyList = false;
+        const lo = Math.round(def.min);
+        // SPECULATIVE probes (def not positively enum-kind) never open a list at a
+        // high absolute sub: every hardware-verified enum starts at a small ordinal,
+        // and an out-of-contract high-sub 0x1f (e.g. a 430..450 pitch range) is the
+        // FORGEFX-32 freeze trigger. Positively-classified enums keep the full range.
+        const speculative = def.kind !== 'enum';
+        // A label list the caller names for this param (`enumHintByBlock`), if any: the only way a
+        // definition the numeric rule refuses (a non-zero `scale`) is label-walked. ANY entry the
+        // caller made for the param — even one too malformed to use — keeps FULL mode from sweeping it.
+        const blockHints = opts.enumHintByBlock?.[block];
+        const hintEntry = blockHints !== undefined && blockHints !== null && Object.prototype.hasOwnProperty.call(blockHints, param);
+        const hint = hintEntry ? usableHint(blockHints![param]) : undefined;
+        let walkLabels = lo >= 0 && (!speculative || lo <= 127) && couldBeEnum(def, enumCap);
+        // The formatted value (view 0x00, read-only) when it was read BEFORE the label walk.
+        let display: string | null | undefined;
+        if (!walkLabels && hint) {
+          const fit = hintedListFit(def, hint, enumCap);
+          if (fit === 'exact') {
+            walkLabels = true;
+          } else if (fit === 'grown' && readValues) {
+            // More values than the hinted list: label-walk only if the device DISPLAYS a label.
+            const vr = await ask(buildValueQuery(model, block, param), true);
+            const vd = vr ? decodeReply(vr) : null;
+            display = vd && vd.view === 'value' ? vd.value : null;
+            walkLabels = display !== null && isLabelDisplay(display);
+          }
+        }
+        if (walkLabels) {
+          // The SUB ordinal is the parameter's RAW VALUE, not a list index:
+          // values[i] lives at sub = min + i, so the walk covers exactly
+          // min..max. Raw values below min can answer with a label, but they are
+          // outside the value list and are never queried. Bounded by the
+          // declared count (max−min+1), hard-capped at `enumCountCap`.
+          const span = Math.round(def.max - def.min + 1);
+          const bound = Math.max(1, Math.min(span >= 1 ? span : enumCap, enumCap));
+          for (let i = 0; i < bound; i++) {
+            throwIfAborted(signal);
+            // i === 0 is the first (possibly speculative) probe: one-shot, as always. From i > 0
+            // the list is proven, so a NO-REPLY is retried rather than read as its end. A reply
+            // that decodes to no label (sentinel / cnt == 0) is the genuine end either way.
+            const er = await ask(buildEnumQuery(model, block, param, lo + i), i > 0, true);
+            const ed = er ? decodeReply(er) : null;
+            if (!ed || ed.view !== 'enum_label') {
+              if (i === 0 && er) emptyList = true; // answered: there is no label list
+              break;
+            }
+            labels.push(ed.label);
+          }
+          enumLabels += labels.length;
+        }
+        // UNIT: read the device's own formatted value (view 0x00) and parse the unit
+        // token. Read-only, one extra query per found param; skipped when the caller
+        // opts out or for enum/label params whose value carries no unit.
+        let unit: string | undefined;
+        if (readValues && labels.length === 0) {
+          if (display === undefined) {
+            const vr = await ask(buildValueQuery(model, block, param), true);
+            const vd = vr ? decodeReply(vr) : null;
+            display = vd && vd.view === 'value' ? vd.value : null;
+          }
+          if (display !== null) unit = parseUnit(display);
+        }
+
+        // FULL mode: sweep the taper of a CONTINUOUS FLOAT param only — never an
+        // enum (a label list was found, or the caller names one: a param with a hint
+        // entry, usable or not, is never written, whatever its label walk gave) nor
+        // an int/inert param
+        // (kind!=float or max==min). Mirrors CaptureRig v2's `d["kind"]=="float" and
+        // max!=min` (the label walk already claimed any enum). The sweep writes +
+        // restores; its taper rides the FloatRecord and is threaded into the RangeDef.
+        // WRITES only on a trustworthy record: reaching here means the definition passed every
+        // pseudo / implausible check. `param <= bound` is defense in depth — the loop bound (the
+        // block's ceiling) already guarantees it; it stays so a later change to the loop cannot let a
+        // sweep write above the ceiling.
+        let taper: FloatTaper | undefined;
+        if (sweepCtx && sweepable.has(block) && labels.length === 0 && !hintEntry && def.kind === 'float' && def.max !== def.min && param <= bound) {
+          await pace(interQueryMs, signal, sleep);
+          const swept = await sweepTaper(sweepCtx, block, param);
+          queries += swept.reads;
+          if (swept.taper) {
+            // Written (and restored): the block gets its preset reload.
+            taper = swept.taper;
+            tapers += 1;
+            progress({ phase: 'param-sweep', block, param, blockIndex: bi, blockCount: blocks.length });
+          }
+        }
+
+        records.push(buildRecord(block, param, def, labels, unit, taper, emptyList));
+      }
+      // Empty slots still pending here are TRAILING. Those a no-payload reply ended are the table's
+      // unused tail and kept (the editor cache carries them as well); any others are dropped — they
+      // cannot be told apart from the end of the table, so a section ending in such slots yields a
+      // SHORTER stride than the editor cache (a lower bound).
+      if (tableTail && tableTail.length > 0 && tableTail.length <= placeholderRunLimit) {
+        for (const p of tableTail) records.push(placeholderRecord(block, p));
+        placeholderSlots += tableTail.length;
       }
 
-      // FULL mode: sweep the taper of a CONTINUOUS FLOAT param only — never an
-      // enum (a label list was found) nor an int/inert param (kind!=float or
-      // max==min). Mirrors CaptureRig v2's `d["kind"]=="float" and max!=min`
-      // (the label walk already claimed any enum). The sweep writes + restores;
-      // its taper rides the FloatRecord and is threaded into the RangeDef.
-      let taper: FloatTaper | undefined;
-      if (sweepCtx && labels.length === 0 && def.kind === 'float' && def.max !== def.min) {
-        await pace(opts.interQueryMs ?? 0, signal, sleep);
-        const swept = await sweepTaper(sweepCtx, block, param);
-        taper = swept.taper;
-        queries += swept.reads;
-        tapers += 1;
-        sweptInBlock = true;
-        onProgress?.({ phase: 'param-sweep', block, param, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries, tapers });
+      // A block whose definition sweep ENDED in a silent run: check the device is alive. An answer
+      // re-books that run's definition queries as silent addresses; no answer ends the walk. With
+      // nothing answered yet the check has nothing to re-read: keep the run booked for the next
+      // successful check. Everything else unanswered (lost labels / unit reads, silent runs that an
+      // answer ended) stays genuine loss.
+      if (!blockSilenceProven && trailingSilentDefs > 0 && runBooked.unresolved > 0) {
+        if (lastAnsweredDef) {
+          await proveSilence();
+        } else {
+          deferredBooked = {
+            lost: deferredBooked.lost + runBooked.lost,
+            unresolved: deferredBooked.unresolved + runBooked.unresolved,
+          };
+        }
       }
-
-      records.push(buildRecord(block, param, def, labels, unit, taper));
+      blockDone = true;
+    } finally {
+      if (sweepCtx && wroteInBlock) {
+        if (blockDone) {
+          await sweepCtx.write.reloadPreset();
+        } else {
+          try {
+            await sweepCtx.write.reloadPreset();
+          } catch {
+            // best effort: the walk is already failing, and its own error is the one to report
+          }
+        }
+      }
     }
 
-    // FULL-mode safety net: reload the preset from flash after every block whose
-    // params were swept, so an interrupt can never leave unsaved sweep edits
-    // behind (CaptureRig v2's per-block `reload_preset`).
-    if (sweepCtx && sweptInBlock) {
-      throwIfAborted(signal);
-      await sweepCtx.write.reloadPreset();
-    }
-
-    onProgress?.({ phase: 'block-done', block, blockIndex: bi, blockCount: blocks.length, records: records.length, enumLabels, queries, ...(full ? { tapers } : {}) });
+    progress({ phase: 'block-done', block, blockIndex: bi, blockCount: blocks.length });
     await pace(opts.blockPauseMs ?? 0, signal, sleep);
   }
 
-  onProgress?.({ phase: 'done', blockIndex: blocks.length, blockCount: blocks.length, records: records.length, enumLabels, queries, ...(full ? { tapers } : {}) });
-  return records;
+  progress({ phase: 'done', blockIndex: blocks.length, blockCount: blocks.length });
+  return { records, queries, enumLabels, lostReplies, recoveredReplies, unresolvedReplies, placeholderSlots, missingSlots, silentAddresses, pseudoReplies };
 }
 
 /**
@@ -852,5 +1893,5 @@ export async function liveWalk(transport: LiveTransport, opts: LiveWalkOptions):
  * `buildCache(liveSource(transport, opts), params, seeds, …)`.
  */
 export function liveSource(transport: LiveTransport, opts: LiveWalkOptions): RecordSource {
-  return { kind: 'live', walk: () => liveWalk(transport, opts) };
+  return { kind: 'live', walk: () => liveWalkDetailed(transport, opts) };
 }

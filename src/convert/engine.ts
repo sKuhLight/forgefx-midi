@@ -35,7 +35,16 @@ import type {
   ConverterGridCell,
 } from './ir.js';
 import { matchModel, modelOnDevice, type LineageMatch } from './lineageIndex.js';
-import { resolveTargetRange, resolveTargetEnumOptions, targetParamId, targetParamIdByName } from './targetRanges.js';
+import {
+  resolveTargetRange,
+  resolveTargetEnumOptions,
+  resolveEnumOptionsByParamId,
+  resolveEnumCountByParamId,
+  isBlockTypeSelector,
+  targetParamId,
+  targetParamIdByName,
+  type TargetRange,
+} from './targetRanges.js';
 import {
   resolveConceptKey,
   normalizeConceptPort,
@@ -43,6 +52,7 @@ import {
 import type { ConversionEvent } from './events.js';
 import { assignGridEffectIds, hasSynthModel, type SynthPreset } from '../devices/gen3/presetSynth.js';
 import { MODEL_BY_DEVICE } from './adapters/gen3.js';
+import { GEN3_WIRE_MAX } from '../devices/gen3/taper.js';
 import { GEN3_DEVICE_IDS, type Gen3DeviceId } from './families.js';
 
 // ── Public API ───────────────────────────────────────────────────────
@@ -126,6 +136,22 @@ function signalOrder(preset: ConverterPreset): string[] {
     }
   }
   return out;
+}
+
+/**
+ * Knob position (0..1) of `value` inside the target `range`: geometric for a
+ * log-taper range (which needs a positive `min`), linear otherwise. This is the
+ * same scale as the device wire fraction (`wireToDisplay` / `valueToRaw`), so a
+ * log param's `normalized` stays the wire position, not a linear fraction of the
+ * display span. `value` is expected to be clamped into `[min, max]` already.
+ * Undefined for a degenerate (`min === max`) range.
+ */
+function normalizedInRange(value: number, range: TargetRange): number | undefined {
+  if (range.max === range.min) return undefined;
+  if (range.log && range.min > 0 && range.max > 0) {
+    return Math.log(value / range.min) / Math.log(range.max / range.min);
+  }
+  return (value - range.min) / (range.max - range.min);
 }
 
 /** True when two devices share one concept-key param vocabulary column. */
@@ -296,10 +322,16 @@ export function convertPreset(
 
   // ── 4. Param mapping ──────────────────────────────────────────────
   const lossless = sameVocabulary(source.sourceDevice, targetDevice);
+  const isGen3Target = normalizeConceptPort(targetDevice) === 'axe-fx-iii';
   if (!lossless) {
     for (const b of blocks) {
       const mapped: ConverterParam[] = [];
       for (const p of b.params) {
+        // A block's TYPE / MODEL selector travels via typeName / typeValue (lineage-matched above), never
+        // as a param: the type write comes first, so a param carrying the source's roster ordinal would
+        // overwrite it with an ordinal from the wrong list. No event: the type itself is reported by the
+        // type-substituted / type-unresolved events.
+        if (isBlockTypeSelector(source.sourceDevice, b.family, p.nativeName)) continue;
         if (p.conceptKey === undefined) {
           events.push({ kind: 'param-dropped', blockKey: b.key, nativeName: p.nativeName, reason: 'no-concept-mapping' });
           continue;
@@ -310,20 +342,26 @@ export function convertPreset(
           continue;
         }
         const tgtName = resolved.localName;
+        if (isBlockTypeSelector(targetDevice, b.family, tgtName)) continue; // the target's selector is set via typeValue
         const range = resolveTargetRange(targetDevice, b.family, tgtName);
         const enumOptions = resolveTargetEnumOptions(targetDevice, b.family, tgtName);
+        // An enum target is a discrete ordinal: labelled options, or an enum range row without a clean vocabulary.
+        const isEnum = enumOptions !== undefined || range?.kind === 'enum';
         if (range === undefined) {
           events.push({ kind: 'param-unverified', blockKey: b.key, nativeName: tgtName, value: p.value });
           mapped.push({
             nativeName: tgtName,
             conceptKey: p.conceptKey,
             value: p.value,
+            ...(isEnum ? { kind: 'enum' as const } : {}),
             displayValue: p.displayValue,
             ...(enumOptions ? { enumOptions } : {}),
           });
           continue;
         }
-        const clamped = Math.min(range.max, Math.max(range.min, p.value));
+        // An ordinal is an integer: round a fractional source value, then clamp into 0..N-1. Either step
+        // changes the value, so the event compares against the source value as given.
+        const clamped = Math.min(range.max, Math.max(range.min, isEnum ? Math.round(p.value) : p.value));
         if (clamped !== p.value) {
           events.push({
             kind: 'param-clamped',
@@ -336,17 +374,20 @@ export function convertPreset(
             targetMax: range.max,
           });
         }
-        const normalized = range.max !== range.min ? (clamped - range.min) / (range.max - range.min) : undefined;
+        const normalized = isEnum && isGen3Target
+          ? clamped / GEN3_WIRE_MAX // a gen-3 enum is stored as its raw ordinal, so the wire fraction is ordinal / 65534
+          : normalizedInRange(clamped, range);
         mapped.push({
           nativeName: tgtName,
           conceptKey: p.conceptKey,
           value: clamped,
+          kind: isEnum ? 'enum' : 'float',
           min: range.min,
           max: range.max,
           ...(range.unit !== undefined ? { unit: range.unit } : {}),
           ...(range.log ? { log: true } : {}),
           ...(normalized !== undefined ? { normalized } : {}),
-          displayValue: String(clamped),
+          displayValue: enumOptions?.[clamped] ?? String(clamped),
           ...(enumOptions ? { enumOptions } : {}),
         });
       }
@@ -386,8 +427,44 @@ export function convertPreset(
         const tid =
           targetParamId(targetDevice, b.family, p.conceptKey) ??
           targetParamIdByName(targetDevice, b.family, p.sharedName);
-        if (tid != null) p.paramId = tid;
-        else if (p.paramId !== undefined) delete p.paramId;
+        if (tid != null) {
+          p.paramId = tid;
+          // Lossless: an enum carries the SOURCE's ordinal verbatim, and what gets written is an ordinal
+          // into the TARGET's list — so offer the target's labels, not the source's (an edit must stay
+          // inside the list the device will actually index). The mapped path already resolved the
+          // target's own options above.
+          if (lossless && p.kind === 'enum') {
+            const options = resolveEnumOptionsByParamId(targetDevice, b.family, tid);
+            const count = options?.length ?? resolveEnumCountByParamId(targetDevice, b.family, tid);
+            if (count !== undefined) {
+              // The target's span replaces the source's; without a clean label list the source's labels
+              // would name the wrong ordinals, so they are cleared.
+              p.min = 0;
+              p.max = count - 1;
+              if (options) p.enumOptions = options;
+              else delete p.enumOptions;
+              const clamped = Math.min(count - 1, Math.max(0, p.value));
+              if (clamped !== p.value) {
+                events.push({
+                  kind: 'param-clamped',
+                  blockKey: b.key,
+                  nativeName: p.nativeName,
+                  ...(p.conceptKey !== undefined ? { conceptKey: p.conceptKey } : {}),
+                  sourceValue: p.value,
+                  targetValue: clamped,
+                  targetMin: 0,
+                  targetMax: count - 1,
+                });
+                p.value = clamped;
+                p.normalized = clamped / GEN3_WIRE_MAX;
+              }
+              // Without target labels the source's label would name the wrong ordinal, and a bare number
+              // would read like a numeric setting: leave it unset so a client falls back to "#n".
+              if (options) p.displayValue = options[p.value];
+              else delete p.displayValue;
+            }
+          }
+        } else if (p.paramId !== undefined) delete p.paramId;
       }
     }
   }

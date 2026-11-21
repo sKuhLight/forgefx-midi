@@ -56,26 +56,49 @@ class BitReader {
     if (this.bit === 8) { this.bit = 0; this.pos += 1; }
     return out;
   }
-  readByteValue(): number {
-    let v = 0;
-    for (let i = 0; i < 8; i++) v = (v << 1) | this.readBit();
-    return v;
+  /** `readBit` that refuses to run past the end of the data. Used while reading
+   *  the code tree; the symbol stream keeps the lenient zero-fill above. */
+  readBitStrict(): number {
+    if (this.exhausted) throw new Error(TREE_TRUNCATED);
+    return this.readBit();
   }
   get exhausted(): boolean { return this.pos >= this.data.length; }
 }
 
+const TREE_TRUNCATED = 'preset body: Huffman tree truncated';
+const TREE_MALFORMED = 'preset body: Huffman tree malformed (more than 256 symbols)';
+
+/** A tree over byte symbols has at most 256 leaves, and a full binary tree with
+ *  L leaves has L - 1 internal nodes: at most 255, which also caps the depth at
+ *  255. A serialization that opens more internal nodes than that cannot be a
+ *  byte-symbol tree (it would need more than 256 leaves). */
+const MAX_TREE_INTERNALS = 255;
+
 /** Tree serialization: bit 1 = leaf followed by an 8-bit symbol; bit 0 = an
- *  internal node followed by its left subtree then its right subtree. */
+ *  internal node followed by its left subtree then its right subtree.
+ *  Bounded: reading past the end of the data, or opening more than 255 internal
+ *  nodes (i.e. more than 256 leaves), throws a plain `Error` instead of
+ *  recursing without limit. */
 function buildTree(r: BitReader): HuffNode {
-  if (r.readBit() === 1) return { value: r.readByteValue() };
-  const left = buildTree(r);
-  const right = buildTree(r);
-  return { value: -1, left, right };
+  let internals = 0;
+  const build = (): HuffNode => {
+    if (r.readBitStrict() === 1) {
+      let v = 0;
+      for (let i = 0; i < 8; i++) v = (v << 1) | r.readBitStrict();
+      return { value: v };
+    }
+    if (++internals > MAX_TREE_INTERNALS) throw new Error(TREE_MALFORMED);
+    const left = build();
+    const right = build();
+    return { value: -1, left, right };
+  };
+  return build();
 }
 
 /** Decompress the dynamic-Huffman body into exactly `outputSize` bytes (the
  *  decomp size from the header). Bits are read MSB-first; at each step a 1 walks
- *  right, a 0 walks left, to a leaf symbol. */
+ *  right, a 0 walks left, to a leaf symbol. Throws a plain `Error` if the data
+ *  is too short to hold the code tree or the tree cannot be a byte-symbol tree. */
 export function huffmanUncompress(data: Uint8Array, outputSize: number): Uint8Array {
   const r = new BitReader(data);
   const root = buildTree(r);
@@ -138,13 +161,29 @@ export interface DecodedRawPatch {
   crcValid: boolean;
   decompSize: number;
   compSize: number;
-  /** The decompressed patch body (decompSize bytes). */
+  /** The decompressed patch body (decompSize bytes); empty for an empty slot. */
   body: Uint8Array;
+  /** True for an unused preset slot: the raw_patch is entirely zero (see
+   *  `isEmptyRawPatch`). Such a dump has no body and never has a valid CRC. */
+  empty: boolean;
+}
+
+/**
+ * True when `rawPatch` is an unused preset slot. An unused slot reads back as a
+ * normal full-length preset dump whose raw_patch is entirely zero: stored CRC 0,
+ * decompressed and compressed sizes 0, no name, no code tree. There is nothing
+ * to decompress, so callers must not run the Huffman decoder over it.
+ */
+export function isEmptyRawPatch(rawPatch: Uint8Array): boolean {
+  if (rawPatch.length === 0) return false;
+  for (let i = 0; i < rawPatch.length; i++) if (rawPatch[i] !== 0) return false;
+  return true;
 }
 
 /** Concatenate a parsed dump's chunk payloads, unpack to the raw_patch, verify
  *  the CRC, and Huffman-decompress the body. The caller passes the
- *  `chunkPayloads` from `parsePresetDump`. */
+ *  `chunkPayloads` from `parsePresetDump`. An unused slot (all-zero raw_patch)
+ *  is reported as `empty` with an empty body instead of being decompressed. */
 export function decodeRawPatch(chunkPayloads: readonly Uint8Array[]): DecodedRawPatch {
   let total = 0;
   for (const c of chunkPayloads) total += c.length - 2; // strip the 2-byte chunk discriminator
@@ -155,12 +194,23 @@ export function decodeRawPatch(chunkPayloads: readonly Uint8Array[]): DecodedRaw
 
   const storedCrc = u16le(rawPatch, RAW_PATCH_CRC_OFFSET);
   const computedCrc = computeRawPatchCrc(rawPatch);
+
+  if (isEmptyRawPatch(rawPatch)) {
+    return {
+      rawPatch, storedCrc, computedCrc, crcValid: false,
+      decompSize: 0, compSize: 0, body: new Uint8Array(0), empty: true,
+    };
+  }
+
   const decompSize = u16le(rawPatch, RAW_PATCH_DECOMP_SIZE_OFFSET);
   const compSize = u16le(rawPatch, RAW_PATCH_COMP_SIZE_OFFSET);
   const compData = rawPatch.subarray(RAW_PATCH_BODY_OFFSET, RAW_PATCH_BODY_OFFSET + compSize);
   const body = huffmanUncompress(compData, decompSize);
 
-  return { rawPatch, storedCrc, computedCrc, crcValid: storedCrc === computedCrc, decompSize, compSize, body };
+  return {
+    rawPatch, storedCrc, computedCrc, crcValid: storedCrc === computedCrc,
+    decompSize, compSize, body, empty: false,
+  };
 }
 
 // ── Encode side (authoring / write-back) ───────────────────────────

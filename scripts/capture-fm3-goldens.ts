@@ -17,6 +17,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildGetTempo } from '../src/gen3/axe-fx-iii/setParam.js';
 
 const BASE = process.argv.includes('--base')
   ? process.argv[process.argv.indexOf('--base') + 1]!
@@ -159,8 +160,9 @@ async function captureTelemetry(detect: unknown) {
     const f = fs.find((x) => x[1] === 0x00 && x[2] === 0x01 && x[3] === 0x74 && x.length > 5);
     return { modelId: f ? f[4] : -1 };
   }, 1);
-  // tempo (fn 0x14): payload bytes 6..7 LSB-first septet pair
-  await capture('tempo', envelope(M, 0x14, []), (fs) => {
+  // tempo (fn 0x14): payload bytes 6..7 LSB-first septet pair. Request = the codec's tempo GET
+  // (7F 7F query sentinel) — the server's /debug/raw only passes frames identical to codec read builders.
+  await capture('tempo', buildGetTempo(M), (fs) => {
     const f = fs.find((x) => x[5] === 0x14);
     if (!f) return null;
     const p = f.slice(6, f.length - 2);

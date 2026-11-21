@@ -117,10 +117,28 @@ layouts (48); FC + modifier models; per-block monitor table; live editing; **off
 - [x] ~~Cab IR names~~ ✅ 2026-07-06 factory banks bundled (`AXE3_CAB_IRS`); user banks live-only.
 - [ ] Offline-decode floor (`paramRegionFloor 0x1400`) is single-preset evidence — collect more
       III dumps to pin the true block-region start (a wrong-but-high floor only skips blocks).
-- [ ] fw 32.6 renamed labels vs the legacy `GEN3_READ_ROSTERS`/overlay spellings (e.g.
-      'Vibra-King') — the device-true list wins; the word-order-tolerant set-by-name resolver
-      keeps old spellings usable.
-
+- [x] fw 32.6 renamed labels vs the legacy `GEN3_READ_ROSTERS`/overlay spellings (e.g.
+      'Vibra-King') — the device-true list is the whole vocabulary (it replaces, never merges
+      with, the overlay and the shared rosters: no foreign labels past its end; it stays dated to
+      one firmware, so the vocabulary is 'partial' and numeric ordinals past its last label
+      still pass, a newer firmware appends models: FM3 fw 13 amp 336 / drive 87 / chorus 27);
+      the curated overlay no longer contradicts any complete device list (audited on FM3/FM9/III,
+      pinned by `enum-overlay-device-truth.test.ts`): the AM4-heritage REVERB/CHORUS/FLANGER/COMP/
+      FUZZ/DELAY type tables, four GLOBAL toggles, the `_CHAN`/`_CHANNEL`/`_MUTEn`/`_ENABLE`/`_HOLD`
+      suffix rules and the amp/volume input selects are retired; the LFO waveform and tempo-division
+      tables, the delay routing list and the phaser pole count are the devices' own. Set-by-name
+      matches the device labels case- and comma-order-tolerantly ('Room, Small' finds 'Small
+      Room'); a RENAMED label ('Vibrato-King' vs 'Vibra-King') is not aliased. The shared
+      `GEN3_READ_ROSTERS` (generated; read by the lineage index) still carries the old spellings
+      and the delay MODEL list under the `DELAY_TYPE` key; device lists mask them in the
+      descriptors.
+- [x] Params-table display metadata vs the device range rows (FM3 / FM9 / III): where an inline
+      params bound disagreed with an informative float range row it is replaced (bounds at the
+      panel's two decimals, the unit follows the row's scale); a row with bounds whose device
+      row is an enum (or carries a label list: the III global-mix toggles) is an `enum` selector
+      with no bounds; the integer -24..24 interval rows read `semitones`; the AM4 log10 hint is
+      dropped where the measured taper is linear. Applied by the data generator, pinned by
+      `params-ranges-agree.test.ts`. Typecode-0 stub rows are not touched.
 ---
 
 ## FM3 `0x11` — the reference device; near-complete

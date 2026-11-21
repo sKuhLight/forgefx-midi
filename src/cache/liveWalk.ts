@@ -1092,8 +1092,9 @@ export interface LiveWalkOptions {
    * REQUIRES `write` hooks — the walk throws at start when they are absent. It
    * writes ONLY to the placeable effect blocks of the model's roster (see
    * `sweepableBlocks`): the system selector, Global, Controllers, the modifier
-   * tables 3..34, Tuner, IR Capture, Scene MIDI, the foot controller and every
-   * block of a model without a roster in the codec are walked read-only. Nor
+   * tables 3..34, Tuner, IR Capture, Scene MIDI, the foot controller, the action
+   * blocks (Looper, Tone Match, RTA, IR Player) and every block of a model
+   * without a roster in the codec are walked read-only. Nor
    * does it write to a param whose current display
    * (read just before the sweep) is not a number: it could not be restored.
    */
@@ -1272,6 +1273,17 @@ async function pace(ms: number, signal: AbortSignal | undefined, sleep?: (ms: nu
 // Full-mode taper sweep (write + restore) — port of CaptureRig v2's Gen3Profile
 // ---------------------------------------------------------------------------
 
+/**
+ * Placeable roster blocks a FULL-mode sweep still never writes to, by family: their parameters start
+ * or steer actions, or hold device-side material, rather than forming a plain preset parameter table —
+ * Looper (record / play / overdub), Tone Match (capture / match), the Real-Time Analyzer and the IR
+ * Player. A continuous-SET there may trigger an action or touch state that is not preset data, so a
+ * preset reload is not known to undo it. The roster marks none of them as an ordinary preset effect
+ * block, so they stay read-only until a full-mode probe on hardware shows otherwise — also when a host
+ * opts blocks above 160 into the walk explicitly.
+ */
+const ACTION_BLOCK_FAMILIES: ReadonlySet<string> = new Set(['LOOPER', 'TONEMATCH', 'RTA', 'IRPLAYER']);
+
 /** Gen-3 model bytes whose effect-id roster the codec carries. */
 const MODEL_AXE_FX_III = 0x10;
 const MODEL_FM3 = 0x11;
@@ -1288,6 +1300,8 @@ const MODEL_FM9 = 0x12;
  *   - Global 1, Controllers 2 and the modifier tables 3..34 (every gen-3 model answers 32 identical
  *     copies there; the roster names only 3);
  *   - Tuner 35 and IR Capture 36 (global functions), Scene MIDI 190, the foot controller 199 / 200;
+ *   - the placeable blocks whose parameters drive ACTIONS or device-side state rather than a plain
+ *     preset table (`ACTION_BLOCK_FAMILIES`: Looper, Tone Match, Real-Time Analyzer, IR Player);
  *   - instances past a family's count, and every block of a model without a roster here.
  * Their settings are persistent device state, or not shown to be preset data: the per-block preset
  * reload that backs up the restore is not known to bring them back.
@@ -1299,7 +1313,7 @@ function sweepableBlocks(model: number): ReadonlySet<number> {
   const iiiInstances = new Map<number, number>();
   for (const b of AXE_FX_III_BLOCKS) if (b.firstId !== null) iiiInstances.set(b.firstId, b.instances);
   for (const e of table) {
-    if (e.addressing !== 'block' || e.firstId === null) continue;
+    if (e.addressing !== 'block' || e.firstId === null || ACTION_BLOCK_FAMILIES.has(e.family)) continue;
     const n = model === MODEL_AXE_FX_III ? (iiiInstances.get(e.firstId) ?? e.instances) : e.instances;
     for (let i = 0; i < n; i++) out.add(e.firstId + i);
   }

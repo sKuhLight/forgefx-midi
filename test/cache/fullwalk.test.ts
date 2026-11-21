@@ -23,7 +23,7 @@ import type { LiveTransport, LiveWalkProgress, LiveWalkWriteHooks } from '../../
 import type { CacheRecord, DeviceParam, FloatRecord } from '../../src/cache/types.js';
 import { VIEW_DEFINITION, VIEW_ENUM_LABEL, VIEW_VALUE } from '../../src/cache/index.js';
 
-export const FULLWALK_CASE_COUNT = 13;
+export const FULLWALK_CASE_COUNT = 14;
 
 const MFR = [0xf0, 0x00, 0x01, 0x74] as const;
 const MODEL = 0x12; // FM9
@@ -542,4 +542,27 @@ export async function runFullWalk(): Promise<void> {
     if (reloadOnly.error !== 'reload failed' || reloadOnly.reloads !== 1) fail(`failing reload after a complete block: ${JSON.stringify(reloadOnly)}`);
   }
   console.log('  cache/fullwalk: once a SET went out, the block reload runs even on abort, a failing SET or a failing query (best effort; the walk keeps its own error); no SET, no reload');
+
+  // ---- Case 14: the action blocks stay read-only, also with blocks above 160 opted in -------
+  // Looper (166..169), Tone Match (170..173), the Real-Time Analyzer (174..177) and the IR Player
+  // (195..198) are placeable roster blocks, but their parameters drive actions or device-side state:
+  // no SET, no reload, whatever the model. Ordinary effect blocks above 160 that a host opts in
+  // (Resonator 162, Plex Delay 178, Send 182, Return 186) are swept as usual.
+  {
+    const ACTION = [166, 169, 170, 173, 174, 177, 195, 198];
+    const ORDINARY = [162, 178, 182, 186];
+    const spec = (block: number): Spec => ({ block, param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.3, respond: (n: number) => 10 * n, unit: 'Hz' });
+    for (const model of [0x10, 0x11, 0x12]) {
+      const dev = new FullFakeTransport([...ACTION, ...ORDINARY].map(spec));
+      const recs = await liveWalk(dev, fullWalkOpts({ model, blocks: [...ACTION, ...ORDINARY], maxParamId: 0, mode: 'full', write: dev.hooks() }));
+      const written = [...new Set(dev.sends.map((s) => s.eid))].sort((a, b) => a - b);
+      if (written.join(',') !== ORDINARY.join(',')) fail(`model 0x${model.toString(16)}: SETs went to blocks ${written.join(',')} (want only ${ORDINARY.join(',')})`);
+      if (dev.reloads !== ORDINARY.length) fail(`model 0x${model.toString(16)}: ${dev.reloads} reloads (want ${ORDINARY.length})`);
+      for (const block of ACTION) {
+        const r = recs.find((x) => x.section === block && x.id === 0);
+        if (!r || r.kind !== 'float' || r.taper !== undefined || r.unit !== 'Hz') fail(`model 0x${model.toString(16)} action block ${block}: ${JSON.stringify(r)} (want a read-only float)`);
+      }
+    }
+  }
+  console.log('  cache/fullwalk: Looper, Tone Match, RTA and IR Player blocks stay read-only in full mode (blocks above 160 opted in); Resonator, Plex, Send and Return are swept');
 }

@@ -23,7 +23,7 @@ import type { LiveTransport, LiveWalkProgress, LiveWalkWriteHooks } from '../../
 import type { CacheRecord, DeviceParam, FloatRecord } from '../../src/cache/types.js';
 import { VIEW_DEFINITION, VIEW_ENUM_LABEL, VIEW_VALUE } from '../../src/cache/index.js';
 
-export const FULLWALK_CASE_COUNT = 12;
+export const FULLWALK_CASE_COUNT = 13;
 
 const MFR = [0xf0, 0x00, 0x01, 0x74] as const;
 const MODEL = 0x12; // FM9
@@ -479,4 +479,67 @@ export async function runFullWalk(): Promise<void> {
     if (other.sends.length !== 0 || other.reloads !== 0) fail('a model without a roster was written');
   }
   console.log('  cache/fullwalk: full mode writes only the roster\'s placeable effect blocks (per model, by instance count); 0, 3..34, 35, 36, 190, 199, 200, past-count instances and roster-less models are read-only');
+
+  // ---- Case 13: a sweep that is cut short still reloads the preset ------------------------
+  // The per-block preset reload is the safety net for writes the restore did not undo. Once any
+  // SET has gone out in a block, the reload runs even when the walk ends there — an abort in the
+  // middle of a sweep, a failing write, a failing query after a sweep — and the walk still reports
+  // its own error (a reload that fails on that path is best effort and never hides it). A block
+  // that wrote nothing gets no reload.
+  {
+    const specs = (): Spec[] => [
+      { param: 0, kind: 'float', min: 0, max: 10, origNorm: 0.3, respond: (n: number) => 10 * n, unit: 'Hz' },
+      { param: 1, kind: 'float', min: 0, max: 10, origNorm: 0.6, respond: (n: number) => 10 * n, unit: 'Hz' },
+    ];
+    const run = async (
+      opts: { abortAfterSets?: number; failSendAt?: number; failReload?: boolean; failQueryParam?: number },
+    ): Promise<{ error: string; sets: number; reloads: number }> => {
+      const t = new FullFakeTransport(specs());
+      const inner = t.hooks();
+      const ac = new AbortController();
+      let sets = 0;
+      let reloads = 0;
+      const write: LiveWalkWriteHooks = {
+        send: (frame) => {
+          sets += 1;
+          if (opts.failSendAt === sets) return Promise.reject(new Error('send failed'));
+          const r = inner.send(frame);
+          if (opts.abortAfterSets === sets) ac.abort(new Error('walk aborted by the caller'));
+          return r;
+        },
+        reloadPreset: () => {
+          reloads += 1;
+          return opts.failReload ? Promise.reject(new Error('reload failed')) : inner.reloadPreset();
+        },
+      };
+      const transport: LiveTransport = {
+        request: (q) => {
+          const param = q[10]! | (q[11]! << 7);
+          if (q[6] === VIEW_DEFINITION && param === opts.failQueryParam) return Promise.reject(new Error('transport failed'));
+          return t.request(q);
+        },
+      };
+      let error = '';
+      try {
+        await liveWalk(transport, fullWalkOpts({ maxParamId: 1, mode: 'full', write, signal: ac.signal }));
+      } catch (e) {
+        error = (e as Error).message;
+      }
+      return { error, sets, reloads };
+    };
+    const aborted = await run({ abortAfterSets: 3 });
+    if (aborted.error !== 'walk aborted by the caller' || aborted.sets !== 3 || aborted.reloads !== 1) fail(`abort mid-sweep: ${JSON.stringify(aborted)} (want the abort error, 3 SETs, 1 reload)`);
+    const failedSend = await run({ failSendAt: 2 });
+    if (failedSend.error !== 'send failed' || failedSend.reloads !== 1) fail(`failing SET: ${JSON.stringify(failedSend)} (want 'send failed' and 1 reload)`);
+    const failedQuery = await run({ failQueryParam: 1 });
+    if (failedQuery.error !== 'transport failed' || failedQuery.reloads !== 1) fail(`failing query after a sweep: ${JSON.stringify(failedQuery)} (want 'transport failed' and 1 reload)`);
+    const bothFail = await run({ abortAfterSets: 3, failReload: true });
+    if (bothFail.error !== 'walk aborted by the caller' || bothFail.reloads !== 1) fail(`failing reload on abort: ${JSON.stringify(bothFail)} (the abort error must win)`);
+    const nothingWritten = await run({ failQueryParam: 0 });
+    if (nothingWritten.error !== 'transport failed' || nothingWritten.sets !== 0 || nothingWritten.reloads !== 0) fail(`failure before any SET: ${JSON.stringify(nothingWritten)} (want no reload)`);
+    // On the normal path a failing reload is still the walk's error, as before.
+    const reloadOnly = await run({ failReload: true });
+    if (reloadOnly.error !== 'reload failed' || reloadOnly.reloads !== 1) fail(`failing reload after a complete block: ${JSON.stringify(reloadOnly)}`);
+  }
+  console.log('  cache/fullwalk: once a SET went out, the block reload runs even on abort, a failing SET or a failing query (best effort; the walk keeps its own error); no SET, no reload');
 }

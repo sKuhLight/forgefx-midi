@@ -1021,7 +1021,7 @@
           "kind": "float",
           "raw": 39320,
           "value": 59.99938962981049,
-          "unit": "knob_0_10"
+          "unit": "percent"
         },
         {
           "paramId": 43,
@@ -1380,7 +1380,7 @@
           "kind": "float",
           "raw": 0,
           "value": 0,
-          "unit": "percent"
+          "unit": "knob_0_10"
         },
         {
           "paramId": 82,
@@ -1462,7 +1462,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 91,
@@ -1601,7 +1601,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 106,
@@ -1723,7 +1723,7 @@
           "kind": "float",
           "raw": 49151,
           "value": 100.0030518509476,
-          "unit": "percent"
+          "unit": "bipolar_percent"
         },
         {
           "paramId": 119,
@@ -2352,7 +2352,7 @@
           "kind": "float",
           "raw": 39320,
           "value": 59.99938962981049,
-          "unit": "knob_0_10"
+          "unit": "percent"
         },
         {
           "paramId": 43,
@@ -2711,7 +2711,7 @@
           "kind": "float",
           "raw": 0,
           "value": 0,
-          "unit": "percent"
+          "unit": "knob_0_10"
         },
         {
           "paramId": 82,
@@ -2793,7 +2793,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 91,
@@ -2932,7 +2932,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 106,
@@ -3054,7 +3054,7 @@
           "kind": "float",
           "raw": 49151,
           "value": 100.0030518509476,
-          "unit": "percent"
+          "unit": "bipolar_percent"
         },
         {
           "paramId": 119,
@@ -3683,7 +3683,7 @@
           "kind": "float",
           "raw": 39320,
           "value": 59.99938962981049,
-          "unit": "knob_0_10"
+          "unit": "percent"
         },
         {
           "paramId": 43,
@@ -4042,7 +4042,7 @@
           "kind": "float",
           "raw": 0,
           "value": 0,
-          "unit": "percent"
+          "unit": "knob_0_10"
         },
         {
           "paramId": 82,
@@ -4124,7 +4124,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 91,
@@ -4263,7 +4263,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 106,
@@ -4385,7 +4385,7 @@
           "kind": "float",
           "raw": 49151,
           "value": 100.0030518509476,
-          "unit": "percent"
+          "unit": "bipolar_percent"
         },
         {
           "paramId": 119,
@@ -5014,7 +5014,7 @@
           "kind": "float",
           "raw": 39320,
           "value": 59.99938962981049,
-          "unit": "knob_0_10"
+          "unit": "percent"
         },
         {
           "paramId": 43,
@@ -5373,7 +5373,7 @@
           "kind": "float",
           "raw": 0,
           "value": 0,
-          "unit": "percent"
+          "unit": "knob_0_10"
         },
         {
           "paramId": 82,
@@ -5455,7 +5455,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 91,
@@ -5594,7 +5594,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 106,
@@ -5716,7 +5716,7 @@
           "kind": "float",
           "raw": 49151,
           "value": 100.0030518509476,
-          "unit": "percent"
+          "unit": "bipolar_percent"
         },
         {
           "paramId": 119,
@@ -6787,7 +6787,7 @@
           "kind": "enum",
           "raw": 2,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "1x10 BF PRINCETONE"
         },
         {
@@ -6797,7 +6797,7 @@
           "kind": "enum",
           "raw": 1,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "1x8 PRINCETONE"
         },
         {
@@ -6825,7 +6825,7 @@
           "kind": "enum",
           "raw": 70,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "#70"
         },
         {
@@ -6835,7 +6835,7 @@
           "kind": "enum",
           "raw": 991,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "#991"
         },
         {
@@ -8024,7 +8024,7 @@
           "kind": "float",
           "raw": 52427,
           "value": 7.999969481490524,
-          "unit": "percent"
+          "unit": "knob_0_10"
         },
         {
           "paramId": 10,

@@ -19,6 +19,9 @@ import {
 } from '../../../src/gen3/fm3/index.js';
 import { FM9_PARAMS, FM9_PARAMS_BY_FAMILY, FM9_EFFECT_IDS } from '../../../src/gen3/fm9/index.js';
 import { VP4_PARAMS, VP4_PARAMS_BY_FAMILY } from '../../../src/gen3/vp4/index.js';
+import { FM3_ENUM_OVERRIDES } from '../../../src/gen3/fm3/index.js';
+import { FM9_ENUM_OVERRIDES } from '../../../src/gen3/fm9/index.js';
+import { AXE3_ENUM_OVERRIDES } from '../../../src/gen3/axe-fx-iii/index.js';
 
 function assert(cond: boolean, msg: string): void {
   if (!cond) throw new Error(msg);
@@ -182,17 +185,26 @@ cases.push(() => assert(divergence(FM3_PARAMS_BY_FAMILY) >= 50, 'FM3 diverges fr
 cases.push(() => assert(divergence(FM9_PARAMS_BY_FAMILY) >= 100, 'FM9 diverges from III on >=100 paramIds'));
 cases.push(() => assert(divergence(VP4_PARAMS_BY_FAMILY) >= 500, 'VP4 diverges from III on >=500 paramIds'));
 
-// 7. Gen-3 read-leg enum overlay (BK-093): effect-type ordinals join to
-//    AM4's verified tables. REVERB_TYPE is byte-anchored (FM9 2026-06-03
-//    capture: broadcast ordinal 16 == 'Spring, Medium', ordinal 1 ==
-//    'Room, Medium'); the rest are reused by family.
+// 7. Gen-3 read-leg enum labels (BK-093). REVERB_TYPE is byte-anchored (FM9 2026-06-03
+//    capture: broadcast ordinal 16 == the spring reverb, ordinal 1 == the medium room).
+//    The labels come from each device's OWN list: the AM4-heritage reverb table that used
+//    to sit in the shared overlay ('Spring, Medium' / 'Room, Medium') named 78 of the 79
+//    reverbs differently from the devices and is retired from the overlay.
 cases.push(() => {
-  const rev = resolveEnumValues('REVERB_TYPE');
-  assert(rev !== undefined, 'REVERB_TYPE overlay present');
-  assert(rev!.values[16] === 'Spring, Medium', `REVERB_TYPE ord 16 = ${rev!.values[16]} (byte-anchor)`);
-  assert(rev!.values[1] === 'Room, Medium', `REVERB_TYPE ord 1 = ${rev!.values[1]} (byte-anchor)`);
+  for (const [label, table] of [['FM3', FM3_ENUM_OVERRIDES], ['FM9', FM9_ENUM_OVERRIDES], ['III', AXE3_ENUM_OVERRIDES]] as const) {
+    const rev = table['REVERB']?.[label === 'FM3' ? '0' : label === 'FM9' ? '10' : '0'];
+    assert(rev !== undefined && rev.length === 79, `${label}: REVERB_TYPE device list present (79 reverbs)`);
+    assert(rev![16] === 'Medium Spring', `${label}: REVERB_TYPE ord 16 = ${rev![16]} (byte-anchor)`);
+    assert(rev![1] === 'Medium Room', `${label}: REVERB_TYPE ord 1 = ${rev![1]} (byte-anchor)`);
+  }
 });
-cases.push(() => assert(resolveEnumValues('DELAY_TYPE') !== undefined, 'DELAY_TYPE overlay present'));
+cases.push(() => assert(resolveEnumValues('REVERB_TYPE') === undefined, 'REVERB_TYPE: the AM4-heritage overlay is retired (device lists only)'));
+// DELAY_TYPE is the delay ROUTING selector on every gen-3 device (the models are DELAY_MODEL).
+cases.push(() => {
+  const dt = resolveEnumValues('DELAY_TYPE');
+  assert(dt !== undefined && dt.values[0] === 'MONO' && dt.values[7] === 'SURROUND' && dt.values[8] === undefined,
+    'DELAY_TYPE overlay is the 8-entry routing list');
+});
 // DISTORT_TYPE deliberately has NO overlay: on gen-3 the DISTORT family is
 // the AMP block, so DISTORT_TYPE is the amp MODEL selector, not a drive-pedal
 // picker. The AM4 DRIVE table is not a valid ordinal oracle for gen-3 amp

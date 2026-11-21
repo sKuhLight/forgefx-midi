@@ -9,10 +9,14 @@
  * all collapse to 524). Confirmed FM3 fw 12.00 (BoodieTraps) + our FM9 reverb
  * capture, 2026-06-08; writeup in `docs/_private/DREW-MSG2-VERIFIED-PLAN-2026-06-08.md`.
  *
- * `resolveGen3EnumOrdinal(symbol, name)` is the set-by-name source: it reverse-
- * maps the same enum vocabulary the READ leg uses (case/word-order tolerant), so
- * a name the device labels on read is the exact name accepted on write. The
- * catalog's enum `encode` returns that ordinal; the writer emits `float32(ordinal)`.
+ * `resolveGen3EnumOrdinal(symbol, name)` reverse-maps the SHARED OVERLAY vocabulary
+ * only (case/word-order tolerant): it is an offline helper for the symbols the
+ * overlay still labels, NOT the set-by-name source of a device. A device's
+ * set-by-name is its descriptor catalog's enum `encode` (`createModernCatalog`),
+ * which resolves against that device's complete label list; the writer emits
+ * `float32(ordinal)`. A symbol the devices label themselves (the reverb / chorus /
+ * flanger / comp / fuzz / delay types, the amp input select, ...) has no overlay
+ * entry, and this helper reports `noEnum` for it.
  *
  * DEPRECATED (kept only until the legacy goldens are migrated): the
  * `GEN3_ENUM_ORDINAL_TO_RAW_ID` table + `resolveGen3EnumNameToRawId` modelled a
@@ -71,7 +75,8 @@ function lookupVocabulary(paramSymbol: string): Readonly<Record<number, string>>
  * Resolve an enum NAME to its broadcast/GET ORDINAL via the offline overlay.
  * Case/whitespace tolerant. Returns the ordinal + the canonical label it
  * matched, or undefined (with the available labels as suggestions) when no
- * label matches. Returns `noEnum: true` when the param carries no vocabulary.
+ * label matches. Returns `noEnum: true` when the OVERLAY carries no vocabulary
+ * for the param (a device list may still exist: use the descriptor's encode).
  *
  * This ordinal IS the discrete-SET value (`buildSetParameter` emits
  * `float32(ordinal)` at payload pos 12), so name→ordinal is the COMPLETE

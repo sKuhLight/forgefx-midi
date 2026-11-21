@@ -180,9 +180,22 @@ export interface FractalModernConfig {
    * (e.g. FM9 amp models). Partial tables are fine. Broadcast/read ordinals,
    * which double as the discrete-SET value (set-by-name: a discrete SET carries
    * float32(ordinal) at pos 12, sub 09 00 — no separate raw-id space). Omit for
-   * devices with none.
+   * devices with none. A COMPLETE table (contiguous 0..n-1, n = the device range
+   * row's enumCount where known) is the whole vocabulary of the parameter: it
+   * replaces the overlay and the shared rosters (no foreign labels past its end).
+   * It is still a table dated to one firmware (a newer one appends models), so the
+   * vocabulary is reported 'partial' and numeric ordinals past its last label are
+   * NOT refused.
    */
   enum_overrides?: Readonly<Record<string, Readonly<Record<number, string>>>>;
+  /**
+   * UNVERIFIED enum label tables for a device that has no device label lists of its
+   * own (the VP4): param firmware symbol -> ordinal -> name. Used in place of the
+   * shared gen-3 read rosters (which only the gridded devices get), merged UNDER the
+   * overlay, always reported 'partial' (numeric ordinals pass through, never bounded).
+   * Omit for devices with `enum_overrides` or a roster.
+   */
+  enum_fallbacks?: Readonly<Record<string, Readonly<Record<number, string>>>>;
   /**
    * Device-true display ranges mined from THIS model's editor cache
    * (family → paramId → range). They take precedence over the catalog's
@@ -239,7 +252,7 @@ export function createModernFractalDescriptor(config: FractalModernConfig): Devi
     resolveEffectId,
     dropEmptyMappedBlocks: config.device_true_roster ?? false,
     deviceEnumOverrides: config.enum_overrides,
-    sharedEnumRosters: config.grid !== undefined ? GEN3_READ_ROSTERS : undefined,
+    sharedEnumRosters: config.grid !== undefined ? GEN3_READ_ROSTERS : config.enum_fallbacks,
     excludeBlocks: config.exclude_blocks,
     // Device-true display ranges (FM9 + III today, mined from each editor's
     // effectDefinitions cache) override the AM4-overlay-inferred bounds for

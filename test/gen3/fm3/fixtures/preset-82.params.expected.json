@@ -519,7 +519,7 @@
           "kind": "float",
           "raw": 0,
           "value": 0,
-          "unit": "knob_0_20"
+          "unit": "knob_0_10"
         },
         {
           "paramId": 18,
@@ -528,7 +528,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 19,
@@ -1043,7 +1043,7 @@
           "kind": "float",
           "raw": 38206,
           "value": 58.299508651997435,
-          "unit": "knob_0_10"
+          "unit": "percent"
         },
         {
           "paramId": 39,
@@ -1402,7 +1402,7 @@
           "kind": "float",
           "raw": 0,
           "value": 0,
-          "unit": "percent"
+          "unit": "knob_0_10"
         },
         {
           "paramId": 78,
@@ -1484,7 +1484,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 87,
@@ -1623,7 +1623,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 102,
@@ -1745,7 +1745,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "percent"
+          "unit": "bipolar_percent"
         },
         {
           "paramId": 115,
@@ -2374,7 +2374,7 @@
           "kind": "float",
           "raw": 38206,
           "value": 58.299508651997435,
-          "unit": "knob_0_10"
+          "unit": "percent"
         },
         {
           "paramId": 39,
@@ -2733,7 +2733,7 @@
           "kind": "float",
           "raw": 0,
           "value": 0,
-          "unit": "percent"
+          "unit": "knob_0_10"
         },
         {
           "paramId": 78,
@@ -2815,7 +2815,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 87,
@@ -2954,7 +2954,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 102,
@@ -3076,7 +3076,7 @@
           "kind": "float",
           "raw": 49151,
           "value": 100.0030518509476,
-          "unit": "percent"
+          "unit": "bipolar_percent"
         },
         {
           "paramId": 115,
@@ -3705,7 +3705,7 @@
           "kind": "float",
           "raw": 38206,
           "value": 58.299508651997435,
-          "unit": "knob_0_10"
+          "unit": "percent"
         },
         {
           "paramId": 39,
@@ -4064,7 +4064,7 @@
           "kind": "float",
           "raw": 0,
           "value": 0,
-          "unit": "percent"
+          "unit": "knob_0_10"
         },
         {
           "paramId": 78,
@@ -4146,7 +4146,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 87,
@@ -4285,7 +4285,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 102,
@@ -4407,7 +4407,7 @@
           "kind": "float",
           "raw": 49151,
           "value": 100.0030518509476,
-          "unit": "percent"
+          "unit": "bipolar_percent"
         },
         {
           "paramId": 115,
@@ -5036,7 +5036,7 @@
           "kind": "float",
           "raw": 38206,
           "value": 58.299508651997435,
-          "unit": "knob_0_10"
+          "unit": "percent"
         },
         {
           "paramId": 39,
@@ -5395,7 +5395,7 @@
           "kind": "float",
           "raw": 0,
           "value": 0,
-          "unit": "percent"
+          "unit": "knob_0_10"
         },
         {
           "paramId": 78,
@@ -5477,7 +5477,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 87,
@@ -5616,7 +5616,7 @@
           "kind": "float",
           "raw": 32767,
           "value": 0,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 102,
@@ -5738,7 +5738,7 @@
           "kind": "float",
           "raw": 49151,
           "value": 100.0030518509476,
-          "unit": "percent"
+          "unit": "bipolar_percent"
         },
         {
           "paramId": 115,
@@ -6819,7 +6819,7 @@
           "kind": "enum",
           "raw": 0,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "1x8 5F1 TWEED"
         },
         {
@@ -6829,7 +6829,7 @@
           "kind": "enum",
           "raw": 0,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "1x8 5F1 TWEED"
         },
         {
@@ -6839,7 +6839,7 @@
           "kind": "enum",
           "raw": 0,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "Condenser"
         },
         {
@@ -6849,7 +6849,7 @@
           "kind": "enum",
           "raw": 0,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "Condenser"
         },
         {
@@ -8644,7 +8644,7 @@
           "kind": "enum",
           "raw": 1,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "4"
         },
         {
@@ -8728,7 +8728,7 @@
           "kind": "float",
           "raw": 34864,
           "value": 0.06399731437116607,
-          "unit": "bipolar_percent"
+          "unit": "numeric"
         },
         {
           "paramId": 11,
@@ -8792,7 +8792,7 @@
           "kind": "enum",
           "raw": 0,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "NORMAL"
         },
         {
@@ -8811,7 +8811,7 @@
           "kind": "float",
           "raw": 40953,
           "value": 2.49828016113773,
-          "unit": "knob_0_10"
+          "unit": "numeric"
         },
         {
           "paramId": 20,
@@ -8820,7 +8820,7 @@
           "kind": "enum",
           "raw": 0,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "UP"
         },
         {
@@ -8859,7 +8859,7 @@
           "kind": "enum",
           "raw": 2,
           "value": null,
-          "unit": "count",
+          "unit": "enum",
           "enumLabel": "JFET"
         },
         {
@@ -9053,7 +9053,7 @@
           "kind": "float",
           "raw": 49151,
           "value": 7.50007629627369,
-          "unit": "percent"
+          "unit": "knob_0_10"
         },
         {
           "paramId": 10,
@@ -9353,7 +9353,7 @@
           "kind": "float",
           "raw": 65532,
           "value": 23.998535111545152,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 16,
@@ -9362,7 +9362,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 17,
@@ -9371,7 +9371,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 18,
@@ -9380,7 +9380,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 19,
@@ -9924,7 +9924,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 78,
@@ -9933,7 +9933,7 @@
           "kind": "float",
           "raw": 2,
           "value": -23.998535111545152,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 79,
@@ -9942,7 +9942,7 @@
           "kind": "float",
           "raw": 4,
           "value": -23.997070223090304,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 80,
@@ -9951,7 +9951,7 @@
           "kind": "float",
           "raw": 7,
           "value": -23.994872890408033,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 81,
@@ -9960,7 +9960,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 82,
@@ -9969,7 +9969,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 83,
@@ -9978,7 +9978,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 84,
@@ -9987,7 +9987,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 85,
@@ -9996,7 +9996,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 86,
@@ -10005,7 +10005,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 87,
@@ -10014,7 +10014,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 88,
@@ -10023,7 +10023,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 89,
@@ -10032,7 +10032,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 90,
@@ -10041,7 +10041,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 91,
@@ -10050,7 +10050,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 92,
@@ -10059,7 +10059,7 @@
           "kind": "float",
           "raw": 0,
           "value": -24,
-          "unit": "numeric"
+          "unit": "semitones"
         },
         {
           "paramId": 93,

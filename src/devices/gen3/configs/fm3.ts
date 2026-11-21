@@ -10,7 +10,8 @@
  * paramIds are FM3's own (reusing the III's mis-addresses 6.9% of shared
  * params; see `docs/_private/MINING-FINDINGS-FM-VP4.md`). community-beta.
  */
-import { FM3_PARAMS_BY_FAMILY, FM3_RANGES } from '../../../gen3/fm3/index.js';
+import { FM3_PARAMS_BY_FAMILY, FM3_ENUM_OVERRIDES, FM3_RANGES } from '../../../gen3/fm3/index.js';
+import { toSymbolEnumOverrides } from '../catalog.js';
 import type { DeviceParamRange, DeviceRangeTable } from '../catalog.js';
 import type { FractalModernConfig, } from '../factory.js';
 import type { PresetSpec } from '../../../core/protocol-generic/types.js';
@@ -34,6 +35,13 @@ const FM3_KNOB_RANGES: DeviceRangeTable = (() => {
   }
   return out;
 })();
+
+// The FM3's device-true label lists (one complete list per enum parameter, the same shape the
+// FM9 / III ship) are the vocabulary of its enum parameters. Without them the descriptor fell
+// back to the shared overlay and rosters, which disagree with the unit for some parameters (amp
+// input select, delay type = routing, reverb type naming, ...). Param names are unique, so the
+// family-shaped lists re-key losslessly to symbols.
+const FM3_SYMBOL_ENUM_OVERRIDES = toSymbolEnumOverrides(FM3_PARAMS_BY_FAMILY, FM3_ENUM_OVERRIDES);
 
 // FM3's grid is 4×12 (wire-confirmed 4 rows; 12 cols per FM3-Edit). The
 // example below keeps every slot within cols 1..4, which is valid.
@@ -111,6 +119,7 @@ export const FM3_CONFIG: FractalModernConfig = {
     'confirmed: set_block placement, save_preset, and the Windows serial-driver path ' +
     '(untested, not falsified).',
   params_by_family: FM3_PARAMS_BY_FAMILY,
+  enum_overrides: FM3_SYMBOL_ENUM_OVERRIDES,
   device_ranges: FM3_KNOB_RANGES,
   device_true_roster: true,
   canonical_terms: {

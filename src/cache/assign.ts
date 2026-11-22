@@ -206,13 +206,37 @@ function paramsByFamily(params: readonly DeviceParam[]): Map<string, DeviceParam
   return out;
 }
 
+/**
+ * Split a byte-identical section group (ascending tags) by owner for a restricted vote: the tags
+ * that the same families may take (`ownerKey`) form one group. A tag no family may take (key '')
+ * joins the group of the nearest lower tag a family may take when `follow` is set (a copy of a known
+ * table, e.g. the modifier slots after the modifier block), else the group of the other such tags.
+ * So a family never loses its own section to an identical lower one it may not take.
+ */
+function splitByOwner(group: readonly number[], ownerKey: (tag: number) => string, follow: boolean): number[][] {
+  const byKey = new Map<string, number[]>();
+  let lastOwned: string | null = null;
+  for (const t of group) {
+    let key = ownerKey(t);
+    if (key !== '') lastOwned = key;
+    else if (follow && lastOwned !== null) key = lastOwned;
+    let g = byKey.get(key);
+    if (!g) byKey.set(key, (g = []));
+    g.push(t);
+  }
+  return [...byKey.values()];
+}
+
 function assignSections(
   bySec: Map<number, Sec>,
   famParams: Map<string, DeviceParam[]>,
   seeds: Record<string, number>,
   assertSeeds?: Set<string>,
+  allowFamily?: (family: string, tag: number) => boolean,
+  unownedTwinsFollow = false,
 ): Assignment {
   const allTags = [...bySec.keys()].sort((a, b) => a - b);
+  const fams = [...famParams.keys()];
 
   const degenerate = allTags.filter((t) => informativeSize(bySec.get(t)!) === 0);
   const degenSet = new Set(degenerate);
@@ -233,7 +257,19 @@ function assignSections(
     }
     g.push(t);
   }
-  const groups = [...groupsBySig.values()];
+  let groups = [...groupsBySig.values()];
+  if (allowFamily) {
+    // A restricted vote checks the group's first tag only, so first split every group by owner:
+    // identical tables of different owners (or an owner's table and an identical one nobody may
+    // take) are separate candidates. Without a restriction nothing changes (`buildCache` parity).
+    const keys = new Map<number, string>();
+    const ownerKey = (t: number): string => {
+      let k = keys.get(t);
+      if (k === undefined) keys.set(t, (k = fams.filter((f) => allowFamily(f, t)).join('\u0000')));
+      return k;
+    };
+    groups = groups.flatMap((g) => splitByOwner(g, ownerKey, unownedTwinsFollow)).sort((a, b) => a[0]! - b[0]!);
+  }
   const groupOf = new Map<number, number[]>();
   for (const g of groups) for (const t of g) groupOf.set(t, g);
   const reps = groups.map((g) => g[0]);
@@ -263,10 +299,11 @@ function assignSections(
     return s;
   };
 
-  const fams = [...famParams.keys()];
   const pairScores: Array<[string, number, number]> = [];
   for (const fam of fams) {
     for (const t of reps) {
+      // A restricted vote (profile documents): the family never takes this section group.
+      if (allowFamily && !allowFamily(fam, t)) continue;
       const sc = score(fam, bySec.get(t)!);
       if (sc > 0) pairScores.push([fam, t, sc]);
     }
@@ -409,6 +446,27 @@ export interface BuildDeviceCacheOptions {
    * option never adds a section that has no ordinary record.
    */
   declaredCounts?: Readonly<Record<number, number>>;
+  /**
+   * Restricts the section vote: a family may be voted onto a section only when this returns true.
+   * Byte-identical sections are first split by owner (the families this allows on each tag; see
+   * `unownedTwinsFollow` for the tags it allows none on), then the check applies to the section the
+   * vote picks (a group's first tag); the group's further tags follow it as instances. Seed anchors
+   * are not checked. Absent (the default, and always in `buildCache`): every family may take every
+   * section, and identical sections stay one group.
+   *
+   * A profile document passes it when the catalog allows it (./profileDoc.ts): in a live walk's
+   * block-address space a block may only take the family whose reserved effect-id span holds it; in
+   * the editor-cache tag space, with a catalog section inventory, a section may only take the family
+   * the inventory lists for its tag (a tag the inventory does not list takes none).
+   */
+  allowFamily?: (family: string, tag: number) => boolean;
+  /**
+   * With `allowFamily`: a section no family may take that is byte-identical to a lower section a
+   * family may take stays in that section's group (it follows the family as a further instance — a
+   * copy of a known table, e.g. the modifier slots after the modifier block). Default false: such
+   * sections form their own group and stay unassigned.
+   */
+  unownedTwinsFollow?: boolean;
 }
 
 const DEFAULT_ROSTER_OVERRIDES: Record<string, string> = { DELAY: 'DELAY_MODEL' };
@@ -456,6 +514,13 @@ export interface DeviceCacheSection {
   family: string | null;
   /** A further tag of the family's instance group (not the group's first tag). */
   instance: boolean;
+  /**
+   * First tag of the byte-identical section group this section belongs to, when that is another
+   * tag (assigned or not: the voter groups identical tables before it votes; a restricted vote
+   * splits the groups by owner first, see `allowFamily`). Absent for a group's first tag and for a
+   * section identical to no other.
+   */
+  instanceOf?: number;
   /** Parameter slots: ordinary records incl. placeholder slots (the family stride rule). */
   stride: number;
   /** Declared record count incl. special table records (and `declaredCounts`). */
@@ -541,6 +606,8 @@ export function buildDeviceCacheDetailed(
     famParams,
     seeds,
     opts.assertSeeds,
+    opts.allowFamily,
+    opts.unownedTwinsFollow === true,
   );
 
   const enumOverrides: Record<string, Record<string, string[]>> = {};
@@ -617,10 +684,12 @@ export function buildDeviceCacheDetailed(
       const rows = new Map<number, CacheRecord>();
       for (const pid of [...sec.keys()].sort((a, b) => a - b)) rows.set(pid, sec.get(pid)!);
       const f = famOfTag.get(tag);
+      const first = (groupOf.get(tag) ?? [tag])[0]!;
       return {
         tag,
         family: f ? f.family : null,
         instance: f ? f.instance : false,
+        ...(first !== tag ? { instanceOf: first } : {}),
         stride: sec.size,
         recordCount: declared.get(tag) ?? sec.size,
         rows,

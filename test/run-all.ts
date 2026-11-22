@@ -104,6 +104,8 @@ import { runProfileDoc, PROFILE_DOC_CASE_COUNT } from './cache/profile-doc.test.
 import { runProfileSections, PROFILE_SECTIONS_CASE_COUNT } from './cache/profile-sections.test.js';
 import { runMerge, MERGE_CASE_COUNT } from './cache/merge.test.js';
 import { runTypecodeRules, TYPECODE_RULES_CASE_COUNT } from './cache/typecode-rules.test.js';
+import { runBlockMap, BLOCK_MAP_CASE_COUNT } from './cache/block-map.test.js';
+import { runLiveWalkScope, LIVEWALK_SCOPE_CASE_COUNT } from './cache/livewalk-scope.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
 import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
 import { runGen3AdapterTests, GEN3_ADAPTER_CASE_COUNT } from './convert/gen3-adapter.test.js';
@@ -233,6 +235,8 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/profile-sections (${PROFILE_SECTIONS_CASE_COUNT} cases)`, run: runProfileSections },
   { name: `cache/merge (${MERGE_CASE_COUNT} cases)`, run: runMerge },
   { name: `cache/typecode-rules (${TYPECODE_RULES_CASE_COUNT} cases, FM3/FM9/III catalogs)`, run: runTypecodeRules },
+  { name: `cache/block-map (${BLOCK_MAP_CASE_COUNT} cases)`, run: runBlockMap },
+  { name: `cache/livewalk-scope (${LIVEWALK_SCOPE_CASE_COUNT} cases)`, run: runLiveWalkScope },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
   { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },
   { name: `convert/gen3-adapter (${GEN3_ADAPTER_CASE_COUNT} preset goldens)`, run: runGen3AdapterTests },

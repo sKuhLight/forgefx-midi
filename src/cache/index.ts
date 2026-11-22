@@ -32,9 +32,12 @@ export type { BuildDeviceCacheOptions, DeviceCacheDetail, DeviceCacheSection } f
 export {
   PROFILE_FORMAT,
   RAW_FORMAT,
+  DERIVATION_REVISION,
+  needsRederive,
   MIN_DERIVED_WITH,
   compareCodecVersions,
   rawSourceId,
+  uniqueSourceIds,
   rawFromCacheBytes,
   rawFromLiveWalk,
   cacheRecordOf,
@@ -71,7 +74,7 @@ export type {
   DerivedUnit,
   ProfileDerivationErrorCode,
 } from './profileDoc.js';
-export { sourceRank, planSourceUnits, mergeDerived, computeCoverage, rosterDiff } from './merge.js';
+export { sourceRank, planSourceUnits, mergeDerived, computeCoverage, rosterDiff, effectIdOwners, liveWalkCaps } from './merge.js';
 export type {
   ProfileProvenance,
   CoverageGapKind,
@@ -84,6 +87,18 @@ export type {
   CoverageInput,
   RosterDiff,
 } from './merge.js';
+export {
+  matchBlocks,
+  matchBulkShape,
+  compareBlockRows,
+  tuplesMatch,
+  deriveBlockMap,
+  bridgeLiveUnits,
+  blockBindableSection,
+  effectIdSpansForModel,
+  BLOCK_MAP_MIN_ROWS,
+} from './blockMap.js';
+export type { MatchBlocksInput, BlockRowsComparison } from './blockMap.js';
 export { rowTuple, sectionSignatureRows, rowsSignature, isPlaceholderRecord, SECTION_SIGNATURE_VERSION } from './rowTuple.js';
 export type { TupleRecord } from './rowTuple.js';
 export { buildCache, CACHE_SCHEMA } from './buildProfile.js';
@@ -103,6 +118,15 @@ export {
   VIEW_DEFINITION,
   VIEW_ENUM_LABEL,
   VIEW_VALUE,
+  LIVE_WALK_LIMITS,
+  walkQueryBound,
+  walkListedIds,
+  walkQueryAllowed,
+  liveWalkScope,
+  decodeWalkQuery,
+  guardWalkTransport,
+  WalkBoundError,
+  LiveWalkAbortError,
 } from './liveWalk.js';
 export type {
   LiveTransport,
@@ -111,9 +135,13 @@ export type {
   LiveEnumHint,
   LiveWalkProgress,
   LiveWalkResult,
+  LiveWalkBoundHit,
   PseudoReplyStats,
   LiveReply,
   LiveDefinition,
+  WalkQuery,
+  WalkGuardOptions,
+  LiveWalkAbortCode,
 } from './liveWalk.js';
 export type {
   Section,

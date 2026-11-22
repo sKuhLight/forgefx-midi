@@ -187,13 +187,16 @@ export async function runProfileSections(): Promise<void> {
       walk: { queries: 0, lostReplies: 0, recoveredReplies: 0, unresolvedReplies: 0, placeholderSlots: 0, missingSlots: 0, silentAddresses: 0, boundHits: [] },
       records: records as LiveRawSource['records'],
     };
-    const ldoc = deriveProfile(raw(live), FM3_PARAMS, HW_SEEDS, { catalogSections: FM3_CATALOG_SECTIONS });
+    // The walk's blocks are the fixture's section tags (not effect ids): the parity vote reads it as
+    // `buildCache(live)` would, so the catalog families are assigned and only block 203 is left.
+    const ldoc = deriveProfile(raw(live), FM3_PARAMS, HW_SEEDS, { catalogSections: FM3_CATALOG_SECTIONS, unrestrictedLiveVote: true });
     const blk = ldoc.sections.find((s) => s.tag === 203);
     if (!blk || blk.space !== 'block' || blk.key !== 'block:203' || blk.role !== 'unclassified' || Object.keys(ldoc.ranges['block:203'] ?? {}).length !== 12) {
       fail(`live block 203 ${JSON.stringify(blk)}`);
     }
     if (ldoc.sections.some((s) => s.space === 'section') || ldoc.rangeSections['block:203']?.sectionTag !== 203) fail('live sections are block space');
     if (Object.keys(ldoc.ranges).some((k) => k.startsWith('section:'))) fail('a live-only document has no section: keys');
+    if (ldoc.rangeSections['DISTORT'] === undefined) fail('the catalog families are assigned (parity vote)');
     console.log(`  cache/profile-sections: live-only — unassigned block 203 kept as block:203 (role unclassified, 12 rows)`);
   }
 

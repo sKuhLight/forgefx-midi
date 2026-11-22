@@ -6,7 +6,8 @@
  *   fixtures (FM3 fw 12.0, AM4), re-encoded to cache bytes behind a header;
  * - the same over one live source vs `buildCache({ kind: 'live' })`, on the shared fake device;
  * - user name tables are omitted from raw (counted), declared section counts keep `recordCount`;
- * - `contentSha256` is the sha256 of the redacted bytes;
+ * - `contentSha256` is the sha256 of the redacted bytes; `meta.derivedRevision` and the
+ *   `needsRederive` vectors (schema / revision, never version strings);
  * - a tolerant source carries its issues into `meta.issues` like `buildCache`;
  * - size budget of a byte + synthetic live document;
  * - `assertNoUserTables` positive / negative; `deriveProfile` input errors.
@@ -23,12 +24,14 @@ import {
   buildProfileDoc,
   CACHE_SCHEMA,
   compareCodecVersions,
+  DERIVATION_REVISION,
   deriveProfile,
   HW_SEEDS,
   isSyntheticFamilyKey,
   isUserNameTable,
   liveWalkDetailed,
   MIN_DERIVED_WITH,
+  needsRederive,
   parseCacheRecords,
   PROFILE_FORMAT,
   ProfileDerivationError,
@@ -182,14 +185,30 @@ export async function runProfileDoc(): Promise<void> {
       fail(`firmware defaults: header ${bare.firmware}, zero header ${zero.firmware}`);
     }
     const m = fm3Doc.meta;
-    if (m.format !== PROFILE_FORMAT || m.derivedWith !== VERSION || m.derivedAt !== stamp || m.schema !== CACHE_SCHEMA) {
-      fail(`meta ${JSON.stringify({ format: m.format, derivedWith: m.derivedWith, derivedAt: m.derivedAt, schema: m.schema })}`);
+    if (m.format !== PROFILE_FORMAT || m.derivedWith !== VERSION || m.derivedRevision !== DERIVATION_REVISION || m.derivedAt !== stamp || m.schema !== CACHE_SCHEMA) {
+      fail(`meta ${JSON.stringify({ format: m.format, derivedWith: m.derivedWith, derivedRevision: m.derivedRevision, derivedAt: m.derivedAt, schema: m.schema })}`);
     }
     if (m.builtAt !== undefined || (fm3Doc as { raw?: unknown }).raw !== undefined) fail('deriveProfile must not stamp builtAt or carry raw');
+    // Re-derivation goes by schema and the integer derivation revision, never by version strings.
+    const rederive: Array<[unknown, boolean]> = [
+      [m, false],
+      [{ ...m, derivedWith: '0.0.1' }, false],
+      [{ ...m, derivedWith: '99.0.0', derivedRevision: DERIVATION_REVISION - 1 }, true],
+      [{ ...m, derivedRevision: undefined }, true],
+      [{ ...m, derivedRevision: DERIVATION_REVISION + 1 }, false],
+      [{ ...m, schema: CACHE_SCHEMA + 1 }, true],
+      [{ ...m, schema: undefined }, true],
+      [{ ...m, format: undefined, schema: CACHE_SCHEMA + 1 }, false],
+      [{ ...m, format: 1, derivedRevision: 0 }, false],
+      [null, false],
+    ];
+    rederive.forEach(([meta, want], i) => {
+      if (needsRederive(meta as Parameters<typeof needsRederive>[0]) !== want) fail(`needsRederive vector ${i}: want ${want}`);
+    });
     if (compareCodecVersions(VERSION, MIN_DERIVED_WITH) < 0 || compareCodecVersions('0.10.0', '0.9.9') <= 0 || compareCodecVersions('1.2', '1.2.0') !== 0) {
       fail('compareCodecVersions');
     }
-    console.log(`  cache/profile-doc: contentSha256 = sha256(redacted bytes); header 12.0/45, id ${fm3Src.id}; meta format ${m.format}, derivedWith ${m.derivedWith}`);
+    console.log(`  cache/profile-doc: contentSha256 = sha256(redacted bytes); header 12.0/45, id ${fm3Src.id}; meta format ${m.format}, derivedWith ${m.derivedWith}, derivedRevision ${m.derivedRevision} (needsRederive: ${rederive.length} vectors)`);
   }
 
   // ---- Case 5: tolerant source keeps the issues like buildCache --------------------------
@@ -224,10 +243,16 @@ export async function runProfileDoc(): Promise<void> {
     const scope: LiveSourceScope = { blocks, maxParamId: 127, bounds: {}, extended: false, above160: false, hinted: false };
     const src = rawFromLiveWalk(res, scope, { kind: 'live-readonly', capturedAt: stamp, firmware: '12.0' });
     const built = await buildCache({ kind: 'live', walk: async () => res }, FM3_PARAMS, HW_SEEDS, { model: 0x11, firmware: '12.0' });
-    const doc = deriveProfile(raw(src), FM3_PARAMS, HW_SEEDS, { model: 0x11, firmware: '12.0' });
+    // A walk of the fixture's section tags (not effect ids): only the unrestricted vote (parity
+    // option) reads it like `buildCache(live)`.
+    const doc = deriveProfile(raw(src), FM3_PARAMS, HW_SEEDS, { model: 0x11, firmware: '12.0', unrestrictedLiveVote: true });
     const diffs = v1Differences(doc, built);
     if (diffs.length > 0) fail(`live determinism:\n  ${diffs.join('\n  ')}`);
-    if (!doc.meta.walk || doc.meta.walk.queries !== res.queries || src.walk.boundHits.length !== 0) fail('live walk stats not carried');
+    // The walk reports the tables cut at the 127 ceiling (the fixture's DISTORT section has 144 rows).
+    const hits = res.boundHits ?? [];
+    if (!doc.meta.walk || doc.meta.walk.queries !== res.queries || JSON.stringify(src.walk.boundHits) !== JSON.stringify(hits) || !hits.some((h) => h.block === 10 && h.lastReal === 127 && h.bound === 127)) {
+      fail(`live walk stats not carried (bound hits ${JSON.stringify(hits)})`);
+    }
     if (src.records.length !== res.records.length || src.records.some((r) => 'offset' in r)) fail('live raw records');
     if (doc.meta.source !== 'live' || doc.meta.sources[0]?.kind !== 'live-readonly') fail(`live meta ${doc.meta.source}`);
     console.log(`  cache/profile-doc: live — deriveProfile(raw from walk) equals buildCache(live) incl. meta.walk (${res.records.length} records, ${res.queries} queries)`);
@@ -235,8 +260,8 @@ export async function runProfileDoc(): Promise<void> {
 
   // ---- Case 7: size budget (byte + synthetic live source) ----------------------------------
   // The live source is the byte rows as a hinted walk returns them (labels, a unit on every
-  // continuous float). Read-only shape: ids up to 127 (the read-only cap) — expected < 1.2 MiB.
-  // Worst case: every ordinary id of every section — within the 2 MiB document budget.
+  // continuous float). Read-only shape: ids up to 127 (the read-only cap); worst case: every
+  // ordinary id of every section. Both within the contract budget of 2 MiB per document.
   {
     const syntheticLive = (maxParamId: number): LiveRawSource => {
       const records = fm3Walk.records
@@ -259,15 +284,18 @@ export async function runProfileDoc(): Promise<void> {
       };
     };
     const size = (x: unknown) => new TextEncoder().encode(JSON.stringify(x)).length;
-    const readOnly = buildProfileDoc(raw(fm3Src, syntheticLive(127)), FM3_PARAMS, HW_SEEDS, { model: 0x11, firmware: '12.0' });
-    const whole = buildProfileDoc(raw(fm3Src, syntheticLive(0xfeff)), FM3_PARAMS, HW_SEEDS, { model: 0x11, firmware: '12.0' });
+    // The synthetic live rows sit at section tags, not effect ids: the parity vote reads them.
+    const sizeOpts = { model: 0x11, firmware: '12.0', unrestrictedLiveVote: true };
+    const readOnly = buildProfileDoc(raw(fm3Src, syntheticLive(127)), FM3_PARAMS, HW_SEEDS, sizeOpts);
+    const whole = buildProfileDoc(raw(fm3Src, syntheticLive(0xfeff)), FM3_PARAMS, HW_SEEDS, sizeOpts);
     const a = size(readOnly);
     const b = size(whole);
-    if (a >= 1.2 * 1024 * 1024) fail(`read-only shaped document is ${a} bytes (expected < 1.2 MiB)`);
-    if (b > 2 * 1024 * 1024) fail(`whole-table document is ${b} bytes (budget 2 MiB)`);
+    const budget = 2 * 1024 * 1024;
+    if (a > budget) fail(`read-only shaped document is ${a} bytes (budget 2 MiB)`);
+    if (b > budget) fail(`whole-table document is ${b} bytes (budget 2 MiB)`);
     console.log(
-      `  cache/profile-doc: size — byte + read-only live ${(a / 1024).toFixed(0)} KiB (raw ${(size(readOnly.raw) / 1024).toFixed(0)} KiB) < 1.2 MiB; ` +
-        `byte + whole-table live ${(b / 1024).toFixed(0)} KiB <= 2 MiB`,
+      `  cache/profile-doc: size — byte + read-only live ${(a / 1024).toFixed(0)} KiB (raw ${(size(readOnly.raw) / 1024).toFixed(0)} KiB), ` +
+        `byte + whole-table live ${(b / 1024).toFixed(0)} KiB; both <= 2 MiB`,
     );
   }
 

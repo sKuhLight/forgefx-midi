@@ -11,10 +11,18 @@
  * - a live-full measured taper attaches (and wins over the catalog's knob taper);
  * - a local editor cache beats a newer cloud one; sources on another firmware are rejected;
  * - an extended live source and a standard one are unioned per (block, pid), newest covering wins;
- * - coverage gaps: high ids, far ids, blocks above 160, rosters, walk losses, bound hits, no-raw,
+ * - coverage gaps: high ids, far ids, blocks above 160, rosters (blocking only off the catalog
+ *   firmware), walk losses and bound hits (only from walks that still provide a family), no-raw,
  *   instance evidence;
- * - suspects per source and the fallback to a non-suspect copy;
- * - `rosterDiff` vectors.
+ * - bound hits of a real walk: a hit at the read-only cap inside a table the reference (catalog or
+ *   editor cache) knows to run on raises no bound-hit (the high-ids gap covers it), a hit at a
+ *   known-size ceiling does, and without a reference every hit does;
+ * - suspects per source and the fallback to a non-suspect copy; suspect copies raise no conflict;
+ * - `rosterDiff` vectors;
+ * - same-kind live sources: an older record fills in where the newer walk has none;
+ * - capture order by instant (ISO offsets, sub-seconds); `uniqueSourceIds` for undated sources;
+ * - v1 documents take their source class from `meta.origin` (cloud / definitions file); without
+ *   effect ids PRESET never counts as addressable.
  *
  * Public data only: the committed walk fixture, committed catalogs, synthetic records.
  */
@@ -24,15 +32,22 @@ import {
   deriveProfile,
   HW_SEEDS,
   isSyntheticFamilyKey,
+  liveWalkDetailed,
+  liveWalkScope,
   ProfileDerivationError,
   rawFromCacheBytes,
+  rawFromLiveWalk,
+  rawSourceId,
   rosterDiff,
   sourceRank,
+  uniqueSourceIds,
 } from '../../src/cache/index.js';
 import type {
+  BuiltCache,
   DerivedProfile,
   EditorCacheRawSource,
   LiveRawSource,
+  LiveWalkOptions,
   ProfileCatalog,
   ProfileRaw,
   RawSource,
@@ -46,9 +61,10 @@ import {
   FM3_RANGES,
 } from '../../src/gen3/fm3/index.js';
 import { VERSION } from '../../src/version.js';
+import { cacheDevice } from './cacheDevice.js';
 import { fixtureBytes, loadWalk } from './profile-doc.test.js';
 
-export const MERGE_CASE_COUNT = 11;
+export const MERGE_CASE_COUNT = 15;
 
 type LiveRec = LiveRawSource['records'][number];
 
@@ -318,11 +334,16 @@ export async function runMerge(): Promise<void> {
     const ros = g('rosters');
     if (!ros?.blocking || !ros.families?.includes('DISTORT')) fail(`rosters ${JSON.stringify(ros)}`);
     if (!g('no-cab-tables') || l.coverage.complete || l.coverage.highIds.present >= l.coverage.highIds.expected) fail(`live-only coverage ${kinds(l)} ${JSON.stringify(l.coverage.highIds)}`);
-    // Same walk on the catalog firmware: the firmware-dependent gaps stop blocking.
+    // Same walk on the catalog firmware: the firmware-dependent gaps stop blocking (the catalog's
+    // own rows cover the high ids, the roster families and the blocks above 160).
     const same = deriveProfile(raw({ ...lo, firmware: '12.0' }), FM3_PARAMS, HW_SEEDS, { ...opts, catalog });
     const sg = (k: string) => same.coverage.gaps.find((x) => x.kind === k);
-    if (sg('blocks-above-160')?.blocking !== false || sg('rosters')?.blocking !== false || sg('high-ids')?.blocking !== true) fail(`catalog-firmware coverage ${kinds(same)}`);
-    console.log(`  cache/merge: coverage — byte doc complete (${kinds(b)}, high ids ${b.coverage.highIds.present}/${b.coverage.highIds.expected}); live-only on 13.0: ${kinds(l)}`);
+    if (sg('blocks-above-160')?.blocking !== false || sg('rosters')?.blocking !== false || sg('high-ids')?.blocking !== false || !same.coverage.complete) fail(`catalog-firmware coverage ${kinds(same)}`);
+    // An unknown catalog firmware counts as differing: blocking again.
+    const unknownFw = deriveProfile(raw({ ...lo, firmware: '12.0' }), FM3_PARAMS, HW_SEEDS, { ...opts, catalog: { ...catalog, firmware: null } });
+    const ug = (k: string) => unknownFw.coverage.gaps.find((x) => x.kind === k);
+    if (!ug('high-ids')?.blocking || !ug('blocks-above-160')?.blocking || !ug('rosters')?.blocking) fail(`unknown catalog firmware coverage ${kinds(unknownFw)}`);
+    console.log(`  cache/merge: coverage — byte doc complete (${kinds(b)}, high ids ${b.coverage.highIds.present}/${b.coverage.highIds.expected}); live-only on 13.0: ${kinds(l)}; on the catalog firmware: ${kinds(same)}`);
   }
 
   // ---- Case 9: walk losses, bound hits, no-raw, instance evidence ----------------------------
@@ -334,13 +355,38 @@ export async function runMerge(): Promise<void> {
       walk: { queries: 9000, lostReplies: 5, recoveredReplies: 2, unresolvedReplies: 3, placeholderSlots: 0, missingSlots: 1, silentAddresses: 0, boundHits: [{ block: 58, lastReal: 125, bound: 127 }] },
     });
     const catalog: ProfileCatalog = { familyFirstEid: FM3_EFFECT_IDS, instanceLimits: { INPUT: 2, OUTPUT: 2, MULTITAP: 2, DISTORT: 1 } };
-    const d = deriveProfile(raw(byte, lossy), FM3_PARAMS, HW_SEEDS, { ...opts, catalog });
+    // Live-only: the lossy walk provides every family, so its losses are the document's.
+    const d = deriveProfile(raw(lossy), FM3_PARAMS, HW_SEEDS, { ...opts, catalog });
     const g = (k: string) => d.coverage.gaps.find((x) => x.kind === k);
     if (g('unresolved-replies')?.count !== 3 || !g('unresolved-replies')?.blocking || g('missing-slots')?.count !== 1 || g('bound-hit')?.eids?.join() !== '58') {
       fail(`walk gaps ${JSON.stringify(d.coverage.gaps)}`);
     }
     if (JSON.stringify(d.coverage.walk) !== JSON.stringify({ lostReplies: 5, unresolvedReplies: 3, missingSlots: 1, boundHits: 1 })) fail(`coverage.walk ${JSON.stringify(d.coverage.walk)}`);
     if (JSON.stringify(d.coverage.instances) !== JSON.stringify([{ family: 'MULTITAP', static: 2, seen: 1 }])) fail(`instances ${JSON.stringify(d.coverage.instances)}`);
+    // With the editor cache every family's existence comes from the bytes: the walk's losses no longer
+    // matter (its units attach only to tuple-equal rows). Instance evidence still comes from the walk.
+    const withByte = deriveProfile(raw(byte, lossy), FM3_PARAMS, HW_SEEDS, { ...opts, catalog });
+    const walkKinds = ['unresolved-replies', 'missing-slots', 'bound-hit'];
+    if (withByte.coverage.gaps.some((x) => walkKinds.includes(x.kind)) || JSON.stringify(withByte.coverage.walk) !== JSON.stringify({ lostReplies: 0, unresolvedReplies: 0, missingSlots: 0, boundHits: 0 })) {
+      fail(`byte + lossy walk: ${JSON.stringify(withByte.coverage)}`);
+    }
+    if (JSON.stringify(withByte.coverage.instances) !== JSON.stringify(d.coverage.instances)) fail(`byte + lossy instances ${JSON.stringify(withByte.coverage.instances)}`);
+    // The walk also read a block the catalog does not know (no editor-cache section matches): it
+    // provides that block's family, so its reply losses count again — but its bound hit on the amp
+    // block does not: the hit is at the 127 cap and the editor cache's amp table runs past it.
+    const unknown = Array.from({ length: 12 }, (_, id): LiveRec => ({ kind: 'float', section: 203, id, tc: 0x31, min: 0, max: 7 + id / 3, def: 1, step: 0.01, t1: 0, t2: 0 }));
+    const lossyNew = { ...lossy, records: [...lossy.records, ...unknown], scope: { ...lossy.scope, blocks: [...lossy.scope.blocks, 203] } };
+    const partly = deriveProfile(raw(byte, lossyNew), FM3_PARAMS, HW_SEEDS, { ...opts, catalog });
+    const pg = (k: string) => partly.coverage.gaps.find((x) => x.kind === k);
+    if (partly.provenance.existence['block:203'] !== lossy.id || pg('unresolved-replies')?.count !== 3 || pg('missing-slots')?.count !== 1 || pg('bound-hit') !== undefined) {
+      fail(`byte + walk with an unknown block: ${JSON.stringify(partly.coverage.gaps)}`);
+    }
+    // A newer complete walk supersedes the lossy one: the old losses are gone with it.
+    const fresh = liveSource('live-readonly', T2, liveFromBytes(byteDoc, walk, 127), { scope: lossy.scope });
+    const superseded = deriveProfile(raw(lossy, fresh), FM3_PARAMS, HW_SEEDS, { ...opts, catalog });
+    if (superseded.coverage.gaps.some((x) => walkKinds.includes(x.kind)) || Object.values(superseded.provenance.existence).includes(lossy.id)) {
+      fail(`superseded walk: ${JSON.stringify(superseded.coverage.gaps)}`);
+    }
     // A v1 document (no raw): non-blocking no-raw; sections from the tables and the inventory.
     const v1 = await buildCache({ kind: 'bytes', buf }, FM3_PARAMS, HW_SEEDS, { model: 0x11, firmware: '12.0' });
     const cv = computeCoverage(v1, { sections: FM3_CATALOG_SECTIONS });
@@ -348,7 +394,11 @@ export async function runMerge(): Promise<void> {
     if (!noRaw || noRaw.blocking || !cv.complete || JSON.stringify(cv.sections) !== JSON.stringify({ total: 45, assigned: 41, system: 4, new: 0, unclassified: 0 })) {
       fail(`v1 coverage ${JSON.stringify(cv)}`);
     }
-    console.log('  cache/merge: walk losses and a bound hit block (counts + eids), MULTITAP instance evidence 1/2 reported; a v1 doc reports non-blocking no-raw');
+    console.log(
+      '  cache/merge: walk losses and a bound hit block a live-only doc (counts + eids), not when the editor cache or a newer walk provides every family; ' +
+        'a walk providing only an unknown block brings its losses back, not its bound hit on a byte-provided block; ' +
+        'MULTITAP instance evidence 1/2 reported; a v1 doc reports non-blocking no-raw',
+    );
   }
 
   // ---- Case 10: suspects per source, fallback to a non-suspect copy --------------------------
@@ -368,7 +418,17 @@ export async function runMerge(): Promise<void> {
     if (fb.provenance.suspects[odd.id]?.includes('REVERB') || fb.provenance.existence['REVERB'] !== odd.id || fb.rangeSections['REVERB']?.sectionTag !== eid('REVERB')) {
       fail(`fallback: suspects ${JSON.stringify(fb.provenance.suspects[odd.id])}, existence ${fb.provenance.existence['REVERB']}`);
     }
-    console.log('  cache/merge: suspects listed per source; a suspect byte copy falls back to the non-suspect live copy');
+    // Suspect copies are not rivals: no conflict, hence no disagreement nobody could fix. Both
+    // copies suspect (`both`): the altered REVERB row of the live copy is not a conflict either;
+    // FORMANT, suspect nowhere, still conflicts.
+    const keys = (d: DerivedProfile) => d.provenance.conflicts.map((c) => c.key).sort().join();
+    const disagreeing = (d: DerivedProfile) => d.coverage.gaps.find((x) => x.kind === 'disagreement')?.families ?? [];
+    if (keys(both) !== 'FORMANT' || keys(fb) !== '' || disagreeing(fb).length > 0) fail(`suspect conflicts: both ${keys(both)}, fallback ${keys(fb)} ${JSON.stringify(disagreeing(fb))}`);
+    // Control without the reference: the same two copies are rivals and disagree on REVERB.
+    const control = deriveProfile(raw(byte, odd), FM3_PARAMS, HW_SEEDS, opts);
+    const rc = control.provenance.conflicts.find((c) => c.key === 'REVERB');
+    if (!rc || !disagreeing(control).includes('REVERB')) fail(`control conflicts ${keys(control)}`);
+    console.log(`  cache/merge: suspects listed per source; a suspect byte copy falls back to the non-suspect live copy; suspect copies raise no conflict (without suspects: REVERB ${rc.count} rows, disagreement)`);
   }
 
   // ---- Case 11: rosterDiff --------------------------------------------------------------------
@@ -385,5 +445,154 @@ export async function runMerge(): Promise<void> {
     const trailing = rosterDiff(['A ', 'B'], ['A', 'B']);
     if (trailing.renamed.length || trailing.ordinalShift) fail('trailing whitespace is not a rename');
     console.log('  cache/merge: rosterDiff — appended, renamed (no shift), inserted / removed (shift), trailing whitespace ignored');
+  }
+
+  // ---- Case 12: same-kind live sources — an older record fills in where the newer has none ---
+  {
+    const revPids = floatPids('REVERB', 3);
+    const dropped = revPids.slice(0, 2);
+    const changed = revPids[2]!;
+    const olderRecs = liveFromBytes(byteDoc, walk, 127);
+    const newerRecs = liveFromBytes(byteDoc, walk, 127).filter((r) => !(r.section === eid('REVERB') && dropped.includes(r.id)));
+    at(newerRecs, eid('REVERB'), changed).max += 2;
+    const older = liveSource('live-readonly', T1, olderRecs);
+    const newer = liveSource('live-readonly', T2, newerRecs);
+    const doc = deriveProfile(raw(older, newer), FM3_PARAMS, HW_SEEDS, opts);
+    const oldOnly = deriveProfile(raw(older), FM3_PARAMS, HW_SEEDS, opts);
+    const newOnly = deriveProfile(raw(newer), FM3_PARAMS, HW_SEEDS, opts);
+    for (const p of dropped) {
+      if (newOnly.ranges['REVERB']![p] !== undefined) fail(`the newer walk must lack REVERB[${p}]`);
+      if (JSON.stringify(doc.ranges['REVERB']![p]) !== JSON.stringify(oldOnly.ranges['REVERB']![p])) fail(`REVERB[${p}] must fall back to the older walk`);
+    }
+    if (doc.ranges['REVERB']![changed]!.displayMax !== newOnly.ranges['REVERB']![changed]!.displayMax || doc.ranges['REVERB']![changed]!.displayMax === oldOnly.ranges['REVERB']![changed]!.displayMax) {
+      fail(`REVERB[${changed}]: the newer walk wins where it has a record`);
+    }
+    if (doc.rangeSections['REVERB']!.stride !== oldOnly.rangeSections['REVERB']!.stride) fail('the fallback keeps the stride');
+    console.log(`  cache/merge: two read-only walks — REVERB ${dropped.join('/')} missing in the newer one come from the older, REVERB[${changed}] from the newer`);
+  }
+
+  // ---- Case 13: capture order by instant; unique source ids ---------------------------------
+  {
+    // 10:00 at +02:00 is 08:00Z — older than 09:00Z, although its text sorts later.
+    const stale = liveFromBytes(byteDoc, walk, 127);
+    at(stale, eid('DISTORT'), 5).max += 3;
+    const a = liveSource('live-readonly', '2026-11-22T10:00:00+02:00', stale);
+    const b = liveSource('live-readonly', '2026-11-22T09:00:00Z', liveFromBytes(byteDoc, walk, 127));
+    const byInstant = deriveProfile(raw(a, b), FM3_PARAMS, HW_SEEDS, opts);
+    if (byInstant.ranges['DISTORT']![5]!.displayMax !== byteDoc.ranges['DISTORT']![5]!.displayMax || byInstant.provenance.existence['DISTORT'] !== b.id) fail('capture order must follow the instant, not the text');
+    // A sub-second stamp is newer than the same second without one.
+    const c = liveSource('live-readonly', '2026-11-22T09:00:00.500Z', stale);
+    if (deriveProfile(raw(b, c), FM3_PARAMS, HW_SEEDS, opts).ranges['DISTORT']![5]!.displayMax === byteDoc.ranges['DISTORT']![5]!.displayMax) fail('09:00:00.500Z is newer than 09:00:00Z');
+    // Two sources without a capture time share an id until `uniqueSourceIds` numbers them.
+    const undated = (recs: LiveRec[]): LiveRawSource => ({ ...liveSource('live-readonly', T1, recs), capturedAt: null, id: rawSourceId('live-readonly', null) });
+    const u1 = undated(liveFromBytes(byteDoc, walk, 127));
+    const u2 = undated(liveFromBytes(byteDoc, walk, 127));
+    let code = 'none';
+    try {
+      deriveProfile(raw(u1, u2), FM3_PARAMS, HW_SEEDS, opts);
+    } catch (e) {
+      code = e instanceof ProfileDerivationError ? e.code : String(e);
+    }
+    const fixed = uniqueSourceIds([u1, u2]);
+    if (code !== 'duplicate-source-id' || fixed[0] !== u1 || fixed[1]!.id !== 'live-readonly@unknown#1' || u2.id !== 'live-readonly@unknown#0') fail(`unique ids: ${code} ${fixed.map((s) => s.id).join()}`);
+    deriveProfile(raw(...fixed), FM3_PARAMS, HW_SEEDS, opts);
+    // A renamed duplicate never takes an id a later source carries.
+    const u3 = { ...u1, id: rawSourceId('live-readonly', null, 1) };
+    if (uniqueSourceIds([u1, u2, u3]).map((s) => s.id.slice(-2)).join() !== '#0,#2,#1') fail('a renamed duplicate must skip ids in use');
+    console.log('  cache/merge: capture order by instant (offsets, sub-seconds), not text; undated sources numbered #0/#1 by uniqueSourceIds (duplicates rejected otherwise)');
+  }
+
+  // ---- Case 14: coverage of v1 documents by source class; addressable families ---------------
+  {
+    const catalog: ProfileCatalog = {
+      firmware: '12.0',
+      ranges: FM3_RANGES,
+      enumOverrides: FM3_ENUM_OVERRIDES,
+      rosters: Object.fromEntries(Object.entries(byteDoc.rosters)),
+      familyFirstEid: FM3_EFFECT_IDS,
+    };
+    // A live-only document on newer firmware, stored as a v1 document from the cloud.
+    const lv = deriveProfile(raw(liveSource('live-readonly', T1, liveFromBytes(byteDoc, walk, 127).filter((r) => r.section <= 160), { firmware: '13.0' })), FM3_PARAMS, HW_SEEDS, { ...opts, firmware: '13.0' });
+    const v1 = (source: string, origin?: string) =>
+      ({
+        enumOverrides: lv.enumOverrides,
+        ranges: lv.ranges,
+        rangeSections: lv.rangeSections,
+        rosters: lv.rosters,
+        cabIrs: lv.cabIrs,
+        unmappedSections: lv.unmappedSections,
+        unmappedFamilies: lv.unmappedFamilies,
+        model: 0x11,
+        firmware: '13.0',
+        meta: { schema: 1, recordCount: lv.meta.recordCount, source, ...(origin !== undefined ? { origin } : {}) },
+      }) as unknown as BuiltCache;
+    const liveGaps = (d: BuiltCache) => computeCoverage(d, catalog).gaps.filter((g) => g.kind === 'blocks-above-160' || g.kind === 'rosters').length;
+    const classes: Array<[string, string | undefined, boolean]> = [
+      ['cloud', 'live', true],
+      ['axisdefs', 'live', true],
+      ['live', undefined, true],
+      ['cloud', 'bytes', false],
+      ['editor-cache', undefined, false],
+      ['bytes', undefined, false],
+    ];
+    for (const [source, origin, isLive] of classes) {
+      if ((liveGaps(v1(source, origin)) > 0) !== isLive) fail(`v1 ${source}/${origin}: treated as ${isLive ? 'byte' : 'live'}`);
+    }
+    // Without effect ids PRESET (no effect id) never counts as addressable: the families a live walk
+    // read at a block address do (byte + live), a v1 byte document has none to tell.
+    const withEids = computeCoverage({ ...merged, raw: raw(byte, liveRO) }, { familyFirstEid: FM3_EFFECT_IDS });
+    const presetToo = computeCoverage({ ...merged, raw: raw(byte, liveRO) }, { familyFirstEid: { ...FM3_EFFECT_IDS, PRESET: 0 } });
+    if (presetToo.highIds.expected <= withEids.highIds.expected) fail('fixture: PRESET must have informative rows above 127');
+    if (merged.coverage.highIds.expected !== withEids.highIds.expected) fail(`byte + live without effect ids: ${merged.coverage.highIds.expected}, with: ${withEids.highIds.expected}`);
+    const v1Byte = await buildCache({ kind: 'bytes', buf }, FM3_PARAMS, HW_SEEDS, { model: 0x11, firmware: '12.0' });
+    const cvb = computeCoverage(v1Byte, {});
+    if (cvb.highIds.expected !== 0 || cvb.gaps.some((g) => g.kind === 'high-ids' || g.kind === 'far-ids')) fail(`v1 byte doc without effect ids: ${JSON.stringify(cvb.highIds)}`);
+    console.log(
+      `  cache/merge: v1 docs from cloud / definitions file take their class from meta.origin; high ids without effect ids: ${merged.coverage.highIds.expected} ` +
+        `(= with effect ids; PRESET would add ${presetToo.highIds.expected - withEids.highIds.expected})`,
+    );
+  }
+
+  // ---- Case 15: bound hits of a real walk — the read-only cap vs a known-size ceiling ----------
+  {
+    // Every fixture family at its FM3 effect ids (instances consecutive), ALL its ids on the fake
+    // device; a standard read-only walk to the 127 cap, REVERB with a known size it outgrew (40).
+    const recs: CacheRecord[] = [];
+    for (const [fam, meta] of Object.entries(byteDoc.rangeSections)) {
+      const first = FM3_EFFECT_IDS[fam];
+      if (isSyntheticFamilyKey(fam) || first == null) continue;
+      (meta.instanceTags ?? [meta.sectionTag]).forEach((tag, i) => {
+        for (const r of walk.records) if (r.section === tag && r.id < 0xff00) recs.push({ ...r, section: first + i });
+      });
+    }
+    const blocks = [...new Set(recs.map((r) => r.section))].sort((x, y) => x - y);
+    const dev = cacheDevice(recs);
+    const o: LiveWalkOptions = { model: 0x11, blocks, maxParamId: 127, paramKnownSizeByBlock: { [eid('REVERB')]: 40 }, readValues: false, sleep: dev.sleep };
+    const res = await liveWalkDetailed(dev, o);
+    const hitAt = (res.boundHits ?? []).map((h) => `${h.block}@${h.bound}`).join();
+    // GLOBAL, CONTROLLERS and DISTORT run past the cap; REVERB (71 rows) reaches its 40 - 1 + 32 ceiling.
+    if (hitAt !== `${eid('GLOBAL')}@127,${eid('CONTROLLERS')}@127,${eid('DISTORT')}@127,${eid('REVERB')}@71`) fail(`walk bound hits ${hitAt}`);
+    const src = rawFromLiveWalk(res, liveWalkScope(o, { hinted: false }), { kind: 'live-readonly', capturedAt: T1, firmware: '12.0' });
+    const limits = { INPUT: 2, OUTPUT: 2 };
+    const catalog: ProfileCatalog = { firmware: '12.0', ranges: FM3_RANGES, enumOverrides: FM3_ENUM_OVERRIDES, familyFirstEid: FM3_EFFECT_IDS, instanceLimits: limits, sections: FM3_CATALOG_SECTIONS };
+    const doc = deriveProfile(raw(src), FM3_PARAMS, HW_SEEDS, { ...opts, catalog });
+    const g = (d: DerivedProfile, k: string) => d.coverage.gaps.find((x) => x.kind === k);
+    // The cap hits sit inside tables the catalog knows to run on: the high-ids gap covers them (not
+    // blocking on the catalog firmware). REVERB's ceiling came from a known size: blocking.
+    const hit = g(doc, 'bound-hit');
+    if (!hit?.blocking || hit.eids?.join() !== String(eid('REVERB')) || doc.coverage.walk?.boundHits !== 1) fail(`bound-hit ${JSON.stringify(hit)} walk ${JSON.stringify(doc.coverage.walk)}`);
+    const high = g(doc, 'high-ids');
+    if (!high || high.blocking || !high.families?.includes('DISTORT') || !high.families.includes('CONTROLLERS')) fail(`high-ids ${JSON.stringify(high)}`);
+    // On newer firmware the high ids block (read-extended); the cap hits still raise no bound-hit.
+    const newer = deriveProfile(raw({ ...src, firmware: '13.0' }), FM3_PARAMS, HW_SEEDS, { ...opts, firmware: '13.0', catalog });
+    if (!g(newer, 'high-ids')?.blocking || g(newer, 'bound-hit')?.eids?.join() !== String(eid('REVERB'))) fail(`newer firmware ${JSON.stringify(newer.coverage.gaps)}`);
+    // No reference table: nothing explains the cap hits, they block too.
+    const bare = deriveProfile(raw(src), FM3_PARAMS, HW_SEEDS, { ...opts, catalog: { familyFirstEid: FM3_EFFECT_IDS, instanceLimits: limits } });
+    const want = [eid('GLOBAL'), eid('CONTROLLERS'), eid('DISTORT'), eid('REVERB')].join();
+    if (!g(bare, 'bound-hit')?.blocking || g(bare, 'bound-hit')?.eids?.join() !== want) fail(`no reference: ${JSON.stringify(g(bare, 'bound-hit'))}`);
+    console.log(
+      `  cache/merge: real walk — bound hits ${hitAt}; the 127-cap hits inside catalog tables raise no bound-hit (non-blocking high-ids on the catalog firmware, blocking on 13.0), ` +
+        `REVERB's known-size ceiling blocks; without a reference table all ${hitAt.split(',').length} block`,
+    );
   }
 }

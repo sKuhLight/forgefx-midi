@@ -8,7 +8,9 @@
  *
  *   - the derived tables stay top-level with the v1 shapes (`BuiltCacheData` + `meta`), so every
  *     v1 consumer keeps working; everything new is additive (`raw`, `sections`, `blockMap`,
- *     `provenance`, `coverage`, `meta.format/derivedWith/derivedAt/sources`);
+ *     `provenance`, `coverage`, `meta.format/derivedWith/derivedRevision/derivedAt/sources`);
+ *   - a stored document re-derives when the rules change: on a `CACHE_SCHEMA` bump, or when its
+ *     `meta.derivedRevision` is below `DERIVATION_REVISION` (`needsRederive`);
  *   - every section of every source is kept (`sections`), including the ones no catalog family
  *     claims: their rows go into the tables under a synthetic family key, `section:<tag>` for an
  *     editor-cache section and `block:<eid>` for a live block address;
@@ -29,13 +31,14 @@
 import { VERSION } from '../version.js';
 import { formatFirmwareVersion } from '../shared/firmware.js';
 import { buildDeviceCacheDetailed, rangeRowOf } from './assign.js';
+import { bridgeLiveUnits, deriveBlockMap, effectIdSpansForModel } from './blockMap.js';
 import type { DeviceCacheDetail } from './assign.js';
 import { CACHE_SCHEMA } from './buildProfile.js';
 import type { BuiltCache, BuiltCacheWalkStats } from './buildProfile.js';
 import { isInformativeRow } from './fingerprint.js';
 import { CACHE_HEADER_BYTES, cacheHeaderVersion, headerMatchesWalk, parseCacheFileName, readCacheHeader } from './header.js';
 import type { LiveWalkResult } from './liveWalk.js';
-import { computeCoverage, mergeDerived, planSourceUnits } from './merge.js';
+import { computeCoverage, effectIdOwners, mergeDerived, planSourceUnits } from './merge.js';
 import type { ProfileCatalog, ProfileCoverage, ProfileProvenance, SourceUnitPlan } from './merge.js';
 import { parseCacheRecords } from './records.js';
 import { isUserNameTable, redactCacheUserNames } from './redact.js';
@@ -53,18 +56,50 @@ export const PROFILE_FORMAT = 2;
 export const RAW_FORMAT = 1;
 
 /**
- * Lowest codec version (`meta.derivedWith`) whose derived tables a consumer keeps without
- * re-deriving a format-2 document. Every format-2 document was derived by a codec that already
- * writes this format, so the floor is open for now; raise it to a released version when an
- * additive derivation change (one that needs no `CACHE_SCHEMA` bump) must reach stored documents.
- * Compare with `compareCodecVersions`. (Unreleased builds report the version in package.json,
- * which lags the release tags.)
+ * Revision of the derivation rules within one `CACHE_SCHEMA`, persisted as `meta.derivedRevision`.
+ * Raise it by one whenever an additive derivation change (one that needs no `CACHE_SCHEMA` bump —
+ * e.g. a better block matcher or voter restriction) must reach stored format-2 documents: a document
+ * derived under a lower revision is re-derived from its raw sources (`needsRederive`). An integer, not
+ * the codec version: a development build reports the version in package.json, a release the git tag,
+ * so version strings do not order derivations reliably.
+ *
+ * History: 1 = derivation of the first format-2 documents: the restricted live vote (a block takes
+ * only the family whose effect-id span holds it, the host's spans or the model's), the
+ * inventory-restricted editor-cache vote (a section takes only the family the catalog section
+ * inventory lists for its tag), the block map (a `confirmed` binding needs the live table to end where
+ * the section ends) and block-space instance groups. Format-2 documents without the field count as
+ * revision 0.
+ */
+export const DERIVATION_REVISION = 1;
+
+/**
+ * True when a stored document's derived tables must be re-derived from its raw sources before use:
+ * a format-2 document (`meta.format === 2`) whose `meta.schema` is not this codec's `CACHE_SCHEMA`, or
+ * whose `meta.derivedRevision` (absent = 0) is lower than `DERIVATION_REVISION`. A document from a
+ * newer codec (higher revision, same schema) is kept as it is. False for a format-1 document (it has
+ * no raw sources; a schema mismatch makes it stale instead) and for anything that is not a meta object.
+ * The caller still checks that it can read the raw envelope (`raw.format <= RAW_FORMAT`).
+ */
+export function needsRederive(meta: { format?: unknown; schema?: unknown; derivedRevision?: unknown } | null | undefined): boolean {
+  if (meta === null || typeof meta !== 'object' || meta.format !== PROFILE_FORMAT) return false;
+  if (meta.schema !== CACHE_SCHEMA) return true;
+  const rev = typeof meta.derivedRevision === 'number' && Number.isFinite(meta.derivedRevision) ? meta.derivedRevision : 0;
+  return rev < DERIVATION_REVISION;
+}
+
+/**
+ * @deprecated Use `needsRederive` / `DERIVATION_REVISION`: version strings do not order derivations
+ * (a development build reports package.json, a release the git tag). Kept at '0.0.0' (never triggers)
+ * so older callers keep compiling; it will be removed.
  */
 export const MIN_DERIVED_WITH = '0.0.0';
 
 /**
  * Numeric comparison of two dotted codec versions (`'0.6.1'`): negative when `a` is older, 0 when
  * equal, positive when newer. Missing parts count as 0; a pre-release or build suffix is ignored.
+ *
+ * @deprecated For re-derivation decisions use `needsRederive`; this helper will be removed together
+ * with `MIN_DERIVED_WITH`.
  */
 export function compareCodecVersions(a: string, b: string): number {
   const parts = (v: string) => v.split(/[-+]/, 1)[0]!.split('.').map((p) => (/^\d+$/.test(p) ? Number(p) : 0));
@@ -177,6 +212,30 @@ export interface SourceSummary {
 /** Source id: `${kind}@${capturedAt ?? 'unknown'}#${n}`. */
 export function rawSourceId(kind: RawSourceKind, capturedAt: string | null | undefined, n = 0): string {
   return `${kind}@${capturedAt ?? 'unknown'}#${n}`;
+}
+
+/**
+ * The sources with unique ids: a source whose id an earlier source already carries (two sources of
+ * one kind without a capture time, or a re-imported source) gets the lowest free `#n` for its kind
+ * and capture time (`rawSourceId`). Sources with unique ids are returned unchanged (same objects);
+ * renamed ones are copies. Deterministic. Call it before appending sources to a document —
+ * `deriveProfile` itself rejects duplicate ids.
+ */
+export function uniqueSourceIds<T extends RawSource>(sources: readonly T[]): T[] {
+  // Every id's first carrier keeps it; a renamed duplicate never takes an id another source carries.
+  const used = new Set(sources.map((s) => s.id));
+  const kept = new Set<string>();
+  return sources.map((s) => {
+    if (!kept.has(s.id)) {
+      kept.add(s.id);
+      return s;
+    }
+    let n = 0;
+    while (used.has(rawSourceId(s.kind, s.capturedAt, n))) n += 1;
+    const id = rawSourceId(s.kind, s.capturedAt, n);
+    used.add(id);
+    return { ...s, id };
+  });
 }
 
 function stripRecord(r: CacheRecord): RawRecord {
@@ -402,7 +461,7 @@ export interface DerivedSection {
   /** `section` = editor-cache section tag, `block` = live block address. */
   space: 'section' | 'block';
   tag: number;
-  /** Catalog family, `section:<tag>` or `block:<eid>`. */
+  /** Catalog family, `section:<tag>` or `block:<eid>` (a live block the block map bridged to a section: that section's key). */
   key: string;
   family: string | null;
   role: SectionRole;
@@ -418,7 +477,7 @@ export interface DerivedSection {
 
 export type BlockMapConfidence = 'catalog' | 'roster' | 'confirmed' | 'likely' | 'candidate';
 
-/** Effect id ↔ section/family binding for a block the catalog cannot place (filled by the block matcher). */
+/** Effect id ↔ section/family binding for a block the catalog cannot place (filled by the block matcher, ./blockMap.ts). */
 export interface BlockMapEntry {
   eid: number;
   key: string | null;
@@ -433,8 +492,10 @@ export interface BlockMapEntry {
 export interface ProfileDoc extends BuiltCache {
   meta: BuiltCache['meta'] & {
     format: 2;
-    /** Codec `VERSION` that derived the tables. */
+    /** Codec `VERSION` that derived the tables (informational; re-derivation goes by `derivedRevision`). */
     derivedWith: string;
+    /** `DERIVATION_REVISION` of the codec that derived the tables (see `needsRederive`). */
+    derivedRevision: number;
     /** Caller-supplied ISO stamp (never wall-clock in the codec). */
     derivedAt?: string;
     /** One per raw source, same order. */
@@ -456,15 +517,36 @@ export interface ProfileDoc extends BuiltCache {
 export type DerivedProfile = Omit<ProfileDoc, 'raw'>;
 
 export interface DeriveOptions {
-  /** Catalog section inventory of the device (`*_CATALOG_SECTIONS`); without it unassigned sections are `unclassified`. */
+  /**
+   * Catalog section inventory of the device (`*_CATALOG_SECTIONS`; default `catalog.sections`).
+   * Classifies unassigned sections (`system` / `new`; without it `unclassified`) and restricts the
+   * editor-cache vote: a section may only take the family the inventory lists for its tag, and a
+   * tag the inventory does not list takes none (`voteRestriction`).
+   */
   catalogSections?: readonly CatalogSection[];
   /** Caller-supplied ISO stamp for `meta.derivedAt`. */
   derivedAt?: string;
+  /** Model byte. Without `catalog.familyFirstEid` it selects the codec's default effect-id spans (`effectIdSpansForModel`). */
   model?: number;
   /** Firmware of the document key. Sources taken on another firmware are rejected. */
   firmware?: string;
-  /** Static catalog facts for suspects and coverage (see `ProfileCatalog`). */
+  /**
+   * Static catalog facts for suspects, coverage, the block map and the restricted vote (see
+   * `ProfileCatalog`). `familyFirstEid` (+ `instanceLimits`) sets the block-space restriction: a
+   * live block may only take the catalog family whose reserved effect-id span holds it
+   * (`effectIdOwners`), every other block stays `block:<eid>` for the block map. Without
+   * `familyFirstEid` the codec's own spans of `model` apply (`effectIdSpansForModel`); without
+   * those either, live units assign no family at all (as probes).
+   */
   catalog?: ProfileCatalog;
+  /**
+   * TEST / PARITY ONLY. Without `catalog.familyFirstEid`, read-only and full live walks vote
+   * unrestricted — the tables of `buildCache({ kind: 'live' })`, which can hand a block to an
+   * unrelated family whose table looks alike — instead of being restricted to the model's default
+   * spans (probes still assign nothing). Ignored when `catalog.familyFirstEid` is given. Never set
+   * it in a host: it exists for the v1 parity tests (and walks recorded in section-tag space).
+   */
+  unrestrictedLiveVote?: boolean;
 }
 
 /** Why `deriveProfile` refused the raw sources. */
@@ -506,7 +588,12 @@ function roleOf(space: 'section' | 'block', family: string | null, instance: boo
 
 /**
  * Add every unassigned section of a unit as a synthetic family (rows, labels, section meta, after
- * the catalog families) and describe each section. `data` of the detail is copied, not modified.
+ * the catalog families) and describe each section. In block space an unassigned block whose table is
+ * identical to a lower unassigned block (`instanceOf`) is an instance of it, like the instances of a
+ * catalog family: it gets no family of its own, its section takes the first block's `block:<eid>`
+ * key, and that family's `rangeSections` entry lists both (`instanceTags`). Editor-cache sections are
+ * never grouped (two identical sections stay two candidates for the block map). `data` of the detail
+ * is copied, not modified.
  */
 function deriveUnit(plan: SourceUnitPlan, detail: DeviceCacheDetail, inventory: ReadonlySet<number> | null): DerivedUnit {
   const base = detail.data;
@@ -514,8 +601,30 @@ function deriveUnit(plan: SourceUnitPlan, detail: DeviceCacheDetail, inventory: 
   const ranges: Record<string, Record<number, RangeDef>> = { ...base.ranges };
   const rangeSections: Record<string, RangeSectionMeta> = { ...base.rangeSections };
   const sections: DerivedSection[] = [];
+  const unassigned = new Set(detail.sections.filter((s) => s.family === null).map((s) => s.tag));
+  const groupTags = new Map<string, number[]>();
   for (const s of detail.sections) {
-    const key = s.family ?? syntheticFamilyKey(plan.space, s.tag);
+    const first = plan.space === 'block' && s.family === null && s.instanceOf !== undefined && unassigned.has(s.instanceOf) ? s.instanceOf : s.tag;
+    const key = s.family ?? syntheticFamilyKey(plan.space, first);
+    if (s.family === null && first !== s.tag) {
+      // A further instance of an unassigned block group: described, but no family of its own.
+      const tags = groupTags.get(key);
+      if (tags) tags.push(s.tag);
+      else groupTags.set(key, [first, s.tag]);
+      sections.push({
+        space: plan.space,
+        tag: s.tag,
+        key,
+        family: null,
+        role: roleOf(plan.space, null, false, s.tag, inventory),
+        stride: s.stride,
+        recordCount: s.recordCount,
+        informative: sections.find((x) => x.tag === first)?.informative ?? 0,
+        signature: rowsSignature(sectionSignatureRows([...s.rows.values()])),
+        sourceId: plan.sectionSource(s.tag),
+      });
+      continue;
+    }
     let informative = 0;
     const rows: Record<number, RangeDef> = {};
     const labels: Record<string, string[]> = {};
@@ -545,6 +654,7 @@ function deriveUnit(plan: SourceUnitPlan, detail: DeviceCacheDetail, inventory: 
       sourceId: plan.sectionSource(s.tag),
     });
   }
+  for (const [key, tags] of groupTags) rangeSections[key] = { ...rangeSections[key]!, instanceTags: tags };
   return { plan, detail, data: { ...base, enumOverrides, ranges, rangeSections }, sections };
 }
 
@@ -571,16 +681,76 @@ function checkSources(raw: ProfileRaw, firmware: string | undefined): void {
   }
 }
 
+/** How one source unit votes (see `voteRestriction`). */
+interface UnitVote {
+  /** `BuildDeviceCacheOptions.allowFamily`; absent = unrestricted. */
+  allowFamily?: (family: string, tag: number) => boolean;
+  /** `BuildDeviceCacheOptions.unownedTwinsFollow`. */
+  unownedTwinsFollow: boolean;
+  /** No family can be assigned: the seed anchors are dropped (nothing could satisfy them). */
+  assignsNothing: boolean;
+}
+
+/**
+ * The section-vote restriction of a unit (`BuildDeviceCacheOptions.allowFamily`):
+ *   - block space (live units) with effect-id spans (`spans`: the caller's `familyFirstEid`, else
+ *     the codec's own of the model): a block may only take the family whose reserved span holds it
+ *     (`effectIdOwners`). A block outside every span — a block the catalog does not know, or a family
+ *     hidden from it — keeps no family and goes to the block map, so it can never be claimed by an
+ *     unrelated family whose table happens to look alike. A block identical to a lower block a family
+ *     may take follows that family as a further instance (`unownedTwinsFollow`: the modifier slots);
+ *   - block space without spans: nothing is assigned — unless `unrestrictedLive` (test/parity only),
+ *     where read-only and full walks vote unrestricted (`buildCache` parity); a probe never does;
+ *   - tag space (editor-cache units) with a section inventory: a section may only take the family
+ *     the inventory lists for its tag (an instance tag: its family too). A family the inventory does
+ *     not list takes no section; a tag the inventory does not list (a section the catalog firmware
+ *     lacks) takes no family and stays `section:<tag>` (role `new`) — it can reach a family only
+ *     through device evidence (the block map). Identical sections never follow across owners;
+ *   - tag space without an inventory: the unrestricted vote (the tables of `buildCache({ kind:
+ *     'bytes' })`, which may give a family a section that only looks like its table).
+ */
+function voteRestriction(
+  catalogSections: readonly CatalogSection[] | undefined,
+  spans: Pick<ProfileCatalog, 'familyFirstEid' | 'instanceLimits'> | null,
+  unrestrictedLive: boolean,
+): (plan: SourceUnitPlan) => UnitVote {
+  const owners = effectIdOwners(spans ?? undefined);
+  const inventory = catalogSections ? new Map(catalogSections.map((c) => [c.tag, c.family])) : null;
+  return (plan) => {
+    if (plan.space === 'block') {
+      if (owners) return { allowFamily: (family, tag) => owners.get(tag) === family, unownedTwinsFollow: true, assignsNothing: false };
+      if (unrestrictedLive && plan.kind !== 'live-probe') return { unownedTwinsFollow: false, assignsNothing: false };
+      return { allowFamily: () => false, unownedTwinsFollow: false, assignsNothing: true };
+    }
+    if (inventory) return { allowFamily: (family, tag) => inventory.get(tag) === family, unownedTwinsFollow: false, assignsNothing: false };
+    return { unownedTwinsFollow: false, assignsNothing: false };
+  };
+}
+
 /**
  * Derive the document tables from raw sources: each source unit (sources of one kind and origin,
  * see ./merge.ts) is built by the section voter on its own (editor-cache units with their declared
- * section counts), unassigned sections become synthetic families, the units merge per family by
- * source precedence, and provenance and coverage are computed.
+ * section counts; the vote restricted as `voteRestriction` describes), unassigned sections become
+ * synthetic families, the block map binds live blocks the catalog cannot place to editor-cache
+ * sections (./blockMap.ts; a byte-bridged block's rows join the section's family instead of
+ * `block:<eid>`), the units merge per family by source precedence, and provenance and coverage are
+ * computed.
  *
- * With a single editor-cache source the v1 fields (`BuiltCacheData` maps, `model`, `firmware`,
- * `meta.schema/recordCount/source/issues`) equal `buildCache({ kind: 'bytes', buf })` of the same
- * bytes, plus the synthetic family keys; with a single live source they equal
- * `buildCache({ kind: 'live' })` of the same walk (incl. `meta.walk`). `meta.builtAt` is never set.
+ * Relation to v1 (`buildCache`), field by field for the v1 fields (`BuiltCacheData` maps, `model`,
+ * `firmware`, `meta.schema/recordCount/source/issues/walk`), plus the synthetic family keys:
+ *   - a single editor-cache source WITHOUT a section inventory equals `buildCache({ kind: 'bytes',
+ *     buf })` of the same bytes. WITH an inventory the tag-space vote is restricted (a section only
+ *     takes the family the inventory lists for it, see `voteRestriction`), so it MAY differ from
+ *     `buildCache(bytes)`: on a cache whose voter result already matches the inventory (the
+ *     committed FM3 fixture) the tables are equal; where the unrestricted voter would hand a section
+ *     to the wrong family (MIXER / OUTPUT on real FM9 / Axe-Fx III caches) or give a section the
+ *     catalog firmware lacks to a look-alike family, the restricted one does not;
+ *   - a single live source equals `buildCache({ kind: 'live' })` of the same walk only with
+ *     `unrestrictedLiveVote` (and no `catalog.familyFirstEid`). Otherwise the live vote is restricted
+ *     to effect-id spans (the host's `familyFirstEid`, else the model's), which on a walk in the
+ *     device's block-address space gives the same catalog families wherever the unrestricted vote
+ *     placed every family at its own effect id; without any spans live units assign nothing.
+ * `meta.builtAt` is never set.
  *
  * Throws `ProfileDerivationError` (format, no sources, duplicate ids, a source on another firmware),
  * `ProfileUserDataError` (a user name table in raw), or the voter's own error (seed disagreement).
@@ -596,12 +766,30 @@ export function deriveProfile(
 
   const catalogSections = opts.catalogSections ?? opts.catalog?.sections;
   const inventory = catalogSections ? new Set(catalogSections.map((c) => c.tag)) : null;
-  const units = planSourceUnits(raw.sources).map((plan) => {
-    // A probe covers single blocks: no seeded core block is expected in it.
-    const unitSeeds = plan.kind === 'live-probe' ? {} : seeds;
-    const detail = buildDeviceCacheDetailed(plan.records, params, unitSeeds, plan.declaredCounts ? { declaredCounts: plan.declaredCounts } : {});
+  // Effect-id spans of the live vote and the block map: the host's table wins (it may hide a family
+  // or carry device-true instance counts), else the codec's own for the model.
+  const spans = opts.catalog?.familyFirstEid
+    ? { familyFirstEid: opts.catalog.familyFirstEid, ...(opts.catalog.instanceLimits ? { instanceLimits: opts.catalog.instanceLimits } : {}) }
+    : opts.unrestrictedLiveVote === true
+      ? null
+      : effectIdSpansForModel(opts.model);
+  const voteOf = voteRestriction(catalogSections, spans, opts.unrestrictedLiveVote === true);
+  const derived = planSourceUnits(raw.sources).map((plan) => {
+    const vote = voteOf(plan);
+    // A probe covers single blocks: no seeded core block is expected in it (nor in a unit that
+    // can take no family at all).
+    const unitSeeds = plan.kind === 'live-probe' || vote.assignsNothing ? {} : seeds;
+    const detail = buildDeviceCacheDetailed(plan.records, params, unitSeeds, {
+      ...(plan.declaredCounts ? { declaredCounts: plan.declaredCounts } : {}),
+      ...(vote.allowFamily ? { allowFamily: vote.allowFamily, unownedTwinsFollow: vote.unownedTwinsFollow } : {}),
+    });
     return deriveUnit(plan, detail, inventory);
   });
+
+  // Block map: live blocks the catalog cannot place, bound to editor-cache sections by their rows.
+  // A byte-bridged block's rows join the section's family instead of a `block:<eid>` family.
+  const blockMap = deriveBlockMap(derived, spans ?? undefined);
+  const units = bridgeLiveUnits(derived, blockMap);
 
   const merged = mergeDerived(units, opts.catalog);
 
@@ -613,6 +801,7 @@ export function deriveProfile(
     ...(merged.issues !== undefined ? { issues: merged.issues } : {}),
     format: PROFILE_FORMAT,
     derivedWith: VERSION,
+    derivedRevision: DERIVATION_REVISION,
     ...(opts.derivedAt !== undefined ? { derivedAt: opts.derivedAt } : {}),
     sources: raw.sources.map(sourceSummary),
   };
@@ -621,7 +810,7 @@ export function deriveProfile(
   if (opts.model !== undefined) out.model = opts.model;
   if (opts.firmware !== undefined) out.firmware = opts.firmware;
   out.sections = units.flatMap((u) => u.sections);
-  out.blockMap = [];
+  out.blockMap = blockMap;
   out.provenance = merged.provenance;
   out.coverage = computeCoverage({ ...out, raw }, opts.catalog);
   return out;

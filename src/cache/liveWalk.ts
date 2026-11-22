@@ -219,10 +219,11 @@
  */
 import { fractalChecksum } from '../shared/checksum.js';
 import { buildSetParameterContinuous } from '../gen3/axe-fx-iii/setParam.js';
-import { AXE_FX_III_BLOCKS } from '../gen3/axe-fx-iii/blockTypes.js';
+import { AXE3_EFFECT_ID_TABLE } from '../gen3/axe-fx-iii/effectIds.js';
 import { FM3_EFFECT_ID_TABLE } from '../gen3/fm3/effectIds.js';
 import { FM9_EFFECT_ID_TABLE } from '../gen3/fm9/effectIds.js';
 import type { RecordSource } from './buildProfile.js';
+import type { LiveSourceScope } from './profileDoc.js';
 import type { CacheRecord, EnumRecord, FloatRecord, FloatTaper } from './types.js';
 
 // ---------------------------------------------------------------------------
@@ -1026,6 +1027,22 @@ export interface LiveWalkResult {
    * bounds and pseudo definitions". Not loss: these replies are the device's own answer.
    */
   pseudoReplies: PseudoReplyStats;
+  /**
+   * Blocks whose last real contiguous definition lies within `LIVE_WALK_LIMITS.boundHitMargin` (4)
+   * ids of the block's ceiling: the stop run could not complete, so the table may go on past the
+   * ceiling. Report only (the walk is unchanged). Optional in the type for results built elsewhere;
+   * `liveWalkDetailed` always sets it.
+   */
+  boundHits?: LiveWalkBoundHit[];
+}
+
+/** A block whose table may continue past its ceiling (see `LiveWalkResult.boundHits`). */
+export interface LiveWalkBoundHit {
+  block: number;
+  /** Highest param id with a real definition. */
+  lastReal: number;
+  /** The block's ceiling (highest id the walk was allowed to query). */
+  bound: number;
 }
 
 /** Breakdown of `LiveWalkResult.pseudoReplies`, counted per query answered. */
@@ -1168,6 +1185,37 @@ export interface LiveWalkOptions {
    */
   paramBoundByBlock?: Record<number, number>;
   /**
+   * Explicit param ids per block (key = block address), queried AFTER the block's contiguous walk:
+   * known ids beyond its ceiling, e.g. the far ids of a non-contiguous section, taken from the
+   * shipped catalog or a local editor cache — never guessed. Off unless given. Per listed id: ONE
+   * definition query (no retry, no stop run, no label walk, no value read, never swept — read-only
+   * in both modes; an enum-shaped definition stays an enum record without labels), then a liveness
+   * re-read of the block's last real contiguous definition (after silence, past the lost-reply drain
+   * pause); an unanswered re-read rejects the walk ("device stopped answering"). The list stops at
+   * the first id that does not answer with a real definition of that id: silence, a non-definition
+   * reply, a definition echoing another param, an empty slot, an end marker, a copy or junk. Ids
+   * run ascending; ids at or below the block's ceiling (the contiguous walk owns those), duplicates,
+   * non-integers and ids outside 0..16383 are ignored. A list runs only for a block that is walked,
+   * not skipped (negative bound), and whose contiguous walk found a real definition.
+   */
+  paramIdsByBlock?: Record<number, readonly number[]>;
+  /**
+   * Reject the walk (`LiveWalkAbortError`, code `implausible-reply`) at the first definition reply
+   * at a param id at or above this value that the junk checks flag (counted in
+   * `pseudoReplies.implausible`), instead of skipping it as an absent slot: an extension walk past
+   * the validated id envelope must not carry on into junk. Off by default. Only a finite integer >= 0
+   * is used.
+   */
+  abortOnImplausibleFrom?: number;
+  /**
+   * Reject the walk (`LiveWalkAbortError`, code `silent-run`) at the first DEFINITION query that
+   * stays unanswered after its retries (block-probe queries are one-shot), and at an unanswered
+   * listed id (`paramIdsByBlock`) — before any liveness check would decide that the silence is
+   * address-specific. Stricter than the liveness check, for walks where every queried address is
+   * known to answer. Off by default.
+   */
+  abortOnSilence?: boolean;
+  /**
    * Label lists the caller knows of (key = block address, then param id): the label count and the
    * wire typecode of each param that carries a label list (`enumHintsFromRanges` builds one block's
    * entry from a family's range rows). It is the ONLY way a definition with a non-zero `scale` (a
@@ -1252,6 +1300,253 @@ export interface LiveWalkOptions {
   sleep?: (ms: number) => Promise<void>;
 }
 
+// ---------------------------------------------------------------------------
+// Walk scope: block plans, explicit id lists, query guard, abort errors
+// ---------------------------------------------------------------------------
+
+/**
+ * Numbers a host needs to build a walk scope (contract limits; the walk itself enforces only the
+ * scope it is given):
+ *   - `standardMaxBlock`: highest effect id of the default (hardware-verified) block range;
+ *   - `readOnlyMaxParamId`: the validated read-only id envelope (and the default ceiling);
+ *   - `extendedReadOnlyMaxParamId`: the most an extended read-only walk of a known contiguous table
+ *     may reach (its ceiling stays min(table size - 1 + stop run, this));
+ *   - `probeMaxParamId`: the most a single-block probe of an unknown block may reach;
+ *   - `fullMaxParamId`: the default (and most) a FULL-mode walk reaches in a known table;
+ *   - `stopRun`: the default absent run that ends a block (`paramAbsentRunLimit`);
+ *   - `boundHitMargin`: how close to its ceiling a block's last real definition counts as a bound hit.
+ */
+export const LIVE_WALK_LIMITS = Object.freeze({
+  standardMaxBlock: DEFAULT_MAX_BLOCK,
+  readOnlyMaxParamId: DEFAULT_READ_ONLY_MAX_PARAM_ID,
+  extendedReadOnlyMaxParamId: 255,
+  probeMaxParamId: 127,
+  fullMaxParamId: DEFAULT_FULL_MAX_PARAM_ID,
+  stopRun: DEFAULT_ABSENT_RUN_LIMIT,
+  boundHitMargin: 4,
+});
+
+/** A block's walk plan: the highest id queried (inclusive; negative = block skipped) and the known table size (0 = none). */
+interface BlockPlan {
+  ceiling: number;
+  knownSize: number;
+}
+
+/** The blocks a walk visits: `blocks`, else 0..`maxBlock` (default 160). */
+function walkBlocks(opts: LiveWalkOptions): number[] {
+  return opts.blocks ?? Array.from({ length: (opts.maxBlock ?? DEFAULT_MAX_BLOCK) + 1 }, (_, i) => i);
+}
+
+/** The default ceiling: `maxParamId` (finite values clamped), else the mode default. */
+function walkMaxParamId(opts: LiveWalkOptions): number {
+  const requested = opts.maxParamId;
+  if (typeof requested === 'number' && Number.isFinite(requested)) return clampParamBound(requested);
+  return (opts.mode ?? 'read-only') === 'full' ? DEFAULT_FULL_MAX_PARAM_ID : DEFAULT_READ_ONLY_MAX_PARAM_ID;
+}
+
+/** `paramAbsentRunLimit` when a finite integer >= 1, else the default 32. */
+function walkAbsentRunLimit(opts: LiveWalkOptions): number {
+  const r = opts.paramAbsentRunLimit;
+  return typeof r === 'number' && Number.isInteger(r) && r >= 1 ? r : DEFAULT_ABSENT_RUN_LIMIT;
+}
+
+/**
+ * A block's walk plan. `ceiling`: the highest id queried, inclusive — the caller's HARD bound when
+ * given (wins over `maxParamId` both ways), else a known size's `size - 1 + absentRunLimit` capped
+ * by `maxParamId`, else `maxParamId`. `knownSize`: ids below it are walked without the stop run
+ * (0 = none known); past it the normal stop run applies, so appended params are found.
+ */
+function blockPlan(opts: LiveWalkOptions, block: number): BlockPlan {
+  const maxParamId = walkMaxParamId(opts);
+  // Only a finite INTEGER is trusted: NaN, Infinity and 1.5 are ignored (treated as no entry).
+  // A negative bound is a deliberate "skip this block"; a negative size means nothing, so it is ignored.
+  const bound = opts.paramBoundByBlock?.[block];
+  const size = opts.paramKnownSizeByBlock?.[block];
+  const hardBound = bound !== undefined && Number.isInteger(bound) ? bound : undefined;
+  const knownSize = size !== undefined && Number.isInteger(size) && size >= 0 ? Math.min(MAX_WIRE_PARAM_ID + 1, size) : undefined;
+  if (hardBound !== undefined) return { ceiling: clampParamBound(hardBound), knownSize: knownSize ?? 0 };
+  if (knownSize !== undefined) return { ceiling: Math.min(maxParamId, clampParamBound(knownSize - 1 + walkAbsentRunLimit(opts))), knownSize };
+  return { ceiling: maxParamId, knownSize: 0 };
+}
+
+/** The usable listed ids of a block (`paramIdsByBlock`): integers above `ceiling`, at most 16383, unique, ascending. */
+function listedIds(opts: LiveWalkOptions, block: number, ceiling: number): number[] {
+  const list = opts.paramIdsByBlock?.[block];
+  if (ceiling < 0 || !Array.isArray(list)) return [];
+  const ids = new Set<number>();
+  for (const id of list) if (Number.isInteger(id) && id > ceiling && id <= MAX_WIRE_PARAM_ID) ids.add(id);
+  return [...ids].sort((a, b) => a - b);
+}
+
+/**
+ * Highest CONTIGUOUS param id the walk described by `opts` may query in `block` (its ceiling, see
+ * `paramBoundByBlock` / `paramKnownSizeByBlock` / `maxParamId`), or -1 when the block is not walked
+ * (not in `blocks` / the default range, or skipped by a negative bound). Exactly the plan the walk
+ * itself uses, so a host watchdog can derive its bounds from the same options.
+ */
+export function walkQueryBound(opts: LiveWalkOptions, block: number): number {
+  if (!walkBlocks(opts).includes(block)) return -1;
+  return Math.max(-1, blockPlan(opts, block).ceiling);
+}
+
+/** The explicit ids (`paramIdsByBlock`) the walk described by `opts` may query in `block`, ascending. */
+export function walkListedIds(opts: LiveWalkOptions, block: number): number[] {
+  const bound = walkQueryBound(opts, block);
+  return bound < 0 ? [] : listedIds(opts, block, bound);
+}
+
+/** True when the walk described by `opts` may send a query (any view) for (`block`, `param`). */
+export function walkQueryAllowed(opts: LiveWalkOptions, block: number, param: number): boolean {
+  const bound = walkQueryBound(opts, block);
+  if (bound < 0 || !Number.isInteger(param) || param < 0) return false;
+  return param <= bound || listedIds(opts, block, bound).includes(param);
+}
+
+/**
+ * The scope of the walk `opts` describes, exactly as the walk plans it — for `rawFromLiveWalk`, so
+ * the recorded scope cannot drift from the walk: `blocks` = the blocks walked (ascending, unique; a
+ * block skipped by a negative bound is left out), `maxParamId` = the default ceiling, `bounds` = every
+ * block whose ceiling differs from it (a hard bound, or a known size's `size - 1 + stop run`),
+ * `idLists` = the explicit ids a block may query beyond its ceiling (`walkListedIds`), when any.
+ * `extended` / `above160` are the caller's (default false); `hinted` defaults to whether
+ * `enumHintByBlock` was given.
+ */
+export function liveWalkScope(
+  opts: LiveWalkOptions,
+  flags: { extended?: boolean; above160?: boolean; hinted?: boolean } = {},
+): LiveSourceScope {
+  const maxParamId = walkMaxParamId(opts);
+  const blocks: number[] = [];
+  const bounds: Record<number, number> = {};
+  const idLists: Record<number, number[]> = {};
+  for (const block of [...new Set(walkBlocks(opts))].sort((a, b) => a - b)) {
+    const ceiling = blockPlan(opts, block).ceiling;
+    if (ceiling < 0) continue;
+    blocks.push(block);
+    if (ceiling !== maxParamId) bounds[block] = ceiling;
+    const ids = listedIds(opts, block, ceiling);
+    if (ids.length > 0) idLists[block] = ids;
+  }
+  return {
+    blocks,
+    maxParamId,
+    bounds,
+    ...(Object.keys(idLists).length > 0 ? { idLists } : {}),
+    extended: flags.extended === true,
+    above160: flags.above160 === true,
+    hinted: flags.hinted ?? opts.enumHintByBlock !== undefined,
+  };
+}
+
+/** An outgoing self-describe query, decoded (see `buildDefQuery`). */
+export interface WalkQuery {
+  model: number;
+  view: number;
+  block: number;
+  param: number;
+  sub: number;
+}
+
+/**
+ * Decode an outgoing self-describe query frame (`F0 00 01 74 <model> 01 <15-byte body> <cksum> F7`),
+ * or `null` when the frame is not one. Block, param and sub are the 14-bit wire values.
+ */
+export function decodeWalkQuery(frame: Uint8Array): WalkQuery | null {
+  if (frame.length !== 23 || frame[0] !== 0xf0 || frame[1] !== 0x00 || frame[2] !== 0x01 || frame[3] !== 0x74 || frame[5] !== FN_SELFDESCRIBE || frame[22] !== 0xf7) {
+    return null;
+  }
+  return {
+    model: frame[4]!,
+    view: frame[6]!,
+    block: frame[8]! | (frame[9]! << 7),
+    param: frame[10]! | (frame[11]! << 7),
+    sub: frame[12]! | (frame[13]! << 7),
+  };
+}
+
+/** A walk query outside the declared scope was refused before it reached the device. */
+export class WalkBoundError extends Error {
+  readonly code = 'walk-bound';
+  /** Decoded block / param / view of the refused frame (-1 when it did not decode). */
+  readonly block: number;
+  readonly param: number;
+  readonly view: number;
+
+  constructor(message: string, q: WalkQuery | null) {
+    super(message);
+    this.name = 'WalkBoundError';
+    this.block = q?.block ?? -1;
+    this.param = q?.param ?? -1;
+    this.view = q?.view ?? -1;
+  }
+}
+
+/** Why a walk with an abort option (`abortOnImplausibleFrom`, `abortOnSilence`) stopped. */
+export type LiveWalkAbortCode = 'implausible-reply' | 'silent-run';
+
+/** A walk stopped by one of its abort options; nothing of it is returned. */
+export class LiveWalkAbortError extends Error {
+  readonly code: LiveWalkAbortCode;
+  readonly block: number;
+  readonly param: number;
+
+  constructor(code: LiveWalkAbortCode, block: number, param: number) {
+    super(
+      code === 'implausible-reply'
+        ? `liveWalk: implausible definition reply at block ${block} param ${param}; walk aborted`
+        : `liveWalk: no reply at block ${block} param ${param}; walk aborted`,
+    );
+    this.name = 'LiveWalkAbortError';
+    this.code = code;
+    this.block = block;
+    this.param = param;
+  }
+}
+
+/** Options of `guardWalkTransport`. */
+export interface WalkGuardOptions {
+  /** An absolute ceiling on every queried param id, on top of the walk's own scope (e.g. a mode cap). */
+  maxParamId?: number;
+}
+
+/**
+ * Watchdog around a walk transport: every outgoing frame must be a self-describe query of
+ * `opts.model` in one of the walk views (definition, enum label, formatted value) whose
+ * (block, param) the walk described by `opts` may query (`walkQueryAllowed`), and at most
+ * `guard.maxParamId` when given. Anything else rejects with `WalkBoundError` and is never sent.
+ * `liveWalkDetailed` applies the same check to its own traffic; a host wraps its transport with this
+ * for an independent check at the wire.
+ */
+export function guardWalkTransport(transport: LiveTransport, opts: LiveWalkOptions, guard: WalkGuardOptions = {}): LiveTransport {
+  const blocks = new Set(walkBlocks(opts));
+  const plans = new Map<number, { bound: number; listed: ReadonlySet<number> }>();
+  const planFor = (block: number) => {
+    let p = plans.get(block);
+    if (p === undefined) {
+      const bound = blocks.has(block) ? Math.max(-1, blockPlan(opts, block).ceiling) : -1;
+      p = { bound, listed: new Set(listedIds(opts, block, bound)) };
+      plans.set(block, p);
+    }
+    return p;
+  };
+  const cap = typeof guard.maxParamId === 'number' && Number.isFinite(guard.maxParamId) ? Math.floor(guard.maxParamId) : MAX_WIRE_PARAM_ID;
+  const views = new Set([VIEW_DEFINITION, VIEW_ENUM_LABEL, VIEW_VALUE]);
+  const guarded: LiveTransport = {
+    async request(query: Uint8Array): Promise<Uint8Array | null> {
+      const q = decodeWalkQuery(query);
+      if (q === null || q.model !== (opts.model & 0x7f) || !views.has(q.view)) throw new WalkBoundError('liveWalk: refused a frame that is not a walk query', q);
+      const p = planFor(q.block);
+      if (p.bound < 0) throw new WalkBoundError(`liveWalk: refused a query for block ${q.block} (not in the walk scope)`, q);
+      if (q.param > cap || (q.param > p.bound && !p.listed.has(q.param))) {
+        throw new WalkBoundError(`liveWalk: refused a query for block ${q.block} param ${q.param} (above its bound ${Math.min(p.bound, cap)})`, q);
+      }
+      return transport.request(query);
+    },
+  };
+  if (transport.drain) guarded.drain = () => transport.drain!();
+  return guarded;
+}
+
 function throwIfAborted(signal?: AbortSignal): void {
   if (signal?.aborted) {
     const reason = (signal as { reason?: unknown }).reason;
@@ -1291,10 +1586,11 @@ const MODEL_FM9 = 0x12;
 
 /**
  * The block addresses a FULL-mode sweep may write to on `model` — an ALLOW-list: the placeable
- * signal-chain blocks of the model's effect-id roster, i.e. every family its family table classifies
- * `addressing: 'block'`, expanded by the instance count (FM3 / FM9: the table's own counts; Axe-Fx
- * III: the gen-3 roster is shared, so the same families with the III block roster's counts for the
- * same first ids). Everything else is walked read-only:
+ * signal-chain blocks of the model's own effect-id table, i.e. every family it classifies
+ * `addressing: 'block'`, expanded by the table's instance count (FM3 `FM3_EFFECT_ID_TABLE`, FM9
+ * `FM9_EFFECT_ID_TABLE`, Axe-Fx III `AXE3_EFFECT_ID_TABLE`). An Axe-Fx III entry whose family binding
+ * is only `confidence: 'roster'` (documented in the shared roster, never bound on a unit) is never
+ * swept. Everything else is walked read-only:
  *   - block 0, the system selector (on an Axe-Fx III it answers hundreds of definitions, many of
  *     them passing the junk checks);
  *   - Global 1, Controllers 2 and the modifier tables 3..34 (every gen-3 model answers 32 identical
@@ -1302,20 +1598,20 @@ const MODEL_FM9 = 0x12;
  *   - Tuner 35 and IR Capture 36 (global functions), Scene MIDI 190, the foot controller 199 / 200;
  *   - the placeable blocks whose parameters drive ACTIONS or device-side state rather than a plain
  *     preset table (`ACTION_BLOCK_FAMILIES`: Looper, Tone Match, Real-Time Analyzer, IR Player);
- *   - instances past a family's count, and every block of a model without a roster here.
+ *   - Axe-Fx III `roster` entries (Vocoder 134, Crossover 142, and the action blocks above);
+ *   - instances past a family's count, and every block of a model without a table here.
  * Their settings are persistent device state, or not shown to be preset data: the per-block preset
  * reload that backs up the restore is not known to bring them back.
  */
 function sweepableBlocks(model: number): ReadonlySet<number> {
   const out = new Set<number>();
-  const table = model === MODEL_FM3 ? FM3_EFFECT_ID_TABLE : model === MODEL_FM9 ? FM9_EFFECT_ID_TABLE : model === MODEL_AXE_FX_III ? FM3_EFFECT_ID_TABLE : undefined;
+  type Entry = { family: string; firstId: number | null; instances: number; addressing: string; confidence?: string };
+  const table: readonly Entry[] | undefined =
+    model === MODEL_FM3 ? FM3_EFFECT_ID_TABLE : model === MODEL_FM9 ? FM9_EFFECT_ID_TABLE : model === MODEL_AXE_FX_III ? AXE3_EFFECT_ID_TABLE : undefined;
   if (!table) return out;
-  const iiiInstances = new Map<number, number>();
-  for (const b of AXE_FX_III_BLOCKS) if (b.firstId !== null) iiiInstances.set(b.firstId, b.instances);
   for (const e of table) {
-    if (e.addressing !== 'block' || e.firstId === null || ACTION_BLOCK_FAMILIES.has(e.family)) continue;
-    const n = model === MODEL_AXE_FX_III ? (iiiInstances.get(e.firstId) ?? e.instances) : e.instances;
-    for (let i = 0; i < n; i++) out.add(e.firstId + i);
+    if (e.addressing !== 'block' || e.firstId === null || ACTION_BLOCK_FAMILIES.has(e.family) || e.confidence === 'roster') continue;
+    for (let i = 0; i < e.instances; i++) out.add(e.firstId + i);
   }
   return out;
 }
@@ -1445,35 +1741,12 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
   // 160 (not 127): the block byte now splits lo/hi (body[2]/[3]) so effectId>=128
   // blocks are reachable. Empty high blocks are skipped after `blockProbeDepth`
   // params (see the found===0 break below), so the extra range is nearly free.
-  const maxBlock = opts.maxBlock ?? DEFAULT_MAX_BLOCK;
-  const blocks = opts.blocks ?? Array.from({ length: maxBlock + 1 }, (_, i) => i);
+  const blocks = walkBlocks(opts);
   // FULL mode writes, so its default ceiling and the sweep guard below care about the mode early.
-  const mode = opts.mode ?? 'read-only';
-  const full = mode === 'full';
-  const defaultMaxParamId = full ? DEFAULT_FULL_MAX_PARAM_ID : DEFAULT_READ_ONLY_MAX_PARAM_ID;
-  // A non-finite value (NaN, +-Infinity) is no value: the mode default applies. Finite ones are clamped.
-  const requestedMax = opts.maxParamId;
-  const maxParamId = typeof requestedMax === 'number' && Number.isFinite(requestedMax) ? clampParamBound(requestedMax) : defaultMaxParamId;
-  // Only a finite integer >= 1 is a run limit; anything else (NaN, Infinity, 1.5, 0, negative) is the default.
-  const requestedRun = opts.paramAbsentRunLimit;
-  const absentRunLimit = typeof requestedRun === 'number' && Number.isInteger(requestedRun) && requestedRun >= 1 ? requestedRun : DEFAULT_ABSENT_RUN_LIMIT;
-  /**
-   * A block's walk plan. `ceiling`: the highest id queried, inclusive — the caller's HARD bound when
-   * given (wins over `maxParamId` both ways), else a known size's `size - 1 + absentRunLimit` capped
-   * by `maxParamId`, else `maxParamId`. `knownSize`: ids below it are walked without the stop run
-   * (0 = none known); past it the normal stop run applies, so appended params are found.
-   */
-  const planOf = (block: number): { ceiling: number; knownSize: number } => {
-    // Only a finite INTEGER is trusted: NaN, Infinity and 1.5 are ignored (treated as no entry).
-    // A negative bound is a deliberate "skip this block"; a negative size means nothing, so it is ignored.
-    const bound = opts.paramBoundByBlock?.[block];
-    const size = opts.paramKnownSizeByBlock?.[block];
-    const hardBound = bound !== undefined && Number.isInteger(bound) ? bound : undefined;
-    const knownSize = size !== undefined && Number.isInteger(size) && size >= 0 ? Math.min(MAX_WIRE_PARAM_ID + 1, size) : undefined;
-    if (hardBound !== undefined) return { ceiling: clampParamBound(hardBound), knownSize: knownSize ?? 0 };
-    if (knownSize !== undefined) return { ceiling: Math.min(maxParamId, clampParamBound(knownSize - 1 + absentRunLimit)), knownSize };
-    return { ceiling: maxParamId, knownSize: 0 };
-  };
+  const full = (opts.mode ?? 'read-only') === 'full';
+  const absentRunLimit = walkAbsentRunLimit(opts);
+  // A block's walk plan (`blockPlan`): its ceiling and known table size.
+  const planOf = (block: number): BlockPlan => blockPlan(opts, block);
   const probeDepth = opts.blockProbeDepth ?? 4;
   const enumCap = opts.enumCountCap ?? 1024;
   // read view 0x00 per found param to capture the device-true unit (default on).
@@ -1484,6 +1757,16 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
   const maxSilent = Math.max(1, opts.maxSilentQueries ?? DEFAULT_MAX_SILENT_QUERIES);
   const interQueryMs = opts.interQueryMs ?? 0;
   const { signal, sleep, onProgress } = opts;
+  // Opt-in abort rules (off by default): junk at or above an id, and any unanswered definition.
+  const implausibleFrom =
+    typeof opts.abortOnImplausibleFrom === 'number' && Number.isInteger(opts.abortOnImplausibleFrom) && opts.abortOnImplausibleFrom >= 0
+      ? opts.abortOnImplausibleFrom
+      : undefined;
+  const abortOnSilence = opts.abortOnSilence === true;
+  // Defense in depth: every frame goes through the scope guard, so a query outside the plan of
+  // `opts` (blocks, ceilings, listed ids) is refused before it reaches the device (`WalkBoundError`).
+  transport = guardWalkTransport(transport, opts);
+  const boundHits: LiveWalkBoundHit[] = [];
 
   // FULL mode: opt-in taper sweep. Requires host write hooks — fail fast at the
   // walk start (before any wire traffic) when they are missing.
@@ -1577,6 +1860,9 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
       lost += 1;
     }
     const isDef = query[6] === VIEW_DEFINITION;
+    if (!frame && isDef && abortOnSilence) {
+      throw new LiveWalkAbortError('silent-run', query[8]! | (query[9]! << 7), query[10]! | (query[11]! << 7));
+    }
     if (isDef) {
       if (frame) lastAnsweredDef = query;
       trailingSilentDefs = frame ? 0 : trailingSilentDefs + 1;
@@ -1719,7 +2005,10 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
               pseudoReplies.endMarker += 1;
               seenIds.set(def.id, null); // (non-zero by definition) a later definition reusing it is a copy
             } else if (verdict === 'duplicate-id') pseudoReplies.duplicateId += 1;
-            else if (verdict === 'garbage' || verdict === 'implausible') pseudoReplies.implausible += 1;
+            else if (verdict === 'garbage' || verdict === 'implausible') {
+              pseudoReplies.implausible += 1;
+              if (implausibleFrom !== undefined && param >= implausibleFrom) throw new LiveWalkAbortError('implausible-reply', block, param);
+            }
           }
           absentRun += 1;
           // Skip an empty block once its opening params are all absent.
@@ -1865,6 +2154,54 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
           };
         }
       }
+
+      // The table may go on past the ceiling when its last real definition sits this close to it.
+      if (lastReal >= 0 && bound - lastReal <= LIVE_WALK_LIMITS.boundHitMargin) boundHits.push({ block, lastReal, bound });
+
+      // Explicit ids beyond the ceiling (`paramIdsByBlock`): one definition query each, a liveness
+      // re-read of the block's last real definition after each, stop at the first that is not a real
+      // definition of that id. Never label-walked, value-read or swept.
+      const listed = lastReal >= 0 ? listedIds(opts, block, bound) : [];
+      if (listed.length > 0) {
+        const known = buildDefQuery(model, block, lastReal);
+        for (const param of listed) {
+          throwIfAborted(signal);
+          await pace(interQueryMs, signal, sleep);
+          const reply = await transport.request(buildDefQuery(model, block, param));
+          queries += 1;
+          if (!reply && abortOnSilence) throw new LiveWalkAbortError('silent-run', block, param);
+          // After silence a late answer must not pass for the liveness reply: let it arrive unheard.
+          if (!reply) await settleAfterLoss();
+          await pace(interQueryMs, signal, sleep);
+          const alive = await transport.request(known);
+          queries += 1;
+          if (!alive) stopped(1);
+          if (!reply) {
+            silentAddresses += 1; // the device still answers: the silence is this address's
+            break;
+          }
+          const dec = decodeReply(reply);
+          // A definition echoing another param is a straggler, not this id's answer.
+          const def = dec && dec.view === 'definition' && dec.param === (param & 0x7f) ? dec : null;
+          if (!def) break;
+          const verdict = judgeDefinition(def, seenIds, false);
+          if (verdict !== 'real') {
+            if (verdict === 'end-marker') pseudoReplies.endMarker += 1;
+            else if (verdict === 'duplicate-id') pseudoReplies.duplicateId += 1;
+            else if (verdict === 'garbage' || verdict === 'implausible') {
+              pseudoReplies.implausible += 1;
+              if (implausibleFrom !== undefined && param >= implausibleFrom) throw new LiveWalkAbortError('implausible-reply', block, param);
+            }
+            break;
+          }
+          if (def.id !== 0) {
+            const bodies = seenIds.get(def.id);
+            if (bodies) bodies.push(def);
+            else seenIds.set(def.id, [def]);
+          }
+          records.push(buildRecord(block, param, def, []));
+        }
+      }
       blockDone = true;
     } finally {
       if (sweepCtx && wroteInBlock) {
@@ -1885,7 +2222,7 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
   }
 
   progress({ phase: 'done', blockIndex: blocks.length, blockCount: blocks.length });
-  return { records, queries, enumLabels, lostReplies, recoveredReplies, unresolvedReplies, placeholderSlots, missingSlots, silentAddresses, pseudoReplies };
+  return { records, queries, enumLabels, lostReplies, recoveredReplies, unresolvedReplies, placeholderSlots, missingSlots, silentAddresses, pseudoReplies, boundHits };
 }
 
 /**

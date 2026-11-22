@@ -1,11 +1,13 @@
 /**
  * Multi-source merge, provenance and coverage for profile documents (./profileDoc.ts).
  *
- * Source units. Sources of the same kind and origin form one unit before anything is derived:
- *   - editor-cache sources: the newest `capturedAt` wins per section;
- *   - live sources: per (block, pid) the newest source whose scope covers that id wins, so a
- *     newer walk replaces an older one where both looked, and walks with disjoint scopes (a
- *     standard walk plus an extension, or probes of different blocks) are unioned.
+ * Source units. Sources of the same kind and origin form one unit before anything is derived
+ * ("newest" = the latest instant `capturedAt` names, ISO 8601 parsed; no stamp = oldest):
+ *   - editor-cache sources: the newest wins per section;
+ *   - live sources: per (block, pid) the newest source that has a record there wins, so a newer
+ *     walk replaces an older one where both read a definition, an older record fills in where the
+ *     newer walk has none (a lost reply), and walks with disjoint scopes (a standard walk plus an
+ *     extension, or probes of different blocks) are unioned.
  * Each unit is derived on its own by the section voter (editor-cache units in section-tag space,
  * live units in block-address space).
  *
@@ -24,7 +26,8 @@
  *
  * Conflicts: per family and losing unit, the pids whose canonical tuples differ (a kind flip
  * with the same typecode is a known live-walk artefact, not a conflict; unit and taper never
- * count).
+ * count). A copy that is an assignment suspect — the winner's or the loser's — is skipped: it is
+ * most likely another family's table, not a rival definition of this one.
  *
  * Coverage (`computeCoverage`): the document-level gaps and counts; runtime-only gaps (a placed
  * block without a family) are the consumer's.
@@ -35,6 +38,7 @@ import { rangeRowOf } from './assign.js';
 import type { BuiltCache, BuiltCacheWalkStats } from './buildProfile.js';
 import { familyAssignmentSuspects, isInformativeRow } from './fingerprint.js';
 import type { FamilyTables } from './fingerprint.js';
+import { LIVE_WALK_LIMITS } from './liveWalk.js';
 import { isPlaceholderRecord, rowTuple } from './rowTuple.js';
 import type { BuiltCacheData, CacheRecord, CacheWalkIssue, RangeDef, RangeSectionMeta, TypeModel } from './types.js';
 import type {
@@ -124,12 +128,79 @@ export interface ProfileCatalog {
   enumOverrides?: FamilyTables['enumOverrides'];
   /** Reference rosters (`*_ROSTERS`): families that carry a model list. */
   rosters?: Readonly<Record<string, readonly unknown[]>>;
-  /** Family -> first effect id (`null`/absent = not addressable, e.g. PRESET). */
+  /**
+   * Family -> first effect id (`null`/absent = not addressable, e.g. PRESET). With it the live vote
+   * of a profile document is restricted to effect-id spans (`effectIdOwners`), the block map knows
+   * which blocks the catalog places, and coverage knows which families are addressable. Without it
+   * `deriveProfile` restricts the live vote to the codec's own spans of `DeriveOptions.model`
+   * (`effectIdSpansForModel`); coverage then has no effect ids.
+   */
   familyFirstEid?: Readonly<Record<string, number | null>>;
-  /** Family -> static instance count. */
+  /**
+   * Family -> static instance count (an unlisted family: 1). Widens the family's effect-id span.
+   * Keys are catalog family SYMBOLS (`DISTORT`, `FDBKSEND`), matched case-insensitively against the
+   * keys of `familyFirstEid` (an exact symbol wins over a case variant); anything else — a UI slug
+   * such as `amp`, `drive`, `send` or `return`, which differ from their symbols — is ignored, so a
+   * host maps its slugs to symbols first. Values: integers >= 1 (anything else counts as 1).
+   */
   instanceLimits?: Readonly<Record<string, number>>;
   /** Catalog section inventory (`*_CATALOG_SECTIONS`). */
   sections?: readonly CatalogSection[];
+}
+
+/**
+ * Effect id -> the catalog family whose reserved effect-id span holds it: `familyFirstEid[F]` ..
+ * `familyFirstEid[F] + instanceLimits[F] - 1` (an unlisted or invalid limit: one instance; limit
+ * keys as `ProfileCatalog.instanceLimits` describes). Where spans overlap the family with the
+ * higher first id owns the id. `null` without `familyFirstEid`. A family absent from
+ * `familyFirstEid` (or `null` there) owns no id.
+ */
+export function effectIdOwners(catalog: Pick<ProfileCatalog, 'familyFirstEid' | 'instanceLimits'> | undefined): ReadonlyMap<number, string> | null {
+  const first = catalog?.familyFirstEid;
+  if (!first) return null;
+  const spans = Object.entries(first)
+    .filter((e): e is [string, number] => typeof e[1] === 'number' && Number.isInteger(e[1]) && e[1] >= 0)
+    .sort((a, b) => a[1] - b[1] || (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0));
+  // Limit keys: the family symbol, case-insensitively (an exact symbol wins over a case variant).
+  const limits = new Map<string, number>();
+  const symbolOf = new Map(Object.keys(first).map((f) => [f.toUpperCase(), f]));
+  for (const [key, limit] of Object.entries(catalog.instanceLimits ?? {})) {
+    const exact = Object.prototype.hasOwnProperty.call(first, key);
+    const family = exact ? key : symbolOf.get(key.toUpperCase());
+    if (family === undefined || (!exact && limits.has(family))) continue;
+    limits.set(family, limit);
+  }
+  const out = new Map<number, string>();
+  for (const [family, eid] of spans) {
+    const limit = limits.get(family);
+    const n = typeof limit === 'number' && Number.isInteger(limit) && limit >= 1 ? limit : 1;
+    for (let i = 0; i < n; i++) out.set(eid + i, family);
+  }
+  return out;
+}
+
+/**
+ * The param-id caps a live source's walk mode imposes (`LIVE_WALK_LIMITS`): every mode stops an
+ * unknown block at the validated read-only envelope (127); a read-only walk whose scope is
+ * `extended` also at the extended cap (255), a full walk at its own cap (511). A block ceiling equal
+ * to one of these is where the mode stopped the walk, not a bound derived from a known table.
+ */
+export function liveWalkCaps(s: Pick<LiveRawSource, 'kind' | 'scope'>): number[] {
+  const caps: number[] = [LIVE_WALK_LIMITS.readOnlyMaxParamId];
+  if (s.kind === 'live-probe') caps.push(LIVE_WALK_LIMITS.probeMaxParamId);
+  else if (s.kind === 'live-full') caps.push(LIVE_WALK_LIMITS.fullMaxParamId);
+  else if (s.scope.extended) caps.push(LIVE_WALK_LIMITS.extendedReadOnlyMaxParamId);
+  return [...new Set(caps)];
+}
+
+/** Last pid of the contiguous table in `pids` (ascending): runs end at a gap of `STOP_RUN` or more absent ids. -1 when empty. */
+function contiguousEnd(pids: readonly number[]): number {
+  let end = -1;
+  for (const p of pids) {
+    if (p - end - 1 >= STOP_RUN) break;
+    end = p;
+  }
+  return end;
 }
 
 // ---------------------------------------------------------------------------
@@ -168,18 +239,24 @@ export interface SourceUnitPlan {
 
 const isLive = (s: RawSource): s is LiveRawSource => s.kind !== 'editor-cache';
 
-/** Newest first: `null` (unknown) sorts oldest. */
-function newer(a: string | null, b: string | null): number {
-  if (a === b) return 0;
-  if (a === null) return 1;
-  if (b === null) return -1;
-  return a < b ? 1 : -1;
+/** A capture stamp as epoch milliseconds (ISO 8601, any offset or precision), or null when absent or unparseable. */
+function stampOf(s: string | null): number | null {
+  if (s === null) return null;
+  const t = Date.parse(s);
+  return Number.isFinite(t) ? t : null;
 }
 
-function covers(s: LiveRawSource, block: number, pid: number): boolean {
-  if (!s.scope.blocks.includes(block)) return false;
-  const ceiling = s.scope.bounds[block] ?? s.scope.maxParamId;
-  return pid <= ceiling || (s.scope.idLists?.[block]?.includes(pid) ?? false);
+/**
+ * Newest first, by the instant the stamps name (`2026-11-22T10:00:00+02:00` is older than
+ * `2026-11-22T09:00:00Z`); an absent or unparseable stamp sorts oldest. Equal instants tie.
+ */
+function newer(a: string | null, b: string | null): number {
+  const x = stampOf(a);
+  const y = stampOf(b);
+  if (x === y) return 0;
+  if (x === null) return 1;
+  if (y === null) return -1;
+  return x < y ? 1 : -1;
 }
 
 function sumWalk(members: readonly LiveRawSource[]): BuiltCacheWalkStats {
@@ -250,10 +327,14 @@ function planUnit(members: RawSource[]): SourceUnitPlan {
     const all = byte.flatMap((m) => m.issues ?? []);
     if (all.length > 0) issues = all;
   } else {
+    // Per (block, pid) the newest member that has a record there; an older record fills in where
+    // every newer member has none (a reply a newer walk lost, or an id outside its scope).
     const live = members as LiveRawSource[];
+    const held = live.map((m) => new Set(m.records.map((r) => `${r.section}:${r.id}`)));
     live.forEach((m, i) => {
       for (const r of m.records) {
-        if (live.slice(0, i).some((n) => covers(n, r.section, r.id))) continue;
+        const at = `${r.section}:${r.id}`;
+        if (held.slice(0, i).some((h) => h.has(at))) continue;
         take(m, r);
       }
     });
@@ -331,7 +412,11 @@ export interface MergeResult {
   recordCount: number;
   /** `bytes` when any unit is an editor-cache unit, else `live`. */
   source: 'bytes' | 'live';
-  /** Primary unit's walk statistics, when the primary unit is live. */
+  /**
+   * Primary unit's walk statistics, when the primary unit is live: summed over its members that
+   * provide the existence facts of at least one family (the sources `computeCoverage` counts; a
+   * superseded walk adds nothing). `coverage.walk` sums the same per source, over every live unit.
+   */
   walk?: BuiltCacheWalkStats;
   /** Primary unit's parse issues, when the primary unit is an editor-cache unit. */
   issues?: CacheWalkIssue[];
@@ -437,6 +522,9 @@ export function mergeDerived(units: readonly DerivedUnit[], catalog: ProfileCata
 
     for (const u of cands) {
       if (u === winner || !wRows) continue;
+      // A suspect copy (winner or loser) is not a rival definition of this family: its rows are
+      // likely another family's table, so counting them would flag a disagreement no re-read fixes.
+      if (suspectsOf.get(u)!.has(key) || suspectsOf.get(winner)!.has(key)) continue;
       const lRows = rowsOf(u, key);
       if (!lRows) continue;
       let count = 0;
@@ -480,7 +568,13 @@ export function mergeDerived(units: readonly DerivedUnit[], catalog: ProfileCata
     recordCount: primary.plan.recordCount,
     source: byteUnit !== undefined ? 'bytes' : 'live',
   };
-  if (primary.plan.space === 'block' && primary.plan.walk !== undefined) out.walk = primary.plan.walk;
+  if (primary.plan.space === 'block' && primary.plan.walk !== undefined) {
+    // Only the members that still provide a family (as `computeCoverage` counts them): a walk a newer
+    // one superseded adds no losses. With a single contributing source: that source's statistics.
+    const winners = new Set(Object.values(provenance.existence));
+    const members = primary.plan.members.filter((m): m is LiveRawSource => isLive(m) && winners.has(m.id));
+    out.walk = members.length === primary.plan.members.length ? primary.plan.walk : sumWalk(members);
+  }
   if (primary.plan.space === 'section' && primary.plan.issues !== undefined) out.issues = primary.plan.issues;
   return out;
 }
@@ -510,16 +604,41 @@ export type CoverageInput = BuiltCache & {
 const sortedUnique = (xs: Iterable<number>): number[] => [...new Set(xs)].sort((a, b) => a - b);
 
 /**
+ * A v1 document's source class from its meta: `bytes` / `editor-cache` are editor-cache data; a
+ * document a host stored from the cloud or a definitions file (`source: 'cloud' | 'axisdefs'`) carries
+ * the class of the data it was built from in `meta.origin`. Anything else (`live`, unknown) is not.
+ */
+function legacyByteMeta(meta: { source?: unknown; origin?: unknown }): boolean {
+  const byteKind = (v: unknown): boolean => v === 'bytes' || v === 'editor-cache';
+  return meta.source === 'cloud' || meta.source === 'axisdefs' ? byteKind(meta.origin) : byteKind(meta.source);
+}
+
+/**
  * Document-level coverage: gaps (with blocking flag and fixes) and counts. A v1 document (no raw
- * sources) reports the non-blocking `no-raw` gap. Rules:
+ * sources) reports the non-blocking `no-raw` gap. "Firmware differs" below: the document firmware
+ * is not `catalog.firmware`, or either is unknown. Rules:
  *   - `high-ids` / `far-ids`: informative rows above id 127 the reference (the editor cache, else
  *     the catalog) has in addressable families and the document lacks; `high` = reachable by a
  *     contiguous read (gaps under the 32-id stop run, at most id 255), `far` = beyond that. High
- *     ids block a live-only document; far ids never block.
+ *     ids block a live-only document when the firmware differs (on the catalog firmware the
+ *     catalog's own rows cover them); far ids never block. Addressable: a family with an effect id
+ *     in `catalog.familyFirstEid`; without it, a family the document holds in live block space (a
+ *     v1 live document: every family), so a family without an effect id (PRESET) never counts.
  *   - `blocks-above-160`: a live-only document lacks catalog families above effect id 160;
- *     blocking when the firmware is not the catalog firmware (or either is unknown).
- *   - `unresolved-replies`, `missing-slots`, `bound-hit`: from the live sources; always blocking.
- *   - `rosters`: a live-only document lacks catalog roster families; blocking as above.
+ *     blocking when the firmware differs.
+ *   - `unresolved-replies`, `missing-slots`, `bound-hit`: from the live sources that still
+ *     contribute — those providing the existence facts of at least one family
+ *     (`provenance.existence`); a walk superseded by a newer one, or whose every family lost to an
+ *     editor cache, raises none. A bound hit further counts only where its source, or an editor
+ *     cache, provides a family the block's rows sit under (a byte-bridged block's hit stays; one
+ *     on a family another walk provides does not), and not when the hit's ceiling is a cap of the
+ *     walk's mode (`liveWalkCaps`: 127, an extended read-only walk's 255, a full walk's 511) and the
+ *     family's reference table — the editor-cache rows when an editor cache provides it, else the
+ *     catalog's — runs contiguously at least up to that ceiling: no re-read can look past the cap,
+ *     and the high-ids / far-ids gaps report the rows beyond it. A hit below a ceiling derived from
+ *     a known table size or a hard bound, or at a cap that no reference table explains, counts.
+ *     Always blocking. (`walk` sums the same sources and hits.)
+ *   - `rosters`: a live-only document lacks catalog roster families; blocking when the firmware differs.
  *   - `new-section`: editor-cache sections absent from the catalog inventory; never blocking.
  *   - `disagreement`: a family whose conflicts with one source exceed 10 % of its informative
  *     rows; always blocking.
@@ -529,11 +648,15 @@ export function computeCoverage(doc: CoverageInput, catalog: ProfileCatalog = {}
   const sources = doc.raw?.sources ?? [];
   const hasRaw = sources.length > 0;
   const live = sources.filter(isLive);
-  const hasByte = hasRaw ? sources.some((s) => s.kind === 'editor-cache') : doc.meta.source !== 'live';
+  const hasByte = hasRaw ? sources.some((s) => s.kind === 'editor-cache') : legacyByteMeta(doc.meta);
   const liveOnly = !hasByte;
   const fwDiffers = catalog.firmware == null || doc.firmware == null || doc.firmware !== catalog.firmware;
+  const secs = doc.sections ?? [];
+  // Without effect ids: the families a live walk read at a block address (all of a v1 live doc's).
+  const blockKeys = new Set(secs.filter((s) => s.space === 'block').map((s) => s.key));
   const addressable = (f: string): boolean =>
-    !isSynthetic(f) && (catalog.familyFirstEid ? catalog.familyFirstEid[f] != null : true);
+    !isSynthetic(f) &&
+    (catalog.familyFirstEid ? catalog.familyFirstEid[f] != null : hasRaw || secs.length > 0 ? blockKeys.has(f) : liveOnly);
   const gaps: CoverageGap[] = [];
 
   if (!hasRaw) gaps.push({ kind: 'no-raw', blocking: false, fix: ['import-editor-cache', 'read-from-device'] });
@@ -549,12 +672,7 @@ export function computeCoverage(doc: CoverageInput, catalog: ProfileCatalog = {}
     if (!addressable(f)) continue;
     const rows = base[f]!;
     const pids = Object.keys(rows).map(Number).sort((a, b) => a - b);
-    let end = -1;
-    for (const p of pids) {
-      if (p - end - 1 >= STOP_RUN) break;
-      end = p;
-    }
-    const reach = Math.min(end, EXTENDED_CAP);
+    const reach = Math.min(contiguousEnd(pids), EXTENDED_CAP);
     for (const p of pids) {
       if (p <= STANDARD_CAP || !isInformativeRow(rows[p]!)) continue;
       expected += 1;
@@ -569,7 +687,7 @@ export function computeCoverage(doc: CoverageInput, catalog: ProfileCatalog = {}
   }
   const total = (m: Map<string, number>) => [...m.values()].reduce((a, b) => a + b, 0);
   if (highMissing.size > 0) {
-    gaps.push({ kind: 'high-ids', blocking: liveOnly, families: [...highMissing.keys()].sort(), count: total(highMissing), fix: ['read-extended', 'import-editor-cache'] });
+    gaps.push({ kind: 'high-ids', blocking: liveOnly && fwDiffers, families: [...highMissing.keys()].sort(), count: total(highMissing), fix: ['read-extended', 'import-editor-cache'] });
   }
   if (farMissing.size > 0) {
     gaps.push({ kind: 'far-ids', blocking: false, families: [...farMissing.keys()].sort(), count: total(farMissing), fix: ['import-editor-cache'] });
@@ -584,17 +702,43 @@ export function computeCoverage(doc: CoverageInput, catalog: ProfileCatalog = {}
     }
   }
 
-  // Walk losses.
+  // Walk losses, from the live sources that still provide a family's existence facts.
   let lost = 0;
   let unresolved = 0;
   let missingSlots = 0;
   const hits: number[] = [];
   let walked = live.length > 0;
+  const existence = doc.provenance?.existence;
+  const winners = existence ? new Set(Object.values(existence)) : null;
+  const byteIds = new Set(sources.filter((s) => s.kind === 'editor-cache').map((s) => s.id));
+  const byteProvided = (key: string): boolean => existence !== undefined && byteIds.has(existence[key] ?? '');
+  // Block -> the family keys its rows sit under (a bound hit counts where its source provides them).
+  const keysAt = new Map<number, string[]>();
+  for (const sec of secs) if (sec.space === 'block') keysAt.set(sec.tag, [...(keysAt.get(sec.tag) ?? []), sec.key]);
+  // Contiguous end of a family's reference table: the editor cache's rows when an editor cache
+  // provides the family, else the catalog's; -1 without one.
+  const referenceEnd = (key: string): number => {
+    const rows = byteProvided(key) ? doc.ranges[key] : catalog.ranges?.[key];
+    return rows ? contiguousEnd(Object.keys(rows).map(Number).sort((a, b) => a - b)) : -1;
+  };
   for (const s of live) {
+    if (winners && !winners.has(s.id)) continue;
     lost += s.walk.lostReplies;
     unresolved += s.walk.unresolvedReplies;
     missingSlots += s.walk.missingSlots;
-    for (const h of s.walk.boundHits ?? []) hits.push(h.block);
+    const caps = liveWalkCaps(s);
+    for (const h of s.walk.boundHits ?? []) {
+      // The family keys the hit concerns: those this walk provides, or an editor cache provides (a
+      // block bridged to its section, a family whose table the cache holds). A key another live
+      // source provides is that source's matter.
+      const keys = keysAt.get(h.block) ?? [];
+      const own = existence && keysAt.size > 0 ? keys.filter((k) => existence[k] === s.id || byteProvided(k)) : keys;
+      if (existence && keysAt.size > 0 && own.length === 0) continue;
+      // Stopped at the mode's cap inside a table the reference knows to reach it: no re-read can
+      // look further; the high-ids / far-ids gaps report what lies beyond.
+      if (caps.includes(h.bound) && own.some((k) => referenceEnd(k) >= h.bound)) continue;
+      hits.push(h.block);
+    }
   }
   if (!hasRaw && doc.meta.walk) {
     walked = true;
@@ -614,7 +758,6 @@ export function computeCoverage(doc: CoverageInput, catalog: ProfileCatalog = {}
   }
 
   // New sections.
-  const secs = doc.sections ?? [];
   const newTags = sortedUnique(secs.filter((s) => s.space === 'section' && s.role === 'new').map((s) => s.tag));
   if (newTags.length > 0) gaps.push({ kind: 'new-section', blocking: false, tags: newTags, fix: ['pack'] });
 

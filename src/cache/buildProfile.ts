@@ -51,7 +51,11 @@ import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam } from '.
  * additive derived fields bump nothing (a profile document's `sections`, `blockMap`, `provenance`, `coverage`
  * and the synthetic `section:<tag>` / `block:<eid>` family keys were added without a bump, see ./profileDoc.ts).
  * A format-2 profile document (it carries its raw sources) re-derives on any bump; a format-1 document (derived
- * tables only) goes stale on the next bump.
+ * tables only) goes stale on the next bump. A derivation change that needs no bump but must still reach stored
+ * format-2 documents (a better block matcher, a restricted vote) raises the integer `DERIVATION_REVISION`
+ * (./profileDoc.ts, persisted as `meta.derivedRevision`): such documents re-derive on load (`needsRederive`),
+ * format-1 documents are unaffected. The codec version (`meta.derivedWith`) is informational only — a development
+ * build reports package.json, a release the git tag, so it does not order derivations.
  */
 export const CACHE_SCHEMA = 1;
 

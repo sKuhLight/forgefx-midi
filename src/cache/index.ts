@@ -6,6 +6,27 @@
 
 export { parseCacheRecords, WalkError } from './records.js';
 export type { ParseCacheOptions } from './records.js';
+export {
+  readCacheHeader,
+  cacheHeaderVersion,
+  parseCacheFileName,
+  headerMatchesFileName,
+  headerMatchesWalk,
+  CacheHeaderError,
+  CACHE_HEADER_BYTES,
+} from './header.js';
+export type { CacheHeader, CacheFileName } from './header.js';
+export {
+  redactCacheUserNames,
+  verifyCacheRedaction,
+  isCacheRedacted,
+  isUserNameTable,
+  userNameTableKind,
+  CacheRedactionError,
+  REDACTION_VERSION,
+  REDACTION_FILLER,
+} from './redact.js';
+export type { UserNameTableKind, CacheRedaction, RedactCacheResult } from './redact.js';
 export { buildDeviceCache, HW_SEEDS } from './assign.js';
 export type { BuildDeviceCacheOptions } from './assign.js';
 export { buildCache, CACHE_SCHEMA } from './buildProfile.js';

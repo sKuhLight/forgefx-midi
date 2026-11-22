@@ -38,6 +38,12 @@ export interface EnumRecord extends RecordBase {
   values: string[];
   x: number;
   wireIds?: number[];
+  /**
+   * Byte-source walks with `parseCacheRecords(buf, { nameSpans: true })` only: where each entry
+   * of `values` sits in the buffer, as `[offset, byteLength]` of its name bytes (after the
+   * entry's u32 length; `byteLength` 0 for an empty name). Absent otherwise.
+   */
+  nameSpans?: ReadonlyArray<readonly [offset: number, byteLength: number]>;
 }
 
 /**

@@ -64,6 +64,9 @@ export async function runDevicesSmokeTests(): Promise<void> {
   const gen2 = await import('../dist/devices/gen2/index.js');
   const gen3 = await import('../dist/devices/gen3/index.js');
   const am4 = await import('../dist/devices/am4/index.js');
+  const fm3 = await import('../dist/gen3/fm3/index.js');
+  const fm9 = await import('../dist/gen3/fm9/index.js');
+  const axe3 = await import('../dist/gen3/axe-fx-iii/index.js');
 
   // gen1: single-read surface only (readOne-style getParam/getParams), no getPreset.
   assertDescriptorShape(gen1.AXEFXGEN1_DESCRIPTOR, 'AXEFXGEN1_DESCRIPTOR', { hasGetPreset: false });
@@ -85,4 +88,10 @@ export async function runDevicesSmokeTests(): Promise<void> {
     vp4.capabilities.supports_save === false,
     'VP4_DESCRIPTOR.capabilities.supports_save must stay false (writes-gated behavior)',
   );
+
+  // Catalog baselines: the firmware each bundled gen-3 table set was derived from (FM9: not
+  // established, so null).
+  assert(fm3.FM3_CATALOG_BASELINE.firmware === '12.0', 'FM3_CATALOG_BASELINE.firmware must be 12.0');
+  assert(axe3.AXE3_CATALOG_BASELINE.firmware === '32.6', 'AXE3_CATALOG_BASELINE.firmware must be 32.6');
+  assert(fm9.FM9_CATALOG_BASELINE.firmware === null, 'FM9_CATALOG_BASELINE.firmware must be null');
 }

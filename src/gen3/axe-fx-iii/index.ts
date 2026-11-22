@@ -19,6 +19,15 @@ export type { AxeFxIIIBlock, ConfidenceTag } from './blockTypes.js';
 export { PARAMS, PARAMS_BY_FAMILY, PARAM_BY_KEY, FAMILIES } from './params.js';
 export type { Unit, Param } from './params.js';
 
+/**
+ * Firmware the bundled Axe-Fx III tables (ranges, enum labels, layouts) were derived from.
+ * A device on another firmware can differ from the catalog; consumers compare against this
+ * to tell "matches the catalog" from "may have drifted".
+ *
+ * `firmware` is formatted `${major}.${minor}` (for example `'32.6'`); `null` means unknown.
+ */
+export const AXE3_CATALOG_BASELINE: Readonly<{ firmware: string | null }> = { firmware: '32.6' };
+
 // Discrete-ordinal classification overlay (param firmware symbol -> maxOrdinal).
 // Params the enum/range paths classify continuous but the device treats as
 // ORDINALS; routed DISCRETE (sub 09 00) so the device stores the right value.

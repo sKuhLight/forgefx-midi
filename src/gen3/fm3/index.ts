@@ -16,6 +16,16 @@ export {
 export { FM3_ROSTERS, type Fm3TypeModel } from './rosters.generated.js';
 export { FM3_ENUM_OVERRIDES } from './enumOverrides.js';
 export { FM3_CAB_IRS } from './cabIrs.generated.js';
+
+/**
+ * Firmware the bundled FM3 tables (ranges, enum labels, strides, layouts) were derived from.
+ * A device on another firmware can differ from the catalog; consumers compare against this
+ * to tell "matches the catalog" from "may have drifted".
+ *
+ * `firmware` is formatted `${major}.${minor}` (for example `'12.0'`); `null` means unknown.
+ */
+export const FM3_CATALOG_BASELINE: Readonly<{ firmware: string | null }> = { firmware: '12.0' };
+
 export {
   FM3_EFFECT_ID_TABLE,
   FM3_EFFECT_IDS,

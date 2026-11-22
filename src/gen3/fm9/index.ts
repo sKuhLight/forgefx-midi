@@ -5,6 +5,16 @@ export { FM9_PARAMS, FM9_PARAMS_BY_FAMILY, FM9_FAMILIES } from './params.js';
 export { FM9_ROUNDTRIP_DISCRETE } from './discreteOverlay.js';
 export { FM9_ENUM_OVERRIDES } from './enumOverrides.generated.js';
 export { FM9_CAB_IRS } from './cabIrs.generated.js';
+
+/**
+ * Firmware the bundled FM9 tables were derived from. Not established for the FM9 data, so
+ * `null`: consumers must not assume a catalog firmware for this device.
+ *
+ * When known, `firmware` is formatted `${major}.${minor}` (for example `'12.0'`); `null`
+ * means unknown.
+ */
+export const FM9_CATALOG_BASELINE: Readonly<{ firmware: string | null }> = { firmware: null };
+
 export {
   FM9_RANGES,
   FM9_RANGE_SECTIONS,

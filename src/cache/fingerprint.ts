@@ -79,7 +79,7 @@ export const FINGERPRINT_VERSION = 1;
 const utf8 = new TextEncoder();
 
 /** FNV-1a 32-bit over the UTF-8 bytes of `s`, as 8 lowercase hex digits. */
-function fnv1a32Hex(s: string): string {
+export function fnv1a32Hex(s: string): string {
   const bytes = utf8.encode(s);
   let h = 0x811c9dc5;
   for (let i = 0; i < bytes.length; i++) {
@@ -107,6 +107,9 @@ function num(x: number): string {
   const n = Number(x.toPrecision(6));
   return n === 0 ? '0' : String(n);
 }
+
+/** The canonical number text above, shared with the profile row tuples (./rowTuple.ts). */
+export { num as canonicalNumber };
 
 /**
  * Fingerprint of a row: `"<version>:<fnv1a32 hex>"` over the canonical string

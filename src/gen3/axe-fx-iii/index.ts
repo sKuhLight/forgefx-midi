@@ -16,6 +16,19 @@ export {
   resolveEffectId,
 } from './blockTypes.js';
 export type { AxeFxIIIBlock, ConfidenceTag } from './blockTypes.js';
+
+// Axe-Fx III effectId <-> family table (FORGEFX-45). Entries are `verified` or `roster`
+// (documented id, no device binding yet: served read-only). See `effectIds.ts`.
+export {
+  AXE3_EFFECT_ID_TABLE,
+  AXE3_EFFECT_IDS,
+  AXE3_FAMILY_BY_EFFECT_ID,
+  axe3EffectId,
+  axe3EffectIdEntry,
+  type Axe3EffectIdEntry,
+  type Axe3EffectAddressing,
+  type Axe3EffectIdConfidence,
+} from './effectIds.js';
 export { PARAMS, PARAMS_BY_FAMILY, PARAM_BY_KEY, FAMILIES } from './params.js';
 export type { Unit, Param } from './params.js';
 
@@ -27,6 +40,9 @@ export type { Unit, Param } from './params.js';
  * `firmware` is formatted `${major}.${minor}` (for example `'32.6'`); `null` means unknown.
  */
 export const AXE3_CATALOG_BASELINE: Readonly<{ firmware: string | null }> = { firmware: '32.6' };
+
+/** Section inventory of the catalog's editor cache (tags, families, record counts). See `catalogSections.ts`. */
+export { AXE3_CATALOG_SECTIONS } from './catalogSections.js';
 
 // Discrete-ordinal classification overlay (param firmware symbol -> maxOrdinal).
 // Params the enum/range paths classify continuous but the device treats as
@@ -318,16 +334,3 @@ export {
   type Gen3OutputMeter,
 } from './telemetry.js';
 export { SUB_ACTION_GET_RAW_VALUE, buildGetRawParamValue, isGen3ReadPollFrame } from './readPolls.js';
-
-// Axe-Fx III effectId <-> family table (FORGEFX-45). Entries are `verified` or `roster`
-// (documented id, no device binding yet: served read-only). See `effectIds.ts`.
-export {
-  AXE3_EFFECT_ID_TABLE,
-  AXE3_EFFECT_IDS,
-  AXE3_FAMILY_BY_EFFECT_ID,
-  axe3EffectId,
-  axe3EffectIdEntry,
-  type Axe3EffectIdEntry,
-  type Axe3EffectAddressing,
-  type Axe3EffectIdConfidence,
-} from './effectIds.js';

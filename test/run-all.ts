@@ -100,6 +100,9 @@ import { runFingerprint, FINGERPRINT_CASE_COUNT } from './cache/fingerprint.test
 import { runCatalogBridge, CATALOG_BRIDGE_CASE_COUNT } from './cache/catalog-bridge.test.js';
 import { runRedact, REDACT_CASE_COUNT } from './cache/redact.test.js';
 import { runCacheHeader, CACHE_HEADER_CASE_COUNT } from './cache/header.test.js';
+import { runProfileDoc, PROFILE_DOC_CASE_COUNT } from './cache/profile-doc.test.js';
+import { runProfileSections, PROFILE_SECTIONS_CASE_COUNT } from './cache/profile-sections.test.js';
+import { runMerge, MERGE_CASE_COUNT } from './cache/merge.test.js';
 import { runTypecodeRules, TYPECODE_RULES_CASE_COUNT } from './cache/typecode-rules.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
 import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
@@ -226,6 +229,9 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/catalog-bridge (${CATALOG_BRIDGE_CASE_COUNT} cases, FM3 catalog vs fw 12.0 walk profile)`, run: runCatalogBridge },
   { name: `cache/redact (${REDACT_CASE_COUNT} cases)`, run: runRedact },
   { name: `cache/header (${CACHE_HEADER_CASE_COUNT} cases)`, run: runCacheHeader },
+  { name: `cache/profile-doc (${PROFILE_DOC_CASE_COUNT} cases)`, run: runProfileDoc },
+  { name: `cache/profile-sections (${PROFILE_SECTIONS_CASE_COUNT} cases)`, run: runProfileSections },
+  { name: `cache/merge (${MERGE_CASE_COUNT} cases)`, run: runMerge },
   { name: `cache/typecode-rules (${TYPECODE_RULES_CASE_COUNT} cases, FM3/FM9/III catalogs)`, run: runTypecodeRules },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
   { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },

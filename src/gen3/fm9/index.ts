@@ -15,6 +15,9 @@ export { FM9_CAB_IRS } from './cabIrs.generated.js';
  */
 export const FM9_CATALOG_BASELINE: Readonly<{ firmware: string | null }> = { firmware: null };
 
+/** Section inventory of the catalog's editor cache (tags, families, record counts). See `catalogSections.ts`. */
+export { FM9_CATALOG_SECTIONS } from './catalogSections.js';
+
 export {
   FM9_RANGES,
   FM9_RANGE_SECTIONS,

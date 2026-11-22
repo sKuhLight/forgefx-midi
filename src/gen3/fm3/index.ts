@@ -26,6 +26,9 @@ export { FM3_CAB_IRS } from './cabIrs.generated.js';
  */
 export const FM3_CATALOG_BASELINE: Readonly<{ firmware: string | null }> = { firmware: '12.0' };
 
+/** Section inventory of the catalog's editor cache (tags, families, record counts). See `catalogSections.ts`. */
+export { FM3_CATALOG_SECTIONS } from './catalogSections.js';
+
 export {
   FM3_EFFECT_ID_TABLE,
   FM3_EFFECT_IDS,

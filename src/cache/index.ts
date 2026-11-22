@@ -27,8 +27,65 @@ export {
   REDACTION_FILLER,
 } from './redact.js';
 export type { UserNameTableKind, CacheRedaction, RedactCacheResult } from './redact.js';
-export { buildDeviceCache, HW_SEEDS } from './assign.js';
-export type { BuildDeviceCacheOptions } from './assign.js';
+export { buildDeviceCache, buildDeviceCacheDetailed, rangeRowOf, HW_SEEDS } from './assign.js';
+export type { BuildDeviceCacheOptions, DeviceCacheDetail, DeviceCacheSection } from './assign.js';
+export {
+  PROFILE_FORMAT,
+  RAW_FORMAT,
+  MIN_DERIVED_WITH,
+  compareCodecVersions,
+  rawSourceId,
+  rawFromCacheBytes,
+  rawFromLiveWalk,
+  cacheRecordOf,
+  sourceSummary,
+  assertNoUserTables,
+  ProfileUserDataError,
+  deriveProfile,
+  buildProfileDoc,
+  ProfileDerivationError,
+  syntheticFamilyKey,
+  isSyntheticFamilyKey,
+} from './profileDoc.js';
+export type {
+  RawSourceKind,
+  SourceOrigin,
+  RawRecord,
+  EditorCacheRawSource,
+  LiveSourceScope,
+  WalkBoundHit,
+  LiveRawSource,
+  RawSource,
+  ProfileRaw,
+  SourceSummary,
+  RawFromCacheBytesOptions,
+  RawFromLiveWalkOptions,
+  CatalogSection,
+  SectionRole,
+  DerivedSection,
+  BlockMapConfidence,
+  BlockMapEntry,
+  ProfileDoc,
+  DerivedProfile,
+  DeriveOptions,
+  DerivedUnit,
+  ProfileDerivationErrorCode,
+} from './profileDoc.js';
+export { sourceRank, planSourceUnits, mergeDerived, computeCoverage, rosterDiff } from './merge.js';
+export type {
+  ProfileProvenance,
+  CoverageGapKind,
+  CoverageFix,
+  CoverageGap,
+  ProfileCoverage,
+  ProfileCatalog,
+  SourceUnitPlan,
+  MergeResult,
+  CoverageInput,
+  RosterDiff,
+} from './merge.js';
+export { rowTuple, sectionSignatureRows, rowsSignature, isPlaceholderRecord, SECTION_SIGNATURE_VERSION } from './rowTuple.js';
+export type { TupleRecord } from './rowTuple.js';
 export { buildCache, CACHE_SCHEMA } from './buildProfile.js';
 export type { RecordSource, BuiltCache, BuiltCacheWalkStats } from './buildProfile.js';
 export {

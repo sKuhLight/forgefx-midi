@@ -47,6 +47,11 @@ import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam } from '.
  *
  * Policy: Schema stays 1 until the first release that carries it; after a release, every change to derived
  * output bumps it. (No bump while unreleased: the consuming runtime's schema gate lands in the same bundle.)
+ * Precisely: bump `CACHE_SCHEMA` when an existing derived field changes value or meaning for the same raw input;
+ * additive derived fields bump nothing (a profile document's `sections`, `blockMap`, `provenance`, `coverage`
+ * and the synthetic `section:<tag>` / `block:<eid>` family keys were added without a bump, see ./profileDoc.ts).
+ * A format-2 profile document (it carries its raw sources) re-derives on any bump; a format-1 document (derived
+ * tables only) goes stale on the next bump.
  */
 export const CACHE_SCHEMA = 1;
 

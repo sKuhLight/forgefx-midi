@@ -401,9 +401,74 @@ export interface BuildDeviceCacheOptions {
    * delay block's user-facing model list; `DELAY_TYPE` is the routing enum).
    */
   rosterSelectorOverrides?: Record<string, string>;
+  /**
+   * Section tag -> record count of the section as the source declared it, including records the
+   * caller left out of `records` (a profile's editor-cache source omits the user name tables).
+   * Replaces the counted records for every listed tag, so `rangeSections[F].recordCount` and
+   * `unmappedSections[].recordCount` stay exact. Tags not listed keep the counted value; the
+   * option never adds a section that has no ordinary record.
+   */
+  declaredCounts?: Readonly<Record<number, number>>;
 }
 
 const DEFAULT_ROSTER_OVERRIDES: Record<string, string> = { DELAY: 'DELAY_MODEL' };
+
+/**
+ * The derived row of one ordinary record, exactly as `buildDeviceCache` derives it for an
+ * assigned family: display bounds (typecode-0x52 knob rule included), scale, step, typecode,
+ * `enumCount`, device unit and measured taper, plus the cleaned label list of an enum record.
+ */
+export function rangeRowOf(r: CacheRecord): { row: RangeDef; labels?: string[] } {
+  const measured = measuredTaper(r);
+  const knob =
+    r.kind === 'float' && r.tc === KNOB_TYPECODE && !r.unit && (measured === undefined || measured.shape === 'linear');
+  const entry: RangeDef = {
+    kind: r.kind,
+    displayMin: knob ? KNOB_DISPLAY_MIN : displayOf(r.min, r.def),
+    displayMax: knob ? KNOB_DISPLAY_MAX : displayOf(r.max, r.def),
+    scale: f32clean(r.def),
+    step: f32clean(r.step),
+    typecode: r.tc,
+  };
+  let labels: string[] | undefined;
+  if (r.kind === 'enum') {
+    entry.enumCount = r.count;
+    labels = cleanLabels(r.values);
+  }
+  if (r.unit) entry.unit = r.unit; // device-true unit from the live-walk (view 0x00)
+  // device-true taper from a FULL-mode live-walk sweep (reliable fits only;
+  // 'flat'/'unknown' are unreliable and carry no taper). 'custom' also keeps
+  // its sample points. Same threading pattern as `unit` above.
+  if (measured) {
+    entry.taper = measured.shape;
+    if (measured.shape === 'custom') entry.taperPoints = measured.points.map(([n, v]) => [n, v] as const);
+  } else if (knob) {
+    entry.taper = 'linear'; // typecode-0x52 knob: linear 0..10 (no measured taper to prefer)
+  }
+  return labels === undefined ? { row: entry } : { row: entry, labels };
+}
+
+/** One section (cache section tag, or block address of a live walk) as `buildDeviceCacheDetailed` saw it. */
+export interface DeviceCacheSection {
+  /** Section tag (editor cache) or block address (live walk). */
+  tag: number;
+  /** Assigned family, also for a further instance tag of the family; `null` when unassigned. */
+  family: string | null;
+  /** A further tag of the family's instance group (not the group's first tag). */
+  instance: boolean;
+  /** Parameter slots: ordinary records incl. placeholder slots (the family stride rule). */
+  stride: number;
+  /** Declared record count incl. special table records (and `declaredCounts`). */
+  recordCount: number;
+  /** pid -> record (ordinary ids only, placeholder slots included), ascending pid order. */
+  rows: ReadonlyMap<number, CacheRecord>;
+}
+
+/** `buildDeviceCache` output plus every section it saw (assigned or not), ascending by tag. */
+export interface DeviceCacheDetail {
+  data: BuiltCacheData;
+  sections: DeviceCacheSection[];
+}
 
 /**
  * Build the device-true cache tables from decoded records + a param catalog.
@@ -418,6 +483,20 @@ export function buildDeviceCache(
   seeds: Record<string, number>,
   opts: BuildDeviceCacheOptions = {},
 ): BuiltCacheData {
+  return buildDeviceCacheDetailed(records, params, seeds, opts).data;
+}
+
+/**
+ * `buildDeviceCache`, plus the per-section view a profile needs: every section with ordinary
+ * records, its assigned family (or none), slot count, declared record count and rows. `data` is
+ * exactly what `buildDeviceCache` returns for the same input.
+ */
+export function buildDeviceCacheDetailed(
+  records: readonly CacheRecord[],
+  params: readonly DeviceParam[],
+  seeds: Record<string, number>,
+  opts: BuildDeviceCacheOptions = {},
+): DeviceCacheDetail {
   // by_sec: ordinary records only (id < 0xff00), first occurrence per id wins.
   const bySec = new Map<number, Sec>();
   const declared = new Map<number, number>(); // section tag -> total record count
@@ -450,6 +529,11 @@ export function buildDeviceCache(
       declared.set(tag, (declared.get(tag) ?? 0) + 1);
     }
   }
+  if (opts.declaredCounts) {
+    for (const [tag, n] of Object.entries(opts.declaredCounts)) {
+      if (declared.has(Number(tag))) declared.set(Number(tag), n);
+    }
+  }
 
   const famParams = paramsByFamily(params);
   const { familyToTag, groupOf, unmappedFamilies, unmappedTags } = assignSections(
@@ -468,33 +552,9 @@ export function buildDeviceCache(
     const eo: Record<string, string[]> = {};
     const rg: Record<number, RangeDef> = {};
     for (const pid of [...sec.keys()].sort((a, b) => a - b)) {
-      const r = sec.get(pid)!;
-      const measured = measuredTaper(r);
-      const knob =
-        r.kind === 'float' && r.tc === KNOB_TYPECODE && !r.unit && (measured === undefined || measured.shape === 'linear');
-      const entry: RangeDef = {
-        kind: r.kind,
-        displayMin: knob ? KNOB_DISPLAY_MIN : displayOf(r.min, r.def),
-        displayMax: knob ? KNOB_DISPLAY_MAX : displayOf(r.max, r.def),
-        scale: f32clean(r.def),
-        step: f32clean(r.step),
-        typecode: r.tc,
-      };
-      if (r.kind === 'enum') {
-        entry.enumCount = r.count;
-        eo[String(pid)] = cleanLabels(r.values);
-      }
-      if (r.unit) entry.unit = r.unit; // device-true unit from the live-walk (view 0x00)
-      // device-true taper from a FULL-mode live-walk sweep (reliable fits only;
-      // 'flat'/'unknown' are unreliable and carry no taper). 'custom' also keeps
-      // its sample points. Same threading pattern as `unit` above.
-      if (measured) {
-        entry.taper = measured.shape;
-        if (measured.shape === 'custom') entry.taperPoints = measured.points.map(([n, v]) => [n, v] as const);
-      } else if (knob) {
-        entry.taper = 'linear'; // typecode-0x52 knob: linear 0..10 (no measured taper to prefer)
-      }
-      rg[pid] = entry;
+      const { row, labels } = rangeRowOf(sec.get(pid)!);
+      if (labels !== undefined) eo[String(pid)] = labels;
+      rg[pid] = row;
     }
     if (Object.keys(eo).length > 0) enumOverrides[fam] = eo;
     ranges[fam] = rg;
@@ -545,13 +605,38 @@ export function buildDeviceCache(
     wireStride: bySec.get(t)?.size ?? 0,
   }));
 
+  // Per-section view: every tag with ordinary records, assigned (family or further instance) or not.
+  const famOfTag = new Map<number, { family: string; instance: boolean }>();
+  for (const [fam, tag] of familyToTag) {
+    for (const t of groupOf.get(tag) ?? [tag]) famOfTag.set(t, { family: fam, instance: t !== tag });
+  }
+  const sections: DeviceCacheSection[] = [...bySec.keys()]
+    .sort((a, b) => a - b)
+    .map((tag) => {
+      const sec = bySec.get(tag)!;
+      const rows = new Map<number, CacheRecord>();
+      for (const pid of [...sec.keys()].sort((a, b) => a - b)) rows.set(pid, sec.get(pid)!);
+      const f = famOfTag.get(tag);
+      return {
+        tag,
+        family: f ? f.family : null,
+        instance: f ? f.instance : false,
+        stride: sec.size,
+        recordCount: declared.get(tag) ?? sec.size,
+        rows,
+      };
+    });
+
   return {
-    enumOverrides,
-    ranges,
-    rangeSections,
-    rosters,
-    cabIrs,
-    unmappedSections,
-    unmappedFamilies,
+    data: {
+      enumOverrides,
+      ranges,
+      rangeSections,
+      rosters,
+      cabIrs,
+      unmappedSections,
+      unmappedFamilies,
+    },
+    sections,
   };
 }

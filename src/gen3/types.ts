@@ -39,7 +39,7 @@ export interface Param {
    */
   paramId: number;
   /**
-   * Symbol name from the device editor's binary (e.g. `'REVERB_TYPE'`).
+   * Symbol name from the device editor's parameter data (e.g. `'REVERB_TYPE'`).
    * Stable across firmware releases of the same generation.
    */
   name: string;

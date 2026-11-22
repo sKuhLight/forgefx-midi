@@ -95,7 +95,7 @@ export const FM9_CONFIG: FractalModernConfig = {
     device_note: [
       'This is the Fractal FM9 (community beta). It shares the Axe-Fx III',
       'gen-3 SysEx protocol and a 6×14 grid with 8 scenes and A–D channels.',
-      'The param catalog is FM9-true (mined from FM9-Edit\'s own binary, so',
+      'The param catalog is FM9-true (taken from FM9-Edit\'s own parameter data, so',
       'paramIds address the right knob); block effect IDs are the III\'s,',
       'which are shared across the gen-3 family. Amp, drive, and reverb types',
       'are settable AND readable BY NAME using the FM9\'s own model names',

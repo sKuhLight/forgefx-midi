@@ -653,7 +653,7 @@ export function createModernCatalog(opts: {
    * unconditionally even when their mapped family carries params. The mined
    * catalog is shared across the gen-3 editor family, so a device-true table
    * can list params for a block a given unit lacks (VP4 carries DISTORT /
-   * CABINET params from the shared editor binary but has no amp/cab blocks).
+   * CABINET params from the shared editor data but has no amp/cab blocks).
    * `dropEmptyMappedBlocks` only removes EMPTY families, so non-empty-but-
    * absent blocks need this explicit list.
    */

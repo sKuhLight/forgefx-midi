@@ -11,7 +11,7 @@
  * were the ONLY channel-bearing blocks. That was incomplete — every block
  * type has an independent channel register at the same wire offset
  * (0x07d2, relative to its own pidLow); see forgefx-midi's
- * `docs/AM4-LIVE-VALUE-DECODE-PLAN.md` and `src/am4/params.ts`
+ * `src/am4/params.ts`
  * (`chorus.channel` etc.). `CHANNEL_BLOCKS` now covers every block; the
  * underlying reader (`decodeChannelParams` in `descriptor/reader.ts`)
  * already self-detects channel-blocked wire chunks per-param from the

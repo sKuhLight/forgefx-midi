@@ -2,7 +2,7 @@
 
 **What editing data (params, ranges, type rosters, enum vocab, layouts, FC/modifier)
 this package actually holds for each device, what is missing, and whether closing a
-gap needs *editor RE* (mine an editor install — no user hardware) or a *hardware
+gap needs *editor data* (read from an editor install — no user hardware) or a *hardware
 capture* (needs a user's device).**
 
 This is the companion to [`DEVICE-TELEMETRY.md`](./DEVICE-TELEMETRY.md): that doc
@@ -31,12 +31,12 @@ preset pair calibrated OFFLINE BODY DECODE for FM9 + III (single-preset evidence
 
 | Category | Meaning | How a gap is closed |
 |---|---|---|
-| **Params** | paramId + name + label + unit (wire addressing) | **Editor RE** |
-| **Ranges** | display min/max + taper (so a knob reads "2.5 kHz", not a raw position) | **Editor RE** |
-| **Type rosters** | the sub-model list *inside* a block (Phaser → "Script 45"…) | **Editor RE** |
-| **Enum vocab** | labels for non-type enums (modes, LFO shapes, tempo subdivisions, mic/cab picks) | **Editor RE** |
-| **Layouts** | editor page organization (which controls, which page) | **Editor RE** |
-| **FC / Modifier** | foot-controller + modifier address models | **Editor RE** (some source enums capture-confirmed) |
+| **Params** | paramId + name + label + unit (wire addressing) | **Editor data** |
+| **Ranges** | display min/max + taper (so a knob reads "2.5 kHz", not a raw position) | **Editor data** |
+| **Type rosters** | the sub-model list *inside* a block (Phaser → "Script 45"…) | **Editor data** |
+| **Enum vocab** | labels for non-type enums (modes, LFO shapes, tempo subdivisions, mic/cab picks) | **Editor data** |
+| **Layouts** | editor page organization (which controls, which page) | **Editor data** |
+| **FC / Modifier** | foot-controller + modifier address models | **Editor data** (some source enums capture-confirmed) |
 | **Cab IR names** | IR bank contents | **Live device read** (per-unit) or capture |
 | **Offline body calibration** | param-array offset + per-channel stride + value scaling to decode params out of a **stored preset blob with no device attached** | **Hardware capture** (needs real preset dumps as ground truth) |
 
@@ -149,7 +149,7 @@ slug rosters + enum-override fallback); rich enum vocab (471 override entries); 
 FC + modifier; **bundled cab IR names**; monitor table; **only device with offline body calibration**;
 live editing.
 
-**Editor-RE gaps** (minor):
+**Editor-data gaps** (minor):
 - [ ] Ranges — zero-calib utility families: `CROSSOVER, FC, IRCAPTURE, IRPLAYER, MIDIBLOCK, RTA,
       TONEMATCH, VOCODER`.
 - [ ] Ranges — partials: `CONTROLLERS 130/141, FLANGER 33/55, GEQ 20/21, PRESET 50/51, TENTAP 48/49`.
@@ -187,13 +187,13 @@ editor layouts (47); FC + modifier; monitor table; live editing; **offline body 
 
 ---
 
-## VP4 `0x14` — params-only skeleton; needs a full editor-RE pass
+## VP4 `0x14` — params-only skeleton; needs a full editor-data pass
 
 **Support:** community-beta (reads + continuous-knob writes decoded from captures; display
 calibration pending — wire values pass through raw 0..65534).
 **Present:** 1690 params (48 families) = wire addressing only. Reads + continuous-knob writes work.
 
-**Editor-RE gaps** (everything display-side — largest single-device effort; mine from VP4-Edit):
+**Editor-data gaps** (everything display-side — largest single-device effort; from VP4-Edit's data):
 - [ ] **Ranges** — NONE (0 families). Every knob passes raw 0..65534.
 - [ ] **Type rosters** — NONE (21 `<FAMILY>_TYPE` families empty).
 - [ ] **Enum vocab** — NONE.
@@ -223,7 +223,7 @@ complete.
 
 ## Consolidated backlog (priority order)
 
-**Editor RE — no user hardware needed (do these first):**
+**Editor data — no user hardware needed (do these first):**
 1. ~~FM9 enum vocab~~ ✅ 2026-07-06 (539 lists from the 76p0 cache).
 2. ~~FM9 type rosters~~ ✅ 2026-07-06 (all families resolve; FILTER stub replaced).
 3. **VP4 full display-side pass** — ranges, type rosters, enum vocab, layouts, FC/modifier from

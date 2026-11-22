@@ -207,7 +207,7 @@ export {
 } from './applicability.js';
 export type { ActiveTypeContext, ApplicabilityCheck } from './applicability.js';
 
-// Editor / bridge labels (RE'd from AM4-Edit binary).
+// Editor / bridge labels (from AM4-Edit's parameter data).
 export {
   EDITOR_CONTROLS,
   EDITOR_CONTROL_FIRMWARE,

@@ -41,7 +41,7 @@ RE/codec · **GAP** = wire shape unknown, needs a capture.
 
 `*` III pushes CPU/meters as its own messages (`AxeCpu`, `Axe3In/OutMeters`) but over USB the
 editors poll; the genuine unsolicited pushes (tempo down‑beat `0x10`, tuner `0x11`) are
-**5‑pin DIN only, never USB** (`axe3spec.txt:120‑124`). `w` = editor renders a graph widget.
+**5‑pin DIN only, never USB** (Axe‑Fx III third‑party MIDI spec). `w` = editor renders a graph widget.
 `ed` = FM3 firmware has the block but FM3‑Edit renders no widget. `fw` = registers exist in
 firmware, no editor graph.
 
@@ -59,7 +59,7 @@ All gen‑3; AM4 has none of these on the wire (see below).
 - **Tuner** — `buildTunerPageOpen/Close/Poll`, `parseTunerFreqHz` (`telemetry.ts:65‑81`). FM3
   byte‑confirmed: fn `0x01` sub `0x19`, field `0x02` = fundamental Hz as float32 @ frame off 12.
 - **Tempo** — `buildSetTempoViaParam` + `parseTempoResponse`; III cmd `0x14`.
-- **Scene / preset** — fn `0x0C` scene, `0x0D` query‑patch‑name (III spec `axe3spec.txt:39‑55`).
+- **Scene / preset** — fn `0x0C` scene, `0x0D` query‑patch‑name (Axe‑Fx III third‑party MIDI spec).
   AM4 has its own scene (4) + preset‑name codec.
 - **Input level** — `liveMonitors()` reads the INPUT block's primary monitor pid (`INPUT_GAINMONITOR`
   pid 8, −60…0 dB) → `GET /preset/monitors/live`.
@@ -128,7 +128,7 @@ pids for the open block, at UI rate, via the new builder.
 
 `buildGetLooperState`/`buildSetLooper`/`parseLooperStateResponse` (`setParam.ts:1714‑1949`)
 are implemented + exported but **never called by ForgeFX**. III spec cmd `0x0F`, reply bitfield:
-bit0 Record · bit1 Play · bit2 Overdub · bit3 Once · bit4 Reverse · bit5 Half (`axe3spec.txt:66‑88`).
+bit0 Record · bit1 Play · bit2 Overdub · bit3 Once · bit4 Reverse · bit5 Half (Axe‑Fx III third‑party MIDI spec).
 
 **Action:** add a driver `looperState()` + a `looper` `DeviceEvent`; poll while a Looper block
 is open (or on a `changed`). `LOOPER_LEVEL` pid (III/FM9 tables; **missing from `fm3/meters.ts`**
@@ -206,7 +206,7 @@ still un-decoded — Axis latches button state locally for now.
   `0..65534` ints, positional by paramId.
 - **Push is DIN‑only.** The III's genuine unsolicited streams (tempo down‑beat `0x10`, tuner
   `0x11 nn ss cc`) require Global → *Send Realtime Sysex = On* and go out the **5‑pin MIDI‑Out jack
-  only, never MIDI‑over‑USB** (`axe3spec.txt:120‑124`). Over USB, **editors poll everything**. This is
+  only, never MIDI‑over‑USB** (Axe‑Fx III third‑party MIDI spec). Over USB, **editors poll everything**. This is
   why our poll‑based telemetry is the right model, and why FM3/AM4 (USB) never push param edits.
 - **`AxeTurnBroadcast*` / `AxeBroadCastKnob`** (touched‑knob push) is a **gen‑2 Axe‑Fx II** FracPad
   feature — **absent from every FM3/FM9/III/AM4 editor** — so it is *not* a route to front‑panel

@@ -136,7 +136,7 @@ export const FM3_CONFIG: FractalModernConfig = {
       'This is the Fractal FM3 (community beta). It shares the Axe-Fx III',
       'gen-3 SysEx protocol with 8 scenes and A–D channels, but uses a',
       'SMALLER 4×12 grid (48 cells, vs the III/FM9 6×14) and a reduced block roster.',
-      'The param catalog is FM3-true (mined from FM3-Edit\'s own binary, so',
+      'The param catalog is FM3-true (taken from FM3-Edit\'s own parameter data, so',
       'paramIds address the right knob); the roster is filtered to FM3\'s',
       'families. A 2026-06-12 hardware field test (fw 12.00, USB-CDC serial)',
       'confirmed the read path, continuous set_param, set_bypass, switch_scene,',

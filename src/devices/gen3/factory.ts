@@ -23,7 +23,7 @@
  * The catalog factory lives in `./catalog.ts`: block roster + effect IDs
  * are the III's (shared across the gen-3 family), but the param table is
  * per-device (each config passes its own `params_by_family`; FM3/FM9 ship
- * device-true tables mined from their own editor binaries). The reader /
+ * device-true tables taken from their own editors' parameter data). The reader /
  * writer / dirty-gate live in `./reader.ts` / `./writer.ts` / `./guard.ts`.
  * Per-device configs live in `./configs/<device>.ts`.
  */
@@ -113,8 +113,8 @@ export interface FractalModernConfig {
   verification?: string;
   /**
    * Device's OWN per-family param table. The III passes its catalog (the
-   * byte-identity anchor); FM3/FM9 pass their device-true tables mined
-   * from each editor's own binary. paramIds are firmware-specific, so the
+   * byte-identity anchor); FM3/FM9 pass their device-true tables taken
+   * from each editor's own parameter data. paramIds are firmware-specific, so the
    * III's must NEVER be reused for FM3/FM9 wire writes — see catalog.ts.
    */
   params_by_family: Readonly<Record<string, readonly AxeFxIIIParam[]>>;
@@ -126,11 +126,11 @@ export interface FractalModernConfig {
   device_true_roster?: boolean;
   /**
    * Block slugs to drop from this device's surface even when their mapped
-   * family carries params in the catalog. The mined catalog is shared across
+   * family carries params in the catalog. The catalog is shared across
    * the gen-3 editor family, so a device-true table can list params for a
    * block the physical device does NOT expose (VP4 has no amp/cab, yet its
-   * mined catalog carries DISTORT/CABINET params from the shared editor
-   * binary). `device_true_roster` only drops EMPTY mapped families, so blocks
+   * catalog carries DISTORT/CABINET params from the shared editor
+   * data). `device_true_roster` only drops EMPTY mapped families, so blocks
    * with non-empty-but-absent rosters need an explicit exclude. Slugs are
    * lower-case (e.g. 'amp', 'cab').
    */

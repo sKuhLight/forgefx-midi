@@ -5,10 +5,10 @@
  * SysEx envelope, 8 scenes, A–D channels, but a smaller **4×12 grid** and
  * a reduced block roster (it drops blocks the III has). Model byte 0x11
  * is byte-confirmed via tysonlt/AxeFxControl (AXEFX3=0x10, FM3=0x11). It
- * now ships a DEVICE-TRUE param catalog (`fractal-midi/gen3/fm3`) mined from
- * FM3-Edit's own binary: block effect IDs are the III's (shared), but
+ * now ships a DEVICE-TRUE param catalog (`fractal-midi/gen3/fm3`) taken from
+ * FM3-Edit's own tables: block effect IDs are the III's (shared), but
  * paramIds are FM3's own (reusing the III's mis-addresses 6.9% of shared
- * params; see `docs/_private/MINING-FINDINGS-FM-VP4.md`). community-beta.
+ * params). community-beta.
  */
 import { FM3_PARAMS_BY_FAMILY, FM3_ENUM_OVERRIDES, FM3_RANGES } from '../../../gen3/fm3/index.js';
 import { toSymbolEnumOverrides } from '../catalog.js';
@@ -136,7 +136,7 @@ export const FM3_CONFIG: FractalModernConfig = {
       'This is the Fractal FM3 (community beta). It shares the Axe-Fx III',
       'gen-3 SysEx protocol with 8 scenes and A–D channels, but uses a',
       'SMALLER 4×12 grid (48 cells, vs the III/FM9 6×14) and a reduced block roster.',
-      'The param catalog is FM3-true (mined from FM3-Edit\'s own binary, so',
+      'The param catalog is FM3-true (taken from FM3-Edit\'s own parameter data, so',
       'paramIds address the right knob); the roster is filtered to FM3\'s',
       'families. A 2026-06-12 hardware field test (fw 12.00, USB-CDC serial)',
       'confirmed the read path, continuous set_param, set_bypass, switch_scene,',

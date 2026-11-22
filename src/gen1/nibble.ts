@@ -7,7 +7,7 @@
 //
 // Proven from the published Ultra doc: value 163 = 0xA3 -> "03 0A"; block
 // Compressor 1 = decimal 100 = 0x64 -> "04 06"; and the doc's full 0..255
-// conversion table (256/256 verified by scripts/_research/parse-gen1-sysex.ts).
+// conversion table (256/256 verified).
 // NOT gen-2's septet pack, NOT gen-1-has-a-checksum (it does not).
 
 /** 8-bit value (0..255) -> [lowNibble, highNibble]. */

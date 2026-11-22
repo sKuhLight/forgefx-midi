@@ -1,8 +1,8 @@
 /**
  * AM4 tuner readout — live-poll block `0x0023`.
  *
- * DECODED and verified from BigCapture 2026-07-05 (B2 audio-correlation; see
- * docs/AM4-B2-AUDIO-CORRELATION.md). AM4-Edit's tuner is driven by four
+ * DECODED and verified from hardware observation 2026-07-05 (see
+ * docs/AM4-LIVE-POLLS.md). AM4-Edit's tuner is driven by four
  * `fn 0x01 PARAM_RW action=0x0010` polls of block `0x0023`. Unlike the meter
  * monitors, these payloads are **absolute float32 engineering values**, NOT the
  * normalized `[0,1]` a knob/meter uses — do not run them through `decode()`.

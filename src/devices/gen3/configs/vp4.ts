@@ -18,9 +18,8 @@
  * math undecoded), `switch_scene` (value↔scene mapping unconfirmed), plus
  * apply_preset / rename / switch_preset refuse with a clear message. community-beta.
  *
- * CATALOG. paramIds are VP4-true (mined from VP4-Edit's own binary; reusing
- * the III's mis-addresses 99.1% of shared params — see
- * `docs/_private/MINING-FINDINGS-FM-VP4.md`). The mined catalog is shared
+ * CATALOG. paramIds are VP4-true (taken from VP4-Edit's own tables; reusing
+ * the III's mis-addresses 99.1% of shared params). The mined catalog is shared
  * across the gen-3 editor family, so it carries DISTORT (amp) + CABINET
  * params even though the physical VP4 has no amp/cab; `exclude_blocks`
  * drops those two blocks from the surface (device_true_roster alone won't —
@@ -136,8 +135,8 @@ export const VP4_CONFIG: FractalModernConfig = {
   params_by_family: VP4_PARAMS_BY_FAMILY,
   enum_fallbacks: VP4_UNVERIFIED_ENUM_FALLBACKS,
   device_true_roster: true,
-  // The mined catalog carries DISTORT (amp) + CABINET params from the shared
-  // gen-3 editor binary, but the physical VP4 has neither block. Drop both.
+  // The catalog carries DISTORT (amp) + CABINET params from the shared
+  // gen-3 editor data, but the physical VP4 has neither block. Drop both.
   exclude_blocks: ['amp', 'cab'],
   canonical_terms: {
     block: 'block',
@@ -169,7 +168,7 @@ export const VP4_CONFIG: FractalModernConfig = {
       'This is the Fractal VP4 (community beta). It reuses the Axe-Fx III',
       'gen-3 effects codec but is AM4-shape: a serial 4-slot chain with 4',
       'scenes, A-D channels, A01..Z04 preset locations, and NO amp/cab.',
-      'The param catalog is VP4-true (mined from VP4-Edit\'s own binary).',
+      'The param catalog is VP4-true (taken from VP4-Edit\'s own parameter data).',
       '',
       'WRITES (community beta, byte-exact captured wire shape, untested on',
       'hardware — tell the user to confirm on the front panel):',

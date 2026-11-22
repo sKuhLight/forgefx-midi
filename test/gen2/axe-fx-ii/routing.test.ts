@@ -18,7 +18,7 @@
  *   payload: [fn=0x05, blockId & 0x7F, cellIdx]
  *
  * All golden bytes are derived from the formula and cross-checked
- * against captured traffic (Q8.02 XL+, session-61).
+ * against captured traffic (Q8.02 XL+).
  */
 import {
   buildSetCellRouting,

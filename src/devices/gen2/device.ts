@@ -6,8 +6,8 @@
  * and (b) make adding Axe-Fx II a fill-in-the-blanks exercise rather
  * than a green-field design.
  *
- * What's already confirmed (Session 53, hardware-free, from factory
- * bank file `samples/factory/Axe-Fx-II_XL+_Bank-{A,B,C}_Q8p02.syx`):
+ * What's already confirmed (Session 53, hardware-free, from the factory
+ * bank files `Axe-Fx-II_XL+_Bank-{A,B,C}_Q8p02.syx`):
  *
  *   - Wire model byte for **Axe-Fx II XL+** = `0x07`. (Earlier guess
  *     `0x03` was wrong — that's the Axe-Edit-internal device tag,
@@ -35,17 +35,17 @@
  *
  * What still needs hardware:
  *
- *   1. Capture AxeEdit ↔ device live SysEx via USBPcap to decode the
+ *   1. Observe AxeEdit ↔ device live SysEx to decode the
  *      live read/write commands (the bank file shows persistence-
  *      format only — not the parameter set/get commands the editor
  *      sends during normal editing).
  *   2. Decode the per-parameter wire-ID mapping (parameterName from
  *      Axe-Edit XML → pidLow/pidHigh) — equivalent to AM4's
- *      `variantResolverTables.ts` derivation. Axe-Edit's BinaryData
- *      ZIP does NOT contain a cache resolver (only XMLs and
- *      graphics) so this path differs from AM4: capture-based RE
- *      is the working route, statistical inference from bank file
- *      bodies is a backup.
+ *      `variantResolverTables.ts` derivation. Axe-Edit's resources
+ *      do NOT contain a cache resolver (only XMLs and
+ *      graphics) so this path differs from AM4: observation of live
+ *      traffic is the working route, statistical inference from bank
+ *      file bodies is a backup.
  *   3. Fill in remaining `FractalDevice` interface methods (wire
  *      builders for set_param, read_param, set_block_type,
  *      switch_scene, etc.).

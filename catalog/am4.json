@@ -3,7 +3,7 @@
   "device": "am4",
   "model_byte": "0x15",
   "support_status": "hardware-verified",
-  "source": "forgefx-midi/src/am4 — AM4-Edit metadata cache + hardware captures; see docs/devices/am4/SYSEX-MAP.md",
+  "source": "forgefx-midi/src/am4 — AM4-Edit metadata cache + hardware observation",
   "data": {
     "KNOWN_PARAMS": {
       "amp.balance": {

@@ -1,8 +1,7 @@
 /**
  * AM4 0x01 SET_PARAM value-field encoding.
  *
- * Reverse-engineered from `FUN_140156d10` (encoder) and `FUN_140156af0`
- * (decoder) in AM4-Edit.exe.
+ * Value-field encoder and decoder as used by AM4-Edit.
  *
  * Algorithm: sliding-window 8-to-7 bit-pack. N raw bytes become N+1 wire
  * septets. Each iteration k=1..N takes the top (8-k) bits of the input

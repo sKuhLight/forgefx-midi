@@ -7,7 +7,7 @@
  * own front panel shows.
  *
  * Anchored by the 2026-06-06 dev-laptop session
- * (docs/_private/0.2.0-dev-test-2026-06-06.md): the four Scene Level trims
+ * (0.2.0 dev test, 2026-06-06): the four Scene Level trims
  * are ±20 dB on the device, NOT the -80..+20 span of preset.level. Before
  * the fix, set +10 read back as -5 because decode scaled the same 0.75 wire
  * against -80..+20. The encode/write path is unit-scale based and was always

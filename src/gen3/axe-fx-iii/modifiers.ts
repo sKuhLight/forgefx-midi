@@ -9,8 +9,8 @@
  *   (ordinals and effectId/paramId references are sent as the integer's float).
  *
  * ── Provenance ───────────────────────────────────────────────────────
- * effectId + slot count + field map recovered from the Axe-Edit III binary (Ghidra-mined param
- * catalog, cross-validated against the macOS Mach-O v1.14.34 strings, 2026-07-02). `ID_MODIFIER1`
+ * effectId + slot count + field map recovered from the Axe-Edit III editor's param
+ * catalog, cross-validated against the macOS editor v1.14.34 (2026-07-02). `ID_MODIFIER1`
  * sits at enum index 3 in the III's own effect-ID enum (`ID_NULL=0, ID_GLOBAL=1, ID_CONTROL=2,
  * ID_MODIFIER1=3, … ID_MODIFIER32=34`), so eid 3 and the 32-slot span are device-CONFIRMED, not
  * assumed. The field pids (0..24) are byte-identical to the FM3's — the modifier subsystem is
@@ -124,7 +124,7 @@ export function axe3ModBindFrames(
  * Modulation-source vocabulary (MOD_CTRLID / pid 0): NOT statically recovered for the III.
  *
  * The source dropdown is built at runtime and does not appear as an ordered ASCII table in either
- * the III Mach-O or the FracPad III resources (a clean static negative). The III's list is expected
+ * the III editor or the FracPad III resources (a clean static negative). The III's list is expected
  * to DIFFER from the FM3's — the III addresses up to 4 FC units (FC1..FC4 pedals/ext-switches),
  * whereas the FM3 list has FC 1/FC 2 only. Recover the ordinals via a live capture (write an
  * ordinal, read back the selected source name), as was done for the FM3. Do NOT reuse the FM3

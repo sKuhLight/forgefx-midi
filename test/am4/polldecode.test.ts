@@ -1,8 +1,7 @@
 // Poll-response decode: parseReadResponse must accept the live-poll (0x0010)
 // and status-poll (0x0026) actions and expose the value as a float32. The
-// four ingate.gain_monitor frames are REAL captures from
-// Repositorys/fm3-scratchpad/devices/am4/captures/{preset-swap,preset-save}.sysex.txt
-// (address 0x0025/0x0010, action 0x0010) — see docs/AM4-LIVE-VALUE-DECODE-PLAN.md.
+// four ingate.gain_monitor frames are REAL hardware captures
+// (address 0x0025/0x0010, action 0x0010) — see docs/AM4-LIVE-POLLS.md.
 
 import {
   parseReadResponse,

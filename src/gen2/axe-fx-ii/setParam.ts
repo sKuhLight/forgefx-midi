@@ -410,7 +410,7 @@ export function buildGetAllParams(
  * - response is payload-insensitive (empty request and a block-selector
  *   request return the same frame shape).
  *
- * SEMANTICS (hardware-verified on Q8.02, see cookbook ii-fn0e-query-states):
+ * SEMANTICS (hardware-verified on Q8.02):
  * byte0 is the per-block LIVE state in the active scene — bit 0x01 = engaged
  * (1) vs bypassed (0), bit 0x02 = channel (set = X, clear = Y). Bytes 1..4
  * (`state28`) are a per-block address monotonic in blockId; sorting records
@@ -489,8 +489,7 @@ export function parseQueryStatesResponse(bytes: number[]): QueryStateRecord[] {
  * is a per-block address monotonic in blockId. Sorting records by
  * `state28` and zipping to the placed effectIds sorted ascending binds
  * each record to its block. Hardware-verified 11/11 against independent
- * fn 0x02 bypass + fn 0x11 channel reads (see cookbook
- * ii-fn0e-query-states). The tag byte then yields the active-scene state.
+ * fn 0x02 bypass + fn 0x11 channel reads. The tag byte then yields the active-scene state.
  *
  * Throws if the counts differ (the caller must pass exactly the placed,
  * non-shunt blocks the same QUERY_STATES read covers).
@@ -625,8 +624,8 @@ export function parseSceneNumberResponse(bytes: number[]): number {
  *
  * The device emits the response form whenever the active channel for a
  * block changes (e.g. user clicks X/Y in AxeEdit or front-panel) —
- * cross-confirmed via passive capture in
- * `samples/captured/session-60-channel-toggle.syx` (2026-05-11):
+ * cross-confirmed via a passive hardware capture
+ * (2026-05-11):
  * Amp 1 toggle X→Y produced `F0 00 01 74 07 11 6A 00 01 78 F7`;
  * Y→X produced `F0 00 01 74 07 11 6A 00 00 79 F7`. Checksums verified.
  *
@@ -725,7 +724,7 @@ export function buildSwitchPreset(
     const modelId = opts.modelId ?? AXE_FX_II_XL_PLUS_MODEL_ID;
     // **MSB-first** byte ordering — matches `buildStorePreset` (0x1D) and
     // the device's own `GET_PRESET_NUMBER` (0x14) response, both of
-    // which were hardware-verified on Q8.02 (session-61).
+    // which were hardware-verified on Q8.02.
     //
     // The wiki documents this envelope as LSB-first, but
     // hardware testing on Q8.02 showed that LSB-first encoding silently
@@ -790,7 +789,7 @@ export function buildPatchDumpRequest(
  *     does NOT reload anything into the buffer (rename survived).
  *   - ROUND-TRIP: pushing the 66-frame response back to the device
  *     restored the dumped buffer state byte-for-byte (name re-read OK).
- * Captures: samples/captured/hw132/ (sentinel-eb-{alpha,bravo}.syx).
+ * Observed with two sentinel edit-buffer dumps.
  */
 export function buildEditBufferDumpRequest(opts: BuildOptions = {}): number[] {
     const modelId = opts.modelId ?? AXE_FX_II_XL_PLUS_MODEL_ID;
@@ -890,7 +889,7 @@ export function buildStorePreset(
  *     result_code 0x00 = OK
  *     result_code 0x05 = parsed but not honored (e.g. malformed payload)
  *
- * Captured session-61, 2026-05-11 from AxeEdit's save-to-slot operation
+ * Captured 2026-05-11 from AxeEdit's save-to-slot operation
  * on Q8.02 XL+: `F0 00 01 74 07 64 1D 00 7B F7` (result=OK).
  */
 export function isStorePresetResponse(bytes: readonly number[]): boolean {
@@ -931,13 +930,13 @@ export function parseStorePresetResponse(bytes: readonly number[]): StorePresetR
  *
  * **Byte ordering is MSB-first** in the response — `[bits 13-7, bits 6-0]`
  * — contrary to the wiki's "bits 6-0 first" documentation. Empirically
- * disambiguated by session-61 passive capture: payload `05 3B` decodes
+ * disambiguated by a passive capture: payload `05 3B` decodes
  * to wire preset 699 (= front-panel display "slot 700") only under
  * MSB-first, matching the founder's reported state at capture time.
  * LSB-first decode would yield preset 7557, which is impossible (XL+
  * user range is 0..767). See `docs/SYSEX-MAP-AXE-FX-II.md` § 6b.
  *
- * Status: 🟡 wire format from session-61 passive capture; will flip to
+ * Status: 🟡 wire format from a passive capture; will flip to
  * 🟢 once axefx2_get_active_preset_number lands end-to-end on Q8.02.
  */
 export function buildGetPresetNumber(opts: BuildOptions = {}): number[] {
@@ -1009,7 +1008,7 @@ export function parseGetPresetNumberResponse(bytes: readonly number[]): GetPrese
  *              auto-assigns a routing mask to newly-placed cells (e.g.
  *              :2 for row-2 placements) regardless of this byte.
  *
- * Decoding evidence (session-62 + session-63 probes, 2026-05-11):
+ * Decoding evidence (hardware probes, 2026-05-11):
  *
  *   Probe (payload bytes after 0x05)         Observed effect
  *   ─────────────────────────────────────────────────────────
@@ -1035,7 +1034,7 @@ export function parseGetPresetNumberResponse(bytes: readonly number[]): GetPrese
  * function byte like 0x06 which also fires during grid-move captures).
  *
  * Status: 🟢 wire format hardware-validated on Q8.02 XL+
- * (session-63 probe sequence). Routing-propagation limitation
+ * (probe sequence). Routing-propagation limitation
  * documented above.
  */
 export function buildSetGridCell(opts: {
@@ -1260,8 +1259,7 @@ export function parseSetCellRoutingResponse(bytes: readonly number[]): SetCellRo
  * state regardless of fn=0x11 channel selection). Full value array
  * required (itemCount must match block's total position count).
  * Encoding is per-position: some positions use wire16 (0..65534),
- * others use display-integer scale. See cookbook entry
- * `ii-state-broadcast-triple-write` and `HW-125-FINDINGS-2026-05-25.md`.
+ * others use display-integer scale. See HW-125 (2026-05-25).
  */
 export interface BuildStateBroadcastOptions extends BuildOptions {
     /** Op flag byte 10. 0x01 = direct block edit, 0x00 = preset-structure. Default 0x01. */

@@ -75,8 +75,8 @@ for (const [name, mb] of [
 
 // 1b. buildStorePreset byte-exact against the captured store frames
 //     (fn=0x01 sub=0x26, presetNum septet @ bytes 12-13 LSB-first). Fixtures
-//     from FM9-Edit (0x12) and AxeEdit III (0x10) driven over loopMIDI; see
-//     cookbook gen3-fn01-store-preset. wellFormed above only checks
+//     from FM9-Edit (0x12) and AxeEdit III (0x10) driven over a virtual MIDI port.
+//     wellFormed above only checks
 //     envelope + checksum, so this pins the exact payload of the production
 //     builder to the captured truth on both confirmed model bytes.
 function parseStoreHex(s: string): number[] {
@@ -101,8 +101,7 @@ for (const [label, mb, presetNum, wantHex] of [
 // 1c. buildSetGridCell byte-exact against the captured block-INSERT frames
 //     (fn=0x01 sub=0x32, effectId septet @8-9, gridPos septet @12-13,
 //     gridPos=(col-1)*rows+(row-1)). Fixtures from FM9-Edit (0x12),
-//     AxeEdit III (0x10), and FM3-Edit (0x11, 4-row grid) over loopMIDI; see
-//     cookbook gen3-fn01-grid-set-position-insert. Pins the production
+//     AxeEdit III (0x10), and FM3-Edit (0x11, 4-row grid) over a virtual MIDI port. Pins the production
 //     builder's exact payload across all three confirmed model bytes.
 for (const [label, mb, row, col, blockId, rows, wantHex] of [
   ['FM9 Amp r1c1', 0x12, 1, 1, 58, 6, 'f0 00 01 74 12 01 32 00 3a 00 00 00 00 00 00 00 00 00 00 00 00 1e f7'],

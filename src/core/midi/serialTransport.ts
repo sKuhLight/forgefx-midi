@@ -8,7 +8,7 @@
  *   - Windows: "FM3 Communications Port" COM port (requires Fractal's
  *     FM3 USB **Serial** Driver, separate from the audio driver)
  *   - macOS:   /dev/cu.usbmodem* (built-in CDC-ACM, no driver)
- *   - Linux:   /dev/ttyACM* (cdc_acm)
+ *   - Linux:   the CDC-ACM serial node (cdc_acm)
  * The byte stream on that port is raw MIDI (SysEx frames verbatim) at a
  * nominal 115200 baud — CDC-ACM ignores the baud setting, we set it anyway.
  * HARDWARE-CONFIRMED end to end (FM3 fw 12.00, macOS Apple Silicon,

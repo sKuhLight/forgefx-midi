@@ -1,21 +1,9 @@
 // Axe-Fx II wire-byte → opcode-name vocabulary.
 //
-// Source: AxeEdit II `OpcodeDescriptor` struct in `.rdata`, mined via
-// `scripts/ghidra/DumpAxeEditIIOpcodeTable.java`. The
-// generator script lives in mcp-midi-control at
-// `scripts/_research/axeedit2-opcode-map.ts`; output committed to
-// `docs/devices/axe-fx-ii/axeedit-opcode-table.md`.
-//
-// To regenerate after an AxeEdit binary refresh:
-//   1. From this repo: scripts\ghidra\run-axeedit2-full-analyze.cmd
-//   2. Re-run scripts/ghidra/DumpAxeEditIIOpcodeTable.java via the
-//      headless launcher (output: samples/captured/decoded/
-//      ghidra-axeedit2-opcode-map.txt).
-//   3. In the consumer repo, run npx tsx
-//      scripts/_research/axeedit2-opcode-map.ts to emit the corrected
-//      wire-byte enum (the generator applies wire = enum - 1; don't
-//      subtract by hand).
-//   4. Replace the AXE_FX_II_OPCODES block below.
+// Source: AxeEdit II's `SYSEX_*` opcode descriptor table. The table is
+// maintained outside this package; this file carries only the derived
+// wire-byte enum (the generator applies wire = enum - 1; don't
+// subtract by hand when refreshing it).
 
 /**
  * Every SysEx function-byte AxeEdit II recognizes on the wire.

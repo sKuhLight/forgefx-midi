@@ -61,14 +61,13 @@ export interface Fm3ParamRange {
    *  knob rows store the log-normalized default 65534 * ln(def/min) / ln(max/min)
    *  (0 when def <= min). */
   readonly defaultRaw?: number;
-  /** Device-true unit token, verbatim from the CaptureRig v2 self-describe value
+  /** Device-true unit token, verbatim from the device's self-describe value
    *  view (e.g. 'Hz', 'dB', 'dB/OCT', 'dBu', 'dBV', 'SAMPLES', 'SECONDS').
    *  Present only where a capture observed a unit; absent for enum/label and
-   *  unitless params. (FM3 has no CaptureRig v2 capture yet, so no FM3 row
-   *  currently carries one — the field is declared for schema uniformity with
-   *  FM9/Axe-Fx III.) */
+   *  unitless params. (No FM3 row currently carries one — the field is
+   *  declared for schema uniformity with FM9/Axe-Fx III.) */
   readonly unit?: string;
-  /** Device-true value taper from the CaptureRig v2 curve fit (reliable fits
+  /** Device-true value taper from a device value-curve fit (reliable fits
    *  only): 'linear' | 'log' | 'flat' emitted bare; 'custom' also carries
    *  `taperPoints`. Absent when no reliable taper was captured; typecode-0x52
    *  knob rows carry 'linear' unless the rule was skipped for the row. */

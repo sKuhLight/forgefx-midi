@@ -93,8 +93,8 @@ export const FN_MULTIPURPOSE_RESPONSE = 0x64;
  *     (mouse-drag, intermediate values mid-drag) + two frames
  *     sub-action `09 00` (typed-input, final value). All 10 frames
  *     are 23 bytes, checksums validate, fields decode cleanly.
- *   •  Ghidra mining: opcode 0x01 appears in the III
- *     message-builder caller list — firmware code path is present.
+ *   •  Editor side: opcode 0x01 is used by the III
+ *     message builder — firmware code path is present.
  *
  * Earlier sessions (85+86) shipped `FN_SET_PARAMETER = 0x02` as a
  * II→III model-byte-swap port. That was WRONG — the III uses fn=0x01
@@ -151,12 +151,8 @@ function buildEnvelope(
 
 // ── 0x01 PARAMETER_SETGET ─────────────────────────────────────────
 //
-// Per cookbook entry [[iii-fn01-set-parameter-envelope]], AxeEdit
-// III's editor-side builder FUN_14033ec70 (Ghidra dump
-// `samples/captured/decoded/ghidra-axe-edit-iii-store-preset.txt`
-// L1325-1531, re-confirmed at
-// `ghidra-axe-edit-iii-actions-and-shapes.txt` L22641-22850) defines
-// the fn=0x01 payload as a 6-field structure:
+// AxeEdit III's editor-side builder defines the fn=0x01 payload as a
+// 6-field structure:
 //
 //   { action14, blockId14, paramId14, value32, modifier14, tailCount14, tail[] }
 //
@@ -166,9 +162,9 @@ function buildEnvelope(
 // 5-septet 32-bit unsigned (via `pack5Septet32`); tail[] variable
 // raw bytes (length = tailCount14).
 //
-// CORRECTED 2026-06-08 (FM3 fw 12.00 lldb + our FM9 capture, BoodieTraps):
+// CORRECTED 2026-06-08 (FM3 fw 12.00 + our FM9 capture, BoodieTraps):
 // the value32 field IS a 5-septet float32 at pos 12-16 — exactly the
-// FUN_14033ec70 layout — interpreted as IEEE-754. The earlier "value at
+// editor builder's layout — interpreted as IEEE-754. The earlier "value at
 // pos 15-16 as a packValue16, pos 12-14 zero" reading was a MISREAD: for the
 // small ordinals in the public captures (e.g. reverb 16 = 2^4), float32's low
 // three septets are zero, so its nonzero high septets happen to land at pos
@@ -185,7 +181,7 @@ function buildEnvelope(
 //   pos 21:    checksum
 //   pos 22:    F7
 //
-// modifier / tailCount / tail (the rest of FUN_14033ec70) stay zero and are not
+// modifier / tailCount / tail (the rest of the editor builder) stay zero and are not
 // exposed. Byte-exact vs the 5 oracle frames in setparam.test.ts.
 
 /**
@@ -206,10 +202,7 @@ export { packValue16, unpackValue16 };
 /**
  * Pack a 32-bit unsigned value into five 7-bit septets, LSB-first.
  *
- * Mirrors FUN_14033ec70 in AxeEdit III (the editor's canonical fn=0x01
- * payload builder) — Ghidra dump
- * `samples/captured/decoded/ghidra-axe-edit-iii-store-preset.txt`
- * L1463-1467:
+ * Mirrors the editor's canonical fn=0x01 payload builder in AxeEdit III:
  *
  *   pbVar4[6]  = (v >> 0)  & 0x7f
  *   pbVar4[7]  = (v >> 7)  & 0x7f
@@ -329,8 +322,8 @@ export function parseGen3SetValueEcho(bytes: readonly number[]): {
 /**
  * SET PARAMETER (function 0x01, sub-action 0x09 0x00 — typed input).
  *
- * Internal 6-field model (per FUN_14033ec70 in AxeEdit III; see
- * cookbook entry [[iii-fn01-set-parameter-envelope]]):
+ * Internal 6-field model (per AxeEdit III's canonical fn=0x01
+ * builder):
  *
  *   { action14, blockId14, paramId14, value32, modifier14, tailCount14, tail[] }
  *
@@ -507,7 +500,7 @@ export function buildSetParameterBypass(effectId: number, bypassed: boolean): nu
 
 /**
  * Predicate: is this an inbound fn=0x01 PARAMETER frame? Accepts any
- * sub-action — `52 00` (echo of host SET, observed in passive sniffs),
+ * sub-action — `52 00` (echo of host SET, observed passively),
  * `04 01` (STATE_BROADCAST), or `09 00` (theoretically a host
  * typed-input echo). The parser disambiguates by sub-action.
  */
@@ -715,8 +708,7 @@ export function buildBlockBulkReadPoll(
 // ── 0x03 REQUEST_PRESET_DUMP (host → device) ───────────────────────
 //
 // Byte-confirmed on FM9 (firmware 11.00, community "receive preset from
-// device" capture 2026-06-04, decoded in
-// `docs/_private/FM9-CAPTURE-RECEIVE+SWEEP-2026-06-04.md` and re-verified
+// device" capture 2026-06-04, re-verified
 // by the `fm9-decode-verify` workflow). A 10-byte request that asks the
 // device to send a STORED preset back as the 0x77/0x78/0x79 dump chain
 // (head + N×body + tail), the same envelope `fractal-gen3`'s
@@ -766,7 +758,7 @@ export function buildRequestPresetDump(
 // Wire-confirmed on FM9 (FW 11.00, 2026-06-04 receive capture; request is
 // byte-exact `F0 00 01 74 12 43 54 F7`, no payload). The body uses the same
 // 3-septet word packing as the stored 0x78 chunk; the canonical body length is
-// 3082 B (off-lengths in the USBPcap capture were drop/coalesce artifacts).
+// 3082 B (off-lengths seen in passive captures were drop/coalesce artifacts).
 //
 // This is the active-buffer scope `export_preset` maps to; distinct from the
 // stored-preset dump (fn=0x03 → 0x77/0x78/0x79). The dump is READ-only and the
@@ -868,8 +860,7 @@ export function assembleGen3BlockBulkRead(
 // The gen-3 editor places a block into a grid cell with fn=0x01
 // sub-action 0x32 (the editor names it `grid_set_position`). Captured
 // byte-exact from FM9-Edit (0x12), AxeEdit III (0x10), and FM3-Edit
-// (0x11) over loopMIDI; see the cookbook [[gen3-fn01-grid-set-position-insert]]
-// and the golden `scripts/cookbook-verify.ts#case-gen3-fn01-grid-set-position-insert`.
+// (0x11) over a virtual MIDI port.
 //
 // This supersedes the earlier fn=0x05 guess (a II-ported opcode the III
 // firmware never confirmed). The editor pairs the insert with a cell-select
@@ -898,8 +889,7 @@ const GRID_INSERT_SUB_ACTION = 0x32;
  * gridPos = (col - 1) * rows + (row - 1), column-major. The row stride is the
  * grid's row count, passed via `opts.rows`. The gen-3 grid is 6 rows on the
  * Axe-Fx III and FM9 (wire-confirmed), 4 rows on the FM3; pass its row count.
- * Default 6. Wire-confirmed across model 0x10/0x11/0x12; see the cookbook
- * [[gen3-fn01-grid-set-position-insert]] entry.
+ * Default 6. Wire-confirmed across model 0x10/0x11/0x12.
  */
 export function buildSetGridCell(opts: {
   row: number;
@@ -962,9 +952,8 @@ export function buildSetGridCell(opts: {
 // it DIVERGES at source row 1 and predicts the row-1 even-col fill we refuse.
 // Do NOT adopt into the active path: his row-1 prediction is itself
 // hardware-unconfirmed and his low-bits model differs from our colTerm/
-// destSign law, so it could regress validated cells. Close it with the R4
-// source-row-1 capture (r1c2→r1c3) before wiring; see
-// docs/_private/gen3-routing-capture-protocol.md (R4).
+// destSign law, so it could regress validated cells. Close it with a
+// source-row-1 capture (r1c2→r1c3) before wiring.
 //
 // ── 4-row grids (FM3 model=0x11) ──────────────────────────────────
 // Decoded via FM3-Edit loopMIDI (10 cables, 2026-06-05):
@@ -1061,17 +1050,13 @@ export function buildSetGridRouting(opts: {
 
 // ── CLEAR / RESET GRID CELL (fn=0x01 sub=0x30, companion sub=0x33) ─
 //
-// Ghidra FACT-tier decode (2026-06-09 mine of
-// `samples/captured/decoded/ghidra-axe-edit-iii-actions-and-shapes.txt`;
-// table: `docs/_private/III-SUBACTIONS-MINE-2026-06-09.md`). The gen-3
-// editor's "Clearing preset..." routine (FUN_140218f80, dump L9821-9976)
-// loops gridPos 0..0x53 (84 = the III/FM9 6x14 grid cell count), and per
-// cell emits a fn=0x01 sub=0x30 frame with the cell index in the value32
-// field, then a sub=0x33 companion carrying the same index. The thin
-// helper FUN_1403403e0 (dump L22283-22301) confirms the field map:
+// Editor-derived decode (2026-06-09). The gen-3 editor's "Clearing
+// preset..." routine loops gridPos 0..0x53 (84 = the III/FM9 6x14 grid cell
+// count), and per cell emits a fn=0x01 sub=0x30 frame with the cell index in
+// the value32 field, then a sub=0x33 companion carrying the same index. The
+// editor's field map is:
 // blockId14=0, paramId14=0, value32=gridPos (raw uint32, NOT a float32),
-// tailCount=0. After the loop, one final sub=0x30 with gridPos=0 is sent
-// (dump L9977-9988).
+// tailCount=0. After the loop, one final sub=0x30 with gridPos=0 is sent.
 //
 // Wire (23 bytes, same skeleton as every fn=0x01 frame):
 //
@@ -1079,11 +1064,10 @@ export function buildSetGridRouting(opts: {
 //    00 00 00 00 <cks> F7`
 //
 // Cross-evidence: the byte-identical sub=0x30 frame was captured live as
-// the block-insert "cell SELECT companion" (loopMIDI editor emulation,
-// cookbook [[gen3-fn01-grid-set-position-insert]]), with gridPos in the
-// same 12-13 position. The mine grounds the semantics: the "Clearing
-// preset..." string anchors sub=0x30 as the cell reset/clear (the insert
-// transaction clears the target cell before inserting into it).
+// the block-insert "cell SELECT companion" (editor emulation over a
+// virtual MIDI port), with gridPos in the same 12-13 position. The editor's
+// "Clearing preset..." string anchors sub=0x30 as the cell reset/clear (the
+// insert transaction clears the target cell before inserting into it).
 //
 // Open points (decoded, hardware-unverified):
 //   - Whether sub=0x30 alone deletes the block or the sub=0x33 companion
@@ -1095,7 +1079,7 @@ export function buildSetGridRouting(opts: {
 //     For III/FM9 (6x14 = 84) the two readings coincide.
 //
 // Scope: the editor only emits these sub-actions for model bytes
-// 0x10/0x11/0x12 (the dump's model gate). VP4 (0x14) has its own fn=0x01
+// 0x10/0x11/0x12 (the editor's model gate). VP4 (0x14) has its own fn=0x01
 // shape with no sub-action; do not use these builders for it.
 
 export const SUB_ACTION_CLEAR_BLOCK = 0x30;
@@ -1137,8 +1121,8 @@ function buildGridClearFrame(
  * companion it sends before a block insert. `rows` is the grid row
  * count: 6 for III/FM9 (default), 4 for FM3.
  *
- * Decoded from the Axe-Edit III binary (Ghidra, FACT tier: string
- * anchored) plus a live loopMIDI capture of the same frame; not yet
+ * Decoded from the Axe-Edit III editor plus a live capture of the
+ * same frame; not yet
  * hardware-confirmed as a standalone delete. The editor's clear loop
  * follows each sub=0x30 with the `buildClearBlockCompanion` frame.
  */
@@ -1153,7 +1137,7 @@ export function buildClearBlock(
  * CLEAR-CELL COMPANION (fn=0x01 sub=0x33): the frame the editor's
  * "Clearing preset..." loop sends immediately after each sub=0x30, with
  * the same gridPos in the value32 field (the editor reuses its action
- * struct, so the index rides through; dump L9916-9925). Semantics not
+ * struct, so the index rides through). Semantics not
  * separately anchored ("clear-preset companion step"); send it after
  * `buildClearBlock` to replicate the editor's exact clear sequence.
  */
@@ -1205,43 +1189,38 @@ export function buildSetPresetName(
 
 // ── NAME WRITES (fn=0x01 sub=0x28 preset, sub=0x2b scene) ──────────
 //
-// Ghidra FACT-tier decode (2026-06-09 mine of
-// `ghidra-axe-edit-iii-actions-and-shapes.txt`; table:
-// `docs/_private/III-SUBACTIONS-MINE-2026-06-09.md`). Two name-write
+// Editor-derived decode (2026-06-09). Two name-write
 // sub-actions, both carrying a 32-byte raw name as the fn=0x01 tail:
 //
-//   sub=0x28  preset-name write. Helper FUN_140340560 (dump L8014-8053):
+//   sub=0x28  preset-name write:
 //             blockId14=0, paramId14=0, tailCount=32, tail = the 32-byte
 //             name field. The "Clearing preset..." routine uses it to
-//             write the literal "<EMPTY>" as the cleared preset's name
-//             (dump L10410-10432), which is exactly what empty gen-3
-//             preset slots display. value32 is 0 in that traced flow
-//             (the preceding step writes 0; dump L10360).
+//             write the literal "<EMPTY>" as the cleared preset's name,
+//             which is exactly what empty gen-3 preset slots display.
+//             value32 is 0 in that flow (the preceding step writes 0).
 //
-//   sub=0x2b  indexed name write. Helper FUN_1403404a0 (dump
-//             L10522-10561): blockId14=0, paramId14=INDEX, tailCount=32,
-//             tail = the 32-byte name field. The "Clear All Names"
-//             routine FUN_1402da550 (dump L17584-17612) loops index
-//             0..7 with an empty name, matching the gen-3 8-scene count,
-//             so the index is read as the scene index (decoded
-//             inference; the indexed byte shape itself is exact).
+//   sub=0x2b  indexed name write: blockId14=0, paramId14=INDEX,
+//             tailCount=32, tail = the 32-byte name field. The "Clear
+//             All Names" routine loops index 0..7 with an empty name,
+//             matching the gen-3 8-scene count, so the index is read as
+//             the scene index (decoded inference; the indexed byte shape
+//             itself is exact).
 //
-// Tail encoding: the canonical fn=0x01 builder (FUN_14033ec70) sizes its
+// Tail encoding: the canonical fn=0x01 builder sizes its
 // payload as ceil(tailCount*8/7) + 15 and 8-to-7 septet-packs the tail
-// (cookbook [[iii-byte-stream-septet-pack-8to7]]); a 32-byte name packs
+// (byte-stream septet pack, 8-to-7); a 32-byte name packs
 // to 37 wire bytes, total frame 60 bytes. The packer is byte-identical
 // to `packValueChunked` (same sliding-window-with-carry algorithm,
 // cross-asserted in the golden tests).
 //
-// PAD CAVEAT: the editor formats the 32-byte field via FUN_140386ac0,
-// whose body is not in any dump we hold, so the pad byte for names
-// shorter than 32 chars is NOT cited. We space-pad (0x20), matching
+// PAD CAVEAT: the editor formats the 32-byte field with a formatter whose
+// pad byte for names shorter than 32 chars is NOT cited. We space-pad (0x20), matching
 // every Fractal 32-char name field decoded so far (AM4 rename,
-// hardware-confirmed space-pad from `session-20-rename-preset.pcapng`;
+// hardware-confirmed space-pad;
 // II fn=0x09; gen-3 fn=0x0d responses). Flagged for capture
 // confirmation.
 //
-// Scope: model bytes 0x10/0x11/0x12 only (the dump's model gate); VP4
+// Scope: model bytes 0x10/0x11/0x12 only (the editor's model gate); VP4
 // (0x14) has its own fn=0x01 shape. Decoded, hardware-unverified.
 
 export const SUB_ACTION_SET_PRESET_NAME = 0x28;
@@ -1294,7 +1273,7 @@ function buildFn01NameFrame(
  * Persisting the rename to flash still requires the store op
  * (`buildStorePreset`, fn=0x01 sub=0x26).
  *
- * Decoded from the Axe-Edit III binary (Ghidra FACT tier); pad byte
+ * Decoded from the Axe-Edit III editor; pad byte
  * convention-based (see section comment). Hardware-unverified.
  */
 export function buildRenamePreset(
@@ -1324,8 +1303,8 @@ export function buildSetSceneName(
 
 /**
  * CLEAR ALL SCENE NAMES: the 8-frame sequence the editor's "Clear All
- * Names" command emits (fn=0x01 sub=0x2b, index 0..7, empty name each;
- * FUN_1402da550). Returns the frames in emission order; send them
+ * Names" command emits (fn=0x01 sub=0x2b, index 0..7, empty name each).
+ * Returns the frames in emission order; send them
  * back-to-back to replicate the editor. Decoded, hardware-unverified.
  */
 export function buildClearAllSceneNames(
@@ -1341,10 +1320,8 @@ export function buildClearAllSceneNames(
 // The gen-3 editor saves the working buffer to a preset location with
 // fn=0x01 sub-action 0x26. This is the editor's own outbound store op,
 // captured byte-exact from FM9-Edit (model 0x12) AND AxeEdit III (model
-// 0x10) driven over loopMIDI (no hardware); the two captures produced
-// the byte-identical frame apart from the model byte. See the cookbook
-// entry [[gen3-fn01-store-preset]] and the golden
-// `scripts/cookbook-verify.ts#case-gen3-fn01-store-preset`.
+// 0x10) driven over a virtual MIDI port (no hardware); the two captures produced
+// the byte-identical frame apart from the model byte.
 //
 // This supersedes the earlier fn=0x1D guess (a II-ported opcode that was
 // never confirmed for gen-3 and kept gen-3 save in community-beta refusal).
@@ -1367,8 +1344,7 @@ const STORE_SUB_ACTION = 0x26;
 
 /**
  * STORE_PRESET (fn=0x01 sub=0x26): persist the working buffer to preset
- * location `presetNumber`. Wire-confirmed across model 0x10 and 0x12; see
- * the cookbook [[gen3-fn01-store-preset]] entry.
+ * location `presetNumber`. Wire-confirmed across model 0x10 and 0x12.
  */
 export function buildStorePreset(
   presetNumber: number,
@@ -1389,29 +1365,24 @@ export function buildStorePreset(
 
 // ── SCENE-BLOB TRANSFER (standalone fn=0x5a header + fn=0x5c trailer) ─
 //
-// Ghidra FACT-tier decode (2026-06-09 mine of
-// `ghidra-axe-edit-iii-actions-and-shapes.txt`, PART B; table:
-// `docs/_private/III-SUBACTIONS-MINE-2026-06-09.md`). The emitter
-// FUN_140328a10 (dump L22861-23053) builds a scene-targeted DATA
-// TRANSFER, not a bare scene switch:
+// Editor-derived decode (2026-06-09). The editor's emitter builds a
+// scene-targeted DATA TRANSFER, not a bare scene switch:
 //
-//   1. fn=0x5a header, 6-byte payload (dump L22925-22941):
+//   1. fn=0x5a header, 6-byte payload:
 //        byte 0    scene & 0x7f             (FACT: scene number)
 //        bytes 1-2 septet14(arg)            (caller-supplied 14-bit arg;
 //                                            semantics uncited)
 //        bytes 3-5 septet21(dataWordCount)  (uint32-word count of the
 //                                            data that follows)
 //   2. the data, streamed in chunks of up to 0x100 uint32 words
-//      (chunk-frame shape not decoded; FUN_1403359b0).
+//      (chunk-frame shape not decoded).
 //   3. fn=0x5c trailer, 5-byte payload = 5-septet XOR-32 checksum over
-//      all data words (XOR loop dump L23000-23019; emission L23025-23039;
-//      standalone form FUN_140336a40 L23059-23086. Byte 4 carries only
+//      all data words; byte 4 carries only
 //      the top 4 bits: `(xor32 >>> 28) & 0x0f`).
 //
-// The dump generator labeled this "fn=0x15 Change Scene"; the body shows
-// the real fn bytes are 0x5a/0x5c. The editor NEVER emits a bare fn=0x5a
-// with no data (a null data pointer aborts before any send, dump
-// L22915), so a zero-filled "switch scene" form of this frame would be a
+// The real fn bytes are 0x5a/0x5c (not a "Change Scene" function). The
+// editor NEVER emits a bare fn=0x5a with no data (a null data pointer
+// aborts before any send), so a zero-filled "switch scene" form of this frame would be a
 // guessed wire shape and is deliberately NOT provided. For a plain scene
 // switch use the spec-documented fn=0x0c (`buildSetScene`).
 //
@@ -2121,9 +2092,8 @@ export function parseMultipurposeResponse(
  * `undefined` for codes not yet documented; callers fall back to the
  * raw hex value.
  *
- * Source: AxeEdit III 1.14.31 release binary contains a contiguous
- * 8-byte-aligned `MIDI_ERROR_*` string table at `.rdata` offset
- * 0x597108 onward. Entries are accessed by result_code as index.
+ * Source: AxeEdit III 1.14.31 carries a contiguous
+ * `MIDI_ERROR_*` string table. Entries are accessed by result_code as index.
  * Index 0 = `MIDI_ERROR_BAD_CHKSUM` matches the empirically-verified
  * 0x64 frame whose host-side trigger was a malformed checksum, so the
  * index → result_code mapping is high-confidence. Codes 0x00..0x1B

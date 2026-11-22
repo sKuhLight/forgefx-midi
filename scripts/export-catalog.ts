@@ -108,8 +108,7 @@ const CATALOGS: DeviceCatalog[] = [
     model_byte: '0x15',
     support_status: 'hardware-verified',
     source:
-      'forgefx-midi/src/am4 — AM4-Edit metadata cache + hardware captures; ' +
-      'see docs/devices/am4/SYSEX-MAP.md',
+      'forgefx-midi/src/am4 — AM4-Edit metadata cache + hardware observation',
     data: {
       KNOWN_PARAMS: AM4_KNOWN_PARAMS,
       PARAM_ALIASES: AM4_PARAM_ALIASES,
@@ -143,7 +142,7 @@ const CATALOGS: DeviceCatalog[] = [
     support_status: 'hardware-verified (XL+, firmware Quantum 8.02)',
     source:
       'forgefx-midi/src/gen2/axe-fx-ii — wiki SysEx tables + Axe-Edit __block_layout.xml + ' +
-      'param-table mining; enum values inline per param (enumValues)',
+      'editor parameter tables; enum values inline per param (enumValues)',
     data: {
       KNOWN_PARAMS: AXEFX2_KNOWN_PARAMS,
       AXE_FX_II_BLOCKS,
@@ -156,14 +155,14 @@ const CATALOGS: DeviceCatalog[] = [
     model_byte: '0x10',
     support_status: 'community-beta (decoded; hardware confirmations from community captures)',
     source:
-      'forgefx-midi/src/gen3/axe-fx-iii — Axe-Edit III binary mining + published v1.4 ' +
+      'forgefx-midi/src/gen3/axe-fx-iii — Axe-Edit III editor data + published v1.4 ' +
       'third-party MIDI spec + community captures + the III editor effectDefinitions cache',
     notes: [
       'AXE_FX_III_BLOCKS (effect IDs) is shared across the gen-3 family (III/FM3/FM9).',
       'GEN3_READ_ROSTERS maps enum ordinals to display names for set-by-name; the ' +
         'ordinal IS the wire set value (float32(ordinal)).',
       'AXE3_ENUM_OVERRIDES is the DEVICE-TRUE enum vocabulary (family -> paramId -> ' +
-        'labels[], uniform with FM3/FM9), mined from the III editor effectDefinitions ' +
+        'labels[], uniform with FM3/FM9), derived from the III editor effectDefinitions ' +
         'cache (fw 32.6 era) — it supersedes GEN3_READ_ROSTERS spellings where both exist.',
       'AXE3_RANGES carries device-true display ranges (display = value * scale) from the ' +
         'same cache. Placeholder rows (all-zero float rows mirroring unused wire slots) are ' +
@@ -218,13 +217,13 @@ const CATALOGS: DeviceCatalog[] = [
     model_byte: '0x12',
     support_status: 'community-beta (decoded from FM9-Edit cache + community captures)',
     source:
-      'forgefx-midi/src/gen3/fm9 — mined from the FM9-Edit binary + effectDefinitions cache; ' +
+      "forgefx-midi/src/gen3/fm9 — derived from FM9-Edit's own data + effectDefinitions cache; " +
       'paramIds are FM9-true, NOT reused from the Axe-Fx III',
     notes: [
       GEN3_BLOCK_NOTE,
       'FM9_RANGES carries device-true display ranges (display = value * scale).',
       'FM9_ENUM_OVERRIDES is the COMPLETE device-true enum vocabulary ' +
-        '(family -> paramId -> labels[], uniform with FM3), mined from the FM9-Edit ' +
+        '(family -> paramId -> labels[], uniform with FM3), derived from the FM9-Edit ' +
         'effectDefinitions cache (76p0) — every enum param, not just the type rosters. ' +
         'The flat rosters (FM9_AMP_ROSTER et al.) are convenience views of the same data.',
     ],
@@ -246,7 +245,7 @@ const CATALOGS: DeviceCatalog[] = [
       'community-beta (reads + continuous-knob writes decoded from community captures; ' +
       'display calibration pending — wire values pass through as raw 0..65534)',
     source:
-      'forgefx-midi/src/gen3/vp4 — mined from the VP4-Edit binary; paramIds are VP4-true, ' +
+      "forgefx-midi/src/gen3/vp4 — derived from VP4-Edit's own data; paramIds are VP4-true, " +
       'NOT reused from the Axe-Fx III',
     notes: ['VP4 is a serial 4-slot chain with no amp/cab blocks.'],
     data: {

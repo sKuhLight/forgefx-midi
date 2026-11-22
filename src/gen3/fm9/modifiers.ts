@@ -10,11 +10,11 @@
  *   (ordinals and effectId/paramId references are sent as the integer's float).
  *
  * Provenance (2026-07-02): the field map (pid → role) is FM9 DEVICE-TRUE, byte-exact from FM9-Edit's
- * OWN binary — every pid was mined directly from the `{ int32 id, int32 pad, char* name }` struct
- * array in the macOS Mach-O's `__const` (Ghidra) AND independently resolves by name against
+ * OWN parameter table — every pid comes from the editor's `{ id, name }` parameter table
+ * (macOS editor) AND independently resolves by name against
  * `FM9_PARAMS` (the MOD family). The field map is byte-identical to the FM3 (shared gen-3 modifier
  * firmware). The slot ID enum (`ID_NULL`=0, `ID_GLOBAL`=1, `ID_CONTROL`=2, `ID_MODIFIER1`=3 …
- * `ID_MODIFIER32`) is confirmed present and in order in the FM9 binary, pinning eid 3 / 32 slots.
+ * `ID_MODIFIER32`) is confirmed present and in order in the FM9 editor, pinning eid 3 / 32 slots.
  * paramIds are DEVICE-SPECIFIC — never reuse another device's.
  *
  * ── Target binding (per-control assignment) ─────────────────────────

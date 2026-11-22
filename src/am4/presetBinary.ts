@@ -12,7 +12,7 @@
  *   - Preset name: 32-char ASCII, chunk-1 offset `0x0C` (= frame
  *     offset `0x21`), 48 wire bytes, 3-byte-per-2-char chunked
  *     encoding. Recovered 2026-05-21 from  calibration captures
- *     (`samples/exports/{ABCDEFG, Test 1234}.syx`).
+ *     (two exported test presets).
  *
  * The remaining structured fields (block-type IDs, parameter values,
  * per-scene bypass / channel state, routing) are NOT yet mapped; same

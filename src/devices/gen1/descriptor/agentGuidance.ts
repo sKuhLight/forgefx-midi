@@ -10,7 +10,7 @@ export const AXEFXGEN1_AGENT_GUIDANCE: Readonly<Record<string, string>> = Object
     'the project owns no gen-1 hardware, so nothing is hardware-confirmed. Tell the user changes are ' +
     'beta and to confirm on the front panel. If the user wants the missing preset-authoring surface ' +
     '(apply_preset / save), tell them ONE capture of a gen-1 AxeEdit editing session (place a block, ' +
-    'route, save, while USBPcap or MIDI Monitor records) is the single unlock — the how-to is ' +
+    'route, save, while a MIDI monitor records) is the single unlock — the how-to is ' +
     "docs/capture-guides/captures-axe-fx-gen1.md (section C2) in the project's fractal-midi repo on GitHub.",
   read_back:
     'gen-1 SUPPORTS parameter read-back (community-beta): function 0x02 with the trailing flag set to ' +

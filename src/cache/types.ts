@@ -43,7 +43,7 @@ export interface EnumRecord extends RecordBase {
 /**
  * Knob-taper classification recovered by a FULL-mode live walk (a normalized
  * SET sweep read back through the device's own formatted-value view, then
- * curve-fit). Port of CaptureRig v2's `classify_taper` (fas-re).
+ * curve-fit).
  *   - `shape` — 'linear'/'log'/'custom' are the reliable fits; 'flat' means the
  *     display never moved (block not instantiated / param inert — carries NO
  *     taper info) and 'unknown' means too few numeric samples. Both are

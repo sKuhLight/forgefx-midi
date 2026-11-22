@@ -4,8 +4,8 @@
  * The III params catalog (`params.ts`) tags each enum-typed parameter
  * with `unit: 'enum'` but cannot ship a `enumValues: {0: 'OFF', ...}`
  * table inline — III enum vocabularies are not in the public v1.4 spec
- * and have not been mined from the Axe-Edit III binary's `.rdata`
- * string pools yet (a substantial Ghidra workstream).
+ * and have not been mined from the Axe-Edit III editor's
+ * string pools yet (a substantial workstream).
  *
  * This overlay fills the gap with three layers of evidence-tagged data:
  *

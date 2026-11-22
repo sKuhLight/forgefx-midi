@@ -93,7 +93,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     // structural guess at id 15.
     30: 'presence',
     // 2026-04-29: Amp Expert-Edit page from
-    // session-40-amp-expert.pcapng + paired AM4-Edit screenshot
+    // a hardware capture + paired AM4-Edit screenshot
     // (FAS Modern III). Wiggle order + screenshot column order
     // disambiguates the OFF/ON switches in the IDEAL column.
     20: { name: 'bright_cap', unit: 'pf', displayMin: 10, displayMax: 10000 },
@@ -116,15 +116,14 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     84: { name: 'master_vol_trim', unit: 'count', displayMin: 0.1, displayMax: 10 },
     104: { name: 'high_treble', unit: 'db', displayMin: -12, displayMax: 12 },
     // 2026-05-16: DISTORT  closeout from
-    // samples/captured/decoded/am4-params-proposed.ts (Ghidra-mined
-    // catalog, Sessions 82–83) + cross-ref audit (35  amp
+    // the editor's parameter catalog (Sessions 82–83) + cross-ref audit (35  amp
     // params at pidLow=0x003a). Same workflow as REVERB + DELAY
     // commit 5de0870: route through paramNames.ts overrides to
     // correct the cache pipeline's c=1 → 'db' fallback for Hz / count
     // entries, plus full overrides where c is non-default (c=0.4166
     // for spkr-reso knobs, c=2 for spkrdrive, c=31.62 for definition).
     // Names re-state the GENERATED_PARAM_NAMES entry verbatim where
-    // present (firmware-truth from AM4-Edit.exe's variant resolver);
+    // present (firmware-truth from AM4-Edit's variant resolver);
     // only unit / displayMin / displayMax overrides are emitted to
     // correct the cache pipeline defaults. Enum-typed ids (typecode
     // 16) need custom value tables and stay hand-authored in
@@ -267,11 +266,11 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     13: 'level',
     14: 'mix',
     // 2026-04-25: EQ-page knobs decoded from
-    // session-30-drive-basic-blackglass-7k. Cache ids 16/17 are the
+    // a Blackglass 7K drive capture. Cache ids 16/17 are the
     // Hz cuts (raw passthrough — c=1 default would mis-classify as dB),
     // ids 20/21/23 are the knob_0_10 Bass/Mid/Treble flanking id 22
     // (mid frequency in Hz). T808 OD doesn't expose these — the
-    // session-30-drive-basic-t808-od capture only had drive/tone/level.
+    // T808 OD capture only had drive/tone/level.
     16: { name: 'low_cut', unit: 'hz', displayMin: 20, displayMax: 2000 },
     20: 'bass',
     21: 'mid',
@@ -280,7 +279,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     //  +  (2026-04-29): Blackglass 7K Drive
     // Expert-Edit page exposes a second-Hz cut + a 10-band post-Drive
     // Graphic EQ + DIGITAL LO-FI + ADVANCED knobs. Decoded from
-    // session-31-drive-expert.pcapng + paired AM4-Edit screenshot.
+    // a hardware capture + paired AM4-Edit screenshot.
     // Closes  (0x002d = high_mid knob, knob_0_10 — wiggled
     // adjacent to drive.mid_freq + drive.treble in the timeline).
     //
@@ -357,13 +356,12 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     56: { name: 'shift_1', unit: 'semitones', displayMin: -24, displayMax: 24 },
     57: { name: 'shift_2', unit: 'semitones', displayMin: -24, displayMax: 24 },
     // 2026-05-16: REVERB params from
-    // samples/captured/decoded/am4-params-proposed.ts (Ghidra-mined
-    // catalog, –83). Routed through paramNames.ts overrides
+    // the editor's parameter catalog (–83). Routed through paramNames.ts overrides
     // (not direct cacheParams hand-edit) per the  unit-fallback
     // trap — the cache pipeline's c=1 default emits `unit: 'db'`, wrong
     // for Hz / Q / count / semitones / seconds. Names defer to the
     // resolver-derived GENERATED_PARAM_NAMES entries (firmware-truth from
-    // AM4-Edit.exe's variant resolver) where they exist; only unit /
+    // AM4-Edit's variant resolver) where they exist; only unit /
     // displayMin / displayMax overrides are emitted to correct the
     // cache pipeline defaults. Eight ids (51, 53, 54, 59, 61, 64, 68,
     // 70) have no GENERATED entry — those that are enums need a custom
@@ -445,14 +443,14 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     // repeats, a standard Fractal delay feature.
     14: { name: 'feedback', unit: 'bipolar_percent', displayMin: -100, displayMax: 100 },
     // 2026-04-25: Ducking attenuation amount,
-    // session-30-delay-basic-digital-mono capture. Cache id=46 a=0
+    // Digital Mono delay capture. Cache id=46 a=0
     // b=80 c=1 → raw dB 0..80. Same signature as reverb.ducking.
     // delay.level (out-of-band, pidHigh=0x0000) and
     // delay.stack_hold (per-block non-Type enum, pidHigh=0x001f) are
     // hand-authored in params.ts directly.
     46: 'ducking',
     // 2026-04-29: Delay Expert-Edit page on
-    // Ambient Stereo from session-40-delay-expert.pcapng. ~32 new
+    // Ambient Stereo from a hardware capture. ~32 new
     // params across BASIC + DIFFUSOR + EQ + MIX + DUCKER + COMPANDER
     // + STACK/HOLD + LO FI sections. Cache shapes pin units; screenshot
     // labels confirm names. Bypass_mode / kill_dry / phase_reverse /
@@ -490,8 +488,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     87: { name: 'stack_feedback', unit: 'percent', displayMin: 0, displayMax: 100 },
     88: { name: 'hold_feedback', unit: 'percent', displayMin: 0, displayMax: 100 },
     // 2026-05-16: DELAY params from
-    // samples/captured/decoded/am4-params-proposed.ts (Ghidra-mined
-    // catalog, –83). Same workflow as the REVERB block above:
+    // the editor's parameter catalog (–83). Same workflow as the REVERB block above:
     // route through paramNames.ts overrides to correct the cache
     // pipeline's c=1 → 'db' fallback for Hz / Q / count / degrees
     // entries. Names use the resolver-derived GENERATED_PARAM_NAMES
@@ -582,7 +579,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     12: { name: 'rate', unit: 'hz', displayMin: 0.1 },
     14: 'depth',
     // 2026-04-29: Chorus Expert-Edit page on
-    // Analog Stereo from session-40-chorus-expert.pcapng. Cache shapes
+    // Analog Stereo from a hardware capture. Cache shapes
     // pin units; screenshot labels confirm names.
     11: { name: 'number_of_voices', unit: 'count', displayMin: 1, displayMax: 4 },
     15: { name: 'high_cut', unit: 'hz', displayMin: 200, displayMax: 20000 },
@@ -654,13 +651,11 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     2: BALANCE,
     10: 'type',
     // 2026-04-29: Wah Expert-Edit page on FAS Wah
-    // from session-40-wah-expert.pcapng. Cache shapes pin units;
+    // from a hardware capture. Cache shapes pin units;
     // screenshot labels confirm names. ** audit ( cont,
     // 2026-04-29):** the original auto-generated names for ids 13..20
     // were misaligned vs the AM4-Edit screenshot. Each label below was
-    // re-derived from the value-matched audit table run via
-    // `scripts/audit-block-vs-screenshot.ts` against
-    // `docs/audit-input/wah.json`. Old → new mapping:
+    // re-derived from a value-matched audit table. Old → new mapping:
     //   13 (was `q`,                  range 2..20) → `q_resonance`, range 0..10
     //   14 (was `q_resonance`)        → `q_tracking`
     //   15 (was `q_tracking`)         → `wah_control`
@@ -690,7 +685,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
   // 2026-04-29: NEW BLOCKS — PEQ (parametric EQ,
   // pidLow=0x0036, S2 cacheBlock=4) and Rotary (pidLow=0x0056, S3
   // cacheBlock=4). Neither has a Type enum at id=10. Captures from
-  // session-40-{peq,rot}-expert.pcapng.
+  // a hardware capture.
   peq: {
     1: 'mix',
     2: BALANCE,
@@ -720,8 +715,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     // FAS Rotary cabinet sim. Cache layout (cacheBlock=4 in S3).
     // ** audit ( cont, 2026-04-29):** initial cache-driven
     // names had two pidHigh swaps vs the AM4-Edit screenshot. Re-derived
-    // via `scripts/audit-block-vs-screenshot.ts` against
-    // `docs/audit-input/rotary.json`:
+    // via a value-matched audit table:
     //   id 10 (was `drive`)        → `rate` (Leslie speed knob; cache
     //                                  range 0..10 ×1 → display 0..10 Hz)
     //   id 21 (was `mic_spacing`)  → `drive` (cache range 0.5..500 ×10)
@@ -749,7 +743,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     1: 'mix',
     2: BALANCE,
     // 2026-04-25: Compressor first-page knobs from
-    // session-30-comp-basic-jfet-studio. Cache ids 10..15 are the
+    // a JFET Studio compressor capture. Cache ids 10..15 are the
     // canonical comp-config registers per Blocks Guide §Compressor:
     // Threshold (dB), Ratio (1..20:1, new `ratio` unit), Attack (ms),
     // Release (ms), Knee Type enum (id 14, not yet wiggled), Auto
@@ -766,7 +760,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     11: { name: 'ratio', unit: 'ratio', displayMin: 1, displayMax: 20 },
     //  +  (2026-04-29): JFET Studio Compressor
     // Expert-Edit page exposes a Sidechain section + a Drive-engine
-    // emphasis knob. Decoded from session-31-comp-jfet-expert.pcapng
+    // emphasis knob. Decoded from a hardware capture
     // + paired AM4-Edit screenshot. Cache shapes pin units; screenshot
     // labels confirm the names. Wire-vs-screenshot value mismatches on
     // Ratio (wire 2.22 / shot 3.000) and Look-Ahead (wire 4.33 ms / shot
@@ -795,7 +789,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     2: BALANCE,
     20: 'type',
     // 2026-04-29: GEQ Expert-Edit page on
-    // 10 Band Variable Q from session-40-geq-expert.pcapng. 10 bands
+    // 10 Band Variable Q from a hardware capture. 10 bands
     // (cache ids 10-19), all bipolar dB ±12, plus Master Q (id 21).
     // ** audit ( cont, 2026-04-29):** added Level
     // (hand-authored in params.ts because pidHigh=0x0000 has no cache
@@ -820,13 +814,13 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     // at cache-c=1 raw). Universal control for every filter type.
     11: { name: 'freq', unit: 'hz' },
     // 2026-04-25: Low/High cut on the
-    // filter Config page — `session-32-filter-extended.pcapng`. Cache
+    // filter Config page — a hardware capture. Cache
     // c=1 raw Hz; needs the 'hz' override since the generator default
     // for c=1 is 'db'. Wire-verified at 100 Hz / 1800 Hz.
     18: { name: 'low_cut', unit: 'hz', displayMin: 20, displayMax: 2000 },
     19: { name: 'high_cut', unit: 'hz', displayMin: 200, displayMax: 20000 },
     // 2026-04-26: All-Pass filter Config-page
-    // residuals — `session-33-filter-extended.pcapng`. Wire-verified
+    // residuals — a hardware capture. Wire-verified
     // at +13% / 4 poles on an All-Pass filter. Feedback's cache
     // signature (a=-1, b=1, c=100) requires the bipolar_percent
     // override since the generator default for c=100 is plain
@@ -869,7 +863,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     1: 'mix',
     2: BALANCE,
     // 2026-04-29: Config-page knobs from
-    // session-33-enhancer-extended.pcapng + paired screenshot. Wire-
+    // a hardware capture + paired screenshot. Wire-
     // verified at width=33% / depth=11% / low_cut=22.2 Hz /
     // high_cut=6500 Hz on a Modern enhancer. Width + Depth follow the
     // generator's c=100 → percent default; Low/High Cut need the 'hz'
@@ -885,7 +879,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
   gate: {
     2: BALANCE,
     // 2026-04-26: slot-Gate Config-page knobs on
-    // Modern Gate type — `session-34-slotgate-extended.pcapng`.
+    // Modern Gate type — a hardware capture.
     // Threshold/Attack/Hold/Release/Attenuation are dB and ms knobs
     // with cache c=1 (raw dB, signed) and c=1000 (ms) signatures
     // respectively. Sidechain enum (cache id=15) is hand-authored
@@ -904,7 +898,7 @@ export const PARAM_NAMES: Readonly<Record<string, Readonly<Record<number, ParamN
     // KNOWN_PARAMS for historical reasons — keep the name stable.
     15: 'mode',
     // 2026-04-25: Auto-Swell envelope params
-    // on the Volume/Pan Config page — `session-32-volpan-extended.pcapng`.
+    // on the Volume/Pan Config page — a hardware capture.
     // Threshold (id=16, dB) wire-verified at -20 dB; Attack (id=17, ms)
     // wire-verified at 300 ms. Cache c=1 for threshold (raw dB, needs
     // 'db' override since generator default is also 'db' but we set the

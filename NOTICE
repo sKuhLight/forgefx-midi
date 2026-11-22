@@ -18,8 +18,8 @@ parses MIDI / SysEx wire bytes for Fractal Audio hardware the
 consuming application's user already owns. Decode work is based on
 publicly-documented protocol information, including Fractal Audio's
 own "MIDI for Third-Party Devices" specifications, plus community
-reverse-engineering of editor binaries (JUCE BinaryData extraction,
-Ghidra symbol mining).
+analysis of the protocol and of data files shipped with Fractal's
+editor software, carried out solely for interoperability.
 
 The package name `fractal-midi` uses the "Fractal" trademark
 descriptively (nominative fair use) to identify the hardware family

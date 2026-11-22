@@ -1,7 +1,7 @@
 /**
  * Editor-layout catalog v2 generator.
  *
- * Parses the JUCE "config" layout XML embedded in each Fractal desktop editor
+ * Parses the "config" layout XML shipped with each Fractal desktop editor
  * (`__block_layout.xml`, `__amp_layout*.xml`) and emits the per-device
  * `<DEV>_LAYOUTS` data files that implement the v2 schema in
  * `src/editorLayouts.ts`. Document order in the XML == on-screen order and is
@@ -9,11 +9,11 @@
  * order). Every control's editor symbol (`parameterName`) is joined against
  * the device's own parameter catalog to resolve a wire `paramId`.
  *
- * SOURCE ROOT (RE material — never hard-coded here):
- *   Set FASRE_EDITOR_XML_ROOT to the directory that holds the extracted editor
- *   config XMLs, laid out as `<root>/<device>/decompile/juce_xml.../<file>.xml`
- *   under a `juce_xml` subfolder (the `<device>` dir names are matched by the
- *   CONFIG/Device model in the XML, not by directory name).
+ * SOURCE ROOT (local editor material — never hard-coded here):
+ *   Set FORGEFX_MIDI_EDITOR_XML_ROOT to a directory tree that holds the editor
+ *   config XMLs (`__block_layout.xml`, with any `__amp_layout*.xml` beside it).
+ *   The tree is walked; devices are matched by the CONFIG/Device model in the
+ *   XML, not by directory name.
  *   There is deliberately NO default — the generator refuses to run without it.
  *
  * SOURCES USED (path-free provenance, baked into each output header):
@@ -29,7 +29,7 @@
  * variants are kept under the DISTORT family; exactly one is `pinned` to the
  * device's current firmware ceiling.
  *
- * Run: FASRE_EDITOR_XML_ROOT=... npx tsx scripts/gen-editor-layouts.ts
+ * Run: FORGEFX_MIDI_EDITOR_XML_ROOT=... npx tsx scripts/gen-editor-layouts.ts
  */
 import { readdirSync, readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
@@ -476,7 +476,7 @@ function parseAmpLayouts(files: string[], resolve: Resolver, fwCeiling: number):
 // --------------------------------------------------------------------------
 interface DiscoveredDevice {
   model: string;
-  juceDir: string;
+  xmlDir: string;
   configName: string;
 }
 
@@ -504,8 +504,8 @@ function findBlockLayouts(dir: string, out: string[] = []): string[] {
 
 /**
  * Discover editor configs anywhere under `root`, matched by CONFIG/Device model
- * id (never by directory name). The whole tree is walked so the root can be the
- * shared RE archive that holds several editors at differing depths (e.g. FM3's
+ * id (never by directory name). The whole tree is walked so the root can be a
+ * shared archive that holds several editors at differing depths (e.g. FM3's
  * genuine model-17 config lives in its own subtree, the others in another).
  * Paths are sorted and de-duplicated by model, first-wins, so selection is
  * deterministic and stable across runs.
@@ -514,14 +514,14 @@ function discoverDevices(root: string): DiscoveredDevice[] {
   const found: DiscoveredDevice[] = [];
   const seen = new Set<string>();
   for (const bl of findBlockLayouts(root).sort()) {
-    const juceDir = dirname(bl);
+    const xmlDir = dirname(bl);
     const root2 = parseXml(readFileSync(bl, 'utf8'));
     const dev = findAll(root2, 'Device')[0];
     const config = findAll(root2, 'CONFIG')[0] ?? root2;
     const model = dev?.attrs.model ?? '?';
     if (seen.has(model)) continue;
     seen.add(model);
-    found.push({ model, juceDir, configName: config.attrs.name ?? '' });
+    found.push({ model, xmlDir, configName: config.attrs.name ?? '' });
   }
   return found;
 }
@@ -690,19 +690,19 @@ function headerFor(deviceLabel: string, sourceNote: string, constName: string): 
 }
 
 async function main() {
-  const root = process.env.FASRE_EDITOR_XML_ROOT;
+  const root = process.env.FORGEFX_MIDI_EDITOR_XML_ROOT;
   if (!root) {
-    console.error('FATAL: set FASRE_EDITOR_XML_ROOT to the editor-config XML source root.');
+    console.error('FATAL: set FORGEFX_MIDI_EDITOR_XML_ROOT to the editor-config XML source root.');
     process.exit(2);
   }
   if (!existsSync(root)) {
-    console.error(`FATAL: FASRE_EDITOR_XML_ROOT does not exist: ${root}`);
+    console.error(`FATAL: FORGEFX_MIDI_EDITOR_XML_ROOT does not exist: ${root}`);
     process.exit(2);
   }
 
   const devices = discoverDevices(root);
   console.log('Discovered editor configs (by model):');
-  for (const d of devices) console.log(`  model ${d.model} -> ${MODEL_TO_DEVICE[d.model]?.label ?? '?'}  [${d.configName}]  ${d.juceDir}`);
+  for (const d of devices) console.log(`  model ${d.model} -> ${MODEL_TO_DEVICE[d.model]?.label ?? '?'}  [${d.configName}]  ${d.xmlDir}`);
 
   const targets: Array<{ file: string; constName: string; label: string }> = [];
 
@@ -731,11 +731,11 @@ async function main() {
       constName = 'AXE3_LAYOUTS';
     }
 
-    const ampFiles = readdirSync(d.juceDir)
+    const ampFiles = readdirSync(d.xmlDir)
       .filter((f) => f.startsWith('__amp_layout') && f.endsWith('.xml'))
-      .map((f) => join(d.juceDir, f));
+      .map((f) => join(d.xmlDir, f));
 
-    const blRoot = parseXml(readFileSync(join(d.juceDir, '__block_layout.xml'), 'utf8'));
+    const blRoot = parseXml(readFileSync(join(d.xmlDir, '__block_layout.xml'), 'utf8'));
     const map = parseBlockLayout(blRoot, resolve, ampFiles.length > 0);
 
     if (ampFiles.length) {

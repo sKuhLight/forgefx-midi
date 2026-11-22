@@ -207,7 +207,7 @@ export {
 } from './applicability.js';
 export type { ActiveTypeContext, ApplicabilityCheck } from './applicability.js';
 
-// Editor / bridge labels (RE'd from AM4-Edit binary).
+// Editor / bridge labels (from AM4-Edit's parameter data).
 export {
   EDITOR_CONTROLS,
   EDITOR_CONTROL_FIRMWARE,
@@ -255,7 +255,7 @@ export {
   encodeRawIntRegister,
 } from './midiRegisters.js';
 
-// Tuner readout (block 0x0023) — DECODED from BigCapture (B2). Absolute float32
+// Tuner readout (block 0x0023) — DECODED from hardware observation. Absolute float32
 // note/freq/cents/string values, not the normalized meter treatment.
 export {
   AM4_TUNER_PID_LOW,

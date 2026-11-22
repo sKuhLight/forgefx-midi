@@ -3,7 +3,7 @@
  *
  * `channel` sits at pidHigh=0x07d2 in every block's own pidLow namespace.
  * amp/drive/reverb/delay are hardware-confirmed via real captures (see the
- * session-09/session-18 goldens in setparam.test.ts). The other 14 blocks
+ * hardware goldens in setparam.test.ts). The other 14 blocks
  * are pattern-extended from that offset (docs: chorus.channel note in
  * src/am4/params.ts) — this test locks in the encode/decode roundtrip for
  * all of them so a future capture that contradicts the pattern shows up as
@@ -29,7 +29,7 @@ function bytes(h: string): number[] {
 }
 
 /**
- * Active-channel READ goldens, byte-exact from Channels.pcapng (2026-07-11,
+ * Active-channel READ goldens, byte-exact from a hardware capture (2026-07-11,
  * AM4-Edit A→B→C→D→A both in-app and front-panel). The channel-SELECT register
  * 0x07D2 is unreadable (FORGEFXMID-16); 0x07DD long-read byte 50 is the reliable
  * source. See docs/AM4-CHANNEL-SWITCH-DECODE.md.

@@ -353,7 +353,7 @@ export function buildSetBlockType(
  * Payload = 4-byte uint32 LE location index (Z04 = 103 = 0x67 →
  * `67 00 00 00` raw, `33 40 00 00 00` after the 8-to-7 septet pack).
  *
- * Decoded  from `session-18-save-preset-z04.pcapng`. Byte-exact
+ * Decoded  from a hardware capture. Byte-exact
  * golden lives in `verify-msg`.
  *
  * WRITE SAFETY: overwrites the target location. Only Z04 is designated
@@ -392,7 +392,7 @@ export function buildSaveToLocation(locationIndex: number): number[] {
  *   [4..35]  32-byte ASCII name, space-padded. Names longer than 32
  *            chars throw; shorter names are space-padded to 32.
  *
- * Decoded  from `session-20-rename-preset.pcapng` — see
+ * Decoded  from a hardware capture — see
  * SYSEX-MAP §6e. Byte-exact golden in `verify-msg`.
  *
  * WRITE SAFETY: like save-to-location, this writes to a specific preset
@@ -418,7 +418,7 @@ export function buildSetPresetName(locationIndex: number, name: string): number[
   const raw = new Uint8Array(4 + PRESET_NAME_BYTES);
   new DataView(raw.buffer).setUint32(0, locationIndex, true);
   // AM4 names are space-padded (0x20), not null-padded. Confirmed by
-  // decoding session-20-rename-preset (raw bytes 4+N..35 were all 0x20
+  // decoding the rename-preset frames (raw bytes 4+N..35 were all 0x20
   // after the "boston" prefix).
   for (let i = 0; i < PRESET_NAME_BYTES; i++) {
     raw[4 + i] = i < name.length ? name.charCodeAt(i) : 0x20;
@@ -448,8 +448,7 @@ export function buildSetPresetName(locationIndex: number, name: string): number[
  * Payload = 4-byte uint32 LE scene index — NOT a float32, to match
  * the integer semantics of save-to-slot.
  *
- * Decoded  from `session-21-switch-scene-1-3-4.pcapng`
- * (combined with `session-18-switch-scene.pcapng`). All four scene
+ * Decoded  from two hardware captures. All four scene
  * indices confirmed: 0→scene 1, 1→scene 2, 2→scene 3, 3→scene 4.
  * pidHigh stays fixed at 0x000D; only the u32 value changes. Byte-
  * exact goldens for all four scenes live in `verify-msg`.
@@ -486,7 +485,7 @@ export function buildSwitchScene(sceneIndex: number): number[] {
  * then emits this write. Same stateful-scoping rule that applies to
  * channel switches and SET_PARAM writes (see  / ).
  *
- * Decoded  from four session-23 captures: amp/drive/reverb
+ * Decoded  from four hardware captures: amp/drive/reverb
  * bypass-on (float 1.0) and amp bypass-off (float 0.0). Byte-exact
  * goldens in `verify-msg`.
  */
@@ -524,7 +523,7 @@ export function buildSetBlockBypass(blockPidLow: number, bypassed: boolean): num
  * index — e.g. index 1 → float 1.0 → raw bytes `00 00 80 3f`. This is
  * DIFFERENT from scene-switch (u32 LE) and save-to-slot (u32 LE); both
  * encodings coexist in the same register. Decoded  from
- * `session-22-switch-preset-via-ui.pcapng`, which captured the user
+ * a hardware capture of the user
  * clicking A01 → A02 → A01 in AM4-Edit. Two unique writes: float 1.0
  * (A02) and float 0.0 (A01). Byte-exact goldens in `verify-msg`.
  *
@@ -552,8 +551,7 @@ export function buildSwitchPreset(locationIndex: number): number[] {
  *     — scene names are scoped to the working buffer, not a preset
  *     location.
  *
- * Decoded  from `session-20-rename-scene.pcapng` (scene 1)
- * plus `session-22-rename-scene-{2,3,4}.pcapng` (scenes 2/3/4).
+ * Decoded  from hardware captures (scene 1, then scenes 2/3/4).
  * Byte-exact goldens in `verify-msg` for scenes 2/3/4 with names
  * "clean" / "chorus" / "lead"; scene 1 was the initial Session 19g
  * capture confirming pidHigh=0x0037.
@@ -614,7 +612,7 @@ const ACTIVE_BUFFER_SENTINEL = 0x7f;
  * (0x77 header + 4x 0x78 chunks + 0x79 footer, 12,352 bytes total).
  *
  * Wire shape (decoded  /  byte-exact from
- * `samples/captured/session-51-export-preset.tshark.txt`; AM4-Edit's
+ * a hardware capture of AM4-Edit's
  * File -> Export Preset action against the working buffer):
  *
  *   F0 00 01 74 15 03 7F 7F 00 [cs] F7        (11 bytes total)
@@ -664,7 +662,7 @@ export function buildRequestActiveBufferDump(): number[] {
  * active dumps with nothing in between), and the post-request buffer
  * did not match the requested slot's content — i.e. unlike the
  * Axe-Fx II's slot-addressed fn 0x03, this does NOT reload the buffer.
- * Captures: samples/captured/hw132/am4-stored-{a01,a02-h1,z04}.syx.
+ * Observed with stored-preset dumps of A01, A02 and Z04.
  */
 export function buildRequestStoredPresetDump(locationIndex: number): number[] {
   if (!Number.isInteger(locationIndex) || locationIndex < 0 || locationIndex > 103) {
@@ -694,8 +692,7 @@ export function buildRequestStoredPresetDump(locationIndex: number): number[] {
  * `size` is septet-14-bit `itemCount` (the number of 16-bit ushorts in
  * the chunk payload); each ushort decodes via the same 3-byte packed-
  * septet shape as Axe-Fx II (`decode16Packed`). See
- * `docs/devices/am4/SYSEX-MAP.md` §6oa and cookbook
- * `am4-fn1f-atomic-read` for the full contract.
+ * `docs/devices/am4/SYSEX-MAP.md` §6oa for the full contract.
  *
  * effectId 0 NACKs with multipurpose-response result_code 0x06 — the
  * device requires a valid effectId. The chunk-position-to-paramId
@@ -739,8 +736,8 @@ const READ_TYPE_SHORT = 0x0e;
 const READ_RESPONSE_PAYLOAD_RAW_BYTES = 4;
 
 /**
- * AM4-Edit live/value poll action. Capture-confirmed (BigCapture 2026-07-05,
- * see docs/AM4-CAPTURE-2026-07-05.md): AM4-Edit reads live meter/tuner-style
+ * AM4-Edit live/value poll action. Capture-confirmed (2026-07-05,
+ * see docs/AM4-LIVE-POLLS.md): AM4-Edit reads live meter/tuner-style
  * values with `action=0x0010`. The response is **byte-shape-identical** to a
  * short read (23 bytes, `hdr4=0x0004`, 5 packed septets → 4 raw bytes) — only
  * the action code differs. The 4 payload bytes are a `float32` LE (same
@@ -765,7 +762,7 @@ export const POLL_READ_ACTIONS: readonly number[] = [
 
 /**
  * Long-form param-descriptor read action. Empirically pinned 
- * from `samples/captured/session-46-front-panel-dly-rev-bypass.pcapng`:
+ * from a hardware capture:
  * AM4-Edit polls bypass state with `action=0x0d`, getting a 64-byte
  * response with `hdr4=0x0028` (40 raw payload bytes). The short read
  * (`action=0x0e`, hdr4=4) returns a static value that doesn't track
@@ -788,7 +785,7 @@ export const LONG_READ_BYPASS_FLAG_BYTE = 22;
  * of the current channel is a SEPARATE register `0x07DD`: a long read
  * (`action=0x0D`) of `(blockPidLow, 0x07DD)` returns a block-status structure
  * whose **byte 50** (of the 8→7-unpacked payload) is the active channel index
- * (0=A … 3=D). Decoded byte-exact from `Channels.pcapng` (AM4-Edit swap A→B→C→D→A
+ * (0=A … 3=D). Decoded byte-exact from a hardware capture (AM4-Edit swap A→B→C→D→A
  * both in-app and from the front panel) — see docs/AM4-CHANNEL-SWITCH-DECODE.md.
  * Verified per-block for amp/drive/reverb/enhancer; other channel-bearing blocks
  * follow the same `(pidLow, 0x07DD)` pattern.
@@ -1007,8 +1004,8 @@ export interface ReadResponse {
  * `asUInt32LE()` for enum/type registers. See SYSEX-MAP.md §6a's "Decode
  * rule" note.
  *
- * Decoded from `samples/captured/session-42-readprobe.pcapng`; live-poll
- * actions confirmed from BigCapture 2026-07-05.
+ * Decoded from a hardware capture; live-poll
+ * actions confirmed from a 2026-07-05 hardware capture.
  */
 export function parseReadResponse(bytes: number[]): ReadResponse {
   if (bytes.length !== 23) {
@@ -1084,7 +1081,7 @@ const READ_PRESET_NAME_RESPONSE_PACKED_BYTES = 37;
  * preset into the working buffer.
  *
  * Wire shape (decoded  /  from
- * `samples/captured/session-46-am4edit-launch-device-connected.midi-events.txt`):
+ * a hardware capture of the AM4-Edit launch with the device connected):
  *
  *   F0 00 01 74 15 01 [4E 01] [0B 00] [12 00] [00 00] [04 00]
  *                     [5 packed bytes — u32 LE location index] <cs> F7
@@ -1161,7 +1158,7 @@ export interface GetPresetNameResponse {
  * specific field that didn't match.
  *
  * Decoded  /  from
- * `samples/captured/session-46-am4edit-launch-device-connected.midi-events.txt`.
+ * a hardware capture of the AM4-Edit launch with the device connected.
  * Byte-exact goldens for one populated location (A01 → "AM4 Gig Rig")
  * and one empty location (X02 → `<EMPTY>`) in `verify-msg`.
  */

@@ -5,10 +5,10 @@
  *    preamble + section header) exercising an enum record, a float record,
  *    a 0xffff name table, and a 0xfff0 cab table with wireIds.
  * 2. Zero-resync: a non-zero record `pad` throws a WalkError (BAD-PAD).
- * 3. Guarded real-cache cross-check: if the raw FM3 12p0 `.cache` is present,
- *    parse it and assert JSON.stringify equality with the committed
- *    `fm3-12p0.walk.json` fixture. Skipped (not failed) when absent — CI
- *    won't have it.
+ * 3. Guarded real-cache cross-check: if the raw FM3 12p0 `.cache` is supplied
+ *    (set `FORGEFX_MIDI_EDITOR_CACHE` to its path), parse it and assert
+ *    JSON.stringify equality with the committed `fm3-12p0.walk.json`
+ *    fixture. Skipped (not failed) when unset or absent — CI won't have it.
  * 4. Empty names: a later empty entry and an empty first entry inside a cab/IR
  *    table are accepted; an all-empty table is a table only with a parallel
  *    wire-id array, otherwise a float-tailed record.
@@ -25,8 +25,8 @@ import { parseCacheRecords, WalkError } from '../../src/cache/records.js';
 import type { CacheRecord, EnumRecord, FloatRecord } from '../../src/cache/types.js';
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
-const REAL_CACHE =
-  '/home/pascal/Dokumente/Repositorys/FractalAudio/fas-re/raw/archive/fm3-protocol/samples/effectDefinitions_11_12p0.cache';
+// Optional local fixture: path to an FM3 12p0 effectDefinitions `.cache`, from the environment.
+const REAL_CACHE = process.env['FORGEFX_MIDI_EDITOR_CACHE'] ?? '';
 
 export const RECORDS_CASE_COUNT = 7;
 
@@ -220,8 +220,8 @@ export function runRecords(): void {
 
   // ---- Case 3: guarded real-cache cross-check -----------------------------
   {
-    if (!existsSync(REAL_CACHE)) {
-      console.log('  SKIP cache/records real-cache cross-check (FM3 .cache absent)');
+    if (!REAL_CACHE || !existsSync(REAL_CACHE)) {
+      console.log('  SKIP cache/records real-cache cross-check (FM3 .cache absent; set FORGEFX_MIDI_EDITOR_CACHE)');
     } else {
       const raw = readFileSync(REAL_CACHE);
       const bytes = new Uint8Array(raw.buffer, raw.byteOffset, raw.byteLength);

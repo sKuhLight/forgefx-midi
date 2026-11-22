@@ -56,71 +56,71 @@ const cases: Case[] = [
     expected: 'f000017415013a000b00010000000400000000000025f7',
   },
   {
-    label: 'buildSetParam amp.bass 6 (session-06)',
+    label: 'buildSetParam amp.bass 6',
     built: buildSetParam('amp.bass', 6),
     expected: 'f000017415013a000c000100000004004d2623137801f7',
   },
   {
-    label: 'buildSetParam amp.channel 1 (session-09 channel-B toggle)',
+    label: 'buildSetParam amp.channel 1 (channel-B toggle)',
     built: buildSetParam('amp.channel', 1),
     expected: 'f000017415013a00520f010000000400000010037818f7',
   },
   {
-    label: 'buildSetParam drive.channel 1 (session-18)',
+    label: 'buildSetParam drive.channel 1',
     built: buildSetParam('drive.channel', 1),
     expected: 'f000017415017600520f010000000400000010037854f7',
   },
   {
-    label: 'buildSetParam reverb.channel 1 (session-18)',
+    label: 'buildSetParam reverb.channel 1',
     built: buildSetParam('reverb.channel', 1),
     expected: 'f000017415014200520f010000000400000010037860f7',
   },
   {
-    label: 'buildSetParam delay.channel 1 (session-18)',
+    label: 'buildSetParam delay.channel 1',
     built: buildSetParam('delay.channel', 1),
     expected: 'f000017415014600520f010000000400000010037864f7',
   },
   {
-    label: 'buildSetParam chorus.type 1 (session-18)',
+    label: 'buildSetParam chorus.type 1',
     built: buildSetParam('chorus.type', 1),
     expected: 'f000017415014e000a0001000000040000001003783bf7',
   },
   {
-    label: 'buildSetParam flanger.type 8 (session-18)',
+    label: 'buildSetParam flanger.type 8',
     built: buildSetParam('flanger.type', 8),
     expected: 'f0000174150152000a00010000000400000000040840f7',
   },
   {
-    label: 'buildSetParam phaser.type 3 (session-18)',
+    label: 'buildSetParam phaser.type 3',
     built: buildSetParam('phaser.type', 3),
     expected: 'f000017415015a000a00010000000400000008040048f7',
   },
 
   // Block type
   {
-    label: 'buildSetBlockType(2, none) — session-18 block-clear-to-none',
+    label: 'buildSetBlockType(2, none) — block-clear-to-none',
     built: buildSetBlockType(2, BLOCK_TYPE_VALUES.none),
     expected: 'f000017415014e01100001000000040000000000004bf7',
   },
   {
-    label: 'buildSetBlockType(3, reverb) — session-18 block-type-gte-to-rev',
+    label: 'buildSetBlockType(3, reverb) — block-type-gte-to-rev',
     built: buildSetBlockType(3, BLOCK_TYPE_VALUES.reverb),
     expected: 'f000017415014e01110001000000040000001044100ef7',
   },
   {
-    label: 'buildSetBlockType(4, amp) — session-18 block-add-none-to-amp',
+    label: 'buildSetBlockType(4, amp) — block-add-none-to-amp',
     built: buildSetBlockType(4, BLOCK_TYPE_VALUES.amp),
     expected: 'f000017415014e01120001000000040000000d041050f7',
   },
 
   // Save + rename
   {
-    label: 'buildSaveToLocation(Z04) — session-18 save-preset-z04',
+    label: 'buildSaveToLocation(Z04) — save-preset-z04',
     built: buildSaveToLocation(parseLocationCode('Z04')),
     expected: 'f00001741501000000001b000000040033400000007df7',
   },
   {
-    label: 'buildSetPresetName(Z04, "boston") — session-20-rename-preset',
+    label: 'buildSetPresetName(Z04, "boston") — rename-preset',
     built: buildSetPresetName(parseLocationCode('Z04'), 'boston'),
     expected:
       'f000017415014e010b000c00000024003340000003095e733a1b6d6201004020100804020100402010080402010040201008040201004020100009f7',
@@ -128,100 +128,100 @@ const cases: Case[] = [
 
   // Switch scene
   {
-    label: 'buildSwitchScene(0) — session-21 switch-to-scene-1',
+    label: 'buildSwitchScene(0) — switch-to-scene-1',
     built: buildSwitchScene(0),
     expected: 'f000017415014e010d00010000000400000000000056f7',
   },
   {
-    label: 'buildSwitchScene(1) — session-18-switch-scene (scene 2)',
+    label: 'buildSwitchScene(1) — switch-scene (scene 2)',
     built: buildSwitchScene(1),
     expected: 'f000017415014e010d00010000000400004000000016f7',
   },
   {
-    label: 'buildSwitchScene(2) — session-21 switch-to-scene-3',
+    label: 'buildSwitchScene(2) — switch-to-scene-3',
     built: buildSwitchScene(2),
     expected: 'f000017415014e010d00010000000400010000000057f7',
   },
   {
-    label: 'buildSwitchScene(3) — session-21 switch-to-scene-4',
+    label: 'buildSwitchScene(3) — switch-to-scene-4',
     built: buildSwitchScene(3),
     expected: 'f000017415014e010d00010000000400014000000017f7',
   },
 
   // Switch preset (float-encoded location index)
   {
-    label: 'buildSwitchPreset(0) — session-22 switch-to-A01 (float 0.0)',
+    label: 'buildSwitchPreset(0) — switch-to-A01 (float 0.0)',
     built: buildSwitchPreset(0),
     expected: 'f000017415014e010a00010000000400000000000051f7',
   },
   {
-    label: 'buildSwitchPreset(1) — session-22 switch-to-A02 (float 1.0)',
+    label: 'buildSwitchPreset(1) — switch-to-A02 (float 1.0)',
     built: buildSwitchPreset(1),
     expected: 'f000017415014e010a0001000000040000001003783af7',
   },
 
   // Read preset name (non-destructive stored-preset read)
   {
-    label: 'buildGetPresetName(0) — session-46 launch capture frame 45 (A01)',
+    label: 'buildGetPresetName(0) — launch capture frame 45 (A01)',
     built: buildGetPresetName(0),
     expected: 'f000017415014e010b00120000000400000000000043f7',
   },
   {
-    label: 'buildGetPresetName(1) — session-46 launch capture frame 49 (A02)',
+    label: 'buildGetPresetName(1) — launch capture frame 49 (A02)',
     built: buildGetPresetName(1),
     expected: 'f000017415014e010b00120000000400004000000003f7',
   },
   {
-    label: 'buildGetPresetName(103) — session-46 launch capture (Z04)',
+    label: 'buildGetPresetName(103) — launch capture (Z04)',
     built: buildGetPresetName(103),
     expected: 'f000017415014e010b00120000000400334000000030f7',
   },
 
-  // Active-buffer dump request ( / session-51)
+  // Active-buffer dump request
   {
-    label: 'buildRequestActiveBufferDump() — session-51 export-preset',
+    label: 'buildRequestActiveBufferDump() — export-preset',
     built: buildRequestActiveBufferDump(),
     expected: 'f000017415037f7f0013f7',
   },
 
   // Scene rename
   {
-    label: 'buildSetSceneName(1, "clean") — session-22-rename-scene-2',
+    label: 'buildSetSceneName(1, "clean") — rename-scene-2',
     built: buildSetSceneName(1, 'clean'),
     expected:
       'f000017415014e0138000c000000240000000000030d5865305b44020100402010080402010040201008040201004020100804020100402010005ef7',
   },
   {
-    label: 'buildSetSceneName(2, "chorus") — session-22-rename-scene-3',
+    label: 'buildSetSceneName(2, "chorus") — rename-scene-3',
     built: buildSetSceneName(2, 'chorus'),
     expected:
       'f000017415014e0139000c000000240000000000030d506f391d2e3201004020100804020100402010080402010040201008040201004020100048f7',
   },
   {
-    label: 'buildSetSceneName(3, "lead") — session-22-rename-scene-4',
+    label: 'buildSetSceneName(3, "lead") — rename-scene-4',
     built: buildSetSceneName(3, 'lead'),
     expected:
       'f000017415014e013a000c00000024000000000003314a613208040201004020100804020100402010080402010040201008040201004020100067f7',
   },
 
-  // Block bypass (session-23 scene-scoped captures)
+  // Block bypass (scene-scoped captures)
   {
-    label: 'buildSetBlockBypass(amp, true) — session-23-scene-2-amp-bypass',
+    label: 'buildSetBlockBypass(amp, true) — scene-2-amp-bypass',
     built: buildSetBlockBypass(BLOCK_TYPE_VALUES.amp, true),
     expected: 'f000017415013a000300010000000400000010037846f7',
   },
   {
-    label: 'buildSetBlockBypass(drive, true) — session-23-scene-3-drive-bypass',
+    label: 'buildSetBlockBypass(drive, true) — scene-3-drive-bypass',
     built: buildSetBlockBypass(BLOCK_TYPE_VALUES.drive, true),
     expected: 'f000017415017600030001000000040000001003780af7',
   },
   {
-    label: 'buildSetBlockBypass(reverb, true) — session-23-scene-4-reverb-bypass',
+    label: 'buildSetBlockBypass(reverb, true) — scene-4-reverb-bypass',
     built: buildSetBlockBypass(BLOCK_TYPE_VALUES.reverb, true),
     expected: 'f000017415014200030001000000040000001003783ef7',
   },
   {
-    label: 'buildSetBlockBypass(amp, false) — session-23-scene-2-amp-unbypass',
+    label: 'buildSetBlockBypass(amp, false) — scene-2-amp-unbypass',
     built: buildSetBlockBypass(BLOCK_TYPE_VALUES.amp, false),
     expected: 'f000017415013a00030001000000040000000000002df7',
   },
@@ -242,7 +242,7 @@ const cases: Case[] = [
 
   // ---------------------------------------------------------------------
   // Live user captures (2026-07-02) — independent third-party AM4 over
-  // USB-MIDI. Wireshark pcapng, de-chunked and reassembled from the raw
+  // USB-MIDI. De-chunked and reassembled from the raw
   // 4-byte USB-MIDI event packets. These upgrade preset-swap /
   // save-to-location / amp-model-change from single-source to a second,
   // independent hardware confirmation, byte-for-byte.

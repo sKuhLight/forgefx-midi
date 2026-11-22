@@ -11,9 +11,9 @@
  *
  * EVIDENCE (cross-validated, no hardware): the cell layout below was
  * contributed by the MIT-licensed `ai-tone-assistant` community project
- * (derived from its own FM9 Wireshark captures) and INDEPENDENTLY cross-validated
+ * (derived from its own FM9 captures) and INDEPENDENTLY cross-validated
  * here against our own FM9 capture
- * (`samples/captured/decoded/fm9-receive-preset-from-device-harp-2026-06-04.frames.json`,
+ * (a 2026-06-04 receive-preset-from-device capture,
  * model 0x12): the 10 empty-target sub=0x2E responses decode identically
  * to a coherent grid whose real-block effect IDs match `blockTypes.ts`
  * (Amp 58, Cab 62, Comp 46, Graphic EQ 50, Chorus 78, Drive 118) and

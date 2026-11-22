@@ -4,8 +4,7 @@
  * The VP4 reuses the gen-3 envelope + XOR checksum + septet encoding, but its
  * fn=0x01 SET frame is its OWN shape — NOT the Axe-Fx III's. Decoded byte-exact
  * from two community captures (Kevin Iudicello, fw 4.03; the 2026-06-09 edit
- * session). See `docs/devices/vp4/SYSEX-MAP.md` (PARAMETER SET) and
- * `samples/captured/decoded/vp4-403-v2/FINDINGS.md`.
+ * session). See `docs/devices/vp4/SYSEX-MAP.md` (PARAMETER SET).
  *
  * Divergence from the III (why this is a separate module, not the shared codec):
  *   • NO 2-byte sub-action. effectId sits at payload pos 0-1 (III: pos 2-3, after

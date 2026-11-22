@@ -10,8 +10,7 @@
  *                       the Axe-Fx III, FM3, and FM9 each pass their OWN
  *                       table, because paramIds are firmware-specific
  *                       ordinals (reusing the III's mis-addresses FM3 13.4%
- *                       / FM9 24% of the symbols they share with the III, see
- *                       cookbook `_negative/gen3-paramid-reuse-across-model-bytes`).
+ *                       / FM9 24% of the symbols they share with the III).
  *   - `resolveEffectId` block-name -> effect ID (shared; the III's).
  *
  * The III passes the III catalog and, with `dropEmptyMappedBlocks: false`,
@@ -654,7 +653,7 @@ export function createModernCatalog(opts: {
    * unconditionally even when their mapped family carries params. The mined
    * catalog is shared across the gen-3 editor family, so a device-true table
    * can list params for a block a given unit lacks (VP4 carries DISTORT /
-   * CABINET params from the shared editor binary but has no amp/cab blocks).
+   * CABINET params from the shared editor data but has no amp/cab blocks).
    * `dropEmptyMappedBlocks` only removes EMPTY families, so non-empty-but-
    * absent blocks need this explicit list.
    */

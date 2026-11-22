@@ -7,8 +7,8 @@
  *   (model byte 0x10 = Axe-Fx III). eid = 199. Values are float32.
  *
  * ── Provenance ───────────────────────────────────────────────────────
- * Region bases + effectId recovered from the Axe-Edit III binary (Ghidra-mined param catalog,
- * cross-validated against the macOS Mach-O v1.14.34 strings, 2026-07-02). `ID_FOOTCONTROLLER`
+ * Region bases + effectId recovered from the Axe-Edit III editor's param catalog,
+ * cross-validated against the macOS editor v1.14.34 (2026-07-02). `ID_FOOTCONTROLLER`
  * sits at enum index 199 in the III's own effect-ID enum (`ID_NULL=0, ID_GLOBAL=1, ID_CONTROL=2,
  * ID_MODIFIER1=3, … ID_FOOTCONTROLLER=199`), so eid 199 is device-CONFIRMED, not assumed.
  *

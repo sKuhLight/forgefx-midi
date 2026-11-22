@@ -26,8 +26,7 @@
  * Registration order in `src/server/index.ts` is INTENTIONAL: Axe-Fx II
  * registers BEFORE AM4 so the more-specific `/axe-?fx/i` regex fires
  * first on port names like "Fractal Axe-Fx II Port 1". AM4's
- * `/Fractal/i` regex stays as a catch-all (Q4 answered Session 66 wrap;
- * see `docs/_private/axefx2-descriptor-plan.md` § 9).
+ * `/Fractal/i` regex stays as a catch-all (Q4 answered Session 66 wrap).
  */
 
 import type { DeviceDescriptor, PresetSpec } from '../../core/protocol-generic/types.js';

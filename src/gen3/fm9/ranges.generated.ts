@@ -15,10 +15,10 @@
 //   defaultRaw            = device DEFAULT as the stored u16 (0..65534), from the
 //                           live func-0x01 self-describe walk (off+16); optional
 //                           (absent for 7-bit-unreachable / garbage rows)
-//   unit                  = device-true unit token, verbatim from the CaptureRig
-//                           v2 self-describe value view (e.g. 'Hz', 'dB', 'dB/OCT',
+//   unit                  = device-true unit token, verbatim from the device's
+//                           self-describe value view (e.g. 'Hz', 'dB', 'dB/OCT',
 //                           'SAMPLES'); optional (unitless / enum rows omit it)
-//   taper / taperPoints   = device-true value taper from the CaptureRig v2 curve
+//   taper / taperPoints   = device-true value taper from a device value-curve
 //                           fit (reliable fits only): 'linear'|'log'|'flat' direct,
 //                           or 'custom' with taperPoints = [normalized, raw] samples;
 //                           typecode-0x52 rows carry 'linear' unless skipped (see below)
@@ -61,12 +61,12 @@ export interface Fm9ParamRange {
    *  typecode-0x52 knob rows store the log-normalized default
    *  65534 * ln(def/min) / ln(max/min) (0 when def <= min). */
   readonly defaultRaw?: number;
-  /** Device-true unit token, verbatim from the CaptureRig v2 self-describe value
+  /** Device-true unit token, verbatim from the device's self-describe value
    *  view (e.g. 'Hz', 'dB', 'dB/OCT', 'dBu', 'dBV', 'SAMPLES', 'SECONDS').
    *  Present only where the capture observed a unit; absent for enum/label and
    *  unitless params. */
   readonly unit?: string;
-  /** Device-true value taper from the CaptureRig v2 curve fit (reliable fits
+  /** Device-true value taper from a device value-curve fit (reliable fits
    *  only): 'linear' | 'log' | 'flat' emitted as the bare shape; 'custom' also
    *  carries `taperPoints`. Absent when no reliable taper was captured; typecode-
    *  0x52 knob rows carry 'linear' unless the rule was skipped for the row. */

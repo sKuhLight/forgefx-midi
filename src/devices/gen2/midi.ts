@@ -103,7 +103,7 @@ const AXE_FX_II_XL_PLUS_MODEL_ID = 0x07;
 // ── Dirty-state classification — DEVICE-SOURCED (not heuristic) ───────
 //
 // Decoded from passive captures across 6 distinct device states
-// (Session 68 analysis of session-58 + session-61 captures):
+// (Session 68 analysis):
 //
 //   - direct-sync (read-only)   → 0 state broadcasts
 //   - preset-change (switch)    → 0 state broadcasts

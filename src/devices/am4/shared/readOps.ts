@@ -58,7 +58,7 @@ export async function sendReadAndParseRaw(
 // The AM4's GET_PATCH descriptor carries a device-authoritative "buffer
 // edited" bit that catches those out-of-band edits too.
 //
-// Confirmed on real hardware 2026-06-03 (`scripts/_research/probe-am4-edit-counter.ts`):
+// Confirmed on real hardware 2026-06-03:
 // GET_PATCH (param-RW fn 0x01, readType/action = 0x1F) returns a long
 // (~238-byte) descriptor frame. `byte[21] & 0x04` held 0x00 at rest,
 // flipped to 0x04 on a single front-panel knob edit, held, and returned
@@ -169,8 +169,8 @@ export async function readPresetName(
 //
 // Wire shape (HW-AM4-FN1F probe, 2026-05-22 — same envelope as Axe-Fx II
 // fn 0x1F but with model byte 0x15 and a 2-byte septet effectId payload
-// instead of II's no-payload request). See cookbook
-// `am4-fn1f-atomic-read` and `docs/devices/am4/SYSEX-MAP.md` §6oa.
+// instead of II's no-payload request). See
+// `docs/devices/am4/SYSEX-MAP.md` §6oa.
 //
 //   Header (fn 0x74):
 //     F0 00 01 74 15 74 [eid_lo eid_hi] [size_lo size_hi] [cs] F7
@@ -194,7 +194,7 @@ export async function readPresetName(
 // the value array packs four contiguous copies of the block's param slots,
 // one per channel A-D, so `value index = channel × stride + pidHigh` where
 // `stride = itemCount / 4` and quarter 0 = channel A. Confirmed read-only via
-// `scripts/_research/probe-am4-channel-blocked.ts` (channel-bearing blocks all
+// a read-only probe (channel-bearing blocks all
 // itemCount %4==0 with DISTINCT quarters; e.g. eff 66 = 292 = 73×4, A/B/C/D
 // differ). `getPreset` currently reads `chunk[pidHigh]` (= channel A only);
 // B/C/D are available in the SAME dump at `channel × stride + pidHigh` without

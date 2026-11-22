@@ -1,13 +1,12 @@
 /**
- * Per-variant resolver tables extracted from AM4-Edit.exe via
- * scripts/extract-variant-resolver.ts. The XML loader's vtable-call
- * resolver (FUN_1402e3da0) dispatches to one of these tables per
+ * Per-variant resolver tables derived from the AM4-Edit variant resolver.
+ * The XML loader's resolver dispatches to one of these tables per
  * effectType to translate parameterName -> cache_id.
  *
  * For our agent: this is the missing link that lets us bind any XML
  * parameterName to its wire address (cache_id) given a known block.
  *
- * AUTO-GENERATED. Do not hand-edit.
+ * AUTO-GENERATED (generator maintained outside this package). Do not hand-edit.
  */
 
 export interface ResolverEntry {

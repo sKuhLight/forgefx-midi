@@ -5,14 +5,13 @@
  * Channels (A/B/C/D) are the data container for block param values; scenes
  * are selectors that choose which channel each block uses. Two scenes
  * pointing at the same channel will both reflect any write to that channel,
- * confirmed on hardware HW-009 (2026-04-19). See SYSEX-MAP.md §6a and
- * docs/_private/HARDWARE-TASKS.md HW-009 for the full explanation.
+ * confirmed on hardware HW-009 (2026-04-19). See SYSEX-MAP.md §6a for the full explanation.
  *
  * 2026-07-08: HW-009 only tested amp/drive/reverb/delay and concluded those
  * were the ONLY channel-bearing blocks. That was incomplete — every block
  * type has an independent channel register at the same wire offset
  * (0x07d2, relative to its own pidLow); see forgefx-midi's
- * `docs/AM4-LIVE-VALUE-DECODE-PLAN.md` and `src/am4/params.ts`
+ * `src/am4/params.ts`
  * (`chorus.channel` etc.). `CHANNEL_BLOCKS` now covers every block; the
  * underlying reader (`decodeChannelParams` in `descriptor/reader.ts`)
  * already self-detects channel-blocked wire chunks per-param from the

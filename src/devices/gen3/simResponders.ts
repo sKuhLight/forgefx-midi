@@ -4,10 +4,10 @@
  *
  * These are the PURE wire-frame builders the codec-backed device simulator
  * uses to answer a gen-3 editor's reads so the editor renders the block grid
- * over loopMIDI with no hardware. They live in the published package (not the
- * research script) so `npm test` covers their byte shapes against captured
- * device frames. The stateful machine that drives them lives in
- * `scripts/_research/sim/` (research-scoped) and calls into here.
+ * over a virtual MIDI port with no hardware. They live in the published package
+ * so `npm test` covers their byte shapes against captured
+ * device frames. The stateful machine that drives them lives outside this
+ * package and calls into here.
  *
  * Wire facts these builders honor (all FM9-confirmed against the
  * 2026-06-03 connect+enum-sweep capture; byte-identical across model bytes

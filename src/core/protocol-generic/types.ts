@@ -6,9 +6,7 @@
  * registered device, dispatched by `port`. Per-device behavior lives in
  * a `DeviceDescriptor` each device package registers at bootstrap.
  *
- * Design reference: Session 63 (2026-05-11) — see STATE.md Recent
- * breakthroughs entry. Spec lives in `docs/_private/04-BACKLOG.md`
- * BK-051. This module is the type-only foundation; runtime registry
+ * Design reference: Session 63 (2026-05-11). This module is the type-only foundation; runtime registry
  * is `./registry.ts`, dispatch logic is `./dispatcher.ts`.
  *
  * Coexists with the older Fractal-only `FractalDevice` interface in

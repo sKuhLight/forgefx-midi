@@ -123,9 +123,8 @@ export interface Param extends ParamId {
    * display label match the right param. Does NOT affect wire encoding —
    * purely a discovery hint.
    *
-   * Maintained by `scripts/_research/add-display-labels.ts` (generator)
-   * and verified by `scripts/_research/coverage-cross-ref-audit.ts`
-   * (gated in preflight via a ceiling).
+   * Generated and cross-checked outside this package (gated in preflight
+   * via a ceiling).
    */
   displayLabel?: string;
 }
@@ -431,7 +430,7 @@ export const PARAM_ALIASES: Record<string, string> = {
   // as delay above. Fractal's Blocks Guide refers to flanger and phaser
   // feedback as "regeneration" / "resonance" in the prose for both
   // blocks (see param-descriptions.json flanger.feedback +
-  // phaser.feedback entries in mcp-midi-control).
+  // phaser.feedback entries in the param descriptions).
   'phaser.regen': 'phaser.feedback',
   'phaser.regeneration': 'phaser.feedback',
   'flanger.regen': 'flanger.feedback',
@@ -460,8 +459,8 @@ export const PARAM_ALIASES: Record<string, string> = {
  *   wire 1   → 'PC'          (Program Change — uses Channel + Value)
  *   wire N≥2 → 'CC #(N-2)'   (Control Change with CC# = N-2)
  *
- * Wire-confirmed against samples/captured/session-85-scene-midi.pcapng
- * (Type=1.0 for PC) and the founder's AM4-Edit screenshot showing
+ * Wire-confirmed on hardware (Type=1.0 for PC) and by the AM4-Edit
+ * screenshot showing
  * "CC #016" displayed when wire Type=18.0 (16 + 2 = 18).
  *
  * Display names use AM4-Edit's exact format: `CC #016` (zero-padded to
@@ -484,7 +483,7 @@ export const SCENE_MIDI_TYPE_ENUM: Record<number, string> = (() => {
  * imports the bulk auto-generated bindings synthesized by
  * `scripts/gen-params-from-cache.ts` from the AM4-Edit metadata cache,
  * with friendly names from `paramNames.ts` (hand-curated) merged with
- * `paramNamesGenerated.ts` (resolver-derived from AM4-Edit.exe). Order
+ * `paramNamesGenerated.ts` (resolver-derived from AM4-Edit). Order
  * matters: hand entries below shadow any same-key spread entry, so a
  * hand override always wins. `verify-cache-params.ts` enforces that
  * any hand override that COLLIDES with a CACHE_PARAMS entry must agree
@@ -587,7 +586,7 @@ export const KNOWN_PARAMS = {
   // Out Boost ON/OFF toggle on the Extras tab.
   // Registered directly in KNOWN_PARAMS (out-of-band from the cache
   // generator because per-block non-Type enum imports aren't
-  // supported). Wire-verified via session-29-amp-out-boost-toggle:
+  // supported). Wire-verified on hardware:
   // value=1.0 → ON.
   'amp.out_boost': {
     block: 'amp', name: 'out_boost',
@@ -633,7 +632,7 @@ export const KNOWN_PARAMS = {
     enumValues: { 0: 'PRE-PI', 1: 'POST-PI', 2: 'PRE-TRIODE' },
   },
   // 2026-04-29: Amp Expert-Edit page from
-  // session-40-amp-expert.pcapng + paired AM4-Edit screenshot
+  // a hardware capture + paired AM4-Edit screenshot
   // (FAS Modern III). 17 new params across BASIC + IDEAL + POST
   // BOOST + CHANNEL COLORS + OUTPUT COMPRESSOR + AMP EXTRAS + GEQ
   // sections. Wiggle-order timeline + screenshot column order
@@ -825,9 +824,7 @@ export const KNOWN_PARAMS = {
   },
 
   // ─── 2026-04-30: Amp Expert-Edit page (4 tabs) ───
-  // Source: session-41-amp-{preamp,poweramp,cabinet,speaker}-expert.{pcapng,png}
-  // + founder-confirmed audit-input JSONs at docs/audit-input/amp-*.json.
-  // Audit script output: docs/audit-output/amp-*.md.
+  // Source: hardware captures + founder-confirmed audit inputs.
   //
   // The amp Expert page surfaces ~120 knobs across Preamp / Power Amp /
   // Cabinet / Speaker tabs — far more than the 16 BASIC params already
@@ -1404,9 +1401,8 @@ export const KNOWN_PARAMS = {
   },
 
   // 2026-05-17 — CABINET  closeout. 25 new amp
-  // params at pidLow=0x003e from the Ghidra CABINET catalog (Sessions
-  // 82-83) cross-referenced against the 54-entry  list in
-  // samples/captured/decoded/coverage-cross-ref-audit.md. Names chosen
+  // params at pidLow=0x003e from the editor's CABINET parameter catalog,
+  // cross-referenced against the 54-entry list of unregistered controls. Names chosen
   // to match the AM4-Edit XML display label after norm() (lowercase +
   // non-alphanumeric → _) so each new entry registers as WIRED-MATCHED
   // (not MISLABEL). For paired controls (Cab 1 / Cab 2 sharing a single
@@ -1422,7 +1418,7 @@ export const KNOWN_PARAMS = {
   // PAN; hz for PROXIMITY / LO-HI-CUT / FREQ; db for LEVEL / DAMPING;
   // count for VU meter (read-only) and other dimensionless knobs.
   // Hand-authored (not via paramNames.ts / gen-params-from-cache.ts)
-  // because the CABINET catalog ids live in the Ghidra dispatcher
+  // because the CABINET catalog ids live in the editor's dispatcher
   // table, not in any S2/S3 cache block — same hand-author pattern as
   // the existing 16 cab_* entries.
   //
@@ -1660,9 +1656,8 @@ export const KNOWN_PARAMS = {
   // paramNames.ts overrides; cacheParams.ts emits the canonical entries
   // and verify-cache-params guards byte-for-byte agreement. displayLabel
   // = AM4-Edit XML "name=" attribute for the same EditorControl. See
-  // samples/captured/decoded/am4-params-proposed.ts for the Ghidra
-  // catalog source (Sessions 82–83) and cache-section2.json for the
-  // signature data that pinned each unit + range.
+  // the editor's parameter catalog (Sessions 82–83) and the cache section
+  // records for the signature data that pinned each unit + range.
   'amp.low_reso': {
     block: 'amp', name: 'low_reso',
     displayLabel: 'Low Reso',
@@ -1820,9 +1815,8 @@ export const KNOWN_PARAMS = {
     unit: 'percent', displayMin: 0, displayMax: 100,
   },
   // 2026-04-25: Drive EQ-page knobs from
-  // session-30-drive-basic-blackglass-7k. T808 OD only exposed
-  // Drive/Tone/Level on its first page (session-30-drive-basic-t808-od
-  // capture confirmed) — the EQ controls below are absent on simpler
+  // a Blackglass 7K drive capture. T808 OD only exposed
+  // Drive/Tone/Level on its first page (confirmed on hardware) — the EQ controls below are absent on simpler
   // pedal types and only surface on amp-emu drive types like
   // Blackglass 7K. Cache signatures pin the unit + range; sequence in
   // the cache (id 16/17 = Low/High Cut Hz, id 20/21/23 = Bass/Mid/
@@ -1868,7 +1862,7 @@ export const KNOWN_PARAMS = {
     enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
   },
   // 2026-04-29: Blackglass 7K Drive
-  // Expert-Edit page from session-31-drive-expert.pcapng + paired
+  // Expert-Edit page from a hardware capture + paired
   // AM4-Edit screenshot. 6 single-knob params + 10 GEQ bands + 1
   // type-specific knob (high_mid for Blackglass, may surface under
   // a different label on other types).
@@ -1928,14 +1922,14 @@ export const KNOWN_PARAMS = {
     enumValues: { 0: 'OFF', 1: 'POST', 2: 'PRE' },
   },
   //  partial (2026-05-02) — Drive Expert-Edit ADVANCED
-  // panel knobs from `session-45-drive-expert-blackglass.{pcapng,png}`.
+  // panel knobs from a hardware capture.
   // Slew Rate is universal (also active on Pi Fuzz at wire 0.21044).
   // Bias is Blackglass-only (silent in Pi Fuzz capture) — type-conditional
-  // UI but firmware-stable address. See docs/audit-output/drive-blackglass.md.
+  // UI but firmware-stable address.
   // Note: drive.balance is currently registered at 0x0002 but 
   // captures show actual Balance is at 0x000f (hdr2=0x0002 bipolar
   // signature). Re-point deferred until 0x0002's actual identity is
-  // confirmed — see open follow-ups in session-44-findings.md.
+  // confirmed.
   'drive.slew_rate': {
     block: 'drive', name: 'slew_rate',
     displayLabel: 'Depth',
@@ -1998,7 +1992,7 @@ export const KNOWN_PARAMS = {
     // not 0x0010. AM4-Edit capture for Pre-Delay→85 ms wrote 0x0042/0x0013
     // with float32(0.085) — confirms the `ms` unit's ÷1000 scale is right.
     // The 0x0010 register was a cache-derived guess that was structurally
-    // plausible (range matched) but wrote to nothing. See SYSEX-MAP §6j.
+    // plausible (range matched) but wrote to nothing.
     block: 'reverb', name: 'pre_delay',
     displayLabel: 'Pre-Delay',
     pidLow: 0x0042, pidHigh: 0x0013,
@@ -2040,8 +2034,8 @@ export const KNOWN_PARAMS = {
   // reverb type tested); awaits a Shimmer-type hardware spot-check
   // or AM4-Edit-side verification.
   // 2026-04-25: 10 new universal/algorithmic-reverb
-  // and Spring-specific knobs decoded from session-30-reverb-basic-hall
-  // and session-30-reverb-spring captures. Cache metadata confirmed
+  // and Spring-specific knobs decoded from Hall and Spring reverb
+  // captures. Cache metadata confirmed
   // pidLow/pidHigh/range for each; capture final values cross-checked
   // against the founder's AM4-Edit screenshot inventory. Hall + Spring
   // share the universal registers (high_cut / low_cut / input_gain /
@@ -2195,7 +2189,7 @@ export const KNOWN_PARAMS = {
     unit: 'bipolar_percent', displayMin: -100, displayMax: 100,
   },
   // 2026-04-25: Delay first-page registers from
-  // session-30-delay-basic-digital-mono. `level` follows the universal
+  // a Digital Mono delay capture. `level` follows the universal
   // pidHigh=0x0000 "Level" pattern shared with amp.level (no cache
   // record at id=0; out-of-band hand-author). `stack_hold` and
   // `ducking` mirror the same registers found on Reverb.
@@ -2208,7 +2202,7 @@ export const KNOWN_PARAMS = {
     unit: 'db', displayMin: -80, displayMax: 20,
   },
   // 2026-04-29: Delay Expert-Edit page from
-  // session-40-delay-expert.pcapng (Ambient Stereo). 32 new params
+  // a hardware capture (Ambient Stereo). 32 new params
   // mirrored from CACHE_PARAMS + 7 hand-authored enums (bypass_mode,
   // kill_dry, lo_fi_drive, phase_reverse, low_cut_slope, high_cut_slope,
   // compander).
@@ -2468,7 +2462,7 @@ export const KNOWN_PARAMS = {
     block: 'delay', name: 'tempo',
     displayLabel: 'Tempo',
     pidLow: 0x0046, pidHigh: 0x0013,
-    // Wire-verified: session-30-delay-basic-digital-mono captured
+    // Wire-verified: a Digital Mono delay capture showed
     // value=11 (= "1/8" tempo division).
     unit: 'enum', displayMin: 0, displayMax: 78,
     enumValues: TEMPO_DIVISIONS_VALUES,
@@ -2547,7 +2541,7 @@ export const KNOWN_PARAMS = {
   },
   // 2026-07-08: `channel` (A/B/C/D per-block channel switch) is
   // hardware-confirmed at pidHigh=0x07d2 on amp/drive/reverb/delay
-  // (session-09/session-18 goldens in test/am4/setparam.test.ts) and
+  // (hardware goldens in test/am4/setparam.test.ts) and
   // that offset is otherwise unused anywhere else in this catalog —
   // pattern-extended here to every remaining block. Not independently
   // capture-confirmed for THIS block; flag if a capture ever
@@ -2579,7 +2573,7 @@ export const KNOWN_PARAMS = {
     unit: 'percent', displayMin: 0, displayMax: 100,
   },
   // 2026-04-26: wire-verified on Analog Stereo
-  // chorus — `session-30-chorus-basic.pcapng`. Chorus first-page
+  // chorus — a hardware capture. Chorus first-page
   // additions: level / time / mod_phase / phase_reverse.
   'chorus.level': {
     block: 'chorus', name: 'level',
@@ -2610,7 +2604,7 @@ export const KNOWN_PARAMS = {
     enumValues: { 0: 'NONE', 1: 'RIGHT', 2: 'LEFT', 3: 'BOTH' },
   },
   // 2026-04-29: Chorus Expert-Edit page from
-  // session-40-chorus-expert.pcapng (Analog Stereo). New non-Type
+  // a hardware capture (Analog Stereo). New non-Type
   // enums + cache mirrors.
   'chorus.bypass_mode': {
     block: 'chorus', name: 'bypass_mode',
@@ -2704,7 +2698,7 @@ export const KNOWN_PARAMS = {
     unit: 'bipolar_percent', displayMin: -200, displayMax: 200,
   },
   // 2026-04-25: wire-verified at +10 dB on
-  // an Analog Stereo flanger — `session-32-flanger-extended.pcapng`.
+  // an Analog Stereo flanger — a hardware capture.
   // Follows the universal pidHigh=0x0000 Level pattern.
   'flanger.level': {
     block: 'flanger', name: 'level',
@@ -2762,7 +2756,7 @@ export const KNOWN_PARAMS = {
     unit: 'bipolar_percent', displayMin: -99, displayMax: 99,
   },
   // 2026-04-26: wire-verified on Analog Stereo
-  // flanger — `session-30-flanger-basic.pcapng`. Manual is a 0–10 knob
+  // flanger — a hardware capture. Manual is a 0–10 knob
   // (no unit suffix shown in AM4-Edit); Mod Phase mirrors the chorus
   // degrees encoding.
   'flanger.manual': {
@@ -2824,7 +2818,7 @@ export const KNOWN_PARAMS = {
     unit: 'bipolar_percent', displayMin: -90, displayMax: 90,
   },
   // 2026-04-26: wire-verified on Digital Stereo
-  // phaser — `session-30-phaser-basic.pcapng`. Phaser uses 0–10 knob
+  // phaser — a hardware capture. Phaser uses 0–10 knob
   // semantics for Depth + Manual (unlike chorus/flanger which use
   // percent for Depth). Mod Phase address differs from chorus/flanger
   // (0x0013 here vs 0x0011 there) — cache lays it out at id=19 not id=17.
@@ -2868,15 +2862,14 @@ export const KNOWN_PARAMS = {
     enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
   },
   // 2026-04-29: Wah Expert-Edit page from
-  // session-40-wah-expert.pcapng (FAS Wah). 18 new params + 3 hand-
+  // a hardware capture (FAS Wah). 18 new params + 3 hand-
   // authored enums. Closes the wah block from "type-only" registration
   // to full Expert coverage.
   //
   // ** audit ( cont, 2026-04-29):** Eight wah ids were
   // mis-named in the original auto-generation pass — the cache-id →
   // pidHigh ordering didn't match the AM4-Edit screenshot's knob
-  // labels. Re-derived from the value-matched audit table (`scripts/
-  // audit-block-vs-screenshot.ts` against `docs/audit-input/wah.json`).
+  // labels. Re-derived from a value-matched audit table.
   // Old → new:
   //   0x000d  q (range 2..20)         → q_resonance (range 0..10)
   //   0x000e  q_resonance              → q_tracking
@@ -2998,7 +2991,7 @@ export const KNOWN_PARAMS = {
     unit: 'percent', displayMin: 0, displayMax: 100,
   },
   // 2026-04-25: Compressor first-page registers
-  // from session-30-comp-basic-jfet-studio. Cache ids 10..15 are the
+  // from a JFET Studio compressor capture. Cache ids 10..15 are the
   // canonical comp-config knobs (Threshold, Ratio, Attack, Release,
   // Knee Type enum, Auto Makeup OFF/ON). `level` follows the universal
   // pidHigh=0x0000 "Level" pattern (out-of-band hand-author).
@@ -3077,7 +3070,7 @@ export const KNOWN_PARAMS = {
   },
   // 2026-04-29: Compressor Expert-Edit
   // Sidechain section + Drive-engine knobs from
-  // session-31-comp-jfet-expert.pcapng + paired AM4-Edit screenshot
+  // a hardware capture + paired AM4-Edit screenshot
   // (JFET Studio Compressor type). Closes the prior gap: 0x0017 = comp.emphasis
   // (knob_0_20 fine knob 0..20, screenshot 2.22 ↔ wire 0.111×20=2.22);
   // 0x0029 = comp.drive (knob_0_10, screenshot 6.66 ↔ wire 0.666). The
@@ -3227,7 +3220,7 @@ export const KNOWN_PARAMS = {
   // block addresses but have no Type enum — their params will be added when
   // we start supporting specific knob names.
   // 2026-04-25: wire-verified at +12 dB on
-  // a Low-Pass filter — `session-32-filter-extended.pcapng`. Follows
+  // a Low-Pass filter — a hardware capture. Follows
   // the universal pidHigh=0x0000 Level pattern.
   'filter.level': {
     block: 'filter', name: 'level',
@@ -3269,7 +3262,7 @@ export const KNOWN_PARAMS = {
   },
   // 2026-04-25: filter Config-page cuts.
   // Wire-verified at 100 Hz / 1800 Hz on a Low-Pass filter
-  // (`session-32-filter-extended.pcapng`). Cache c=1 raw Hz at ids
+  // (a hardware capture). Cache c=1 raw Hz at ids
   // 18 / 19. Mirrored from CACHE_PARAMS so the type-check picks them up.
   'filter.low_cut': {
     block: 'filter', name: 'low_cut',
@@ -3286,7 +3279,7 @@ export const KNOWN_PARAMS = {
     scaling: 'log10',
   },
   // 2026-04-26: All-Pass filter Config-page
-  // residuals — `session-33-filter-extended.pcapng`. Wire-verified
+  // residuals — a hardware capture. Wire-verified
   // at 13% Feedback / 4-pole Order. Feedback cache signature
   // (a=-1, b=1, c=100) is bipolar_percent ±100 (All-Pass feedback
   // can invert phase). Order is an integer pole count 1..12 — cache
@@ -3338,7 +3331,7 @@ export const KNOWN_PARAMS = {
     unit: 'percent', displayMin: 0, displayMax: 100,
   },
   // 2026-04-26: wire-verified on Panner-type
-  // tremolo — `session-30-tremolo-basic.pcapng`. Tremolo's first page
+  // tremolo — a hardware capture. Tremolo's first page
   // is type-dependent: Panner exposes Width / Phase / Center / Ducking
   // / Waveform (instead of VCA Trem's Depth which lives at pidHigh
   // 0x000d). Level (pidHigh=0x0000) wasn't moved in this capture — to
@@ -3387,7 +3380,7 @@ export const KNOWN_PARAMS = {
     unit: 'knob_0_10', displayMin: 0, displayMax: 10,
   },
   // 2026-04-29: Enhancer Config-page knobs from
-  // session-33-enhancer-extended.pcapng + paired AM4-Edit screenshot.
+  // a hardware capture + paired AM4-Edit screenshot.
   // Wire-verified on a Modern enhancer at level=-6 dB / width=33% /
   // depth=11% / low_cut=22.2 Hz / high_cut=6500 Hz. Level is the
   // universal pidHigh=0x0000 out-of-band pattern (no cache record);
@@ -3472,7 +3465,7 @@ export const KNOWN_PARAMS = {
     enumValues: { 0: 'A', 1: 'B', 2: 'C', 3: 'D' },
   },
   // 2026-04-26: slot-Gate first-page knobs on a
-  // Modern Gate type — `session-34-slotgate-extended.pcapng`. Wire-
+  // Modern Gate type — a hardware capture. Wire-
   // verified at Threshold=-22 dB / Attack=1 ms / Hold=80 ms /
   // Release=90 ms / Attenuation=-33 dB / Sidechain=INPUT 1 / Level=
   // 12 dB. Threshold/Attack/Hold/Release/Attenuation are mirrored
@@ -3525,17 +3518,16 @@ export const KNOWN_PARAMS = {
     unit: 'db', displayMin: -80, displayMax: 0,
   },
   //  partial (2026-05-02) — slot-Gate Modern Expander
-  // Expert-Edit page from `session-44-gate-expert.{pcapng,png}`. 7 new
+  // Expert-Edit page from a hardware capture. 7 new
   // first-page registrations: ratio, sidechain_low_cut, sidechain_high_cut,
   // bypass_mode, knee_type, detector_type, mix-phantom. Modern Expander
   // exposes Ratio at 0x000e (replaces the fixed Attenuation that Modern
   // Gate exposes at 0x0014); same firmware register surface, different
   // type-dependent UI. Knee_type vs detector_type pidHigh assignment
   // disambiguated via single-knob-isolation capture
-  // `session-46-gate-knee-isolation.pcapng` — 0x0016 moved (knee_type),
+  // a hardware capture — 0x0016 moved (knee_type),
   // 0x0015 stayed (detector_type by elimination). Ratio range 1..20
-  // founder-confirmed at the device. See docs/audit-output/gate.md for
-  // the full audit table.
+  // founder-confirmed at the device.
   'gate.ratio': {
     block: 'gate', name: 'ratio',
     displayLabel: 'Ratio',
@@ -3605,7 +3597,7 @@ export const KNOWN_PARAMS = {
   },
   // 2026-04-25: Volume/Pan Auto-Swell
   // envelope params. Wire-verified at -20 dB / 300 ms on the Auto-Swell
-  // type (`session-32-volpan-extended.pcapng`). Cache ids 16 / 17 with
+  // type (a hardware capture). Cache ids 16 / 17 with
   // c=1 (raw dB) and c=1000 (display ms) respectively. Mirrored from
   // CACHE_PARAMS so the type-check picks them up.
   'volpan.threshold': {
@@ -3621,7 +3613,7 @@ export const KNOWN_PARAMS = {
     unit: 'ms', displayMin: 1, displayMax: 5000, scaling: 'log10',
   },
   // 2026-04-25: wire-verified at +12 dB on
-  // an Auto-Swell Volume/Pan — `session-32-volpan-extended.pcapng`.
+  // an Auto-Swell Volume/Pan — a hardware capture.
   // Follows the universal pidHigh=0x0000 Level pattern.
   'volpan.level': {
     block: 'volpan', name: 'level',
@@ -3629,15 +3621,13 @@ export const KNOWN_PARAMS = {
     unit: 'db', displayMin: -80, displayMax: 20,
   },
   //  partial (2026-05-02) — Volume/Pan Expert-Edit
-  // captures from `session-44-volpan-expert-{volume,autoswell}.{pcapng,png}`.
+  // captures from a hardware capture.
   // Confirmed type-dependent UI on volpan: Volume mode exposes
   // volume/pan_l/pan_r at 0x000a/c/d; Auto-Swell mode exposes
   // release/hysteresis at 0x0012/0x0013. Both modes share level/balance/
   // mix/bypass_mode/taper/input_select at the same pidHighs. Type-
   // agnostic firmware addressing — same pattern as gate. Hysteresis
-  // range 0..12 dB founder-confirmed at the device. See
-  // docs/audit-output/volpan-{volume,autoswell}.md for the full audit
-  // tables.
+  // range 0..12 dB founder-confirmed at the device.
   'volpan.volume': {
     block: 'volpan', name: 'volume',
     displayLabel: 'Volume',
@@ -3723,7 +3713,7 @@ export const KNOWN_PARAMS = {
   // (per docs/BLOCK-PARAMS.md "Input Noise Gate (global, not a block
   // slot)"); not placeable in any of the 4 effect slots. Distinct from
   // the slot-placeable Gate effect block (pidLow=0x0092).
-  // Wire-verified on `session-32-gate-extended.pcapng` against the
+  // Wire-verified on a hardware capture against the
   // AM4-Edit "In-Gate" tab on Z04. Captured 4 distinct registers
   // (0x00 / 0x0a / 0x0c / 0x0f); `level` is the only one with a
   // unit-clean encoding so far. Threshold (0x0a, internal 0..1 →
@@ -3739,7 +3729,7 @@ export const KNOWN_PARAMS = {
     unit: 'db', displayMin: -80, displayMax: 20,
   },
   // 2026-04-26: In-Gate Config-page residuals
-  // from `session-34-inputgate-extended.pcapng`. Wire-verified at
+  // from a hardware capture. Wire-verified at
   // Threshold=-44 dB / Release=60 ms / Type=Intelligent on the
   // In-Gate tab. All three were residuals queued for
   // unit + type-walk. Threshold curve is dB-direct (not the 0..1
@@ -3857,7 +3847,7 @@ export const KNOWN_PARAMS = {
   'peq.channel_5_gain': { block: 'peq', name: 'channel_5_gain', displayLabel: 'Gain 5', pidLow: 0x0036, pidHigh: 0x0018, unit: 'db', displayMin: -20, displayMax: 20 },
   //  audit ( cont, 2026-04-29): PEQ Bypass Mode +
   // 5 per-channel Type enums + 5 per-channel Solo toggles. Founder
-  // confirmed labels from `session-40-peq-expert.png`. Cache provides
+  // confirmed labels from a screenshot. Cache provides
   // each channel's Type enum entries (different shapes per channel —
   // e.g. Channel 3 only has [Peaking, Peaking 2] while Channels 1/5
   // have the full [Shelving, Peaking, Blocking, Shelving 2, Peaking 2]).
@@ -4009,7 +3999,7 @@ export const KNOWN_PARAMS = {
   },
 
   // ── Main Levels page — pidLow=0x002A —  closed 2026-05-16 ──
-  // Capture: samples/captured/session-84-levels.pcapng. AM4-Edit 2.00 +
+  // Capture: a hardware capture. AM4-Edit 2.00 +
   // AM4 firmware 2.00 use action=0x0001 (the standard write action) on
   // this register family — supersedes an earlier tentative 0x0002.
   // Anchors from screenshot match wire 1:1: preset.level wire 1.1100 →
@@ -4032,7 +4022,7 @@ export const KNOWN_PARAMS = {
   // against ±20: a wrong -80..+20 here makes get_param / get_preset / list_params
   // report bogus dB (e.g. set +10 read back as -5) even though the write is fine.
   // Verified live 2026-06-06: wire 0.75 → +10 dB, 0.40 → -4 dB (see
-  // docs/_private/0.2.0-dev-test-2026-06-06.md). The encode path is unit-scale
+  // the 0.2.0 dev test notes). The encode path is unit-scale
   // based (db scale = 1) and ignores these bounds, so writes were always correct.
   'preset.scene_1_level': {
     block: 'preset', name: 'scene_1_level',
@@ -4056,9 +4046,8 @@ export const KNOWN_PARAMS = {
   },
 
   // ── PATCH family — pidLow=0x00CE (cross-references catalog case 0x3c) ──
-  // Closed 2026-05-16 via samples/captured/session-84-routing-
-  // mix-midi.pcapng. Wire shape decoded directly against Ghidra's PATCH
-  // catalog: paramId N → pidHigh = N (matching §6p rule for every other
+  // Closed 2026-05-16 via a routing capture. Wire shape decoded directly
+  // against the editor's PATCH catalog: paramId N → pidHigh = N (matching §6p rule for every other
   // AM4 block). Same pidLow already hosts block-placement (pidHigh=
   // 0x0010+slot-1) and preset rename — PATCH is the umbrella family that
   // covers "everything preset-scoped that isn't a block parameter."
@@ -4086,9 +4075,7 @@ export const KNOWN_PARAMS = {
   },
 
   // ── PATCH scene-MIDI — pidLow=0x00CE, base rows 0x40/0x50/0x60 ──
-  // Closed 2026-05-16 via:
-  //   samples/captured/session-85-scene-midi.pcapng
-  //   samples/captured/session-86-scene-midi-disambiguate.pcapng
+  // Closed 2026-05-16 via two scene-MIDI hardware captures.
   //
   // Each scene has 4 MIDI message slots; each slot has 3 fields
   // (Type / Channel / Value). 4×4×3 = 48 wire-addressable params,
@@ -4102,7 +4089,7 @@ export const KNOWN_PARAMS = {
   //     base_row 0x60 → Value   (0..127, raw int as float)
   //
   // Type enum: only PC=1 is wire-confirmed. The (s=4,m=4) bonus in
-  // session-85 showed Type=18.0 for what the founder believed was CC,
+  // one scene-MIDI capture showed Type=18.0 for what the founder believed was CC,
   // so CC=18 is hypothesized but not yet locked. A dedicated type-
   // sweep capture (cycle the Type dropdown through all entries on one
   // slot) would harvest the full enum. Treat unknown Type values as
@@ -4288,7 +4275,7 @@ export const KNOWN_PARAMS = {
   'delay.pan_depth':         { block: 'delay',  name: 'pan_depth', displayLabel: "Pan Depth",         pidLow: 0x0046, pidHigh: 0x0054, unit: 'percent', displayMin: 0, displayMax: 100 },
   'delay.lfo_phase_4':       { block: 'delay',  name: 'lfo_phase_4', displayLabel: "LFO Phase",       pidLow: 0x0046, pidHigh: 0x0055, unit: 'degrees', displayMin: 0, displayMax: 180 },
   // 2026-05-17: Phase 3 — REVERB + DELAY enums + tempo-
-  // sync registers from the Ghidra catalog. These have no cache record
+  // sync registers from the editor's parameter catalog. These have no cache record
   // (so the cacheParams generator can't emit them) but the paramNames.ts
   // TODOs document the expected range from prior structural analysis.
   // Confidence tier per entry:
@@ -4444,7 +4431,7 @@ export const KNOWN_PARAMS = {
   'compressor.tone':         { block: 'compressor', name: 'tone', displayLabel: "Tone",               pidLow: 0x002e, pidHigh: 0x0028, unit: 'knob_0_10', displayMin: 0, displayMax: 10 },
 
   // 2026-05-17: FLANGER / PHASER / FILTER 
-  // closeout. 28 catalog symbols from the Ghidra paramId table that
+  // closeout. 28 catalog symbols from the editor's paramId table that
   // have AM4-Edit XML labels but no params.ts entry. Confidence tiers
   // per the  convention:
   //   • HIGH: shared LFO_WAVEFORMS_VALUES / TEMPO_DIVISIONS_VALUES
@@ -4516,8 +4503,7 @@ export const KNOWN_PARAMS = {
 
   // ── 2026-05-17 — CABINET  closeout ──
   // 24 hand-authored entries on the canonical CABINET register
-  // (pidLow=0x003e). Catalog source: Ghidra-extracted PATCH family
-  // params via samples/captured/decoded/ghidra-am4-paramnames.json,
+  // (pidLow=0x003e). Catalog source: the editor's PATCH family params,
   // cross-referenced with AM4-Edit's __block_layout.xml +
   // __block_layout_expert.xml. Display labels come from the XML
   // `name=` attribute; entries lacking a display string are XML-
@@ -4735,24 +4721,22 @@ export const KNOWN_PARAMS = {
   // GLOBAL family (pidLow = 0x0001) — 98 entries.
   //
   // Wire pidLow decoded 2026-05-17 from
-  // samples/captured/session-95-am4-global-pidlow.pcapng. paramIds
-  // sourced from samples/captured/decoded/ghidra-am4-paramnames.json
-  // (effect_types.case_0x1.params, 99 entries; GLOBAL_FC_HOLD_TIMEOUT
+  // a hardware capture. paramIds
+  // sourced from the editor's GLOBAL parameter catalog
+  // (99 entries; GLOBAL_FC_HOLD_TIMEOUT
   // appears twice at paramId 57 so deduped to 98).
   //
   // Two paramIds are HW-verified by the  capture: USBLEVEL1
   // (99) at 1.11 dB and TAP_TEMPO_MODE (46) at 1.0 = "Last Two".
   // All other unit/range pairs are name-inferred — entries default
   // to unit: 'count' as a safe write placeholder pending hardware
-  // verification. The Ghidra catalog gives us the address and the
+  // verification. The editor catalog gives us the address and the
   // symbolic name; UI semantics still need front-panel or AM4-Edit
   // captures to confirm range/enum tables.
   //
   // Naming convention: `global.<lowercased>` with the GLOBAL_ prefix
   // stripped and `+N` array suffixes converted to `_N` (so
   // `GLOBAL_EXT_CC_BEGIN+1` -> `global.ext_cc_begin_1`).
-  //
-  // Regenerate: `npx tsx scripts/_research/generate-am4-global-block.ts`
 
   // tuning reference Hz convention — HW unverified
   'global.tuningref': { block: 'global', name: 'tuningref', displayLabel: "Calibration", pidLow: 0x0001, pidHigh: 0x000d, unit: 'hz', displayMin: 430, displayMax: 450 },
@@ -4804,7 +4788,7 @@ export const KNOWN_PARAMS = {
   'global.out1_phase': { block: 'global', name: 'out1_phase', displayLabel: "Output Phase", pidLow: 0x0001, pidHigh: 0x0031, unit: 'enum', displayMin: 0, displayMax: 1, enumValues: { 0: 'Normal', 1: 'Invert' } },
   // confirmed 2026-06-05
   'global.in1_source': { block: 'global', name: 'in1_source', displayLabel: "Input Source", pidLow: 0x0001, pidHigh: 0x0034, unit: 'enum', displayMin: 0, displayMax: 2, enumValues: { 0: 'Analog', 1: 'SPDIF', 2: 'USB (Channels 3/4)' } },
-  // safe placeholder (range unverified) — Ghidra catalog entry only
+  // safe placeholder (range unverified) — editor catalog entry only
   'global.in1_config': { block: 'global', name: 'in1_config', pidLow: 0x0001, pidHigh: 0x0035, unit: 'count', displayMin: 0, displayMax: 127 },
   // percent inferred from AM4-Edit display — HW unverified
   'global.lcd_contrast': { block: 'global', name: 'lcd_contrast', displayLabel: "LCD Contrast", pidLow: 0x0001, pidHigh: 0x0038, unit: 'percent', displayMin: 0, displayMax: 100 },
@@ -4827,9 +4811,9 @@ export const KNOWN_PARAMS = {
   'global.scene_decr_cc': { block: 'global', name: 'scene_decr_cc', displayLabel: "Scene -1", pidLow: 0x0001, pidHigh: 0x004c, unit: 'count', displayMin: 0, displayMax: 127 },
   // not visible on front-panel Setup menu; may be editor-only or firmware-internal
   'global.scene_revert': { block: 'global', name: 'scene_revert', displayLabel: "Default Scene Revert", pidLow: 0x0001, pidHigh: 0x004d, unit: 'count', displayMin: 0, displayMax: 127 },
-  // safe placeholder (range unverified) — Ghidra catalog entry only
+  // safe placeholder (range unverified) — editor catalog entry only
   'global.custom_scale': { block: 'global', name: 'custom_scale', pidLow: 0x0001, pidHigh: 0x0050, unit: 'count', displayMin: 0, displayMax: 127 },
-  // safe placeholder (range unverified) — Ghidra catalog entry only
+  // safe placeholder (range unverified) — editor catalog entry only
   'global.tuner_source': { block: 'global', name: 'tuner_source', pidLow: 0x0001, pidHigh: 0x0053, unit: 'count', displayMin: 0, displayMax: 127 },
   // AM4 has 4 scenes (1..4)
   'global.default_scene': { block: 'global', name: 'default_scene', displayLabel: "Default Scene", pidLow: 0x0001, pidHigh: 0x0056, unit: 'count', displayMin: 1, displayMax: 4 },
@@ -4922,7 +4906,7 @@ export const KNOWN_PARAMS = {
   // (not in Setup menu). Global default; per-preset behavior may differ.
   'global.dynacab_sync': { block: 'global', name: 'dynacab_sync', displayLabel: "DynaCab Auto-Match", pidLow: 0x0001, pidHigh: 0x009e, unit: 'enum', displayMin: 0, displayMax: 1, enumValues: { 0: 'Off', 1: 'On' } },
   'global.amp1_vol_cc': { block: 'global', name: 'amp1_vol_cc', displayLabel: "Amp Block Out Vol", pidLow: 0x0001, pidHigh: 0x009f, unit: 'count', displayMin: 0, displayMax: 127 },
-  // safe placeholder (range unverified) — Ghidra catalog entry only
+  // safe placeholder (range unverified) — editor catalog entry only
   'global.metronome': { block: 'global', name: 'metronome', displayLabel: "Metronome", pidLow: 0x0001, pidHigh: 0x00a0, unit: 'count', displayMin: 0, displayMax: 127 },
   'global.metronome_cc': { block: 'global', name: 'metronome_cc', displayLabel: "Metronome", pidLow: 0x0001, pidHigh: 0x00a1, unit: 'count', displayMin: 0, displayMax: 127 },
   // confirmed 2026-06-05: only visible when Input Source = SPDIF
@@ -4932,10 +4916,9 @@ export const KNOWN_PARAMS = {
   // 2026-05-17  closeout — wires the
   // remaining placeable-family entries the AM4-Edit XML exposes
   // but params.ts didn't carry. Catalog symbols sourced from
-  // `samples/captured/decoded/ghidra-am4-paramnames.json`,
+  // the editor's parameter catalog,
   // display labels from `__block_layout.xml` /
-  // `__block_layout_expert.xml` (mined by
-  // `scripts/_research/list-ui-missing.ts`).
+  // `__block_layout_expert.xml`.
   //
   // UI widgets (paramId >= 65000 — name/label/button/graph/menu
   // sentinels) intentionally skipped: those addresses back UI
@@ -5132,10 +5115,9 @@ export const KNOWN_PARAMS = {
   // 2026-05-18  residual closeout — wires the
   // 15 remaining placeable-family entries the AM4-Edit XML exposes
   // but params.ts didn't carry. Catalog symbols sourced from
-  // `samples/captured/decoded/ghidra-am4-paramnames.json`,
+  // the editor's parameter catalog,
   // display labels from `__block_layout.xml` /
-  // `__block_layout_expert.xml` (mined by
-  // `scripts/_research/list-ui-missing.ts`).
+  // `__block_layout_expert.xml`.
   //
   // UI widgets (paramId >= 65000 or empty XML label — meter/name/
   // label/button/graph/menu sentinels) intentionally skipped: those
@@ -5172,8 +5154,7 @@ export const KNOWN_PARAMS = {
   // AM4-Edit dropdown display order (the editor re-sorts; e.g. knee swaps
   // MEDIUM/MED-SOFT vs the dropdown, detector is fully reordered). The AM4
   // echoes no label over MIDI, so this was captured by set-index + read the
-  // device front panel per step (probe-am4-enum-sweep.ts). See
-  // docs/RE-WORKFLOW.md + cookbook _negative/am4-edit-dropdown-order-not-wire-order.
+  // device front panel per step.
   'compressor.knee_type':            { block: 'compressor', name: 'knee_type',            displayLabel: 'Knee Type',         pidLow: 0x002e, pidHigh: 0x000e, unit: 'enum', displayMin: 0, displayMax: 4, enumValues: { 0: 'HARD', 1: 'MED-HARD', 2: 'MEDIUM', 3: 'MED-SOFT', 4: 'SOFT' } },
   'compressor.detector_type':        { block: 'compressor', name: 'detector_type',        displayLabel: 'Detector Type',     pidLow: 0x002e, pidHigh: 0x0010, unit: 'enum', displayMin: 0, displayMax: 3, enumValues: { 0: 'RMS', 1: 'PEAK', 2: 'RMS + PEAK', 3: 'HALF-WAVE' } },
   'compressor.auto_attack_release':  { block: 'compressor', name: 'auto_attack_release',  displayLabel: 'Auto Att/Rel',      pidLow: 0x002e, pidHigh: 0x0016, unit: 'enum',  displayMin: 0, displayMax: 1, enumValues: { 0: 'OFF', 1: 'ON' } },

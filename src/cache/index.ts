@@ -52,3 +52,15 @@ export type {
   TypeModel,
   BuiltCacheData,
 } from './types.js';
+export {
+  BYPASS_TYPECODE,
+  FINGERPRINT_VERSION,
+  isPlaceholderRow,
+  isInformativeRow,
+  enumOrdinalBounds,
+  labelsHash,
+  paramFingerprint,
+  rowsCompatible,
+  familyAssignmentSuspects,
+} from './fingerprint.js';
+export type { FamilyTables } from './fingerprint.js';

@@ -95,6 +95,8 @@ import { runLiveWalkHints, LIVEWALK_HINTS_CASE_COUNT } from './cache/livewalk-hi
 import { runFullWalk, FULLWALK_CASE_COUNT } from './cache/fullwalk.test.js';
 import { runKnobRule, KNOBRULE_CASE_COUNT } from './cache/knobrule.test.js';
 import { runWalkReplay, WALKREPLAY_CASE_COUNT } from './cache/walkreplay.test.js';
+import { runFingerprint, FINGERPRINT_CASE_COUNT } from './cache/fingerprint.test.js';
+import { runCatalogBridge, CATALOG_BRIDGE_CASE_COUNT } from './cache/catalog-bridge.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
 import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
 import { runGen3AdapterTests, GEN3_ADAPTER_CASE_COUNT } from './convert/gen3-adapter.test.js';
@@ -215,6 +217,8 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/fullwalk (${FULLWALK_CASE_COUNT} cases)`, run: runFullWalk },
   { name: `cache/knobrule (${KNOBRULE_CASE_COUNT} cases)`, run: runKnobRule },
   { name: `cache/walkreplay (${WALKREPLAY_CASE_COUNT} device captures)`, run: runWalkReplay },
+  { name: `cache/fingerprint (${FINGERPRINT_CASE_COUNT} cases)`, run: runFingerprint },
+  { name: `cache/catalog-bridge (${CATALOG_BRIDGE_CASE_COUNT} cases, FM3 catalog vs fw 12.0 walk profile)`, run: runCatalogBridge },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
   { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },
   { name: `convert/gen3-adapter (${GEN3_ADAPTER_CASE_COUNT} preset goldens)`, run: runGen3AdapterTests },

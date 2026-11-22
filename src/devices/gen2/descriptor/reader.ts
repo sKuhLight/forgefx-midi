@@ -392,8 +392,7 @@ function collectPlacedBlocks(cells: readonly GridCell[]): PlacedBlock[] {
 /**
  * One fn 0x0E QUERY_STATES read → per-block active-scene state map keyed
  * by effectId. The grid's `placedEffectIds` (placed, non-shunt blocks)
- * pins the record-to-block zip (sort by address, zip ascending — see
- * cookbook ii-fn0e-query-states). Replaces N per-block bypass (fn 0x02
+ * pins the record-to-block zip (sort by address, zip ascending). Replaces N per-block bypass (fn 0x02
  * paramId=255) + N channel (fn 0x11) round-trips with a single read;
  * hardware-verified 11/11 equivalent on Q8.02. Best-effort: returns an
  * empty map on any failure or a record/block count mismatch, so callers

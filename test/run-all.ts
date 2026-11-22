@@ -94,7 +94,7 @@ import { runLiveWalkBounds, LIVEWALK_BOUNDS_CASE_COUNT } from './cache/livewalk-
 import { runLiveWalkHints, LIVEWALK_HINTS_CASE_COUNT } from './cache/livewalk-hints.test.js';
 import { runFullWalk, FULLWALK_CASE_COUNT } from './cache/fullwalk.test.js';
 import { runKnobRule, KNOBRULE_CASE_COUNT } from './cache/knobrule.test.js';
-import { runRigV2Replay, RIGV2REPLAY_CASE_COUNT } from './cache/rigv2replay.test.js';
+import { runWalkReplay, WALKREPLAY_CASE_COUNT } from './cache/walkreplay.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
 import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
 import { runGen3AdapterTests, GEN3_ADAPTER_CASE_COUNT } from './convert/gen3-adapter.test.js';
@@ -214,7 +214,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/livewalk-hints (${LIVEWALK_HINTS_CASE_COUNT} cases)`, run: runLiveWalkHints },
   { name: `cache/fullwalk (${FULLWALK_CASE_COUNT} cases)`, run: runFullWalk },
   { name: `cache/knobrule (${KNOBRULE_CASE_COUNT} cases)`, run: runKnobRule },
-  { name: `cache/rigv2replay (${RIGV2REPLAY_CASE_COUNT} device captures)`, run: runRigV2Replay },
+  { name: `cache/walkreplay (${WALKREPLAY_CASE_COUNT} device captures)`, run: runWalkReplay },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
   { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },
   { name: `convert/gen3-adapter (${GEN3_ADAPTER_CASE_COUNT} preset goldens)`, run: runGen3AdapterTests },

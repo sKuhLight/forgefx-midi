@@ -213,11 +213,11 @@ rosters (`enums.*_VALUES`); 220 params with inline enum values; `BLOCK_TYPE_VALU
 complete.
 
 **Gaps** — telemetry only (not editing):
-- [ ] No surfaced meters/tuner/cpu/looper/RTA. BigCapture analysis (2026-07-05 capture, analyzed
-      2026-07-06) confirms AM4-Edit uses `fn 0x01 PARAM_RW` poll variants, especially
-      `action=0x0010`, rather than a gen-3 telemetry channel. The diagnostic decoder labels those
-      shapes, but payload semantics are still unmapped. `GET_METER` remains wire-confirmed dead.
-      See [`AM4-CAPTURE-2026-07-05.md`](./AM4-CAPTURE-2026-07-05.md) and DEVICE-TELEMETRY.md.
+- [ ] No surfaced meters/tuner/cpu/looper/RTA. AM4-Edit uses `fn 0x01 PARAM_RW` poll variants,
+      especially `action=0x0010`, rather than a gen-3 telemetry channel. The diagnostic decoder
+      labels those shapes; the tuner is decoded, other payload semantics are still unmapped.
+      `GET_METER` remains wire-confirmed dead.
+      See [`AM4-LIVE-POLLS.md`](./AM4-LIVE-POLLS.md) and DEVICE-TELEMETRY.md.
 
 ---
 

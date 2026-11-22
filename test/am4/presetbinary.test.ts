@@ -2,8 +2,7 @@
  * AM4 preset binary — name field codec goldens.
  *
  * Wire bytes lifted directly from  calibration captures
- * (`samples/exports/{ABCDEFG, Test 1234}.syx`, mcp-midi-control repo,
- * 2026-05-21). Every byte is checked here so a regression in the
+ * (two exported test presets, 2026-05-21). Every byte is checked here so a regression in the
  * 3-byte-per-2-char chunked encoding fails the suite, not just the
  * factory-bank lookup.
  */

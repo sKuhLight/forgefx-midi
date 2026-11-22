@@ -180,14 +180,14 @@ export const AM4_DESCRIPTOR: DeviceDescriptor = {
     // (`readAllParams` in shared/readOps.ts) returns a per-block u16
     // chunk where position == pidHigh — hardware-validated 53/53 across
     // 17 audio blocks (Session 122 amp probe + 2026-05-22 all-blocks
-    // probe, samples/captured/decoded/am4-fn1f-all-blocks-position-map.json).
+    // probe).
     // `reader.getPreset` reads the layout, then one chunk per pidLow per
     // placed slot, then decodes `chunk[pidHigh]` via the same `am4Decode`
     // path `get_param` uses. ~250 ms for a full 4-slot preset snapshot
     // covering every documented param across every placed block (cold-
     // start: 263 ms; warm with include_channel_state: 129 ms). Output
-    // round-trips through `get_param` byte-exactly (cross-check probe
-    // `scripts/_research/probe-am4-get-preset-roundtrip.ts`).
+    // round-trips through `get_param` byte-exactly (cross-checked by a
+    // round-trip probe).
     // The 4 `*.channel` selectors (amp/drive/reverb/delay, pidHigh=0x7d2)
     // live outside the chunk; emitted via per-paramId GET only when
     // `include_channel_state: true`, mirroring II's pattern.

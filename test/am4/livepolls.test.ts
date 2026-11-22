@@ -11,7 +11,7 @@ function assert(condition: unknown, message: string): void {
 }
 
 export function runAm4LivePollTests(): void {
-  assert(AM4_LIVE_POLL_CANDIDATES.length >= 10, '[am4/livePolls] expected BigCapture candidates');
+  assert(AM4_LIVE_POLL_CANDIDATES.length >= 10, '[am4/livePolls] expected live-poll candidates');
 
   for (const candidate of AM4_LIVE_POLL_CANDIDATES) {
     const resolved = am4LivePollCandidateFor(candidate.pidLow, candidate.pidHigh);

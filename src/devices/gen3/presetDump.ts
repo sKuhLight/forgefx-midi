@@ -18,22 +18,21 @@
  *
  * The wire layout was synthesized from two evidence sources:
  *
- * 1. **Descriptor table mining** (no hardware needed). The III's editor
- *    binary contains the same kind of `(tag, mid, byte_count)` descriptor
- *    tables Session 113-115 decoded for the II. Table at `0x1407ab940`
+ * 1. **Descriptor table analysis** (no hardware needed). The III editor
+ *    carries the same kind of `(tag, mid, byte_count)` descriptor
+ *    tables Session 113-115 decoded for the II. The table
  *    declares `(tag=0, mid=6, byte_count=2) + (tag=1, mid=8, byte_count=3072)`,
  *    encoding a chunk envelope with a 2-byte field at offset 6 (chunk
  *    index / discriminator) followed by 3072 bytes of packed body (1024
- *    ushorts x 3-byte septet packing). Mining work captured in
- *    `fractal-midi/docs/research/cookbook/vendor-envelope-descriptor-table.md`.
+ *    ushorts x 3-byte septet packing).
  *
  * 2. **Factory-bank + on-disk export structural validation** (no hardware
- *    needed). The three III bank files at
- *    `samples/factory/Axe-Fx-III-Factory-Preset-Banks-28p06/Axe-Fx_III_BANK_{A,B,C}-*.syx`
+ *    needed). The three III bank files
+ *    (`Axe-Fx_III_BANK_{A,B,C}-*.syx`)
  *    are each exactly 128 x 49,336 bytes; every preset across the 384
  *    factory entries parses as 1 x 0x77 (13B) + 16 x 0x78 (3082B) + 1 x
  *    0x79 (11B). An on-disk FM9 export
- *    (`samples/captured/fm9-152-super-duos2-exported-*.syx`, model 0x12,
+ *    (an FM9 preset export, model 0x12,
  *    24,680 B) parses as 1 x 0x77 (13B) + 8 x 0x78 (3082B) + 1 x 0x79 (11B)
  *    under this same frame-counted parser, with every checksum valid via
  *    the same XOR-7F primitive used on II/AM4.
@@ -68,14 +67,13 @@
  * READ DIRECTION WIRE-VERIFIED (FM9 fw 11.00, 2026-06-04). The
  * device→host dump was previously only structurally verified (III factory
  * banks N=384 + an on-disk FM9 export N=1). A "receive preset from device"
- * USBPcap capture now confirms the dump on the wire: the host requests a
+ * capture now confirms the dump on the wire: the host requests a
  * stored preset with `fn=0x03 [preset#:14b big-endian]`
  * (`buildRequestPresetDump` in `fractal-midi/gen3/axe-fx-iii`) and the device
  * replies with this exact 0x77/0x78/0x79 chain. The reassembled body's
  * `word[1] == 0xAA55` magic and the word-4 name decode reproduce here
  * (e.g. "4x12 Plexi DARK AltCab"), and `parsePresetDump` + `extractPresetName`
- * parse the captured bytes directly. Evidence:
- * `docs/_private/FM9-CAPTURE-RECEIVE+SWEEP-2026-06-04.md`.
+ * parse the captured bytes directly.
  *
  * WRITE-BACK (host→device 0x77/0x78/0x79) is still NOT captured; treat
  * `serializePresetDump` output as file-backup bytes, not a verified

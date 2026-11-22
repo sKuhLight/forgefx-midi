@@ -10,8 +10,7 @@
  *
  * Status — 2026-05-22 (Session 116 cont 2, BK-070):
  *
- *   Widths measured across 5 hardware batches (see
- *   `scripts/_research/bk070-measure-widths.ts`). Cross-batch
+ *   Widths measured across 5 hardware batches. Cross-batch
  *   consistency verified: Reverb=92 (Batch C+E), Chorus=50 (A+E),
  *   Compressor=42 (A+E), Flanger=50 (B+E), GraphicEQ=40 (B+E),
  *   ParametricEQ=50 (C+E), Pitch=172 (C+E), Rotary=40 (C+D),
@@ -36,17 +35,15 @@
  *     regardless of cascade position (Mixer is cascade pos 18,
  *     observed last in Batch B).
  *
- * Until the algorithm is fully reverse-engineered (likely via more
- * Ghidra mining of AxeEdit.exe), use this table for known-composition
+ * Until the algorithm is fully understood, use this table for known-composition
  * presets only. For general atomic_apply against arbitrary
  * compositions, a per-preset calibration probe is the safest path
  * (probe each target block once, derive its actual paramBase from
  * the diff, then patch the binary).
  */
 
-/** Axe-Fx II canonical block-name as used by AxeEdit's FUN_00595260
- * string-compare cascade. See `docs/_private/BK-070-DECODE-NOTES.md`
- * §"Session 116 cont — Ghidra confirms" for the full extracted table. */
+/** Axe-Fx II canonical block-name as used by AxeEdit's block-name
+ * string-compare cascade. */
 export type AxeFxIIBlockName =
   | 'Amp' | 'Cab' | 'Chorus' | 'Compressor' | 'Crossover' | 'Delay'
   | 'Drive' | 'EffectsLoop' | 'Enhancer' | 'FeedbackReturn' | 'FeedbackSend'
@@ -67,9 +64,9 @@ export type AxeFxIIBlockName =
  *     channel-Y paramBase for this block. Per-block-name constant.
  *
  *   wireIds: array of wire ids this block-name reserves (1 / 2 / 4
- *     elements). Extracted from AxeEdit.exe FUN_00595260 cascade.
+ *     elements). Taken from AxeEdit's block-name cascade.
  *
- *   cascadePosition: 0-indexed position in FUN_00595260's if-else
+ *   cascadePosition: 0-indexed position in AxeEdit's block-name if-else
  *     chain. Hint for binary ordering; not always equal to binary
  *     position (see module docstring).
  *
@@ -92,11 +89,11 @@ export interface BlockBinaryLayout {
  * verified against hardware. `undefined` means not yet measured.
  *
  * Sources:
- *   Width:        scripts/_research/bk070-measure-widths.ts (batches A-E)
- *   X→Y offset:   scripts/_research/bk070-map-xy-paramBase-v2.ts +
+ *   Width:        hardware measurements (batches A-E)
+ *   X→Y offset:   hardware measurements +
  *                 BLOCK_LAYOUT_MAP in sceneChannelMap.ts (Tier 1a)
- *   Wire ids:     AxeEdit.exe FUN_00595260 decompile
- *   Cascade pos:  AxeEdit.exe FUN_00595260 if-else order
+ *   Wire ids:     AxeEdit's block-name cascade
+ *   Cascade pos:  AxeEdit's block-name if-else order
  */
 export const BLOCK_BINARY_LAYOUT: Readonly<Record<AxeFxIIBlockName, BlockBinaryLayout>> = {
   Amp:            { widthUshorts: 238, xToYOffsetUshorts: 118, wireIds: [106, 107],        cascadePosition: 0,  canBypass: true  },

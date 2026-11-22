@@ -3,7 +3,7 @@
  *
  * Byte-exact against two community captures (Kevin Iudicello, fw 4.03; the
  * 2026-06-09 edit session). Frames lifted verbatim from
- * `samples/captured/decoded/vp4-403-v2/FINDINGS.md`. Failure means the VP4
+ * those captures. Failure means the VP4
  * write codec drifted from the real device's wire shape.
  *
  * Status: 🟡 community beta. SAVE + bypass are strong-evidence (byte-identical,

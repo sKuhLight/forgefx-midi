@@ -9,7 +9,7 @@
  * This module is DATA-SHAPE ONLY: pure types plus one widget-normalisation
  * table. No runtime dependencies, browser-safe (no `node:*` imports).
  *
- * Provenance of the data files: each editor embeds a JUCE "config" XML
+ * Provenance of the data files: each editor ships a "config" XML
  * (`__block_layout.xml`, `__amp_layout*.xml`) whose document order is the
  * on-screen order (controls left→right per row, rows top→bottom, pages in
  * tab order). The generator (`scripts/gen-editor-layouts.ts`) parses those

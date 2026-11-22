@@ -1,7 +1,7 @@
 /**
  * Gen-3 decompressed-body data tables (GENERATED — do not hand-edit).
  *
- * Re-run: npx tsx scripts/_research/gen3-body-tables-generate.ts
+ * Generator maintained outside this package.
  *
  * SOURCE: fractal-syx-codec by Andrew Mercurio ("BoodieTraps"), Apache-2.0,
  * derived by correlating decoded Fractal factory presets. See the repo NOTICE

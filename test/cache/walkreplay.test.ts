@@ -1,7 +1,7 @@
 /**
- * CaptureRig v2 offline replay validation (FORGEFXMID-28).
+ * Offline replay validation of two full self-describe captures (FORGEFXMID-28).
  *
- * Replays the two CaptureRig v2 "full" device captures (FM9 fw 12.0, Axe-Fx III
+ * Replays the two "full" device captures (FM9 fw 12.0, Axe-Fx III
  * fw 32.6) back through the REAL `liveWalk` self-describe driver via a fake
  * `LiveTransport`, then builds a device cache through the SAME vote-only path
  * ForgeFX uses on a live device. This proves the captures decode and reconstruct
@@ -21,10 +21,13 @@
  *     still complete and reconstruct exactly the capture's definitions (what the
  *     walk returned before reply-loss handling existed).
  *
- * The capture files live in the sibling fas-re RE workspace, addressed by
- * ABSOLUTE path; the whole suite SKIPS (never fails) when they are absent, so CI
- * without the RE workspace stays green — mirroring the guarded real-`.cache`
- * cross-check in `records.test.ts`.
+ * The capture files are optional local fixtures: point
+ * `FORGEFX_MIDI_WALK_CAPTURES` at the directory that holds them
+ * (`<dir>/fm9-full-fw12p0/fm9-full.defs.jsonl`,
+ * `<dir>/axe3-full-fw32p6/axe3-full.defs.jsonl`). The whole suite SKIPS (never
+ * fails) when the variable is unset or the files are absent, so CI without the
+ * fixtures stays green — mirroring the guarded real-`.cache` cross-check in
+ * `records.test.ts`.
  *
  * Assertions per device:
  *   • the walk COMPLETES and reconstructs exactly the capture's non-filler /
@@ -47,16 +50,12 @@ import type { CacheRecord, DeviceParam, EnumRecord } from '../../src/cache/types
 import { FM9_PARAMS } from '../../src/gen3/fm9/index.js';
 import { PARAMS as AXE3_PARAMS } from '../../src/gen3/axe-fx-iii/index.js';
 
-export const RIGV2REPLAY_CASE_COUNT = 2;
+export const WALKREPLAY_CASE_COUNT = 2;
 
-// Candidate absolute roots for the CaptureRig v2 capture set (sibling fas-re RE
-// workspace). Skip-if-absent, like records.test.ts's REAL_CACHE: the first that
-// exists wins; none => SKIP (not fail). Both the Linux RE box and the Windows
-// checkout are covered so the replay actually runs wherever the captures live.
-const CAPTURE_ROOTS = [
-  '/home/pascal/Dokumente/Repositorys/FractalAudio/fas-re/raw/captures/rigv2-20260717',
-  'C:/Users/pasca/Documents/repositorys/FractalAudio/fas-re/raw/captures/rigv2-20260717',
-];
+// Directory holding the optional capture set, taken from the environment.
+// Skip-if-absent, like records.test.ts's REAL_CACHE: unset or missing => SKIP
+// (not fail).
+const CAPTURE_ROOT = process.env['FORGEFX_MIDI_WALK_CAPTURES'];
 
 interface DeviceCase {
   name: string;
@@ -266,21 +265,21 @@ function isWalkPlaceholder(r: CacheRecord): boolean {
   return r.kind === 'float' && r.placeholder === true;
 }
 
-export async function runRigV2Replay(): Promise<void> {
+export async function runWalkReplay(): Promise<void> {
   const fail = (msg: string): never => {
-    throw new Error(`[cache/rigv2replay] ${msg}`);
+    throw new Error(`[cache/walkreplay] ${msg}`);
   };
 
-  const root = CAPTURE_ROOTS.find((p) => existsSync(p));
+  const root = CAPTURE_ROOT && existsSync(CAPTURE_ROOT) ? CAPTURE_ROOT : undefined;
   if (!root) {
-    console.log('  SKIP cache/rigv2replay (CaptureRig v2 captures absent — sibling fas-re RE workspace not present)');
+    console.log('  SKIP cache/walkreplay (captures absent — set FORGEFX_MIDI_WALK_CAPTURES to the capture directory)');
     return;
   }
 
   for (const dev of DEVICES) {
     const path = `${root}/${dev.defsRel}`;
     if (!existsSync(path)) {
-      console.log(`  SKIP cache/rigv2replay ${dev.name} (${dev.defsRel} absent)`);
+      console.log(`  SKIP cache/walkreplay ${dev.name} (${dev.defsRel} absent)`);
       continue;
     }
     const cap = loadCapture(path, dev.model, false);
@@ -415,12 +414,12 @@ export async function runRigV2Replay(): Promise<void> {
     if (addrs(quiet.records) !== addrs(records)) fail(`${dev.name}: silent-address walk reached different definitions than the device walk`);
 
     console.log(
-      `  cache/rigv2replay ${dev.name} (silent addresses): walk completes with the same ${quiet.records.length} definitions ` +
+      `  cache/walkreplay ${dev.name} (silent addresses): walk completes with the same ${quiet.records.length} definitions ` +
         `(${quiet.queries} queries vs ${walked.queries}, ${quiet.silentAddresses} silent addresses, ` +
         `${quiet.unresolvedReplies} kept as loss: silent list ends + short inner runs)`,
     );
     console.log(
-      `  cache/rigv2replay ${dev.name}: ${records.length - walked.placeholderSlots}/${cap.defCount} defs reconstructed ` +
+      `  cache/walkreplay ${dev.name}: ${records.length - walked.placeholderSlots}/${cap.defCount} defs reconstructed ` +
         `(+${walked.placeholderSlots} inner placeholders; baseline walk kept ${cap.baselineRecords}, ${cap.pseudoDefs} junk-shaped definitions now rejected), ` +
         `${labels} enum labels reconcile; ${Object.keys(built.ranges).length} families mapped, ` +
         `0 param-sections unmapped; seeds present [${seedsResolved.join(',')}]` +

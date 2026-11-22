@@ -94,8 +94,7 @@ export type CalibrationProvenance =
   // measured on the II itself, so it overrides am4-shared / convention
   // on conflict (e.g. amp.ac_line_freq is LINEAR Hz, not the bare-'freq'
   // log10 convention). Evidence:
-  //   samples/captured/decoded/ii-opaque-amp-sweep.json
-  //   samples/captured/decoded/ii-opaque-amp-fit.json
+  //   a 5-point wire sweep per knob and the fit derived from it.
   | 'hardware-swept';
 
 export interface CalibrationEntry {
@@ -302,8 +301,7 @@ const EDITOR_OBSERVED: Record<string, CalibrationEntry> = {
 /**
  * Hardware-swept entries: Axe-Fx II `amp` block opaque knobs calibrated
  * by a direct 5-point wire sweep with the device echoing its own display
- * label at each point (see `scripts/_research/probe-ii-opaque-amp-sweep.ts`
- * → `fit-ii-opaque-amp-calibration.ts`; verified by the
+ * label at each point (verified by the
  * `ii-amp-calibration-verify` workflow). These params previously surfaced
  * as raw wire integers in `get_preset` (the deep-amp-decode bug) because
  * none of the catalog / AM4-shared / convention layers calibrated them.

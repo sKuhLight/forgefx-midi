@@ -14,8 +14,7 @@
  *     Cached at `founder-private notes`.
  *   • Axe-Edit `__block_layout.xml` — symbolic `parameterName` (e.g.
  *     `DISTORT_DRIVE`) + Title-Case UI label + type-applicability
- *     gates. Catalogued at
- *     `samples/captured/decoded/labels/axe-edit-catalog.json`.
+ *     gates.
  *
  * **DO NOT EDIT BY HAND** — regenerate via:
  *   npx tsx scripts/extract-axe-fx-ii-params.ts
@@ -491,8 +490,7 @@ export const AMP_TONE_STACK_VALUES: Readonly<Record<number, string>> = Object.fr
 // The four amp deep-param enums below are hardware-dumped, not wiki/XML
 // sourced. Ground truth: `fn 0x28` SYSEX_GET_PARAM_STRINGS sweep on the
 // Axe-Fx II XL+ (Q8.02), 2026-05-29, probe
-// `scripts/_research/probe-ii-amp-enum-dump.ts`, captured to
-// `samples/captured/decoded/ii-amp-enum-dump.json`. The wire value is the
+// output. The wire value is the
 // enum index directly. The generator does not emit these (the wiki/XML
 // catalog lists them as bare CLIPTYPE2 / DRIVETYPE / FBTYPE / VERSION with
 // no enum vocabulary), so they are maintained here the same way the amp
@@ -2912,15 +2910,13 @@ export const KNOWN_PARAMS = {
     "wah.coil_bias": { groupCode: "WAH", block: "wah", paramId: 13, wikiName: "COIL BIAS", name: "coil_bias", controlType: "knob", parameterName: "WAH_BIAS", xmlLabel: "Coil Bias", fwAdded: "Since Quantum 6" },
     "wah.low_cut_freq": { groupCode: "WAH", block: "wah", paramId: 14, wikiName: "LOW CUT FREQ", name: "low_cut_freq", controlType: "knob", fwAdded: "Since Quantum 6", parameterName: "WAH_HPF", xmlLabel: "Low Cut Frequency" },
 
-    // >>> BEGIN_GHIDRA_ADDENDUM (2026-05-17) >>>
+    // >>> BEGIN_EDITOR_ADDENDUM (2026-05-17) >>>
     //
-    // 221 net-new entries recovered from Axe-Edit.exe via direct-pattern-
-    // scan Ghidra mining (`scripts/ghidra/SeekParamTablesII.java`).
-    // Source: `samples/captured/decoded/ghidra-axeedit2-paramtables.json`
+    // 221 net-new entries recovered from Axe-Edit's own parameter tables
     // (1,353 raw (paramId, symbol) entries; 905 already ship via wiki; 221
     // remain after (groupCode, paramId) dedup against shipping entries).
     // Validated: 639/640 shipping (parameterName, paramId) pairs agree with
-    // the Ghidra catalog exactly. Two entirely new blocks (VOCODER 50,
+    // the editor catalog exactly. Two entirely new blocks (VOCODER 50,
     // RESONATOR 40) get param coverage for the first time.
     //
     // Skipped during generation: groupCode-paramId-pair-already-shipping
@@ -2935,14 +2931,12 @@ export const KNOWN_PARAMS = {
     //
     // Append-only block — survives `extract-axe-fx-ii-params.ts` regens
     // ONLY until the broader-preservation work the generator header queues
-    // separately lands. The `>>> BEGIN_GHIDRA_ADDENDUM` / `<<< END_GHIDRA_
+    // separately lands. The `>>> BEGIN_EDITOR_ADDENDUM` / `<<< END_EDITOR_
     // ADDENDUM` markers are designed for that preservation work to
     // pattern-match and re-splice this block across regens.
     //
-    // Regenerate via:
-    //   npx tsx scripts/_research/generate-axefx2-ghidra-addendum.ts
-    //   (writes samples/captured/decoded/axefx2-ghidra-addendum.ts.txt;
-    //    paste into THIS block between the BEGIN/END markers.)
+    // The addendum is produced outside this package; paste it into THIS
+    // block between the BEGIN/END markers.
 
     // --- amp (AMP) ---
     "amp.wslpf": { groupCode: "AMP", block: "amp", paramId: 11, wikiName: "WSLPF", name: "wslpf", controlType: "unknown", parameterName: "DISTORT_WSLPF" },
@@ -3229,7 +3223,7 @@ export const KNOWN_PARAMS = {
     "crossover.mix": { groupCode: "XVR", block: "crossover", paramId: 10, wikiName: "MIX", name: "mix", controlType: "unknown", parameterName: "CROSSOVER_MIX" },
     "crossover.bypass": { groupCode: "XVR", block: "crossover", paramId: 14, wikiName: "BYPASS", name: "bypass", controlType: "unknown", parameterName: "CROSSOVER_BYPASS" },
 
-    // <<< END_GHIDRA_ADDENDUM <<<
+    // <<< END_EDITOR_ADDENDUM <<<
 } as const satisfies Readonly<Record<string, AxeFxIIParam>>;
 
 export type AxeFxIIParamKey = keyof typeof KNOWN_PARAMS;

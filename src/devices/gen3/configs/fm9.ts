@@ -3,10 +3,10 @@
  *
  * The FM9 (model byte 0x12) is a gen-3 sibling of the Axe-Fx III: same
  * SysEx envelope, same 6×14 grid, 8 scenes, A–D channels. It now ships a
- * DEVICE-TRUE param catalog (`fractal-midi/gen3/fm9`) mined from FM9-Edit's own
- * binary — block roster + effect IDs are the III's (shared across the
+ * DEVICE-TRUE param catalog (`fractal-midi/gen3/fm9`) taken from FM9-Edit's own
+ * tables — block roster + effect IDs are the III's (shared across the
  * family), but paramIds are FM9's own (reusing the III's mis-addresses
- * 18.6% of shared params; see `docs/_private/MINING-FINDINGS-FM-VP4.md`).
+ * 18.6% of shared params).
  * Model byte 0x12 is HARDWARE-CONFIRMED on a real FM9 (firmware 11.0,
  * community fm9-catalog foundation probe, 2026-06-06): a QUERY PATCH NAME
  * built with 0x12 echoes model 0x12 with a valid checksum, scene GET/SET

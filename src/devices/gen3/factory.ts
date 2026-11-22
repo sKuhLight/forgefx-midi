@@ -12,8 +12,7 @@
  * SCOPE / DISCIPLINE. The wire codec (model byte + checksum + function
  * family) is validated as shared across the family — the III's own codec
  * is byte-verified against 10 public captures, and FM3/FM9 reuse it with
- * their model byte (see memory `project_fm3_fm9_capture_evidence` and
- * `docs/_private/PLAN-device-family-expansion.md`). The PARAMETER SET/GET
+ * their model byte (see the FM3/FM9 capture evidence). The PARAMETER SET/GET
  * path (fn=0x01) is reused from the III but is NOT hardware-verified on
  * any device yet; every config that wires it ships with
  * `support_tier: 'community-beta'` and a per-response safety marker. We

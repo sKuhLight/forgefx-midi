@@ -18,9 +18,8 @@
  * math undecoded), `switch_scene` (value↔scene mapping unconfirmed), plus
  * apply_preset / rename / switch_preset refuse with a clear message. community-beta.
  *
- * CATALOG. paramIds are VP4-true (mined from VP4-Edit's own binary; reusing
- * the III's mis-addresses 99.1% of shared params — see
- * `docs/_private/MINING-FINDINGS-FM-VP4.md`). The mined catalog is shared
+ * CATALOG. paramIds are VP4-true (taken from VP4-Edit's own tables; reusing
+ * the III's mis-addresses 99.1% of shared params). The mined catalog is shared
  * across the gen-3 editor family, so it carries DISTORT (amp) + CABINET
  * params even though the physical VP4 has no amp/cab; `exclude_blocks`
  * drops those two blocks from the surface (device_true_roster alone won't —

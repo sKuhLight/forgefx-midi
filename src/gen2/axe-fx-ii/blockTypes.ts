@@ -20,7 +20,7 @@
  * panel display + AxeEdit's rendering.  then wrote params to
  * Amp 1 and Reverb 1 by ID + saw the audible/visible result — block
  * ID resolution proven end to end. Factory bank file references
- * (`samples/factory/Axe-Fx-II_XL+_Bank-{A,B,C}_Q8p02.syx`) line up
+ * (`Axe-Fx-II_XL+_Bank-{A,B,C}_Q8p02.syx`) line up
  * with the registry as expected.
  */
 

@@ -13,8 +13,7 @@
  * (newer than the `2p0` set above; both are definitions-version tags,
  * NOT firmware numbers — device firmware is 2.1). Ordinal-SAFE, applied
  * surgically (the full generator was NOT re-run, to avoid the chorus
- * mid-list reindex that `66p1` also carries — see the scratchpad
- * AM4-modifiers-and-cache findings): idx 56 relabeled
+ * mid-list reindex that `66p1` also carries): idx 56 relabeled
  * "Deluxe Tweed"→"Deluxe Tweed Bright" (same amp), and two new amps
  * appended at 248/249 ("Deluxe Tweed Normal", "PVH 6160 Block Clean").
  * All other rosters verified byte-identical between `2p0` and `66p1`,

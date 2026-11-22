@@ -719,7 +719,7 @@ export function parseUnit(display: string): string | undefined {
 /**
  * Extract the leading numeric value from a device formatted-value string (view
  * 0x00), or `null` for a pure label. '200.00 Hz'→200, '-3.0 dB'→-3, 'ON'→null.
- * Port of CaptureRig v2's `parse_display` (value half). Full-mode taper sweeps
+ * Display-string parser (value half). Full-mode taper sweeps
  * classify on these numbers; a non-numeric display makes that sample inert.
  */
 export function parseDisplayValue(display: string): number | null {
@@ -729,14 +729,14 @@ export function parseDisplayValue(display: string): number | null {
   return Number.isFinite(v) ? v : null;
 }
 
-/** Round to 5 decimals — CaptureRig v2's `round(err, 5)` for the fit error. */
+/** Round to 5 decimals — the fit error precision. */
 function round5(x: number): number {
   return Math.round(x * 1e5) / 1e5;
 }
 
 /**
- * Classify a normalized→display sweep into a knob taper. Faithful port of
- * CaptureRig v2's `classify_taper` (fas-re): fewer than 3 numeric points →
+ * Classify a normalized→display sweep into a knob taper. Fewer than 3
+ * numeric points →
  * 'unknown' (unreliable); no movement (span ≤ 1e-9 or span/scale < 1e-4) →
  * 'flat' (unreliable — the block is not instantiated / the param is inert, so
  * the sweep carries no taper info); otherwise fit linear (`lo + span·n`) vs log
@@ -782,7 +782,7 @@ export function classifyTaper(samples: ReadonlyArray<readonly [number, number | 
 /**
  * The normalized position that reproduces display `target` using a classified
  * taper — analytic inverse for log/linear, piecewise-linear interpolation over
- * the samples for custom/degenerate. Port of CaptureRig v2's `_invert`.
+ * the samples for custom/degenerate.
  */
 function invertTaper(
   points: ReadonlyArray<readonly [number, number]>,
@@ -1047,7 +1047,7 @@ export interface PseudoReplyStats {
  * encoder (`buildSetParameterContinuous`) and hands the finished bytes to
  * `send`; the host owns the wire. `reloadPreset` re-selects the current preset
  * to reload it from flash — the non-destructive safety net run after every
- * block whose params were swept, mirroring CaptureRig v2's per-block reload.
+ * block whose params were swept, reloading once per swept block.
  * Ignored entirely in read-only mode.
  */
 export interface LiveWalkWriteHooks {
@@ -1105,13 +1105,13 @@ export interface LiveWalkOptions {
    */
   write?: LiveWalkWriteHooks;
   /**
-   * Normalized sample count per taper sweep (default 9, matching CaptureRig v2):
+   * Normalized sample count per taper sweep (default 9):
    * n = i/(points-1) for i in 0..points-1. Full mode only.
    */
   taperPoints?: number;
   /**
    * Settle pause (ms) between a sweep SET and the display read-back, floored at
-   * 20ms (CaptureRig v2's ≥20ms pacing). Routed through `sleep`. Full mode only.
+   * 20ms (the ≥20ms pacing floor). Routed through `sleep`. Full mode only.
    */
   sweepSettleMs?: number;
   /** Explicit block addresses to sweep; defaults to `0..maxBlock`. The way to reach blocks above
@@ -1270,7 +1270,7 @@ async function pace(ms: number, signal: AbortSignal | undefined, sleep?: (ms: nu
 }
 
 // ---------------------------------------------------------------------------
-// Full-mode taper sweep (write + restore) — port of CaptureRig v2's Gen3Profile
+// Full-mode taper sweep (write + restore)
 // ---------------------------------------------------------------------------
 
 /**
@@ -1320,10 +1320,10 @@ function sweepableBlocks(model: number): ReadonlySet<number> {
   return out;
 }
 
-/** CaptureRig v2's ≥20ms floor between a sweep SET and the display read-back. */
+/** The ≥20ms floor between a sweep SET and the display read-back. */
 const MIN_SWEEP_SETTLE_MS = 20;
 
-/** Default normalized sample count per sweep (CaptureRig v2 default). */
+/** Default normalized sample count per sweep. */
 const DEFAULT_TAPER_POINTS = 9;
 
 /** Read the device's formatted-value string (view 0x00), or `null`. */
@@ -1347,7 +1347,7 @@ interface SweepContext {
  * Sweep one continuous float param: read the current display, drive normalized
  * 0..1 via CONTINUOUS-SET reading the display back at each step, classify the
  * taper, then RESTORE the original value through the classified curve's analytic
- * inverse. Faithful port of CaptureRig v2's `_sweep_taper`/`_restore`. Returns
+ * inverse. Returns
  * the classified taper (`undefined` when nothing was written, see below); the
  * codec builds every SET with `buildSetParameterContinuous` and sends it via the
  * host `write` hook. `reads` counts the display queries issued (folded into
@@ -1680,8 +1680,8 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
     silentSinceProof = 0;
     runBooked = { lost: 0, unresolved: 0 };
     // FULL-mode safety net: reload the preset from flash after every block in which any SET was sent,
-    // so an interrupt can never leave unsaved sweep edits behind (CaptureRig v2's per-block
-    // `reload_preset`). In a `finally`, so an abort or error in the middle of a sweep still reloads:
+    // so an interrupt can never leave unsaved sweep edits behind (a per-block
+    // preset reload). In a `finally`, so an abort or error in the middle of a sweep still reloads:
     // best effort then — a failing reload must not hide the error that ended the walk.
     wroteInBlock = false;
     let blockDone = false;
@@ -1819,8 +1819,8 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
         // enum (a label list was found, or the caller names one: a param with a hint
         // entry, usable or not, is never written, whatever its label walk gave) nor
         // an int/inert param
-        // (kind!=float or max==min). Mirrors CaptureRig v2's `d["kind"]=="float" and
-        // max!=min` (the label walk already claimed any enum). The sweep writes +
+        // (kind!=float or max==min). Requires `kind=="float"` and
+        // max!=min (the label walk already claimed any enum). The sweep writes +
         // restores; its taper rides the FloatRecord and is threaded into the RangeDef.
         // WRITES only on a trustworthy record: reaching here means the definition passed every
         // pseudo / implausible check. `param <= bound` is defense in depth — the loop bound (the

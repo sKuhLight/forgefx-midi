@@ -2,8 +2,8 @@
  * Axe-Fx II annotation-coverage golden.
  *
  * Locks the 67 catalog-symbol + display-label annotations added to
- * params.ts. Each row's parameterName was anchored to the SeekParamTablesII
- * Ghidra catalog at the SHIPPING paramId, and each xmlLabel is the verbatim
+ * params.ts. Each row's parameterName was anchored to the editor's
+ * parameter catalog at the SHIPPING paramId, and each xmlLabel is the verbatim
  * AxeEdit __block_layout label. This test guards three invariants:
  *
  *   1. Wire address unchanged: paramId is exactly the shipping value (the
@@ -15,9 +15,7 @@
  *   4. controlType is correct: 17 continuous controls upgraded "unknown" ->
  *      "knob"; the 11 dropdowns stay "select"; none remain "unknown".
  *
- * Self-contained (no samples/ dependency) so it runs in CI. Regenerate the
- * expectation table with scripts/_research/validate-ii-annotation-coverage.ts
- * if the source catalogs change.
+ * Self-contained (no external sample dependency) so it runs in CI.
  */
 import { KNOWN_PARAMS } from '../../../src/gen2/axe-fx-ii/index.js';
 

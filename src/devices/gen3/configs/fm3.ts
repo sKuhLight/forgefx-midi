@@ -5,10 +5,10 @@
  * SysEx envelope, 8 scenes, A–D channels, but a smaller **4×12 grid** and
  * a reduced block roster (it drops blocks the III has). Model byte 0x11
  * is byte-confirmed via tysonlt/AxeFxControl (AXEFX3=0x10, FM3=0x11). It
- * now ships a DEVICE-TRUE param catalog (`fractal-midi/gen3/fm3`) mined from
- * FM3-Edit's own binary: block effect IDs are the III's (shared), but
+ * now ships a DEVICE-TRUE param catalog (`fractal-midi/gen3/fm3`) taken from
+ * FM3-Edit's own tables: block effect IDs are the III's (shared), but
  * paramIds are FM3's own (reusing the III's mis-addresses 6.9% of shared
- * params; see `docs/_private/MINING-FINDINGS-FM-VP4.md`). community-beta.
+ * params). community-beta.
  */
 import { FM3_PARAMS_BY_FAMILY, FM3_ENUM_OVERRIDES, FM3_RANGES } from '../../../gen3/fm3/index.js';
 import { toSymbolEnumOverrides } from '../catalog.js';

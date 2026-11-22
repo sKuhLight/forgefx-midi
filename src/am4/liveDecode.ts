@@ -2,8 +2,7 @@
  * AM4 live-poll value decode.
  *
  * AM4-Edit drives its meters / tuner by polling ordinary `fn 0x01 PARAM_RW`
- * addresses (BigCapture 2026-07-05; see docs/AM4-CAPTURE-2026-07-05.md and
- * docs/AM4-LIVE-VALUE-DECODE-PLAN.md). A poll response is byte-shape-identical
+ * addresses (hardware-observed 2026-07-05; see docs/AM4-LIVE-POLLS.md). A poll response is byte-shape-identical
  * to a short read — 23 bytes, `hdr4=0x0004`, a `float32` LE payload in `[0,1]`.
  *
  * This module turns such a response into a display value **when the polled

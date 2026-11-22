@@ -1,29 +1,13 @@
 # AM4 Channel (A/B/C/D) switch — wire decode
 
-**Source capture:** `Channels.pcapng` (2026-07-11, 96 MB Linux usbmon USB capture).
-Sequence performed: amp channel **A→B→C→D→A from software (Axis)**, then the same
-**A→B→C→D→A from the AM4 front panel**.
+Channel switching (A/B/C/D) on the AM4, both directions: setting the channel
+from software and reading it back, which is also how front-panel changes are
+reflected. Tracked as **FORGEFXMID-18**.
 
-**Status:** BOTH directions verified from the capture (part 1 = swaps via AM4-Edit,
-part 2 = swaps via the AM4 front panel). Tracked as **FORGEFXMID-18**.
+**Status:** both directions are hardware-verified (swaps from the editor and
+swaps from the AM4 front panel).
 
 ---
-
-## Capture mechanics (for reproducing the analysis)
-
-- The AM4 enumerates as a USB **audio + MIDI** device. The 96 MB is dominated by
-  ~213k isochronous **audio** packets; MIDI is a small fraction.
-- MIDI rides **bulk** endpoints: `0x02` = OUT (host→device), `0x82` = IN (device→host).
-  ~11,788 MIDI frames total.
-- `usb.capdata` is **not populated** in this capture and `usb.data_len==N` is not a
-  usable display filter. Reliable extraction:
-  - Filter `frame contains f0:00:01` (the SysEx header — note it is *split* by
-    USB-MIDI CIN bytes, so `00:01:74` never appears contiguously).
-  - Dump with `tshark -x` (do **not** use `-c`, which limits packets *read* not
-    *matched*), strip the **64-byte usbmon pseudo-header**, then unwrap USB-MIDI
-    4-byte event packets (CIN 0x4=3 bytes, 0x5=1, 0x6=2, 0x7=3).
-- Each `-x` packet prints **two** hexdumps (frame + payload); keep only the first.
-- Analysis scripts: `scratchpad/decode6.py` / `decode7.py`.
 
 ## Frame layout recap (func 0x01 PARAM_RW)
 
@@ -44,19 +28,19 @@ It is exactly:
 buildSetFloatParam({ pidLow: 0x3A, pidHigh: 0x7D2 }, channelIndex /* 0..3 as float */)
 ```
 
-The four software swaps in the capture wrote floats **1, 2, 3, 0 = B, C, D, A**,
+The four software swaps wrote floats **1, 2, 3, 0 = B, C, D, A**,
 matching "A up to D then A again".
 
-Byte-exact reconstruction of the channel-B write vs. the captured frame:
+Byte-exact reconstruction of the channel-B write vs. the observed frame:
 
 ```
-captured : f0 00 01 74 15 01 3a 00 52 0f 01 00 00 00 04 00  00 00 10 03 78  18 f7
+observed : f0 00 01 74 15 01 3a 00 52 0f 01 00 00 00 04 00  00 00 10 03 78  18 f7
 fields   : func=01  pidLo=3A  pidHi=7D2  action=01  hdr3=0  hdr4=04  value=0000100378
 value    : 8→7 unpack(0000100378) = 00 00 80 3F = float32 1.0  (= channel B)
 ```
 
 `buildSetFloatParam` + `packFloat32LE(1.0)` reproduces `0000100378` and the whole
-frame including checksum `0x18` — confirmed in `packValue.ts` by hand.
+frame including checksum `0x18`.
 
 The WRITE **response** (IN) is a 40-byte structure (`hdr4=0x28`) whose leading float
 is ≈ the newly selected channel (1.001, 2.0018, 3.0077, ~0 for the four writes) —
@@ -82,8 +66,7 @@ ch C: …0a000000010002000400                                  (byte50 = 02)
 ch D: …0a000000010003000400                                  (byte50 = 03)
 ```
 
-AM4-Edit polls `(block, 0x7DD)` for every block ~every 0.5 s (≈55 reads/block over the
-capture). The **amp** byte-50 cycles `0→1→2→3→0` during the part-1 (AM4-Edit) swaps;
+AM4-Edit polls `(block, 0x7DD)` for every block about every 0.5 s. The **amp** byte-50 cycles `0→1→2→3→0` during the part-1 (AM4-Edit) swaps;
 **other blocks** (Enhancer `0x7A`, Reverb `0x42`) cycle during the part-2 (front-panel)
 swaps — confirming the same read-back register catches front-panel changes.
 

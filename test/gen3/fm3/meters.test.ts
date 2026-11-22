@@ -2,7 +2,7 @@
  * FM3 monitor (meter) param table — catalog cross-checks.
  *
  * The monitor pids come from the editor's UI-layout data; FM3_PARAMS comes from
- * an independent mine of the editor binary's own param tables. Every meter entry
+ * an independent read of the editor's own param tables. Every meter entry
  * must resolve by name in FM3_PARAMS with the same paramId and family, so a
  * regression in either table fails here.
  */

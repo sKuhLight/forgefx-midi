@@ -1,22 +1,20 @@
 /**
  * Gen-3 sub-action + standalone-fn builders decoded from the 2026-06-09
- * Ghidra actions-and-shapes mine of the Axe-Edit III binary
- * (`docs/_private/III-SUBACTIONS-MINE-2026-06-09.md`):
+ * analysis of the Axe-Edit III editor:
  *
  *   - buildClearBlock / buildClearBlockCompanion (fn=0x01 sub=0x30/0x33)
  *   - buildRenamePreset (fn=0x01 sub=0x28, 32-byte name tail)
  *   - buildSetSceneName / buildClearAllSceneNames (fn=0x01 sub=0x2b)
  *   - buildSceneBlobHeader / buildSceneBlobChecksum (fn=0x5a / fn=0x5c)
  *
- * Goldens are byte literals derived from the decompiled emission sites
- * (hand-traced through the canonical fn=0x01 builder FUN_14033ec70 and
+ * Goldens are byte literals derived from the editor's emission sites
+ * (hand-traced through the canonical fn=0x01 builder and
  * the fn=0x5a/0x5c emitters), NOT from hardware captures: everything
  * here is decoded / hardware-unverified, community-beta tier.
  *
  * The name-tail cases additionally cross-validate the production packer
  * (`packValueChunked`) against an independent reimplementation of the
- * editor's streaming 8-to-7 packer (FUN_14033f2d0, cookbook
- * [[iii-byte-stream-septet-pack-8to7]]): the two algorithms must agree
+ * editor's streaming 8-to-7 packer: the two algorithms must agree
  * byte-for-byte on every frame.
  */
 import {
@@ -49,7 +47,7 @@ function assertBytes(got: readonly number[], want: readonly number[], label: str
 
 /**
  * Independent reimplementation of the editor's streaming 8-to-7 packer
- * (FUN_14033f2d0), used as the oracle for the packed 32-byte name tail.
+ * used as the oracle for the packed 32-byte name tail.
  * Kept separate from src on purpose: the production builder uses
  * `packValueChunked`, so agreement here cross-validates two
  * independently-written algorithms.
@@ -107,7 +105,7 @@ const cases: Array<() => void> = [];
 
 // Case 1: gridPos 0 (r1c1, model 0x10). This exact frame is cited twice:
 // the post-loop emission of the editor's "Clearing preset..." routine
-// (gridPos=0) and the loopMIDI-captured insert companion at r1c1.
+// (gridPos=0) and the captured insert companion at r1c1.
 cases.push(() => {
   const got = buildClearBlock({ row: 1, col: 1 }, III);
   const want = parseHex('f0 00 01 74 10 01 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 24 f7');
@@ -115,7 +113,7 @@ cases.push(() => {
 });
 
 // Case 2: gridPos 15 (r4c3 on a 6-row grid) — the same cell the insert
-// cookbook entry cites with captured byte12 = 0x0f.
+// captured insert frame cites with byte12 = 0x0f.
 cases.push(() => {
   const got = buildClearBlock({ row: 4, col: 3 }, III);
   const want = parseHex('f0 00 01 74 10 01 30 00 00 00 00 00 0f 00 00 00 00 00 00 00 00 2b f7');
@@ -172,7 +170,7 @@ cases.push(() => {
 
 // Case 8: the "<EMPTY>" frame from the editor's "Clearing preset..."
 // flow — full hand-traced byte literal (header fields plus the
-// 37-byte packed tail traced through the FUN_14033f2d0 algorithm).
+// 37-byte packed tail traced through the editor's packing algorithm).
 cases.push(() => {
   const got = buildRenamePreset('<EMPTY>', III);
   const want = parseHex(
@@ -284,7 +282,7 @@ cases.push(() => {
 });
 
 // Case 16: checksum trailer — 5-septet LSB-first XOR-32, byte 4 = top
-// 4 bits only ((v >>> 28) & 0x0f), per both decompiled 0x5c emitters.
+// 4 bits only ((v >>> 28) & 0x0f), per both editor 0x5c emitters.
 cases.push(() => {
   const got = buildSceneBlobChecksum(0xdeadbeef, III);
   const want = parseHex('f0 00 01 74 10 5c 6f 7d 36 75 0d 15 f7');

@@ -9,7 +9,7 @@
  *   Msg 66    11B   func 0x79   PRESET_DUMP_FOOTER  (3-byte payload)
  *
  * The wire layout was confirmed Session 53 against the factory bank files
- * (`samples/factory/Axe-Fx-II_XL+_Bank-{A,B,C}_Q8p02.syx`). Each bank file
+ * (`Axe-Fx-II_XL+_Bank-{A,B,C}_Q8p02.syx`). Each bank file
  * is exactly 128 × 12,951 bytes = 1,657,728 bytes — a clean concatenation
  * of all 128 presets with no inter-preset separator.
  *

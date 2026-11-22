@@ -183,7 +183,7 @@ export interface Gen3ConnectorSpec {
    * Fall back to a USB-CDC serial connection when no MIDI port matches.
    * FM3-only: the FM3 exposes no USB-MIDI interface on any OS — its control
    * channel is a serial device ("FM3 Communications Port" / /dev/cu.usbmodem*
-   * / /dev/ttyACM*) carrying raw MIDI bytes. The MIDI-needle path stays
+   * / the Linux CDC-ACM node) carrying raw MIDI bytes. The MIDI-needle path stays
    * primary so DIN-via-interface and loopMIDI test setups keep working.
    * Community-beta: decoded from a collaborator's FM3 hardware sessions,
    * not yet hardware-verified through THIS implementation.

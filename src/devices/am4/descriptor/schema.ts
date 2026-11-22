@@ -130,7 +130,7 @@ export function buildBlocks(): Record<string, BlockSchema> {
     // `display_name` is the friendly label the LLM sees in list_params /
     // describe_device output. Priority order:
     //   1. `param.displayLabel` — hand-set in params.ts from the
-    //      AM4-Edit XML join (scripts/_research/add-display-labels.ts).
+    //      AM4-Edit XML join.
     //      Most accurate per-entry source.
     //   2. `bridge?.canonicalLabel` — resolver-derived label from
     //      parameterBridge.ts (XML + paramNames.ts merge).

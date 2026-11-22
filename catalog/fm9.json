@@ -3,11 +3,11 @@
   "device": "fm9",
   "model_byte": "0x12",
   "support_status": "community-beta (decoded from FM9-Edit cache + community captures)",
-  "source": "forgefx-midi/src/gen3/fm9 — mined from the FM9-Edit binary + effectDefinitions cache; paramIds are FM9-true, NOT reused from the Axe-Fx III",
+  "source": "forgefx-midi/src/gen3/fm9 — derived from FM9-Edit's own data + effectDefinitions cache; paramIds are FM9-true, NOT reused from the Axe-Fx III",
   "notes": [
     "Gen-3 block effect IDs are family-shared: the block table lives in axe-fx-iii.json (AXE_FX_III_BLOCKS). paramIds are DEVICE-SPECIFIC — never reuse another gen-3 device's paramIds; always use this file's params for this device.",
     "FM9_RANGES carries device-true display ranges (display = value * scale).",
-    "FM9_ENUM_OVERRIDES is the COMPLETE device-true enum vocabulary (family -> paramId -> labels[], uniform with FM3), mined from the FM9-Edit effectDefinitions cache (76p0) — every enum param, not just the type rosters. The flat rosters (FM9_AMP_ROSTER et al.) are convenience views of the same data."
+    "FM9_ENUM_OVERRIDES is the COMPLETE device-true enum vocabulary (family -> paramId -> labels[], uniform with FM3), derived from the FM9-Edit effectDefinitions cache (76p0) — every enum param, not just the type rosters. The flat rosters (FM9_AMP_ROSTER et al.) are convenience views of the same data."
   ],
   "data": {
     "FM9_PARAMS": [

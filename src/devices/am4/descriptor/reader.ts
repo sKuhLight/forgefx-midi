@@ -209,7 +209,6 @@ async function readBypassState(
  *   - non-enum: internal = u16 / 65534 (Q16 → [0..1]), then `am4Decode`
  *     applies the per-unit scale (knob_0_10 / percent / log10-ratio / etc.)
  *
- * Wire-encoding rule cited in `[[am4-fn1f-atomic-read]]` cookbook entry.
  */
 function decodeChunkValue(param: Param, wire: number): number | string {
   if (param.unit === 'enum') {
@@ -228,10 +227,10 @@ function decodeChunkValue(param: Param, wire: number): number | string {
  * of every paramId slot, one per channel, in FIXED order A/B/C/D (quarter 0
  * = channel A), so `value index = channel * stride + pidHigh` with
  * `stride = itemCount / 4`. Confirmed on live AM4 hardware 2026-06-04
- * (`probe-am4-channel-{blocked,orientation,switch-test}.ts`): channel-bearing
+ * (channel-blocked / orientation / switch-test probes): channel-bearing
  * blocks all have `itemCount % 4 === 0` with DISTINCT quarters, and a
  * reversible A->B->A switch left the quarters invariant (FIXED, not sliding).
- * See `readOps.ts` and cookbook `am4-fn1f-atomic-read`.
+ * See `readOps.ts`.
  *
  * Non-channel-blocked chunks (`itemCount % 4 !== 0`, every non-channel
  * register) degrade safely: only channel index 0 reads a value (at `pidHigh`),
@@ -657,7 +656,7 @@ export const reader: DeviceReader = {
     // mutated device channel state). Default OFF still returns only the active
     // channel to keep the response small and avoid the (amp-unreliable)
     // channel-selector read implying more than it can. Channel-blocked layout
-    // confirmed on live AM4 hardware 2026-06-04 (cookbook am4-fn1f-atomic-read).
+    // confirmed on live AM4 hardware 2026-06-04.
     const includeChannelState = options?.include_channel_state ?? false;
     // Server-side timer around the SysEx read loop — surfaced as
     // _meta.read_duration_ms (client-independent; alpha.17 finding).

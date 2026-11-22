@@ -35,7 +35,7 @@ Every `catalog/<device>.json` is one object:
 | `device` | Device id: `am4`, `axe-fx-ii`, `axe-fx-iii`, `fm3`, `fm9`, `vp4`, `axe-fx-gen1`. |
 | `model_byte` | The SysEx model byte as a hex string (e.g. `"0x12"`). |
 | `support_status` | Honest evidence label: `hardware-verified` or `community-beta` with a parenthetical naming what is and is not confirmed. |
-| `source` | Where the data came from (mining source, spec, captures). |
+| `source` | Where the data came from (editor data, spec, hardware observations). |
 | `notes` | Optional array of device-specific caveats. Read them — they carry the family-shared-vs-device-true distinctions. |
 | `data` | The payload. **Each key mirrors the same-named TypeScript export** in `fractal-midi/<device>` (or a clearly named generated module), serialized verbatim. The TS interfaces in `src/<device>/` are the normative field documentation. |
 
@@ -66,7 +66,7 @@ Every `catalog/<device>.json` is one object:
   device's own table verbatim (a Record keyed `"block.name"` on AM4/II/gen-1,
   an array on gen-3). One cross-device parser is not a goal of schema v1;
   faithfulness to the tested source is.
-- **Per-param provenance fields** (capture-confirmed vs spec-derived vs mined)
+- **Per-param provenance fields** (hardware-confirmed vs spec-derived vs editor-derived)
   are a candidate for schema v2, once real consumer mismatch reports show
   which granularity matters. Today provenance is per-device
   (`support_status` / `source`) plus whatever status fields the source tables
@@ -84,27 +84,27 @@ ordinal**. The ordinal IS the wire set value (sent as float32(ordinal)).
 Each `*_RANGES` row (`FM9_RANGES`, `AXE3_RANGES`, `FM3_RANGES`) always carries
 `kind`, `displayMin`, `displayMax`, `scale`, `step`, `typecode`, with optional
 `enumCount` (enum rows) and `defaultRaw` (the device default as the stored u16).
-FM9 and Axe-Fx III rows additionally carry, **where a CaptureRig capture observed
+FM9 and Axe-Fx III rows additionally carry, **where hardware observed
 them**, three optional device-true fields:
 
 - `unit` — the physical unit token, **verbatim** from the device self-describe
   value view (e.g. `"Hz"`, `"dB"`, `"dB/OCT"`, `"dBu"`, `"dBV"`, `"SAMPLES"`,
   `"SECONDS"`). Absent for enum/label and unitless params.
-- `taper` — the value curve shape from the capture curve fit, **reliable fits
+- `taper` — the value curve shape from a device value-curve fit, **reliable fits
   only**: `"linear" | "log" | "flat" | "custom"`. Absent when no reliable taper
-  was captured.
+  was measured.
 - `taperPoints` — for a `"custom"` taper only: an array of `[normalized, raw]`
   sample points (normalized position 0..1 → raw value) describing the curve.
 
 These are **additive**: they never appear as required, older consumers ignore
 them, and the `schema_version` is unchanged (per the additive-keys rule above).
-FM3 declares the same optional fields for schema uniformity but has no capture
-yet, so no FM3 row currently populates them.
+FM3 declares the same optional fields for schema uniformity but no FM3 row
+currently populates them.
 
 ## The two traps to read before using gen-3 data
 
-1. **paramIds are device-specific.** FM3/FM9/VP4 paramIds were mined from
-   each device's own editor binary. Reusing Axe-Fx III paramIds on an FM3
+1. **paramIds are device-specific.** FM3/FM9/VP4 paramIds come from
+   each device's own editor data. Reusing Axe-Fx III paramIds on an FM3
    mis-addresses ~7% of params (FM9 ~19%, VP4 ~99%). Always use the file for
    the device on your bench.
 2. **Block effect IDs are family-shared.** The gen-3 block table ships once,

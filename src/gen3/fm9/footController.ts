@@ -5,12 +5,12 @@
  * region layout so a consumer can address any switch's tap/hold action and the layout-name /
  * current-window registers by `(layout, switchSlot)` and a field name.
  *
- * Provenance: the FC region bases below are FM9 DEVICE-TRUE, byte-exact from FM9-Edit's OWN binary.
- * The paramId of each `*_BEGIN` marker was mined directly from the `{ int32 id, int32 pad, char* name }`
- * struct array in the macOS Mach-O's `__const` (Ghidra, 2026-07-02) AND independently resolves by
+ * Provenance: the FC region bases below are FM9 DEVICE-TRUE, byte-exact from FM9-Edit's OWN parameter table.
+ * The paramId of each `*_BEGIN` marker comes from the editor's `{ id, name }` parameter table
+ * (macOS editor, 2026-07-02) AND independently resolves by
  * name against `FM9_PARAMS` (the FC family). The region layout is byte-identical to the FM3 — the FC
- * subsystem is shared gen-3 firmware — EXCEPT the CUR_WINDOW base, which is FM9-specific (mining the
- * FM9 binary pins 5640; the III's 5648 would mis-address). paramIds are DEVICE-SPECIFIC — never reuse
+ * subsystem is shared gen-3 firmware — EXCEPT the CUR_WINDOW base, which is FM9-specific (FM9
+ * editor analysis pins 5640; the III's 5648 would mis-address). paramIds are DEVICE-SPECIFIC — never reuse
  * the III's.
  *
  * ── Addressing ───────────────────────────────────────────────────────

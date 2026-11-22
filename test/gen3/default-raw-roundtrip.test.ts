@@ -14,8 +14,8 @@
  *   3. FLOAT IN-RANGE (>=90%): a float default decodes (linear model) inside its
  *      display range. The known ~5% residue is a class of amp advanced params
  *      whose captured default is in a different unit than min/max (clamped to an
- *      extreme, flagged at import) — tolerated, not fatal, mirroring the fas-re
- *      generator's own gate.
+ *      extreme, flagged at import) — tolerated, not fatal, mirroring the
+ *      catalog generator's own gate.
  *   4. ENUM ORDINAL VALID (>=98%): an enum default ordinal is < enumCount.
  *
  * NOT a device-acceptance test — it validates the codec's own read/write model.

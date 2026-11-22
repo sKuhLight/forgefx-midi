@@ -3,7 +3,7 @@
  *
  * Source: Fractal Audio Wiki "MIDI_SysEx" §"GET/SET_BLOCK_PARAMETER_
  * VALUE" + §"obtaining parameter values", verified against captured
- * Q8.02 firmware traffic (session-61). MSB-first wire
+ * Q8.02 firmware traffic. MSB-first wire
  * ordering for SWITCH_PRESET/STORE_PRESET locked from
  * a hardware test ruling out the wiki's documented LSB-first
  * ordering for preset >= 128.
@@ -158,15 +158,15 @@ const cases: Case[] = [
     expected: [0xf0, 0x00, 0x01, 0x74, 0x03, 0x1d, 0x01, 0x59, 0x43, 0xf7],
   },
   {
-    label: 'buildStorePreset(699) XL+ — session-61 capture',
+    label: 'buildStorePreset(699) XL+ — hardware capture',
     built: buildStorePreset(699),
     expected: envelope([0xf0, 0x00, 0x01, 0x74, 0x07, 0x1d, 0x05, 0x3b]),
   },
   // SYSEX_GET_ALL_PARAMS (function 0x1F) — bulk per-block param dump.
   // Hardware-verified  (Q8.02 XL+): sending this for AMP 1
   // (effectId 106 = 0x6A) returned a 0x74/0x75/0x76 state-broadcast
-  // triple with 236 16-bit values. Wire bytes captured in
-  // samples/captured/probe-axefx2-bulk-read.syx (first AMP 1 probe).
+  // triple with 236 16-bit values. Wire bytes captured from
+  // the first AMP 1 probe.
   {
     label: 'buildGetAllParams(amp1 / effectId 106) — Session 103 probe wire bytes',
     built: buildGetAllParams(106),

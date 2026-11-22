@@ -13,8 +13,7 @@
  *     Wraps across chunk boundaries at ushort 64 (chunks are 64 ushorts).
  *
  * Recovered Session 115 via paired-dump experiments
- * (`scripts/_research/bk070-channel-experiment-v2.ts` for sceneState,
- *  `scripts/_research/bk070-amp-param-mapper.ts` for paramBase).
+ * (one for sceneState, one for paramBase).
  *
  * ⚠️ SESSION 116 FINDING: paramBase entries are LAYOUT-DEPENDENT.
  *
@@ -32,9 +31,8 @@
  *
  * `axefx2_atomic_apply` therefore only handles presets with the
  * Test Crunch composition correctly. General-purpose atomic apply
- * requires either Ghidra-mining AxeEdit's encoder or a per-preset
- * dynamic probe; see `docs/_private/BK-070-DECODE-NOTES.md` §"Session
- * 116 — paramBase is LAYOUT-DEPENDENT" for the path forward.
+ * requires either decoding AxeEdit's encoder or a per-preset
+ * dynamic probe.
  *
  * sceneState entries may also be layout-dependent — not yet verified.
  * Treat them with the same caveat until a multi-composition probe

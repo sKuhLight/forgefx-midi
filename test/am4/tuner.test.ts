@@ -1,7 +1,7 @@
-// AM4 tuner decode. The four frames are REAL captures from BigCapture 2026-07-05
+// AM4 tuner decode. The four frames are REAL hardware captures (2026-07-05)
 // (block 0x0023, action 0x0010), from the same tuning moment: A0 detected at
 // 28.108 Hz, +37.9 cents (28.108 Hz is 37.9 cents sharp of A0 = 27.5 Hz),
-// string band 5. See docs/AM4-B2-AUDIO-CORRELATION.md and src/am4/tuner.ts.
+// string band 5. See docs/AM4-LIVE-POLLS.md and src/am4/tuner.ts.
 
 import { decodeAm4PollResponse } from '../../src/am4/liveDecode.js';
 import { decodeAm4Tuner, am4TunerNoteName, isAm4TunerChannel, AM4_TUNER_CHANNEL } from '../../src/am4/tuner.js';

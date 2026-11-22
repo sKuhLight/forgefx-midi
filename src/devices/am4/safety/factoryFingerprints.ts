@@ -1,6 +1,6 @@
 /**
  * Factory-preset fingerprints — derived at runtime from the user's local
- * copy of `samples/factory/AM4-Factory-Presets-1p01.syx`.
+ * copy of the AM4 factory presets file (`AM4-Factory-Presets-1p01.syx`).
  *
  * A fingerprint is a SHA-256 hash over the four chunk payloads of one
  * preset dump (4 × 3074 = 12,296 bytes), encoded as a hex string. The

@@ -255,7 +255,7 @@ export {
   encodeRawIntRegister,
 } from './midiRegisters.js';
 
-// Tuner readout (block 0x0023) — DECODED from BigCapture (B2). Absolute float32
+// Tuner readout (block 0x0023) — DECODED from hardware observation. Absolute float32
 // note/freq/cents/string values, not the normalized meter treatment.
 export {
   AM4_TUNER_PID_LOW,

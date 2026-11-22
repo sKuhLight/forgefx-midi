@@ -7,7 +7,7 @@
  * "two-leg / raw-id permutation" framing was an artifact of reading that float's
  * high septets as a `packValue16` integer at pos 15 (lossy: ordinals 16,17,18,19
  * all collapse to 524). Confirmed FM3 fw 12.00 (BoodieTraps) + our FM9 reverb
- * capture, 2026-06-08; writeup in `docs/_private/DREW-MSG2-VERIFIED-PLAN-2026-06-08.md`.
+ * capture, 2026-06-08.
  *
  * `resolveGen3EnumOrdinal(symbol, name)` reverse-maps the SHARED OVERLAY vocabulary
  * only (case/word-order tolerant): it is an offline helper for the symbols the

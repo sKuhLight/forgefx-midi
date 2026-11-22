@@ -646,7 +646,7 @@ export function buildApplyPresetAtOps(
   // the device's "move on duplicate" behavior, only the LAST
   // placement persists, all earlier cells get cleared as a side
   // effect, leaving the row-2 chain riddled with empty cells (silent
-  // preset even after cabling). Confirmed by AxeEdit's session-71
+  // preset even after cabling). Confirmed by AxeEdit's
   // in-to-out-route capture: 6 shunt placements at cols 7-12 used
   // blockIds 200, 201, 202, 203, 204, 205, one unique instance per
   // cell.
@@ -921,7 +921,7 @@ export function buildApplyPresetAtOps(
   //
   // This pattern is confirmed family-wide by Fractal's official Axe-Fx
   // III MIDI spec: "all writes target the active scene only." The
-  // captured 0x29 echoes in session-68-scene-broadcast.syx confirm the
+  // captured 0x29 echoes in a scene-broadcast capture confirm the
   // device accepts back-to-back scene switches without ack delay.
   //
   // Scene-name writes are deferred, Q8.02 surfaces scene names in

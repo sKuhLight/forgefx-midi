@@ -17,8 +17,8 @@
 // roundtrip). Community-beta; an FM3 SET→GET roundtrip is the pending
 // hardware confirm (queued for Drew's next FM3 session).
 //
-// JOIN RULE: by (family, SYMBOL) — NEVER by paramId across devices (cookbook
-// negative gen3-paramid-reuse-across-model-bytes). A row exists iff the FM3
+// JOIN RULE: by (family, SYMBOL) — NEVER by paramId across devices (paramIds are
+// firmware-specific). A row exists iff the FM3
 // catalog has the symbol in the same family AND at least one sibling source
 // classifies it discrete AND no existing FM3 enum path already routes it
 // discrete. maxOrdinal = the LARGEST sibling bound (FM9 cache enumCount-1 /

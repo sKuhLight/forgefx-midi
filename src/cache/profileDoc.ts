@@ -52,7 +52,17 @@ import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam, EnumReco
 /** Document format: 2 = carries raw sources. An absent `meta.format` (or 1) is a v1 derived-only doc. */
 export const PROFILE_FORMAT = 2;
 
-/** Format of `ProfileRaw` (the raw record envelope). */
+/**
+ * Format of `ProfileRaw` (the raw record envelope).
+ *
+ * Policy: a raw source is not only stored in a profile document, it is also what is shared with a
+ * definitions backend (`shareableSource`, `sourceFactHash`: ./share.ts) and what that backend
+ * validates against its own copy of this shape. Any change to a raw field (a field added, removed,
+ * retyped or given another meaning, in a source, a record, the live scope or the walk statistics)
+ * therefore BUMPS `RAW_FORMAT`, and the backend's validator must accept the new format (and be
+ * deployed) before a client that writes it ships. Within one format a reader drops keys it does not
+ * know: they are never stored and never derived from.
+ */
 export const RAW_FORMAT = 1;
 
 /**

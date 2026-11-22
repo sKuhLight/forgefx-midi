@@ -706,7 +706,7 @@ function isLabelDisplay(display: string): boolean {
 /** Build one `CacheRecord` from a decoded definition (+ any 0x1f labels). */
 /** Plausible physical-unit token (rejects model/type NAMES that ride a discrete
  * param's value string, e.g. 'INPUT 2' — those contain a space or digits). */
-const UNIT_RE = /^[A-Za-z%°µΩ/]{1,8}$/;
+export const UNIT_RE = /^[A-Za-z%°µΩ/]{1,8}$/;
 
 /** Parse the device's formatted value string (view 0x00) → its unit token, or
  * undefined. '440.0 Hz'→'Hz', '0.00 ct'→'ct', '100.0 %'→'%', 'ACTIVE'→undefined. */

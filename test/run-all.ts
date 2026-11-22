@@ -106,6 +106,7 @@ import { runMerge, MERGE_CASE_COUNT } from './cache/merge.test.js';
 import { runTypecodeRules, TYPECODE_RULES_CASE_COUNT } from './cache/typecode-rules.test.js';
 import { runBlockMap, BLOCK_MAP_CASE_COUNT } from './cache/block-map.test.js';
 import { runLiveWalkScope, LIVEWALK_SCOPE_CASE_COUNT } from './cache/livewalk-scope.test.js';
+import { runShare, SHARE_CASE_COUNT } from './cache/share.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
 import { runEditorLayoutFamiliesTests, EDITOR_LAYOUT_FAMILIES_CASE_COUNT } from './editorLayouts-families.test.js';
 import { runCrossBlockEffectIdTests, CROSSBLOCK_EFFECTID_CASE_COUNT } from './gen3/crossblock-effectid.test.js';
@@ -240,6 +241,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/typecode-rules (${TYPECODE_RULES_CASE_COUNT} cases, FM3/FM9/III catalogs)`, run: runTypecodeRules },
   { name: `cache/block-map (${BLOCK_MAP_CASE_COUNT} cases)`, run: runBlockMap },
   { name: `cache/livewalk-scope (${LIVEWALK_SCOPE_CASE_COUNT} cases)`, run: runLiveWalkScope },
+  { name: `cache/share (${SHARE_CASE_COUNT} cases, sanitizer + fact hash goldens)`, run: runShare },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
   { name: `editorLayouts/families (${EDITOR_LAYOUT_FAMILIES_CASE_COUNT} cases)`, run: runEditorLayoutFamiliesTests },
   { name: `gen3/crossblock-effectid (${CROSSBLOCK_EFFECTID_CASE_COUNT} cases)`, run: runCrossBlockEffectIdTests },

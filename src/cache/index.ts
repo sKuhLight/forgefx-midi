@@ -74,6 +74,22 @@ export type {
   DerivedUnit,
   ProfileDerivationErrorCode,
 } from './profileDoc.js';
+export {
+  shareableSource,
+  sourceFactHash,
+  sourceFactCanonical,
+  canonicalJson,
+  coarsenCapturedAt,
+  FACT_HASH_VERSION,
+} from './share.js';
+export type {
+  ShareableSource,
+  ShareableEditorCacheSource,
+  ShareableLiveSource,
+  ShareRefusal,
+  ShareRefused,
+  SourceFactKey,
+} from './share.js';
 export { sourceRank, planSourceUnits, mergeDerived, computeCoverage, rosterDiff, effectIdOwners, liveWalkCaps } from './merge.js';
 export type {
   ProfileProvenance,

@@ -85,3 +85,19 @@ export {
   familyAssignmentSuspects,
 } from './fingerprint.js';
 export type { FamilyTables } from './fingerprint.js';
+export {
+  typecodeTaper,
+  typecodeUnit,
+  typecodeClass,
+  KNOB_0_10_TYPECODE,
+  MONITOR_TYPECODE_LOW_BYTE,
+  TOGGLE_ROW_TYPECODE_LOW_BYTE,
+} from './typecodeRules.js';
+export type {
+  TypecodeConfidence,
+  TypecodeTaperKind,
+  TypecodeUnitCode,
+  TypecodeClassKind,
+  TypecodeTaperRule,
+  TypecodeUnitRule,
+} from './typecodeRules.js';

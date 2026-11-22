@@ -73,6 +73,7 @@ import { runFm9ModifierTests, FM9_MODIFIER_CASE_COUNT } from './gen3/fm9/modifie
 import { runAxe3MetersTests, AXE3_METERS_CASE_COUNT } from './gen3/axe-fx-iii/meters.test.js';
 import { runAxe3FootControllerTests, AXE3_FC_CASE_COUNT } from './gen3/axe-fx-iii/footcontroller.test.js';
 import { runAxe3ModifierTests, AXE3_MOD_CASE_COUNT } from './gen3/axe-fx-iii/modifiers.test.js';
+import { runAxe3EffectIdsTests, AXE3_EFFECT_IDS_CASE_COUNT } from './gen3/axe-fx-iii/effect-ids.test.js';
 import { runVp4SetParamTests, VP4_SETPARAM_CASE_COUNT } from './gen3/vp4/setparam.test.js';
 import { runVp4StructureBlobTests, VP4_STRUCTUREBLOB_CASE_COUNT } from './gen3/vp4/structureblob.test.js';
 import { runDiscreteOverlayTests, DISCRETE_OVERLAY_CASE_COUNT } from './gen3/discrete-overlay.test.js';
@@ -99,6 +100,7 @@ import { runFingerprint, FINGERPRINT_CASE_COUNT } from './cache/fingerprint.test
 import { runCatalogBridge, CATALOG_BRIDGE_CASE_COUNT } from './cache/catalog-bridge.test.js';
 import { runRedact, REDACT_CASE_COUNT } from './cache/redact.test.js';
 import { runCacheHeader, CACHE_HEADER_CASE_COUNT } from './cache/header.test.js';
+import { runTypecodeRules, TYPECODE_RULES_CASE_COUNT } from './cache/typecode-rules.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
 import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
 import { runGen3AdapterTests, GEN3_ADAPTER_CASE_COUNT } from './convert/gen3-adapter.test.js';
@@ -194,6 +196,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `axe-fx-iii/meters (${AXE3_METERS_CASE_COUNT} cases)`, run: runAxe3MetersTests },
   { name: `axe-fx-iii/footcontroller (${AXE3_FC_CASE_COUNT} cases)`, run: runAxe3FootControllerTests },
   { name: `axe-fx-iii/modifiers (${AXE3_MOD_CASE_COUNT} cases)`, run: runAxe3ModifierTests },
+  { name: `axe-fx-iii/effect-ids (${AXE3_EFFECT_IDS_CASE_COUNT} cases)`, run: runAxe3EffectIdsTests },
   { name: `vp4/setparam (${VP4_SETPARAM_CASE_COUNT} goldens)`, run: runVp4SetParamTests },
   { name: `vp4/structureblob (${VP4_STRUCTUREBLOB_CASE_COUNT} goldens)`, run: runVp4StructureBlobTests },
   { name: `gen3/discrete-overlay (${DISCRETE_OVERLAY_CASE_COUNT} cases)`, run: runDiscreteOverlayTests },
@@ -223,6 +226,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/catalog-bridge (${CATALOG_BRIDGE_CASE_COUNT} cases, FM3 catalog vs fw 12.0 walk profile)`, run: runCatalogBridge },
   { name: `cache/redact (${REDACT_CASE_COUNT} cases)`, run: runRedact },
   { name: `cache/header (${CACHE_HEADER_CASE_COUNT} cases)`, run: runCacheHeader },
+  { name: `cache/typecode-rules (${TYPECODE_RULES_CASE_COUNT} cases, FM3/FM9/III catalogs)`, run: runTypecodeRules },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
   { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },
   { name: `convert/gen3-adapter (${GEN3_ADAPTER_CASE_COUNT} preset goldens)`, run: runGen3AdapterTests },

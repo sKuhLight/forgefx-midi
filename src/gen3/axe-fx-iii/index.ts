@@ -318,3 +318,16 @@ export {
   type Gen3OutputMeter,
 } from './telemetry.js';
 export { SUB_ACTION_GET_RAW_VALUE, buildGetRawParamValue, isGen3ReadPollFrame } from './readPolls.js';
+
+// Axe-Fx III effectId <-> family table (FORGEFX-45). Entries are `verified` or `roster`
+// (documented id, no device binding yet: served read-only). See `effectIds.ts`.
+export {
+  AXE3_EFFECT_ID_TABLE,
+  AXE3_EFFECT_IDS,
+  AXE3_FAMILY_BY_EFFECT_ID,
+  axe3EffectId,
+  axe3EffectIdEntry,
+  type Axe3EffectIdEntry,
+  type Axe3EffectAddressing,
+  type Axe3EffectIdConfidence,
+} from './effectIds.js';

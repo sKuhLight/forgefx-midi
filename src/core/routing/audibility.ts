@@ -82,6 +82,28 @@ export interface AudibilityInput {
 /** Bypass-mode display labels that kill signal entirely. */
 export const MUTING_BYPASS_MODES = new Set(['MUTE', 'MUTE OUT', 'MUTE IN']);
 
+/**
+ * Does this bypass-mode option label silence the block while it is bypassed?
+ * True for the {@link MUTING_BYPASS_MODES} labels (MUTE / MUTE OUT / MUTE IN);
+ * false for THRU and the FX-only modes (MUTE FX OUT / MUTE FX IN), which still
+ * pass the dry signal. Case and surrounding/inner whitespace are normalised so a
+ * label list from another source (a device profile, a live walk) classifies the
+ * same way; anything else (an unlabelled ordinal like '2') is not muting.
+ */
+export function isMutingBypassMode(label: string | null | undefined): boolean {
+  if (typeof label !== 'string') return false;
+  return MUTING_BYPASS_MODES.has(label.trim().replace(/\s+/g, ' ').toUpperCase());
+}
+
+/** The ordinals of a bypass-mode label list (index = ordinal) that silence the block. */
+export function mutingBypassOrdinals(labels: readonly (string | null | undefined)[]): number[] {
+  const out: number[] = [];
+  labels.forEach((label, ordinal) => {
+    if (isMutingBypassMode(label)) out.push(ordinal);
+  });
+  return out;
+}
+
 function isPlaced(cell: GridCell | undefined): cell is GridCell {
   return cell !== undefined && cell.blockId !== 0;
 }

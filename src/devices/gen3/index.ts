@@ -10,6 +10,8 @@
  * raw-patch unpack + Huffman + CRC (`decodeRawPatch`), the structured body
  * decode (`decodeGen3Body`, `decodeGen3PresetDump`), and the FM3-verified
  * generic per-block param extraction (`readBlockParams`, blockParams.ts).
+ * `blockStateParams` (blockState.ts) resolves a block family's Scene Ignore /
+ * Bypass Mode params per model, with their firmware gates.
  */
 export * from './device.js';
 
@@ -79,6 +81,18 @@ export type {
   DecodedBlock,
   DecodedBlockParam,
 } from './blockParams.js';
+export {
+  blockStateParams,
+  hasBlockStateParams,
+  firmwareAtLeast,
+  formatBlockStateFirmware,
+  BLOCK_STATE_MODELS,
+  MUTING_BYPASS_MODES,
+  isMutingBypassMode,
+  mutingBypassOrdinals,
+} from './blockState.js';
+export type { BlockStateParam, BlockStateParams, BlockStateFirmware } from './blockState.js';
+
 export {
   findBlockHeader,
   paramByteOffset,

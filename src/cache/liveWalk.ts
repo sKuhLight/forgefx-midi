@@ -242,6 +242,8 @@ export const VIEW_VALUE = 0x00;
 
 /** Reply TAG bytes (inner[6]) that carry NO payload (sentinels). */
 const TAG_SENTINELS = new Set([0x01, 0x03]);
+/** The sentinel tags, for the spot check (./spotCheck.ts); not part of the package barrel. */
+export const REPLY_SENTINEL_TAGS: ReadonlySet<number> = TAG_SENTINELS;
 
 // ---------------------------------------------------------------------------
 // Pure codec — query builders
@@ -577,8 +579,12 @@ function isImplausibleDefinition(d: LiveDefinition): boolean {
   return d.min > d.max;
 }
 
-/** What a decoded definition reply is, for the walk (see "Table end, bounds and pseudo definitions"). */
-type DefinitionVerdict = 'real' | 'empty' | 'end-marker' | 'garbage' | 'duplicate-id' | 'implausible';
+/**
+ * What a decoded definition reply is, for the walk (see "Table end, bounds and pseudo definitions").
+ * Exported for the spot check (./spotCheck.ts), which judges its replies by the same rules; not part
+ * of the package barrel.
+ */
+export type DefinitionVerdict = 'real' | 'empty' | 'end-marker' | 'garbage' | 'duplicate-id' | 'implausible';
 
 /**
  * Non-zero symbol ids already seen in a block: the bodies of the real definitions that carried
@@ -602,7 +608,7 @@ function sameBody(a: LiveDefinition, b: LiveDefinition): boolean {
  * is the observed reality, not junk; anywhere else (outside a known table, after a gap) it stays a
  * copy.
  */
-function judgeDefinition(d: LiveDefinition, seen: ReadonlyMap<number, readonly LiveDefinition[] | null>, continuesKnownTable: boolean): DefinitionVerdict {
+export function judgeDefinition(d: LiveDefinition, seen: ReadonlyMap<number, readonly LiveDefinition[] | null>, continuesKnownTable: boolean): DefinitionVerdict {
   if (isFillerDefinition(d)) return d.id === 0 ? 'empty' : 'end-marker';
   if (isGarbageDefinition(d)) return 'garbage';
   if (d.id !== 0 && seen.has(d.id)) {
@@ -894,8 +900,10 @@ const DEFAULT_LOST_REPLY_RETRIES = 2;
  * shift every following label (a roster with the wrong model names — worse than a short one). The
  * pause lets a straggler arrive while no request is listening (and `LiveTransport.drain` discards
  * it where the host buffers frames). Only spent after a loss, so a clean walk is not slowed.
+ * Exported for the spot check (./spotCheck.ts), which pauses the same way; not part of the package
+ * barrel.
  */
-const DEFAULT_LOST_REPLY_DRAIN_MS = 500;
+export const DEFAULT_LOST_REPLY_DRAIN_MS = 500;
 
 /**
  * Default longest run of empty slots, bounded by real definitions, kept as inner placeholders.

@@ -90,6 +90,34 @@ export type {
   ShareRefused,
   SourceFactKey,
 } from './share.js';
+export {
+  spotCheckTargets,
+  spotCheckRows,
+  runSpotCheck,
+  guardSpotCheckTransport,
+  rangeMatchesDefinition,
+  spotCheckRng,
+  SPOT_CHECK_TARGETS,
+  SPOT_CHECK_BUDGET_MS,
+  SPOT_CHECK_LIMITS,
+} from './spotCheck.js';
+export type {
+  SpotCheckRowClass,
+  SpotCheckRange,
+  SpotCheckRow,
+  SpotCheckGates,
+  SpotCheckTargetsInput,
+  SpotCheckTarget,
+  SpotCheckPlan,
+  SpotCheckAnchor,
+  SpotCheckRunOptions,
+  SpotCheckVerdict,
+  SpotCheckMismatchReason,
+  SpotCheckTargetResult,
+  SpotCheckResult,
+  SpotCheckDoc,
+  SpotCheckRowsOptions,
+} from './spotCheck.js';
 export { sourceRank, planSourceUnits, mergeDerived, computeCoverage, rosterDiff, effectIdOwners, liveWalkCaps } from './merge.js';
 export type {
   ProfileProvenance,

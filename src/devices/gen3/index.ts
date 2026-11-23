@@ -133,3 +133,24 @@ export type {
 
 export { validateGen3Preset } from './presetValidate.js';
 export type { Gen3ValidationResult } from './presetValidate.js';
+
+// Block visuals (read-only graph displays) resolved against each device's own catalog.
+export { blockVisuals, gen3VisualModel, hasBlockVisuals } from './visuals.js';
+export type { Gen3VisualModel } from './visuals.js';
+export {
+  graphSlotKey,
+  stampGraphKeys,
+  layoutParamIds,
+  resolveBlockVisuals,
+  DYNAMICS_CURVE_ROLES,
+} from '../../visuals.js';
+export type {
+  BlockVisual,
+  ResolveVisualsOptions,
+  VisualKind,
+  VisualKey,
+  VisualMode,
+  VisualRole,
+  GraphSlotKey,
+  GraphSlotContext,
+} from '../../visuals.js';

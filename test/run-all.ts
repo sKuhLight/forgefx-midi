@@ -96,6 +96,7 @@ import { runFullWalk, FULLWALK_CASE_COUNT } from './cache/fullwalk.test.js';
 import { runKnobRule, KNOBRULE_CASE_COUNT } from './cache/knobrule.test.js';
 import { runWalkReplay, WALKREPLAY_CASE_COUNT } from './cache/walkreplay.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
+import { runVisualsTests, VISUALS_CASE_COUNT } from './visuals.test.js';
 import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
 import { runGen3AdapterTests, GEN3_ADAPTER_CASE_COUNT } from './convert/gen3-adapter.test.js';
 import { runShallowAdaptersTests, SHALLOW_ADAPTERS_CASE_COUNT } from './convert/adapters-shallow.test.js';
@@ -216,6 +217,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/knobrule (${KNOBRULE_CASE_COUNT} cases)`, run: runKnobRule },
   { name: `cache/walkreplay (${WALKREPLAY_CASE_COUNT} device captures)`, run: runWalkReplay },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
+  { name: `visuals (${VISUALS_CASE_COUNT} cases: per-device role ids, required roles, strict layout narrowing, COMP/GATE/TREMOLO variants, CONTROLLERS, DELAY without layout, graph-slot keys)`, run: runVisualsTests },
   { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },
   { name: `convert/gen3-adapter (${GEN3_ADAPTER_CASE_COUNT} preset goldens)`, run: runGen3AdapterTests },
   { name: `convert/adapters-shallow (${SHALLOW_ADAPTERS_CASE_COUNT} adapters)`, run: runShallowAdaptersTests },

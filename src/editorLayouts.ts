@@ -16,6 +16,7 @@
  * and joins every control's editor symbol (`parameterName`) against the
  * device's own parameter catalog to resolve a wire `paramId`.
  */
+import type { GraphSlotKey } from './visuals.js';
 
 /**
  * Normalised widget kind. The editor XML uses ~90 fine-grained `type` values
@@ -90,6 +91,14 @@ export interface EditorLayoutControl {
   crossBlock?: EditorCrossBlockRef;
   /** Per-control firmware gate, when present. */
   fw?: EditorFwRange;
+  /**
+   * Graph slots only: the normalised visual key this slot is for (see `graphSlotKey` /
+   * `stampGraphKeys` in `visuals.ts`). Absent in the generated layout data; a server stamps it
+   * on the layouts it serves. Absent = the slot has no visual. A stamped key may still have NO
+   * served visual (the current variant lacks the visual's required params, or the key is `'eq'`);
+   * a client treats such a slot as a gap.
+   */
+  graphKey?: GraphSlotKey;
 }
 
 /** One row of controls (editor order). */

@@ -6,8 +6,9 @@
  * uses to lay out an effect's parameters. Consumed by the per-device
  * `*.generated.ts` layout data files (`<DEV>_LAYOUTS`).
  *
- * This module is DATA-SHAPE ONLY: pure types plus one widget-normalisation
- * table. No runtime dependencies, browser-safe (no `node:*` imports).
+ * This module is DATA-SHAPE ONLY: pure types, one widget-normalisation table
+ * and the pure cross-block token helpers (`parseCrossToken`,
+ * `crossBlockEffectId`). No imports, browser-safe (no `node:*`).
  *
  * Provenance of the data files: each editor ships a "config" XML
  * (`__block_layout.xml`, `__amp_layout*.xml`) whose document order is the
@@ -70,6 +71,101 @@ export interface EditorCrossBlockRef {
   paramName: string | null;
   /** Resolved wire paramId of the referenced parameter, or null. */
   paramId: number | null;
+  /**
+   * Wire effectId of the block that owns the referenced parameter. SERVED BY
+   * THE HOST, NEVER GENERATED: the layout data files never carry it (the
+   * owning instance depends on the connected device and its profile). A host
+   * fills it at serve time, e.g. via the device's cross-block resolver
+   * (`fm3CrossBlockEffectId` / `fm9CrossBlockEffectId` /
+   * `axe3CrossBlockEffectId`). `null` or absent means "no addressable owner"
+   * (modifier / preset-level tokens, unknown family, instance beyond the
+   * device): the control stays display-only.
+   */
+  effectId?: number | null;
+}
+
+/** An editor cross-effect token split into its symbol and 1-based instance. */
+export interface EditorCrossToken {
+  /** Token symbol without the `ID_` prefix and instance digits, e.g. `'OUTPUT'`, `'PRESET_FC'`. */
+  symbol: string;
+  /** 1-based instance from the trailing digits; 1 when the token has none. */
+  instance: number;
+}
+
+/**
+ * Split an editor cross-effect token (`'ID_<SYMBOL>[<n>]'`) into its symbol
+ * and instance: `'ID_OUTPUT2'` → `{ symbol: 'OUTPUT', instance: 2 }`,
+ * `'ID_GLOBAL'` → `{ symbol: 'GLOBAL', instance: 1 }`, `'ID_PRESET_FC'` →
+ * `{ symbol: 'PRESET_FC', instance: 1 }`. Returns null for anything that is
+ * not such a token (missing `ID_` prefix, lowercase, empty symbol, instance 0).
+ *
+ * The symbol is the editor's own name and need not equal the catalog family
+ * (`FOOTCONTROLLER` is family `FC`, `MODIFIER` is `MOD`); the owning family is
+ * the `family` the generator resolved from the referenced parameter.
+ */
+export function parseCrossToken(token: string): EditorCrossToken | null {
+  const m = /^ID_([A-Z][A-Z0-9_]*?)(\d+)?$/.exec(token);
+  if (!m || m[1].endsWith('_')) return null; // `ID_X_2`: no symbol/instance split
+  const instance = m[2] === undefined ? 1 : Number(m[2]);
+  if (!Number.isSafeInteger(instance) || instance < 1) return null;
+  return { symbol: m[1], instance };
+}
+
+/**
+ * Families a cross-block reference never addresses by effect id: modifier
+ * slots (`ID_MODIFIER<n>`, family `MOD`) are not blocks, and `ID_PRESET_FC`
+ * (family `PRESET`) is preset-level data with no effect id.
+ */
+const CROSS_BLOCK_UNADDRESSED: ReadonlySet<string> = new Set(['MOD', 'PRESET']);
+
+/** The part of a cross-block reference the effect-id resolvers read. */
+export type CrossBlockRefKey = Pick<EditorCrossBlockRef, 'effect' | 'family'>;
+
+/** A device's family symbol → first-instance effect id table (`null`: no id of its own). */
+export type FamilyFirstEffectIds = Readonly<Record<string, number | null>>;
+
+/**
+ * Number of consecutive effect ids reserved from `firstEffectId` on, or
+ * undefined when unknown (e.g. `gen3RosterSpan` over the shared gen-3 roster).
+ */
+export type CrossBlockSpanLookup = (firstEffectId: number) => number | undefined;
+
+/**
+ * Resolve the owning effect id of a cross-block reference against ONE
+ * device's family → first-effectId table: `firstId(family) + instance - 1`.
+ *
+ * Device-neutral building block, for hosts that resolve families through
+ * their own runtime table (catalog plus block-map families); the device-bound
+ * resolvers (`fm3CrossBlockEffectId`, `fm9CrossBlockEffectId`,
+ * `axe3CrossBlockEffectId`) pass the device's static table and the shared
+ * gen-3 roster span. `instanceCount` is the CONNECTED device's instance count
+ * for the referenced family (the host's per-device instance limits; 1 for
+ * singletons such as GLOBAL or FC); an instance beyond it resolves to null.
+ *
+ * `reservedSpan` caps the instance by the id span reserved for the family, so
+ * an oversized `instanceCount` cannot run into the next family's ids. Without
+ * it the CALLER guarantees `instanceCount` never exceeds that span.
+ *
+ * Returns null as well for an unparseable token, a null / unknown family, a
+ * family without an effect id, and `MOD` / `PRESET`. Resolving an id does not
+ * make the target writable: GLOBAL (effect id 1) is persistent device setup,
+ * so a host keeps its write guards in place.
+ */
+export function crossBlockEffectId(
+  ref: CrossBlockRefKey,
+  firstEffectIds: FamilyFirstEffectIds,
+  instanceCount: number,
+  reservedSpan?: CrossBlockSpanLookup,
+): number | null {
+  const tok = parseCrossToken(ref.effect);
+  if (!tok || !ref.family || CROSS_BLOCK_UNADDRESSED.has(ref.family)) return null;
+  if (!Object.prototype.hasOwnProperty.call(firstEffectIds, ref.family)) return null;
+  const first = firstEffectIds[ref.family];
+  if (first === null || first === undefined) return null;
+  if (!Number.isSafeInteger(instanceCount) || tok.instance > instanceCount) return null;
+  const span = reservedSpan?.(first);
+  if (span !== undefined && tok.instance > span) return null;
+  return first + tok.instance - 1;
 }
 
 /** One control on an editor page. */
@@ -130,6 +226,15 @@ export interface EditorLayoutVariant {
   name: string;
   /** Block-type selector value(s) selecting this variant, or null. */
   value: string | null;
+  /**
+   * The selector parameter `value` refers to, when the generator folded a
+   * page-level type selector into per-type variants (e.g. `'DELAY_TYPE'`, which
+   * is not the block's model selector `DELAY_MODEL`). Also set on such a
+   * block's fallback variant (`value: null`), which catches every value of that
+   * selector no other variant names. Absent on variants the editor itself keys
+   * (their selector is implied) and on unconditional ones.
+   */
+  selectorParamName?: string;
   /** Firmware gate for the whole variant, when present. */
   fw?: EditorFwRange;
   /**

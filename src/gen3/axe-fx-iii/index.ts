@@ -12,6 +12,7 @@
 // III's `__block_layout.xml` mining).
 export {
   AXE_FX_III_BLOCKS,
+  gen3RosterSpan,
   resolveBlock,
   resolveEffectId,
 } from './blockTypes.js';
@@ -25,6 +26,7 @@ export {
   AXE3_FAMILY_BY_EFFECT_ID,
   axe3EffectId,
   axe3EffectIdEntry,
+  axe3CrossBlockEffectId,
   type Axe3EffectIdEntry,
   type Axe3EffectAddressing,
   type Axe3EffectIdConfidence,
@@ -274,6 +276,8 @@ export { AXE3_LAYOUTS } from './layouts.generated.js';
 export {
   normalizeWidget,
   EDITOR_WIDGET_KINDS,
+  parseCrossToken,
+  crossBlockEffectId,
   type DeviceEditorLayouts,
   type EditorBlockLayout,
   type EditorLayoutVariant,
@@ -282,6 +286,10 @@ export {
   type EditorLayoutControl,
   type EditorControlPlacement,
   type EditorCrossBlockRef,
+  type EditorCrossToken,
+  type CrossBlockRefKey,
+  type FamilyFirstEffectIds,
+  type CrossBlockSpanLookup,
   type EditorWidgetKind,
   type EditorFwRange,
 } from '../../editorLayouts.js';

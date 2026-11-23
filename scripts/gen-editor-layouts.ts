@@ -32,7 +32,7 @@
  * Run: FORGEFX_MIDI_EDITOR_XML_ROOT=... npx tsx scripts/gen-editor-layouts.ts
  */
 import { readdirSync, readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
-import { join, dirname, relative } from 'node:path';
+import { join, dirname, relative, resolve as resolvePath } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   normalizeWidget,
@@ -52,11 +52,21 @@ const REPO = join(HERE, '..');
 // --------------------------------------------------------------------------
 // Minimal dependency-free XML parser (the package ships no XML dependency).
 // Handles: <?...?>, <!-- -->, <tag a="v" .../>, <tag ...>...</tag>, entities.
+// Strict about structure: an unterminated tag / comment / declaration, a
+// closing tag that does not match the open element, and elements left open at
+// the end of the document all throw instead of silently re-nesting the tree.
 // --------------------------------------------------------------------------
-interface XmlNode {
+export interface XmlNode {
   tag: string;
   attrs: Record<string, string>;
   children: XmlNode[];
+}
+
+/** 1-based line of `offset` in `text`, for parse errors. */
+function lineAt(text: string, offset: number): number {
+  let line = 1;
+  for (let k = 0; k < offset && k < text.length; k++) if (text.charCodeAt(k) === 10) line++;
+  return line;
 }
 
 function decodeEntities(s: string): string {
@@ -70,52 +80,87 @@ function decodeEntities(s: string): string {
     .replace(/&amp;/g, '&');
 }
 
+/** Attributes of a tag body; values may be double- or single-quoted (as `findTagEnd` assumes). */
 function parseAttrs(raw: string): Record<string, string> {
   const attrs: Record<string, string> = {};
-  const re = /([\w:.-]+)\s*=\s*"([^"]*)"/g;
+  const re = /([\w:.-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(raw)) !== null) {
-    attrs[m[1]] = decodeEntities(m[2]);
+    attrs[m[1]] = decodeEntities(m[2] ?? m[3]);
   }
   return attrs;
 }
 
-function parseXml(text: string): XmlNode {
+/**
+ * Index of the `>` that ends the tag starting before `from`, or -1. A `>`
+ * inside a quoted attribute value is part of the value, not the tag end: the
+ * editor config carries literal `>` glyphs in control captions (e.g.
+ * `name="Feedback&#10;L>R"`, `name="Feedback 1->2"`). Ending the tag there
+ * would leave the control open and mis-nest every following node: the Delay
+ * block's pages were filed under MULTITAP, rows lost controls, and the AM4
+ * Global pages landed in the amp family.
+ */
+function findTagEnd(text: string, from: number): number {
+  let quote: string | null = null;
+  for (let k = from; k < text.length; k++) {
+    const ch = text[k];
+    if (quote) {
+      if (ch === quote) quote = null;
+    } else if (ch === '"' || ch === "'") {
+      quote = ch;
+    } else if (ch === '>') {
+      return k;
+    }
+  }
+  return -1;
+}
+
+export function parseXml(text: string): XmlNode {
   const root: XmlNode = { tag: '#root', attrs: {}, children: [] };
   const stack: XmlNode[] = [root];
   let i = 0;
   const n = text.length;
+  const skipTo = (from: number, terminator: string, what: string): number => {
+    const end = text.indexOf(terminator, from);
+    if (end < 0) throw new Error(`XML: unterminated ${what} at line ${lineAt(text, from)}`);
+    return end + terminator.length;
+  };
   while (i < n) {
     const lt = text.indexOf('<', i);
     if (lt < 0) break;
     i = lt;
     if (text.startsWith('<!--', i)) {
-      const end = text.indexOf('-->', i);
-      i = end < 0 ? n : end + 3;
+      i = skipTo(i, '-->', 'comment');
       continue;
     }
     if (text.startsWith('<?', i)) {
-      const end = text.indexOf('?>', i);
-      i = end < 0 ? n : end + 2;
+      i = skipTo(i, '?>', 'processing instruction');
       continue;
     }
     if (text.startsWith('<![CDATA[', i)) {
-      const end = text.indexOf(']]>', i);
-      i = end < 0 ? n : end + 3;
+      i = skipTo(i, ']]>', 'CDATA section');
       continue;
     }
     if (text.startsWith('<!', i)) {
-      const end = text.indexOf('>', i);
-      i = end < 0 ? n : end + 1;
+      i = skipTo(i, '>', 'declaration');
       continue;
     }
-    const gt = text.indexOf('>', i);
-    if (gt < 0) break;
+    const gt = findTagEnd(text, i + 1);
+    if (gt < 0) throw new Error(`XML: unterminated tag at line ${lineAt(text, i)}`);
     const inner = text.slice(i + 1, gt);
+    const at = i;
     i = gt + 1;
     if (inner.startsWith('/')) {
-      // closing tag
-      if (stack.length > 1) stack.pop();
+      // closing tag: must close the innermost open element
+      const name = inner.slice(1).trim();
+      const open = stack[stack.length - 1];
+      if (stack.length <= 1 || open.tag !== name) {
+        throw new Error(
+          `XML: closing tag </${name}> at line ${lineAt(text, at)} does not match ` +
+            (stack.length <= 1 ? 'any open element' : `open <${open.tag}>`),
+        );
+      }
+      stack.pop();
       continue;
     }
     const selfClose = inner.endsWith('/');
@@ -126,6 +171,9 @@ function parseXml(text: string): XmlNode {
     const node: XmlNode = { tag, attrs, children: [] };
     stack[stack.length - 1].children.push(node);
     if (!selfClose) stack.push(node);
+  }
+  if (stack.length > 1) {
+    throw new Error(`XML: element <${stack[stack.length - 1].tag}> is never closed (${stack.length - 1} open at end of document)`);
   }
   return root;
 }
@@ -144,17 +192,29 @@ function firstChild(node: XmlNode, tag: string): XmlNode | undefined {
 // --------------------------------------------------------------------------
 // Param-catalog resolver: parameterName -> { paramId, family } per device.
 // --------------------------------------------------------------------------
-type Resolver = (paramName: string, editorBlockHint: string) => { paramId: number | null; family: string | null };
+export type Resolver = (paramName: string, editorBlockHint: string) => { paramId: number | null; family: string | null };
 
-async function gen3Resolver(paramsModule: string, arrayExport: string): Promise<Resolver> {
+/** A device's name resolver plus the catalog family symbols it knows. */
+interface ParamCatalog {
+  resolve: Resolver;
+  /** Catalog family symbols (empty when the catalog carries no families, e.g. AM4). */
+  families: ReadonlySet<string>;
+}
+
+async function gen3Catalog(paramsModule: string, arrayExport: string): Promise<ParamCatalog> {
   const mod: any = await import(paramsModule);
   const arr: Array<{ name: string; paramId: number; family: string }> = mod[arrayExport];
   const byName = new Map<string, { paramId: number; family: string }>();
   for (const p of arr) if (!byName.has(p.name)) byName.set(p.name, { paramId: p.paramId, family: p.family });
-  return (name) => {
+  const resolve: Resolver = (name) => {
     const hit = byName.get(name);
     return hit ? { paramId: hit.paramId, family: hit.family } : { paramId: null, family: null };
   };
+  return { resolve, families: new Set(arr.map((p) => p.family)) };
+}
+
+async function am4Catalog(): Promise<ParamCatalog> {
+  return { resolve: await am4Resolver(), families: new Set() };
 }
 
 async function am4Resolver(): Promise<Resolver> {
@@ -263,10 +323,24 @@ const EDITORNAME_FAMILY_ALIAS: Record<string, string> = {
   Tuner: 'TUNER',
 };
 
-/** Family key = mode of own controls' paramName prefix; else editorName alias. */
-function deriveFamily(editorName: string, ecsNode: XmlNode): string {
+/**
+ * Editor display name for a family hosted by a component that holds several
+ * families (see {@link parseBlockLayout}): Multitap variants found inside a
+ * Delay component are still the MultiDelay block, not "Delay". Families not
+ * listed keep the component's name.
+ */
+const FAMILY_EDITORNAME: Record<string, string> = {
+  MULTITAP: 'MultiDelay',
+};
+
+/**
+ * Mode of the own (non-cross-block) controls' paramName prefix under `node`,
+ * or null when the node has no own parameter controls. `node` may be a whole
+ * `EditorControls` component or a single `EffectVariant`.
+ */
+function ownPrefixMode(node: XmlNode): string | null {
   const prefixes = new Map<string, number>();
-  for (const ec of findAll(ecsNode, 'EditorControl')) {
+  for (const ec of findAll(node, 'EditorControl')) {
     if (ec.attrs.effectName) continue; // cross-block controls belong elsewhere
     const pn = ec.attrs.parameterName;
     if (!pn) continue;
@@ -276,8 +350,16 @@ function deriveFamily(editorName: string, ecsNode: XmlNode): string {
   let best: string | null = null;
   let bestN = 0;
   for (const [k, v] of prefixes) if (v > bestN) { best = k; bestN = v; }
-  if (best) return best;
-  return EDITORNAME_FAMILY_ALIAS[editorName] ?? editorName.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  return best;
+}
+
+/** Component family key = mode of own controls' paramName prefix; else editorName alias. */
+function deriveFamily(editorName: string, ecsNode: XmlNode): string {
+  return (
+    ownPrefixMode(ecsNode) ??
+    EDITORNAME_FAMILY_ALIAS[editorName] ??
+    editorName.toUpperCase().replace(/[^A-Z0-9]/g, '')
+  );
 }
 
 /**
@@ -307,7 +389,7 @@ function deriveFamily(editorName: string, ecsNode: XmlNode): string {
 const DEFAULT_TYPE = Symbol('default-type');
 type TypeAssignment = number | typeof DEFAULT_TYPE;
 
-function splitVariantByPageSelectors(base: EditorLayoutVariant): EditorLayoutVariant[] {
+export function splitVariantByPageSelectors(base: EditorLayoutVariant): EditorLayoutVariant[] {
   if (base.value !== null) return [base]; // already a typed variant (AM4 Comp-style)
   const pages = base.pages;
   const selParams = new Set<string>();
@@ -377,6 +459,9 @@ function splitVariantByPageSelectors(base: EditorLayoutVariant): EditorLayoutVar
     const variant: EditorLayoutVariant = {
       name: isFallback ? (values.length ? `${values.join(',')}+default` : 'Default') : values.join(','),
       value: isFallback ? null : values.join(','),
+      // The page-level selector moves up with the value: it says WHICH param
+      // `value` keys (e.g. DELAY_TYPE, not the model selector DELAY_MODEL).
+      selectorParamName: selParam,
       pages: outPages,
     };
     if (base.fw) variant.fw = base.fw;
@@ -385,8 +470,27 @@ function splitVariantByPageSelectors(base: EditorLayoutVariant): EditorLayoutVar
   return out;
 }
 
-/** Parse a `__block_layout.xml` root into families -> block layout. */
-function parseBlockLayout(root: XmlNode, resolve: Resolver, skipAmp: boolean): Map<string, EditorBlockLayout> {
+/**
+ * Parse a `__block_layout.xml` root into families -> block layout.
+ *
+ * The family is derived PER VARIANT, not per `EditorControls` component. This
+ * is a guard for editor builds that merge components: one component can then
+ * host more than one catalog family (e.g. the Delay block's DELAY_* variants
+ * and the legacy MultiDelay MULTITAP_* variants in one component), and keying
+ * the whole component off the mode of all its controls would let one family
+ * swallow the other. The sources the committed layouts are generated from keep
+ * those components separate, so there this path never moves a variant. A
+ * variant leaves its component's family only when its own controls' prefix is
+ * itself a catalog family of the device (`knownFamilies`); otherwise (no own
+ * parameter controls, a shared prefix such as AM4's `BLOCK_*` mixer controls,
+ * or a catalog without families) it inherits the component's family.
+ */
+export function parseBlockLayout(
+  root: XmlNode,
+  resolve: Resolver,
+  skipAmp: boolean,
+  knownFamilies: ReadonlySet<string>,
+): Map<string, EditorBlockLayout> {
   const out = new Map<string, EditorBlockLayout>();
   for (const ecs of findAll(root, 'EditorControls')) {
     const editorName = ecs.attrs.name ?? '';
@@ -394,9 +498,11 @@ function parseBlockLayout(root: XmlNode, resolve: Resolver, skipAmp: boolean): M
     const variantsGroup = firstChild(ecs, 'EffectVariants');
     if (!variantsGroup) continue;
     const variantNodes = variantsGroup.children.filter((c) => c.tag === 'EffectVariant');
-    const family = deriveFamily(editorName, ecs);
-    const variants: EditorLayoutVariant[] = [];
+    const componentFamily = deriveFamily(editorName, ecs);
+    const parsed: Array<{ family: string; split: EditorLayoutVariant[] }> = [];
     for (const vn of variantNodes) {
+      const own = ownPrefixMode(vn);
+      const family = own !== null && knownFamilies.has(own) ? own : componentFamily;
       const pages = buildPages(vn, resolve, editorName);
       if (!pages.length) continue;
       const variant: EditorLayoutVariant = {
@@ -406,12 +512,18 @@ function parseBlockLayout(root: XmlNode, resolve: Resolver, skipAmp: boolean): M
       const fw = fwFrom(vn.attrs);
       if (fw) variant.fw = fw;
       variant.pages = pages;
-      variants.push(...splitVariantByPageSelectors(variant));
+      parsed.push({ family, split: splitVariantByPageSelectors(variant) });
     }
-    if (!variants.length) continue;
-    const existing = out.get(family);
-    if (existing) existing.variants.push(...variants);
-    else out.set(family, { editorName, family, variants });
+    // A component that hosts several families names each after its own block.
+    const multiFamily = new Set(parsed.map((p) => p.family)).size > 1;
+    for (const { family, split } of parsed) {
+      const existing = out.get(family);
+      if (existing) existing.variants.push(...split);
+      else {
+        const blockName = multiFamily ? FAMILY_EDITORNAME[family] ?? editorName : editorName;
+        out.set(family, { editorName: blockName, family, variants: split });
+      }
+    }
   }
   return out;
 }
@@ -571,6 +683,7 @@ function serialize(layouts: DeviceEditorLayouts): string {
     lines.push(`    "variants": [`);
     block.variants.forEach((v, vi) => {
       const head: string[] = [`"name": ${j(v.name)}`, `"value": ${j(v.value)}`];
+      if (v.selectorParamName !== undefined) head.push(`"selectorParamName": ${j(v.selectorParamName)}`);
       if (v.fw) head.push(`"fw": ${j(v.fw)}`);
       if (v.pinned) head.push(`"pinned": true`);
       lines.push(`      { ${head.join(', ')}, "pages": [`);
@@ -710,33 +823,34 @@ async function main() {
     const dev = MODEL_TO_DEVICE[d.model];
     if (!dev) continue;
 
-    let resolve: Resolver;
+    let catalog: ParamCatalog;
     let outFile: string;
     let constName: string;
     if (dev.key === 'am4') {
-      resolve = await am4Resolver();
+      catalog = await am4Catalog();
       outFile = join(REPO, 'src', 'am4', 'editorLayouts.generated.ts');
       constName = 'AM4_LAYOUTS';
     } else if (dev.key === 'fm9') {
-      resolve = await gen3Resolver('../src/gen3/fm9/params.js', 'FM9_PARAMS');
+      catalog = await gen3Catalog('../src/gen3/fm9/params.js', 'FM9_PARAMS');
       outFile = join(REPO, 'src', 'gen3', 'fm9', 'layouts.generated.ts');
       constName = 'FM9_LAYOUTS';
     } else if (dev.key === 'fm3') {
-      resolve = await gen3Resolver('../src/gen3/fm3/params.js', 'FM3_PARAMS');
+      catalog = await gen3Catalog('../src/gen3/fm3/params.js', 'FM3_PARAMS');
       outFile = join(REPO, 'src', 'gen3', 'fm3', 'layouts.generated.ts');
       constName = 'FM3_LAYOUTS';
     } else {
-      resolve = await gen3Resolver('../src/gen3/axe-fx-iii/params.js', 'PARAMS');
+      catalog = await gen3Catalog('../src/gen3/axe-fx-iii/params.js', 'PARAMS');
       outFile = join(REPO, 'src', 'gen3', 'axe-fx-iii', 'layouts.generated.ts');
       constName = 'AXE3_LAYOUTS';
     }
+    const resolve = catalog.resolve;
 
     const ampFiles = readdirSync(d.xmlDir)
       .filter((f) => f.startsWith('__amp_layout') && f.endsWith('.xml'))
       .map((f) => join(d.xmlDir, f));
 
     const blRoot = parseXml(readFileSync(join(d.xmlDir, '__block_layout.xml'), 'utf8'));
-    const map = parseBlockLayout(blRoot, resolve, ampFiles.length > 0);
+    const map = parseBlockLayout(blRoot, resolve, ampFiles.length > 0, catalog.families);
 
     if (ampFiles.length) {
       const amp = parseAmpLayouts(ampFiles, resolve, dev.ceiling);
@@ -784,7 +898,17 @@ async function main() {
   console.log(`\nWidget kinds: ${EDITOR_WIDGET_KINDS.join(', ')}`);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+/** True when this file is the process entry (not imported, e.g. by the generator unit test). */
+function isEntry(): boolean {
+  const argv1 = process.argv[1];
+  if (!argv1) return false;
+  const norm = (p: string) => (process.platform === 'win32' ? p.toLowerCase() : p);
+  return norm(resolvePath(argv1)) === norm(fileURLToPath(import.meta.url));
+}
+
+if (isEntry()) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}

@@ -161,6 +161,22 @@ const BY_GROUP_CODE: Map<string, AxeFxIIIBlock> = new Map(
   AXE_FX_III_BLOCKS.map((b) => [b.groupCode, b] as const),
 );
 
+/** Lookup: first-instance effect ID → id span the roster reserves (`instances`). */
+const SPAN_BY_FIRST_ID: ReadonlyMap<number, number> = new Map(
+  AXE_FX_III_BLOCKS.filter((b) => b.firstId !== null).map((b) => [b.firstId as number, b.instances] as const),
+);
+
+/**
+ * Number of consecutive effect IDs the shared gen-3 roster reserves for the
+ * block whose FIRST id is `firstEffectId` (e.g. 42 → 4, Output 1..4 = 42..45),
+ * or `undefined` when the roster has no block starting there (the GLOBAL and
+ * Modifier ids, a non-first instance id). The id spacing is shared by every
+ * gen-3 device; a device may ship fewer instances than the span.
+ */
+export function gen3RosterSpan(firstEffectId: number): number | undefined {
+  return SPAN_BY_FIRST_ID.get(firstEffectId);
+}
+
 /**
  * Resolve a user-supplied block reference (display name or group code)
  * to its block descriptor. Returns `undefined` if not found.

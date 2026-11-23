@@ -30,6 +30,7 @@ export {
   FM9_EFFECT_IDS,
   FM9_FAMILY_BY_EFFECT_ID,
   fm9EffectId,
+  fm9CrossBlockEffectId,
   type Fm9EffectIdEntry,
   type Fm9EffectAddressing,
 } from './effectIds.js';
@@ -37,6 +38,8 @@ export { FM9_LAYOUTS } from './layouts.generated.js';
 export {
   normalizeWidget,
   EDITOR_WIDGET_KINDS,
+  parseCrossToken,
+  crossBlockEffectId,
   type DeviceEditorLayouts,
   type EditorBlockLayout,
   type EditorLayoutVariant,
@@ -45,9 +48,14 @@ export {
   type EditorLayoutControl,
   type EditorControlPlacement,
   type EditorCrossBlockRef,
+  type EditorCrossToken,
+  type CrossBlockRefKey,
+  type FamilyFirstEffectIds,
+  type CrossBlockSpanLookup,
   type EditorWidgetKind,
   type EditorFwRange,
 } from '../../editorLayouts.js';
+export { gen3RosterSpan } from '../axe-fx-iii/blockTypes.js';
 export {
   FM9_MONITOR_PARAMS,
   fm9MonitorParamsFor,

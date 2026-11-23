@@ -107,6 +107,9 @@ import { runTypecodeRules, TYPECODE_RULES_CASE_COUNT } from './cache/typecode-ru
 import { runBlockMap, BLOCK_MAP_CASE_COUNT } from './cache/block-map.test.js';
 import { runLiveWalkScope, LIVEWALK_SCOPE_CASE_COUNT } from './cache/livewalk-scope.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
+import { runEditorLayoutFamiliesTests, EDITOR_LAYOUT_FAMILIES_CASE_COUNT } from './editorLayouts-families.test.js';
+import { runCrossBlockEffectIdTests, CROSSBLOCK_EFFECTID_CASE_COUNT } from './gen3/crossblock-effectid.test.js';
+import { runGenEditorLayoutsTests, GEN_EDITOR_LAYOUTS_CASE_COUNT } from './scripts/gen-editor-layouts.test.js';
 import { runFamiliesTests, FAMILIES_CASE_COUNT } from './convert/families.test.js';
 import { runGen3AdapterTests, GEN3_ADAPTER_CASE_COUNT } from './convert/gen3-adapter.test.js';
 import { runShallowAdaptersTests, SHALLOW_ADAPTERS_CASE_COUNT } from './convert/adapters-shallow.test.js';
@@ -238,6 +241,9 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/block-map (${BLOCK_MAP_CASE_COUNT} cases)`, run: runBlockMap },
   { name: `cache/livewalk-scope (${LIVEWALK_SCOPE_CASE_COUNT} cases)`, run: runLiveWalkScope },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
+  { name: `editorLayouts/families (${EDITOR_LAYOUT_FAMILIES_CASE_COUNT} cases)`, run: runEditorLayoutFamiliesTests },
+  { name: `gen3/crossblock-effectid (${CROSSBLOCK_EFFECTID_CASE_COUNT} cases)`, run: runCrossBlockEffectIdTests },
+  { name: `scripts/gen-editor-layouts (${GEN_EDITOR_LAYOUTS_CASE_COUNT} cases)`, run: runGenEditorLayoutsTests },
   { name: `convert/families (${FAMILIES_CASE_COUNT} cases)`, run: runFamiliesTests },
   { name: `convert/gen3-adapter (${GEN3_ADAPTER_CASE_COUNT} preset goldens)`, run: runGen3AdapterTests },
   { name: `convert/adapters-shallow (${SHALLOW_ADAPTERS_CASE_COUNT} adapters)`, run: runShallowAdaptersTests },

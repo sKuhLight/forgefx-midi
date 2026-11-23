@@ -34,6 +34,7 @@ export {
   FM3_EFFECT_IDS,
   FM3_FAMILY_BY_EFFECT_ID,
   fm3EffectId,
+  fm3CrossBlockEffectId,
   type Fm3EffectIdEntry,
   type Fm3EffectAddressing,
 } from './effectIds.js';
@@ -41,6 +42,8 @@ export { FM3_LAYOUTS } from './layouts.generated.js';
 export {
   normalizeWidget,
   EDITOR_WIDGET_KINDS,
+  parseCrossToken,
+  crossBlockEffectId,
   type DeviceEditorLayouts,
   type EditorBlockLayout,
   type EditorLayoutVariant,
@@ -49,9 +52,14 @@ export {
   type EditorLayoutControl,
   type EditorControlPlacement,
   type EditorCrossBlockRef,
+  type EditorCrossToken,
+  type CrossBlockRefKey,
+  type FamilyFirstEffectIds,
+  type CrossBlockSpanLookup,
   type EditorWidgetKind,
   type EditorFwRange,
 } from '../../editorLayouts.js';
+export { gen3RosterSpan } from '../axe-fx-iii/blockTypes.js';
 export {
   FM3_FC_EFFECT_ID,
   FM3_FC_SWITCHES,

@@ -300,6 +300,7 @@ export { AM4_LAYOUTS } from './editorLayouts.generated.js';
 export {
   normalizeWidget,
   EDITOR_WIDGET_KINDS,
+  parseCrossToken,
   type DeviceEditorLayouts,
   type EditorBlockLayout,
   type EditorLayoutVariant,
@@ -308,6 +309,7 @@ export {
   type EditorLayoutControl,
   type EditorControlPlacement,
   type EditorCrossBlockRef,
+  type EditorCrossToken,
   type EditorWidgetKind,
   type EditorFwRange,
 } from '../editorLayouts.js';

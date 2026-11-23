@@ -34,6 +34,9 @@
  * here; `test/gen3/axe-fx-iii/effect-ids.test.ts` cross-checks the two.
  */
 
+import { crossBlockEffectId, type CrossBlockRefKey } from '../../editorLayouts.js';
+import { gen3RosterSpan } from './blockTypes.js';
+
 /** How a family is addressed on the wire. */
 export type Axe3EffectAddressing =
   /** Placeable signal-chain block; `effectId = firstId + (instance - 1)`. */
@@ -168,6 +171,23 @@ export function axe3EffectIdEntry(
   effectId: number,
 ): { readonly entry: Axe3EffectIdEntry; readonly instance: number } | undefined {
   return ENTRY_BY_EFFECT_ID.get(effectId);
+}
+
+/**
+ * Owning effectId of an Axe-Fx III editor-layout cross-block reference
+ * (`control.crossBlock`), from its token instance and resolved family, over
+ * THIS table (never the FM3 one): `ID_GLOBAL` → 1, `ID_FOOTCONTROLLER` → 199,
+ * `ID_OUTPUT2` → 43, `ID_DISTORT2` → 59. `MOD` / `PRESET` refs, families
+ * without an id (`DYNDIST`) and an instance beyond `instanceCount` give null.
+ *
+ * `instanceCount` is the connected device's instance count for the referenced
+ * family (the host's per-device instance limits; 1 for singletons), capped by
+ * the id span the shared gen-3 roster reserves (`gen3RosterSpan`). The id of a
+ * `roster` entry resolves like any other; serving it read-only is the host's
+ * call (`axe3EffectIdEntry` gives the confidence). See `crossBlockEffectId`.
+ */
+export function axe3CrossBlockEffectId(ref: CrossBlockRefKey, instanceCount: number): number | null {
+  return crossBlockEffectId(ref, AXE3_EFFECT_IDS, instanceCount, gen3RosterSpan);
 }
 
 /**

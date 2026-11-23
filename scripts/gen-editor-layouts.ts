@@ -385,11 +385,67 @@ function deriveFamily(editorName: string, ecsNode: XmlNode): string {
  * Pages that differ only by a firmware gate are always kept (genuine fw
  * revisions of the same tab), as are pages with no selector (they belong to
  * every type).
+ *
+ * A page whose selector value is EMPTY (`value=""`) is the editor's catch-all
+ * for its tab position: it applies to every selector value that no sibling
+ * page names, not only to types the editor never lists. A sibling is an
+ * explicitly-valued page on the same tab position (`pageNum`; the page name
+ * when the page carries none); the catch-all yields a value to it only on the
+ * firmware where the sibling holds, so the sibling's gate must contain the
+ * catch-all's: a catch-all gated `gtet 8,00` is not blocked by an `lt 8,00`
+ * page of the same tab (disjoint), and an alternative tab at that position
+ * (Reverb `Ducker` for 0,5 vs the catch-all `Duck + Mod`, AM4 Filter `Filter`
+ * for 16 vs the catch-all `Config`) keeps the catch-all away from the types it
+ * names. A sibling gate that only partly covers the catch-all's, or a
+ * catch-all listed before a sibling it yields to, throws (the editor data has
+ * neither). Selector-less pages never claim a value. The synthetic `Default`
+ * variant (any value no page lists) still receives every catch-all page.
  */
 const DEFAULT_TYPE = Symbol('default-type');
 type TypeAssignment = number | typeof DEFAULT_TYPE;
 
-export function splitVariantByPageSelectors(base: EditorLayoutVariant): EditorLayoutVariant[] {
+/** The selector values a page `value` list names; blank segments are dropped, so `""` names none (catch-all). */
+function selectorValues(value: string): number[] {
+  return value
+    .split(',')
+    .map((t) => t.trim())
+    .filter((t) => t !== '')
+    .map(Number)
+    .filter((n) => Number.isFinite(n));
+}
+
+/** An editor firmware bound ("maj,min", e.g. "8,00", "9,2", "10") on a comparable integer scale (maj*1000+min). */
+function fwLevel(bound: string): number {
+  const [maj = 0, min = 0] = bound.split(/[,.]/).map((s) => Number(s.trim()) || 0);
+  return maj * 1000 + min;
+}
+
+/** The firmware span `[from, below)` a gate holds on (`gtet` = from, `lt` = below; no gate = every firmware). */
+function fwSpan(g: EditorFwRange | undefined): [number, number] {
+  return [g?.gtet ? fwLevel(g.gtet) : -Infinity, g?.lt ? fwLevel(g.lt) : Infinity];
+}
+
+/** How the gate `outer` relates to the gate `inner`: it holds on every firmware `inner` does (`contains`), on none
+ *  of them (`disjoint`), or on only part of them (`partial`). */
+function fwGateRelation(outer: EditorFwRange | undefined, inner: EditorFwRange | undefined): 'contains' | 'disjoint' | 'partial' {
+  const [oLo, oHi] = fwSpan(outer);
+  const [iLo, iHi] = fwSpan(inner);
+  if (oLo <= iLo && iHi <= oHi) return 'contains';
+  return Math.max(oLo, iLo) < Math.min(oHi, iHi) ? 'partial' : 'disjoint';
+}
+
+/** A firmware gate for an error message. */
+function fwText(g: EditorFwRange | undefined): string {
+  if (!g || (!g.gtet && !g.lt)) return 'ungated';
+  return [g.gtet ? `gtet ${g.gtet}` : '', g.lt ? `lt ${g.lt}` : ''].filter(Boolean).join(' ');
+}
+
+/** The tab position a page competes for: its `pageNum`, else its name. */
+function tabPosition(p: EditorLayoutPage): string {
+  return p.pageNum !== undefined ? `#${p.pageNum}` : `@${p.name}`;
+}
+
+export function splitVariantByPageSelectors(base: EditorLayoutVariant, family?: string): EditorLayoutVariant[] {
   if (base.value !== null) return [base]; // already a typed variant (AM4 Comp-style)
   const pages = base.pages;
   const selParams = new Set<string>();
@@ -412,9 +468,38 @@ export function splitVariantByPageSelectors(base: EditorLayoutVariant): EditorLa
   const assignments: TypeAssignment[] = [...concrete].sort((a, b) => a - b);
   if (hasWildcard) assignments.push(DEFAULT_TYPE);
 
+  // The values each catch-all page `pages[idx]` yields to an explicitly-valued sibling (same tab position). A
+  // catch-all yields a value only on the firmware where the sibling naming it holds, so the sibling's gate must
+  // contain the catch-all's (a disjoint sibling never competes with it). Two shapes the editor data does not use
+  // are refused rather than guessed at: a sibling that holds on only part of the catch-all's firmware (the
+  // catch-all would apply to that value on the rest), and a catch-all listed BEFORE a sibling it yields to
+  // (under the editor's first-match-wins order the catch-all would come first).
+  const where = `${family ?? '?'} variant '${base.name}'`;
+  const yields = new Map<number, Set<number>>();
+  pages.forEach((c, idx) => {
+    if (c.selectorParamName !== selParam || c.value !== '') return;
+    const claimed = new Set<number>();
+    pages.forEach((q, qi) => {
+      if (qi === idx || q.selectorParamName !== selParam || q.value === undefined) return;
+      if (tabPosition(q) !== tabPosition(c)) return;
+      const values = selectorValues(q.value);
+      if (!values.length) return; // another catch-all names nothing
+      const rel = fwGateRelation(q.fw, c.fw);
+      if (rel === 'disjoint') return;
+      const pair =
+        `catch-all page '${c.name}' (${fwText(c.fw)}) and page '${q.name}' ` +
+        `(${selParam}="${q.value}", ${fwText(q.fw)}) on tab ${tabPosition(c)}`;
+      if (rel === 'partial') throw new Error(`${where}: ${pair}: the sibling's firmware gate only partly covers the catch-all's`);
+      if (qi > idx) throw new Error(`${where}: ${pair}: the catch-all precedes the sibling it yields to`);
+      for (const v of values) claimed.add(v);
+    });
+    yields.set(idx, claimed);
+  });
+
   // Pick a type's pages by the editor's document-order first-match-wins rule:
   // within one page slot (pageNum + name + fw signature) the first matching
-  // page wins; a selector-less page belongs to every type.
+  // page wins; a selector-less page belongs to every type; a catch-all page
+  // (`value=""`) to every type no sibling names, and to the default.
   const pickIndices = (a: TypeAssignment): number[] => {
     const picked: number[] = [];
     const takenSlot = new Set<string>();
@@ -422,7 +507,7 @@ export function splitVariantByPageSelectors(base: EditorLayoutVariant): EditorLa
       let match: boolean;
       if (p.selectorParamName !== selParam) match = true;
       else if (p.value === undefined) match = true;
-      else if (p.value === '') match = a === DEFAULT_TYPE;
+      else if (p.value === '') match = a === DEFAULT_TYPE || !yields.get(idx)!.has(a);
       else match = typeof a === 'number' && p.value.split(',').map((t) => Number(t.trim())).includes(a);
       if (!match) return;
       const slot = `${p.pageNum ?? ''} ${p.name} ${p.fw ? JSON.stringify(p.fw) : ''}`;
@@ -512,7 +597,7 @@ export function parseBlockLayout(
       const fw = fwFrom(vn.attrs);
       if (fw) variant.fw = fw;
       variant.pages = pages;
-      parsed.push({ family, split: splitVariantByPageSelectors(variant) });
+      parsed.push({ family, split: splitVariantByPageSelectors(variant, family) });
     }
     // A component that hosts several families names each after its own block.
     const multiFamily = new Set(parsed.map((p) => p.family)).size > 1;

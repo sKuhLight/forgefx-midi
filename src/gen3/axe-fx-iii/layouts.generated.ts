@@ -1181,6 +1181,38 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CHORUS_BYPASS","paramId":15,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CHORUS_SCENEIGNORE","paramId":28,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ] },
+        { "name": "Expert", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"CHORUS_LOWCUT","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"High Cut","paramName":"CHORUS_HICUT","paramId":5,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Drive","paramName":"CHORUS_DRIVE","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Number of Voices","paramName":"CHORUS_VOICES","paramId":1,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Minimum\nDelay","paramName":"CHORUS_DELAYTIME","paramId":6,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Delay Range","paramName":"CHORUS_DELAYRANGE","paramId":29,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"LFO Type","paramName":"CHORUS_LFOTYPE","paramId":8,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":6}},
+            {"label":"LFO Phase","paramName":"CHORUS_LFOPHASE","paramId":7,"widget":"knob","rawWidget":"knob","placement":{"col":7}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Phase Reverse","paramName":"CHORUS_PHASEREV","paramId":16,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Dimension Mode","paramName":"CHORUS_MODE","paramId":23,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
+            {"label":"Width","paramName":"CHORUS_WIDTH","paramId":17,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Auto Depth","paramName":"CHORUS_AUTO","paramId":9,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":4}},
+            {"label":"LFO2 Rate","paramName":"CHORUS_RATE2","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"LFO2 Depth","paramName":"CHORUS_DEPTH2","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"CHORUS_MIX","paramId":10,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"CHORUS_LEVEL","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"CHORUS_PAN","paramId":12,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Stereo\nSpread","paramName":"CHORUS_SPREAD","paramId":22,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"CHORUS_BYPASSMODE","paramId":13,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"CHORUS_BYPASS","paramId":15,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"CHORUS_SCENEIGNORE","paramId":28,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
+          ] }
         ] }
       ] },
       { "name": "9", "value": "9", "selectorParamName": "CHORUS_TYPE", "fw": {"gtet":"32,03"}, "pages": [
@@ -1205,6 +1237,38 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"CHORUS_BYPASSMODE","paramId":13,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"CHORUS_BYPASS","paramId":15,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CHORUS_SCENEIGNORE","paramId":28,"widget":"button","rawWidget":"btnIgnoreScene"},
+          ] }
+        ] },
+        { "name": "Expert", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"CHORUS_LOWCUT","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"High Cut","paramName":"CHORUS_HICUT","paramId":5,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Drive","paramName":"CHORUS_DRIVE","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Number of Voices","paramName":"CHORUS_VOICES","paramId":1,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Minimum\nDelay","paramName":"CHORUS_DELAYTIME","paramId":6,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Delay Range","paramName":"CHORUS_DELAYRANGE","paramId":29,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"LFO Type","paramName":"CHORUS_LFOTYPE","paramId":8,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":6}},
+            {"label":"LFO Phase","paramName":"CHORUS_LFOPHASE","paramId":7,"widget":"knob","rawWidget":"knob","placement":{"col":7}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Phase Reverse","paramName":"CHORUS_PHASEREV","paramId":16,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Dimension Mode","paramName":"CHORUS_MODE","paramId":23,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
+            {"label":"Width","paramName":"CHORUS_WIDTH","paramId":17,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Auto Depth","paramName":"CHORUS_AUTO","paramId":9,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":4}},
+            {"label":"LFO2 Rate","paramName":"CHORUS_RATE2","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"LFO2 Depth","paramName":"CHORUS_DEPTH2","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"CHORUS_MIX","paramId":10,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"CHORUS_LEVEL","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"CHORUS_PAN","paramId":12,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Stereo\nSpread","paramName":"CHORUS_SPREAD","paramId":22,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"CHORUS_BYPASSMODE","paramId":13,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"CHORUS_BYPASS","paramId":15,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"CHORUS_SCENEIGNORE","paramId":28,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
         ] }
       ] },
@@ -1378,6 +1442,38 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
           ] },
           { "section": "parameters", "controls": [
             {"label":"EQ","paramName":"CHORUS_TREBLE","paramId":31,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Mix","paramName":"CHORUS_MIX","paramId":10,"widget":"knob","rawWidget":"knob"},
+            {"label":"Level","paramName":"CHORUS_LEVEL","paramId":11,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"CHORUS_PAN","paramId":12,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Stereo\nSpread","paramName":"CHORUS_SPREAD","paramId":22,"widget":"knob","rawWidget":"knob"},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"CHORUS_BYPASSMODE","paramId":13,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"CHORUS_BYPASS","paramId":15,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"CHORUS_SCENEIGNORE","paramId":28,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
+          ] }
+        ] },
+        { "name": "Expert", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Low Cut","paramName":"CHORUS_LOWCUT","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"High Cut","paramName":"CHORUS_HICUT","paramId":5,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Drive","paramName":"CHORUS_DRIVE","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Number of Voices","paramName":"CHORUS_VOICES","paramId":1,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Minimum\nDelay","paramName":"CHORUS_DELAYTIME","paramId":6,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Delay Range","paramName":"CHORUS_DELAYRANGE","paramId":29,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"LFO Type","paramName":"CHORUS_LFOTYPE","paramId":8,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":6}},
+            {"label":"LFO Phase","paramName":"CHORUS_LFOPHASE","paramId":7,"widget":"knob","rawWidget":"knob","placement":{"col":7}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Phase Reverse","paramName":"CHORUS_PHASEREV","paramId":16,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Dimension Mode","paramName":"CHORUS_MODE","paramId":23,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
+            {"label":"Width","paramName":"CHORUS_WIDTH","paramId":17,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Auto Depth","paramName":"CHORUS_AUTO","paramId":9,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":4}},
+            {"label":"LFO2 Rate","paramName":"CHORUS_RATE2","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"LFO2 Depth","paramName":"CHORUS_DEPTH2","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Mix","paramName":"CHORUS_MIX","paramId":10,"widget":"knob","rawWidget":"knob"},
@@ -3249,6 +3345,48 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
+        { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LFO1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,25"}},
+            {"label":"Type","paramName":"DELAY_LFO1TYPE","paramId":24,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"305,50"}},
+            {"label":"Target","paramName":"DELAY_LFO1TARGET","paramId":48,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"390,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE1","paramId":12,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO1TEMPO","paramId":50,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"390,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH1","paramId":14,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO1PHASE","paramId":36,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"390,294"}},
+            {"label":"LFO2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"545,25"}},
+            {"label":"Type","paramName":"DELAY_LFO2TYPE","paramId":25,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"545,50"}},
+            {"label":"Target","paramName":"DELAY_LFO2TARGET","paramId":49,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"630,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE2","paramId":13,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO2TEMPO","paramId":51,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"630,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH2","paramId":15,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO2PHASE","paramId":37,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"630,294"}},
+            {"label":"LFO3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"785,25"}},
+            {"label":"Type","paramName":"DELAY_LFO4TYPE","paramId":77,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"785,50"}},
+            {"label":"Target","paramName":"DELAY_LFO4TARGET","paramId":82,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"870,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE4","paramId":78,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO4TEMPO","paramId":79,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"870,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH4","paramId":80,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO4PHASE","paramId":81,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"870,294"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"DELAY_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"DELAY_MIX","paramId":17,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"DELAY_LEVEL","paramId":18,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"DELAY_PAN","paramId":19,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"DELAY_SPREAD","paramId":8,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"DELAY_KILLDRY","paramId":86,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"25,00"}},
+            {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
+            {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Low Cut","paramName":"DELAY_LOCUT","paramId":10,"widget":"knob","rawWidget":"knob"},
@@ -3532,6 +3670,48 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
+        { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LFO1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,25"}},
+            {"label":"Type","paramName":"DELAY_LFO1TYPE","paramId":24,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"305,50"}},
+            {"label":"Target","paramName":"DELAY_LFO1TARGET","paramId":48,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"390,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE1","paramId":12,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO1TEMPO","paramId":50,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"390,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH1","paramId":14,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO1PHASE","paramId":36,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"390,294"}},
+            {"label":"LFO2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"545,25"}},
+            {"label":"Type","paramName":"DELAY_LFO2TYPE","paramId":25,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"545,50"}},
+            {"label":"Target","paramName":"DELAY_LFO2TARGET","paramId":49,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"630,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE2","paramId":13,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO2TEMPO","paramId":51,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"630,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH2","paramId":15,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO2PHASE","paramId":37,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"630,294"}},
+            {"label":"LFO3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"785,25"}},
+            {"label":"Type","paramName":"DELAY_LFO4TYPE","paramId":77,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"785,50"}},
+            {"label":"Target","paramName":"DELAY_LFO4TARGET","paramId":82,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"870,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE4","paramId":78,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO4TEMPO","paramId":79,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"870,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH4","paramId":80,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO4PHASE","paramId":81,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"870,294"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"DELAY_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"DELAY_MIX","paramId":17,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"DELAY_LEVEL","paramId":18,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"DELAY_PAN","paramId":19,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"DELAY_SPREAD","paramId":8,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"DELAY_KILLDRY","paramId":86,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"25,00"}},
+            {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
+            {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Low Cut","paramName":"DELAY_LOCUT","paramId":10,"widget":"knob","rawWidget":"knob"},
@@ -3793,6 +3973,48 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Tempo","paramName":"DELAY_LFO4TEMPO","paramId":79,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"870,192"},"fw":{"gtet":"19,2"}},
             {"label":"Depth","paramName":"DELAY_DEPTH4","paramId":80,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,294"},"fw":{"gtet":"19,2"}},
             {"label":"Phase","paramName":"DELAY_LFO4PHASE","paramId":81,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"870,294"},"fw":{"gtet":"19,2"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"DELAY_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"DELAY_MIX","paramId":17,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"DELAY_LEVEL","paramId":18,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"DELAY_PAN","paramId":19,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"DELAY_SPREAD","paramId":8,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"DELAY_KILLDRY","paramId":86,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"25,00"}},
+            {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
+            {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LFO1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,25"}},
+            {"label":"Type","paramName":"DELAY_LFO1TYPE","paramId":24,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"305,50"}},
+            {"label":"Target","paramName":"DELAY_LFO1TARGET","paramId":48,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"390,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE1","paramId":12,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO1TEMPO","paramId":50,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"390,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH1","paramId":14,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO1PHASE","paramId":36,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"390,294"}},
+            {"label":"LFO2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"545,25"}},
+            {"label":"Type","paramName":"DELAY_LFO2TYPE","paramId":25,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"545,50"}},
+            {"label":"Target","paramName":"DELAY_LFO2TARGET","paramId":49,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"630,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE2","paramId":13,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO2TEMPO","paramId":51,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"630,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH2","paramId":15,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO2PHASE","paramId":37,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"630,294"}},
+            {"label":"LFO3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"785,25"}},
+            {"label":"Type","paramName":"DELAY_LFO4TYPE","paramId":77,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"785,50"}},
+            {"label":"Target","paramName":"DELAY_LFO4TARGET","paramId":82,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"870,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE4","paramId":78,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO4TEMPO","paramId":79,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"870,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH4","paramId":80,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO4PHASE","paramId":81,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"870,294"}},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Input Gain","paramName":"DELAY_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
@@ -4102,6 +4324,48 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
         ] },
+        { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LFO1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,25"}},
+            {"label":"Type","paramName":"DELAY_LFO1TYPE","paramId":24,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"305,50"}},
+            {"label":"Target","paramName":"DELAY_LFO1TARGET","paramId":48,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"390,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE1","paramId":12,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO1TEMPO","paramId":50,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"390,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH1","paramId":14,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO1PHASE","paramId":36,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"390,294"}},
+            {"label":"LFO2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"545,25"}},
+            {"label":"Type","paramName":"DELAY_LFO2TYPE","paramId":25,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"545,50"}},
+            {"label":"Target","paramName":"DELAY_LFO2TARGET","paramId":49,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"630,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE2","paramId":13,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO2TEMPO","paramId":51,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"630,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH2","paramId":15,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO2PHASE","paramId":37,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"630,294"}},
+            {"label":"LFO3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"785,25"}},
+            {"label":"Type","paramName":"DELAY_LFO4TYPE","paramId":77,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"785,50"}},
+            {"label":"Target","paramName":"DELAY_LFO4TARGET","paramId":82,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"870,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE4","paramId":78,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO4TEMPO","paramId":79,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"870,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH4","paramId":80,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO4PHASE","paramId":81,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"870,294"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"DELAY_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"DELAY_MIX","paramId":17,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"DELAY_LEVEL","paramId":18,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"DELAY_PAN","paramId":19,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"DELAY_SPREAD","paramId":8,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"DELAY_KILLDRY","paramId":86,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"25,00"}},
+            {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
+            {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Low Cut","paramName":"DELAY_LOCUT","paramId":10,"widget":"knob","rawWidget":"knob"},
@@ -4344,6 +4608,48 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Tempo","paramName":"DELAY_LFO4TEMPO","paramId":79,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"870,192"},"fw":{"gtet":"19,2"}},
             {"label":"Depth","paramName":"DELAY_DEPTH4","paramId":80,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,294"},"fw":{"gtet":"19,2"}},
             {"label":"Phase","paramName":"DELAY_LFO4PHASE","paramId":81,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"870,294"},"fw":{"gtet":"19,2"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"DELAY_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"DELAY_MIX","paramId":17,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"DELAY_LEVEL","paramId":18,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"DELAY_PAN","paramId":19,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"DELAY_SPREAD","paramId":8,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"DELAY_KILLDRY","paramId":86,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"25,00"}},
+            {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
+            {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LFO1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,25"}},
+            {"label":"Type","paramName":"DELAY_LFO1TYPE","paramId":24,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"305,50"}},
+            {"label":"Target","paramName":"DELAY_LFO1TARGET","paramId":48,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"390,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE1","paramId":12,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO1TEMPO","paramId":50,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"390,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH1","paramId":14,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO1PHASE","paramId":36,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"390,294"}},
+            {"label":"LFO2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"545,25"}},
+            {"label":"Type","paramName":"DELAY_LFO2TYPE","paramId":25,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"545,50"}},
+            {"label":"Target","paramName":"DELAY_LFO2TARGET","paramId":49,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"630,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE2","paramId":13,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO2TEMPO","paramId":51,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"630,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH2","paramId":15,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO2PHASE","paramId":37,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"630,294"}},
+            {"label":"LFO3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"785,25"}},
+            {"label":"Type","paramName":"DELAY_LFO4TYPE","paramId":77,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"785,50"}},
+            {"label":"Target","paramName":"DELAY_LFO4TARGET","paramId":82,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"870,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE4","paramId":78,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO4TEMPO","paramId":79,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"870,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH4","paramId":80,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO4PHASE","paramId":81,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"870,294"}},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Input Gain","paramName":"DELAY_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
@@ -4627,6 +4933,48 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Tempo","paramName":"DELAY_LFO4TEMPO","paramId":79,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"870,192"},"fw":{"gtet":"19,2"}},
             {"label":"Depth","paramName":"DELAY_DEPTH4","paramId":80,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,294"},"fw":{"gtet":"19,2"}},
             {"label":"Phase","paramName":"DELAY_LFO4PHASE","paramId":81,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"870,294"},"fw":{"gtet":"19,2"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"DELAY_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"DELAY_MIX","paramId":17,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"DELAY_LEVEL","paramId":18,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"DELAY_PAN","paramId":19,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"DELAY_SPREAD","paramId":8,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"DELAY_KILLDRY","paramId":86,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"25,00"}},
+            {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
+            {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LFO1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,25"}},
+            {"label":"Type","paramName":"DELAY_LFO1TYPE","paramId":24,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"305,50"}},
+            {"label":"Target","paramName":"DELAY_LFO1TARGET","paramId":48,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"390,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE1","paramId":12,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO1TEMPO","paramId":50,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"390,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH1","paramId":14,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO1PHASE","paramId":36,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"390,294"}},
+            {"label":"LFO2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"545,25"}},
+            {"label":"Type","paramName":"DELAY_LFO2TYPE","paramId":25,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"545,50"}},
+            {"label":"Target","paramName":"DELAY_LFO2TARGET","paramId":49,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"630,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE2","paramId":13,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO2TEMPO","paramId":51,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"630,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH2","paramId":15,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO2PHASE","paramId":37,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"630,294"}},
+            {"label":"LFO3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"785,25"}},
+            {"label":"Type","paramName":"DELAY_LFO4TYPE","paramId":77,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"785,50"}},
+            {"label":"Target","paramName":"DELAY_LFO4TARGET","paramId":82,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"870,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE4","paramId":78,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO4TEMPO","paramId":79,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"870,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH4","paramId":80,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO4PHASE","paramId":81,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"870,294"}},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Input Gain","paramName":"DELAY_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
@@ -5293,6 +5641,48 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Tempo","paramName":"DELAY_LFO4TEMPO","paramId":79,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"870,192"},"fw":{"gtet":"19,2"}},
             {"label":"Depth","paramName":"DELAY_DEPTH4","paramId":80,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,294"},"fw":{"gtet":"19,2"}},
             {"label":"Phase","paramName":"DELAY_LFO4PHASE","paramId":81,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"870,294"},"fw":{"gtet":"19,2"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"DELAY_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"DELAY_MIX","paramId":17,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"DELAY_LEVEL","paramId":18,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"DELAY_PAN","paramId":19,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"DELAY_SPREAD","paramId":8,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"DELAY_KILLDRY","paramId":86,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"25,00"}},
+            {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
+            {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LFO1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,25"}},
+            {"label":"Type","paramName":"DELAY_LFO1TYPE","paramId":24,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"305,50"}},
+            {"label":"Target","paramName":"DELAY_LFO1TARGET","paramId":48,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"390,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE1","paramId":12,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO1TEMPO","paramId":50,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"390,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH1","paramId":14,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO1PHASE","paramId":36,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"390,294"}},
+            {"label":"LFO2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"545,25"}},
+            {"label":"Type","paramName":"DELAY_LFO2TYPE","paramId":25,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"545,50"}},
+            {"label":"Target","paramName":"DELAY_LFO2TARGET","paramId":49,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"630,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE2","paramId":13,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO2TEMPO","paramId":51,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"630,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH2","paramId":15,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"545,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO2PHASE","paramId":37,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"630,294"}},
+            {"label":"LFO3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"785,25"}},
+            {"label":"Type","paramName":"DELAY_LFO4TYPE","paramId":77,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"positionExact":"785,50"}},
+            {"label":"Target","paramName":"DELAY_LFO4TARGET","paramId":82,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"870,50"}},
+            {"label":"Rate","paramName":"DELAY_RATE4","paramId":78,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,192"}},
+            {"label":"Tempo","paramName":"DELAY_LFO4TEMPO","paramId":79,"widget":"dropdown","rawWidget":"dropdownMiniReadout","placement":{"positionExact":"870,192"}},
+            {"label":"Depth","paramName":"DELAY_DEPTH4","paramId":80,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"785,294"}},
+            {"label":"Phase","paramName":"DELAY_LFO4PHASE","paramId":81,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"870,294"}},
           ] },
           { "section": "mixer", "controls": [
             {"label":"Input Gain","paramName":"DELAY_GAIN","paramId":23,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
@@ -32346,6 +32736,157 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
         ] }
       ] },
       { "name": "1,2,3,6,7,8,9,10", "value": "1,2,3,6,7,8,9,10", "selectorParamName": "REVERB_BASETYPE", "fw": {"gtet":"23"}, "pages": [
+        { "name": "Basic", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Time","paramName":"REVERB_TIME","paramId":1,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Size","paramName":"REVERB_SIZE","paramId":5,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Stack/Hold","paramName":"REVERB_HOLD","paramId":44,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":2}},
+            {"label":"PRE-DELAY","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"563,29"}},
+            {"label":"Pre-Delay","paramName":"REVERB_PREDELAY","paramId":9,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Tempo","paramName":"REVERB_PREDLYTEMPO","paramId":61,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":4}},
+            {"label":"Feedback","paramName":"REVERB_PREDLYFDBK","paramId":62,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Echo Mix","paramName":"REVERB_PREDLYMIX","paramId":63,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+            {"label":"Tap","paramName":"REVERB_PREDLYTAP","paramId":67,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":7}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"DECAY","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"563,209"}},
+            {"label":"Crossover Frequency","paramName":"REVERB_LFXOVER","paramId":34,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Low Decay","paramName":"REVERB_LFTIME","paramId":33,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"High Decay","paramName":"REVERB_HFRATIO","paramId":3,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Echo Density","paramName":"REVERB_DENSITY","paramId":19,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":6}},
+            {"label":"Quality","paramName":"REVERB_QUALITY","paramId":43,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":7}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":18,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":13,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":14,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":15,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":35,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":47,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":16,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"REVERB_KILLDRY","paramId":68,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"25,00"}},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":60,"widget":"button","rawWidget":"btnIgnoreScene"},
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Advanced", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"DIFFUSION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
+            {"label":"Input Diffusion","paramName":"REVERB_INPDIFF","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Input Diff Time","paramName":"REVERB_INDIFFTIME","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Wall Diffusion","paramName":"REVERB_DIFFUSION","paramId":4,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"EARLY REFLECTIONS","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,209"}},
+            {"label":"Early Level","paramName":"REVERB_EARLYLEVEL","paramId":7,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Early Diffusion","paramName":"REVERB_EARLYDIFF","paramId":39,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Early Diff Time","paramName":"REVERB_EARLYDIFFTIME","paramId":40,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Early Decay","paramName":"REVERB_EARLYDECAY","paramId":41,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Mic Spacing","paramName":"REVERB_WIDTH","paramId":25,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"LATE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"733,209"}},
+            {"label":"Late Level","paramName":"REVERB_REVERBLEVEL","paramId":8,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Late Input Mix ","paramName":"REVERB_EARLYSEND","paramId":42,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":18,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":13,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":14,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":15,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":35,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":47,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":16,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"REVERB_KILLDRY","paramId":68,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"25,00"}},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":60,"widget":"button","rawWidget":"btnIgnoreScene"},
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "Duck + Mod", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
+            {"label":"Threshold","paramName":"REVERB_THRESH","paramId":37,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Attenuation","paramName":"REVERB_ATTEN","paramId":36,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Release Time","paramName":"REVERB_RELEASE","paramId":38,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"563,29"}},
+            {"label":"Depth","paramName":"REVERB_DEPTH","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Rate","paramName":"REVERB_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"LFO Phase","paramName":"REVERB_LFOPHASE","paramId":46,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":18,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":13,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":14,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":15,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":35,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":47,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":16,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"REVERB_KILLDRY","paramId":68,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"25,00"}},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":60,"widget":"button","rawWidget":"btnIgnoreScene"},
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
+        { "name": "EQ", "pageNum": 3, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"LOW","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"308,29"}},
+            {"label":"Low Cut\nFrequency","paramName":"REVERB_LOWCUT","paramId":10,"widget":"knob","rawWidget":"knob","placement":{"col":0},"fw":{"lt":"28,02"}},
+            {"label":"Low Cut\nSlope","paramName":"REVERB_LOWSLOPE","paramId":49,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"305,230"},"fw":{"lt":"28,02"}},
+            {"label":"Low Cut","paramName":"REVERB_LOWCUT","paramId":10,"widget":"knob","rawWidget":"knob","placement":{"col":0},"fw":{"gtet":"28,02"}},
+            {"label":"Low Slope","paramName":"REVERB_LOWSLOPE","paramId":49,"widget":"dropdown","rawWidget":"dropdown1Tight1Line","placement":{"positionExact":"305,194"},"fw":{"gtet":"28,02"}},
+            {"label":"Low Q","paramName":"REVERB_LOWQ","paramId":69,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"305,270"},"fw":{"gtet":"28,02"}},
+            {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"391,29"}},
+            {"label":"Freq 1","paramName":"REVERB_FREQ1","paramId":26,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Q 1","paramName":"REVERB_Q1","paramId":28,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Gain 1","paramName":"REVERB_GAIN1","paramId":30,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"646,29"}},
+            {"label":"Freq 2","paramName":"REVERB_FREQ2","paramId":27,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"Q 2","paramName":"REVERB_Q2","paramId":29,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Gain 2","paramName":"REVERB_GAIN2","paramId":31,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+            {"label":"HIGH","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"903,29"}},
+            {"label":"High Cut\nFrequency","paramName":"REVERB_HICUT","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":7},"fw":{"lt":"28,02"}},
+            {"label":"High Cut\nSlope","paramName":"REVERB_HIGHSLOPE","paramId":50,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"900,230"},"fw":{"lt":"28,02"}},
+            {"label":"High Cut","paramName":"REVERB_HICUT","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":7},"fw":{"gtet":"28,02"}},
+            {"label":"High Slope","paramName":"REVERB_HIGHSLOPE","paramId":50,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"positionExact":"900,194"},"fw":{"gtet":"28,02"}},
+            {"label":"High Q","paramName":"REVERB_HIGHQ","paramId":70,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"900,270"},"fw":{"gtet":"28,02"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_eq","placement":{"positionExact":"390,190"}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input Gain","paramName":"REVERB_GAIN","paramId":18,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Mix","paramName":"REVERB_MIX","paramId":13,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+            {"label":"Level","paramName":"REVERB_LEVEL","paramId":14,"widget":"knob","rawWidget":"knobCompact","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Balance","paramName":"REVERB_PAN","paramId":15,"widget":"knob","rawWidget":"knobCompact","placement":{"col":0}},
+            {"label":"Spread","paramName":"REVERB_SPREAD","paramId":35,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Input\nSelect","paramName":"REVERB_INPUTSELECT","paramId":47,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":1}},
+            {"label":"Bypass\nMode","paramName":"REVERB_BYPASSMODE","paramId":16,"widget":"dropdown","rawWidget":"dropdown1TightXtra","placement":{"col":2}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Kill Dry","paramName":"REVERB_KILLDRY","paramId":68,"widget":"button","rawWidget":"btnKillDry","fw":{"gtet":"25,00"}},
+            {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":60,"widget":"button","rawWidget":"btnIgnoreScene"},
+            {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
         { "name": "Pitch Shift", "pageNum": 4, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mix","paramName":"REVERB_PITCHMIX","paramId":51,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -33711,6 +34252,36 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"TREMOLO_BYPASSMODE","paramId":9,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"TREMOLO_BYPASS","paramId":14,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"TREMOLO_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
+          ] }
+        ] },
+        { "name": "Tremolo", "pageNum": 0, "fw": {"gtet":"23,00"}, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Rate","paramName":"TREMOLO_RATE","paramId":2,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Tempo","paramName":"TREMOLO_TEMPO","paramId":5,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":2}},
+            {"label":"LFO Type","paramName":"TREMOLO_LFOTYPE","paramId":1,"widget":"dropdown","rawWidget":"dropdown1LFO","placement":{"col":3}},
+            {"label":"LFO Duty Cycle","paramName":"TREMOLO_DUTY","paramId":4,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"LFO Shape","paramName":"TREMOLO_BETA","paramId":20,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_trem","placement":{"col":6}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Depth","paramName":"TREMOLO_DEPTH","paramId":3,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
+            {"label":"Ducking","paramName":"TREMOLO_DUCKING","paramId":21,"widget":"knob","rawWidget":"knobCompact","placement":{"col":1},"fw":{"gtet":"27,04"}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":2}},
+            {"label":"LFO Phase","paramName":"TREMOLO_PHASE","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer","placement":{"col":4}},
+            {"label":"Start Phase","paramName":"TREMOLO_STARTPHASE","paramId":15,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Trigger Threshold","paramName":"TREMOLO_THRESH","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":8}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"TREMOLO_LEVEL","paramId":7,"widget":"knob","rawWidget":"knob"},
+            {"label":"Balance","paramName":"TREMOLO_PAN","paramId":8,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"","paramName":null,"paramId":null,"widget":"spacer","rawWidget":"spacer"},
+            {"label":"Bypass\nMode","paramName":"TREMOLO_BYPASSMODE","paramId":9,"widget":"dropdown","rawWidget":"dropdown1Tight"},
+            {"label":"Bypass","paramName":"TREMOLO_BYPASS","paramId":14,"widget":"button","rawWidget":"btnBypass"},
+            {"label":"Scene\nIgnore","paramName":"TREMOLO_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
         ] }
       ] },

@@ -209,7 +209,11 @@ export interface EditorLayoutPage {
   /**
    * Block-type / amp-model selector value(s) that activate this page, as the
    * editor's comma-joined list (e.g. amp pages keyed by `DISTORT_TYPE`). Only
-   * set where the editor gates a page by a selector value.
+   * set where the editor gates a page by a selector value. An empty list (`''`)
+   * is the editor's catch-all for its tab: it applies to every selector value no
+   * explicitly-valued sibling page on the same tab names on the catch-all's
+   * firmware (the generator folds it that way when it splits a page-level
+   * selector into per-type variants).
    */
   value?: string;
   /** The selector parameter whose `value` gates this page, when present. */

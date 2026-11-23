@@ -12,7 +12,8 @@
  *   1. gen-3 DELAY and MULTITAP are separate families (Delay / MultiDelay) whose own
  *      controls stay inside their family, with pinned variant / page / control counts;
  *   2. variants split from page-level selectors name that selector (DELAY_TYPE,
- *      REVERB_BASETYPE); editor-keyed variants carry none;
+ *      REVERB_BASETYPE); editor-keyed variants carry none; a catch-all page
+ *      (`value=""`) reaches every type no sibling page on its tab names;
  *   3. captions containing `>` stay on their own control;
  *   4. editor names are unique per device (one editor component per family);
  *   5. AM4 Global is its own family and the amp family holds only the amp editor;
@@ -65,20 +66,31 @@ function get(dev: string, layouts: DeviceEditorLayouts, family: string): EditorB
   return block!;
 }
 
-/** Variants / pages / controls of the two delay families, per gen-3 device. */
+/** Variants / pages / controls of the two delay families, per gen-3 device. DELAY carries the
+ *  editor's catch-all `Modulation` page (fw >= 8.00 FM3 / 6.00 FM9 / 23.00 III) on every type its
+ *  `DELAY_TYPE="6"` sibling does not name (0-5, 7): 7 pages / 210 controls per device. */
 const DELAY_COUNTS: Record<string, { DELAY: string; MULTITAP: string }> = {
-  FM3: { DELAY: '9/56/1180', MULTITAP: '12/87/1991' },
-  FM9: { DELAY: '9/47/1042', MULTITAP: '12/82/1844' },
-  III: { DELAY: '9/72/1572', MULTITAP: '12/84/1916' },
+  FM3: { DELAY: '9/63/1390', MULTITAP: '12/87/1991' },
+  FM9: { DELAY: '9/54/1252', MULTITAP: '12/82/1844' },
+  III: { DELAY: '9/79/1782', MULTITAP: '12/84/1916' },
 };
 
-/** Families / variants / pages / controls per device. */
+/** Families / variants / pages / controls per device. Catch-all pages fold into every type no
+ *  sibling page names: FM3 +12 pages (DELAY 7, REVERB 4, TREMOLO 1), FM9 +17 (DELAY 7, REVERB 9,
+ *  TREMOLO 1), III +15 (DELAY 7, REVERB 4, TREMOLO 1, CHORUS 3), AM4 +1 (FILTER 1). */
 const TOTALS: Record<string, string> = {
-  FM3: '44/188/938/17317',
-  FM9: '44/182/836/15596',
-  III: '47/199/1160/21602',
-  AM4: '32/184/382/4033',
+  FM3: '44/188/950/17640',
+  FM9: '44/182/853/16035',
+  III: '47/199/1175/21995',
+  AM4: '32/184/383/4042',
 };
+
+/** Page tabs (name + firmware gate) of a variant, in editor order. */
+function tabs(block: EditorBlockLayout, variantName: string, gate?: string): string {
+  const v = block.variants.find((x) => x.name === variantName && (gate === undefined || JSON.stringify(x.fw ?? null) === gate));
+  if (!v) fail(`${block.family}: no variant '${variantName}'${gate ? ` ${gate}` : ''}`);
+  return v!.pages.map((p) => (p.fw ? `${p.name}${JSON.stringify(p.fw).replace(/"/g, '')}` : p.name)).join(' | ');
+}
 
 /** Captions containing `>` and the parameter each one belongs to. */
 const ARROW_CAPTIONS: ReadonlyArray<readonly [family: string, label: string, paramName: string]> = [
@@ -126,6 +138,35 @@ const cases: Array<[string, () => void]> = [
         }
       }
     }
+  }],
+  ['catch-all pages reach every type no sibling page names', () => {
+    const fm3 = (family: string) => get('FM3', FM3_LAYOUTS, family);
+    const want = (got: string, expected: string, what: string) => {
+      if (got !== expected) fail(`${what}: ${got}, expected ${expected}`);
+    };
+    // REVERB fw >= 10: the types the "Pitch Shift" page names get the catch-all Basic..EQ tabs too; the
+    // "Ducker" tab of 0,5 keeps the catch-all "Duck + Mod" (same tab position) away from them.
+    want(tabs(fm3('REVERB'), '1,2,3,6,7,8,9,10', '{"gtet":"10"}'), 'Basic | Advanced | Duck + Mod | EQ | Pitch Shift', 'FM3 REVERB 1,2,3,6..10');
+    want(tabs(fm3('REVERB'), '0,5', '{"gtet":"10"}'), 'Basic | Advanced | Ducker | EQ', 'FM3 REVERB 0,5');
+    want(tabs(fm3('REVERB'), 'Default', '{"gtet":"10"}'), 'Basic | Advanced | Duck + Mod | EQ', 'FM3 REVERB Default');
+    // DELAY: the fw >= 8.00 catch-all Modulation reaches every type but 6, which names its own; an
+    // `lt 8,00` page on the same tab does not block it (the gates never hold together).
+    for (const t of ['0', '1', '2', '3', '4', '5', '7', 'Default']) {
+      const mod = tabs(fm3('DELAY'), t).split(' | ').filter((n) => n.startsWith('Modulation')).join(' | ');
+      want(mod, 'Modulation{lt:8,00} | Modulation{gtet:8,00}', `FM3 DELAY ${t} Modulation`);
+    }
+    const delay6 = fm3('DELAY').variants.find((v) => v.name === '6')!;
+    const mod6 = delay6.pages.filter((p) => p.name === 'Modulation' && p.fw?.gtet === '8,00');
+    const catchAll = fm3('DELAY').variants.find((v) => v.name === 'Default')!.pages.find((p) => p.name === 'Modulation' && p.fw?.gtet === '8,00');
+    if (mod6.length !== 1 || mod6[0] === catchAll) fail('FM3 DELAY 6: exactly its own fw >= 8.00 Modulation page');
+    // TREMOLO fw >= 8.00: types 0/2/4 draw the catch-all Tremolo page; the Panner type does not.
+    want(tabs(fm3('TREMOLO'), '0,2,4'), 'Tremolo{lt:8,00} | Tremolo{gtet:8,00}', 'FM3 TREMOLO 0,2,4');
+    want(tabs(fm3('TREMOLO'), '1'), 'Panner{lt:8,00} | Panner{gtet:8,00}', 'FM3 TREMOLO 1');
+    // Axe-Fx III Chorus fw >= 32.03: the catch-all Expert tab reaches the types only the Basic tab names.
+    want(tabs(get('III', AXE3_LAYOUTS, 'CHORUS'), '9', '{"gtet":"32,03"}'), 'Basic | Expert', 'III CHORUS 9');
+    // AM4 Filter: the catch-all Config tab reaches the Modulation-only types; type 16 keeps its own tab.
+    want(tabs(get('AM4', AM4_LAYOUTS, 'FILTER'), '4,5,6,9,10,11'), 'Config | Modulation', 'AM4 FILTER 4,5,6,9,10,11');
+    want(tabs(get('AM4', AM4_LAYOUTS, 'FILTER'), '16'), 'Filter', 'AM4 FILTER 16');
   }],
   ['captions containing > stay on their own control', () => {
     for (const [dev, layouts] of DEVICES) {

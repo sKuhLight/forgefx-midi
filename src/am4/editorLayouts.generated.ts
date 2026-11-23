@@ -3719,6 +3719,25 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
         ] }
       ] },
       { "name": "4,5,6,9,10,11", "value": "4,5,6,9,10,11", "selectorParamName": "FILTER_TYPE", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Order","paramName":"FILTER_ORDER","paramId":14,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Q","paramName":"FILTER_Q","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Gain","paramName":"FILTER_GAIN","paramId":13,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Low Cut","paramName":"FILTER_LOWCUT","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"High Cut","paramName":"FILTER_HICUT","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
         { "name": "Modulation", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},

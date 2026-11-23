@@ -7,7 +7,11 @@
  *      tag that does not match the open element, a stray closing tag, a tag or
  *      comment without its end, an element left open at the end;
  *   3. the page-selector splitter folds pages into per-type variants that carry
- *      the selector parameter;
+ *      the selector parameter, and gives a catch-all page (`value=""`) to every
+ *      type no explicitly-valued page on the same tab position (with a firmware
+ *      gate that contains the catch-all's) names; a sibling gate that only
+ *      partly covers the catch-all's, or a catch-all listed before a sibling it
+ *      yields to, throws;
  *   4. the per-variant family path: a component hosting two catalog families
  *      yields both, a variant whose prefix is no catalog family stays with its
  *      component, and without catalog families nothing moves.
@@ -85,6 +89,78 @@ const cases: Array<[string, () => void]> = [
     }
     const plain = splitVariantByPageSelectors({ name: 'Plain', value: null, pages: [base.pages[2]] });
     if (plain.length !== 1 || plain[0].selectorParamName !== undefined) fail('a selector-less variant stays as it is');
+  }],
+  ['a catch-all page reaches every type no sibling on its tab names', () => {
+    // Each page carries one control whose label identifies it.
+    const pg = (id: string, name: string, pageNum: number, value?: string, fw?: { gtet?: string; lt?: string }) => ({
+      name,
+      pageNum,
+      rows: [{ section: 'parameters' as const, controls: [{ label: id, paramName: null, paramId: null, widget: 'knob' as const, rawWidget: 'knob' }] }],
+      ...(fw ? { fw } : {}),
+      ...(value !== undefined ? { selectorParamName: 'T_TYPE', value } : {}),
+    });
+    const base: EditorLayoutVariant = {
+      name: 'T',
+      value: null,
+      pages: [
+        pg('main0', 'Main', 0, '0'),
+        pg('alt1', 'Alt', 0, '1'), // another tab on position 0: keeps the catch-all Main away from 1
+        pg('mainAny', 'Main', 0, ''),
+        pg('extra2', 'Extra', 1, '2'), // type 2 is named only on another tab
+        pg('mod3', 'Mod', 2, '3', { gtet: '8,00' }),
+        pg('modOld', 'Mod', 2, undefined, { lt: '8,00' }), // selector-less: claims nothing
+        pg('modAny', 'Mod', 2, '', { gtet: '8,00' }),
+        pg('old0', 'Old', 3, '0', { lt: '5' }), // never holds together with the gtet 5 catch-all
+        pg('oldAny', 'Old', 3, '', { gtet: '5' }),
+      ],
+    };
+    const out = splitVariantByPageSelectors(base);
+    const shape = out
+      .map((v) => `${v.name}=${v.pages.map((p) => p.rows[0].controls[0].label).join(',')}`)
+      .join(' ');
+    const expected = [
+      '0=main0,modOld,modAny,old0,oldAny',
+      '1=alt1,modOld,modAny,oldAny',
+      '2=mainAny,extra2,modOld,modAny,oldAny',
+      '3=mainAny,mod3,modOld,oldAny',
+      'Default=mainAny,modOld,modAny,oldAny',
+    ].join(' ');
+    if (shape !== expected) fail(`catch-all fold ${shape}`);
+  }],
+  ['a catch-all yields only where the sibling gate contains its own; partial cover and order throw', () => {
+    const pg = (id: string, name: string, pageNum: number, value?: string, fw?: { gtet?: string; lt?: string }) => ({
+      name,
+      pageNum,
+      rows: [{ section: 'parameters' as const, controls: [{ label: id, paramName: null, paramId: null, widget: 'knob' as const, rawWidget: 'knob' }] }],
+      ...(fw ? { fw } : {}),
+      ...(value !== undefined ? { selectorParamName: 'T_TYPE', value } : {}),
+    });
+    const shapeOf = (pages: EditorLayoutVariant['pages']) =>
+      splitVariantByPageSelectors({ name: 'T', value: null, pages }, 'TFAM')
+        .map((v) => `${v.name}=${v.pages.map((p) => p.rows[0].controls[0].label).join(',')}`)
+        .join(' ');
+    // An ungated sibling contains the catch-all's gtet 9 gate: type 4 never draws the catch-all.
+    const contained = shapeOf([pg('w4', 'Wide', 0, '4'), pg('wAny', 'Wide', 0, '', { gtet: '9' }), pg('x5', 'X', 1, '5')]);
+    if (contained !== '4=w4 5=wAny,x5 Default=wAny') fail(`containment ${contained}`);
+    const expectSplitThrow = (pages: EditorLayoutVariant['pages'], pattern: RegExp, what: string) => {
+      try {
+        shapeOf(pages);
+      } catch (e) {
+        const msg = (e as Error).message;
+        if (!/^TFAM variant 'T': /.test(msg) || !pattern.test(msg)) fail(`${what}: unexpected error '${msg}'`);
+        return;
+      }
+      fail(`${what}: the splitter accepted it`);
+    };
+    // The sibling holds on part of the catch-all's firmware only: which page type 4 shows there is not decidable.
+    expectSplitThrow([pg('n4', 'Main', 0, '4', { gtet: '8,00' }), pg('nAny', 'Main', 0, '')], /only partly covers/, 'narrower sibling');
+    expectSplitThrow(
+      [pg('s4', 'Main', 0, '4', { lt: '10' }), pg('sAny', 'Main', 0, '', { gtet: '8,00' })],
+      /'Main' \(T_TYPE="4", lt 10\).*only partly covers/,
+      'straddling sibling',
+    );
+    // A catch-all listed before the sibling it yields to.
+    expectSplitThrow([pg('eAny', 'Main', 0, ''), pg('e4', 'Main', 0, '4')], /precedes the sibling/, 'catch-all first');
   }],
   ['per-variant family: a merged component yields both families', () => {
     const xml =

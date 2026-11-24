@@ -35,7 +35,7 @@ preset pair calibrated OFFLINE BODY DECODE for FM9 + III (single-preset evidence
 | **Ranges** | display min/max + taper (so a knob reads "2.5 kHz", not a raw position) | **Editor data** |
 | **Type rosters** | the sub-model list *inside* a block (Phaser → "Script 45"…) | **Editor data** |
 | **Enum vocab** | labels for non-type enums (modes, LFO shapes, tempo subdivisions, mic/cab picks) | **Editor data** |
-| **Layouts** | editor page organization (which controls, which page) | **Editor data** |
+| **Layouts** | editor page organization (which controls, which page: in rows, or directly on the page as `pageControls`) | **Editor data** |
 | **FC / Modifier** | foot-controller + modifier address models | **Editor data** (some source enums capture-confirmed) |
 | **Cab IR names** | IR bank contents | **Live device read** (per-unit) or capture |
 | **Offline body calibration** | param-array offset + per-channel stride + value scaling to decode params out of a **stored preset blob with no device attached** | **Hardware capture** (needs real preset dumps as ground truth) |

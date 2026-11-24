@@ -8,6 +8,9 @@
 // (tabs), each page its rows, each row its controls in editor order. Every
 // control's paramId is the join of its editor parameterName against the
 // device parameter catalog (null when the name has no catalog entry).
+// Controls the editor places directly on a page, outside its rows, are in that
+// page's optional `pageControls` (editor order, same shape as a row control;
+// its paramId is also null when the parameter belongs to another family).
 // Firmware-versioned amp variants are all retained; the one pinned to the
 // current firmware ceiling carries `pinned: true`. Access:
 // `AM4_LAYOUTS.REVERB.variants[0].pages`.
@@ -3442,6 +3445,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":99,"widget":"dropdown","rawWidget":"dropdown1p5Tight","placement":{"positionExact":"126,15"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"148,185"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":133,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"140,240"}},
         ] },
         { "name": "GEQ", "pageNum": 1, "value": "1,4", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -3460,6 +3467,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":99,"widget":"dropdown","rawWidget":"dropdown1p5Tight","placement":{"positionExact":"126,15"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"148,185"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":133,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"140,240"}},
         ] },
         { "name": "GEQ", "pageNum": 1, "value": "2", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -3476,6 +3487,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":99,"widget":"dropdown","rawWidget":"dropdown1p5Tight","placement":{"positionExact":"126,15"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"148,185"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":133,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"140,240"}},
         ] },
         { "name": "GEQ", "pageNum": 1, "value": "5", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -3492,6 +3507,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":99,"widget":"dropdown","rawWidget":"dropdown1p5Tight","placement":{"positionExact":"126,15"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"148,185"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":133,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"140,240"}},
         ] },
         { "name": "GEQ", "pageNum": 1, "value": "6", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -3508,6 +3527,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":99,"widget":"dropdown","rawWidget":"dropdown1p5Tight","placement":{"positionExact":"126,15"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"148,185"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":133,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"140,240"}},
         ] },
         { "name": "GEQ", "pageNum": 1, "value": "7", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -3523,6 +3546,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":99,"widget":"dropdown","rawWidget":"dropdown1p5Tight","placement":{"positionExact":"126,15"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"148,185"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":133,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"140,240"}},
         ] },
         { "name": "GEQ", "pageNum": 1, "value": "8,9", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -3537,6 +3564,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":99,"widget":"dropdown","rawWidget":"dropdown1p5Tight","placement":{"positionExact":"126,15"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"148,185"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":133,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"140,240"}},
         ] },
         { "name": "GEQ", "pageNum": 1, "value": "10", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -3552,6 +3583,10 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":99,"widget":"dropdown","rawWidget":"dropdown1p5Tight","placement":{"positionExact":"126,15"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"148,185"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":133,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"140,240"}},
         ] },
         { "name": "Cab", "pageNum": 2, "value": "0", "selectorParamName": "CABINET_MODE", "rows": [
           { "section": "parameters", "controls": [
@@ -4714,6 +4749,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] },
       { "name": "8 Band", "value": "1,5", "pages": [
@@ -4737,6 +4775,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] },
       { "name": "7 Band", "value": "2,6", "pages": [
@@ -4759,6 +4800,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] },
       { "name": "Boss GE-7 Band", "value": "16", "pages": [
@@ -4781,6 +4825,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] },
       { "name": "Boss GE-7B Band", "value": "17", "pages": [
@@ -4803,6 +4850,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] },
       { "name": "5 Band Active", "value": "3,7", "pages": [
@@ -4823,6 +4873,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] },
       { "name": "5 Band Passive", "value": "8", "pages": [
@@ -4843,6 +4896,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] },
       { "name": "5 Band Mark", "value": "14", "pages": [
@@ -4863,6 +4919,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] },
       { "name": "4 Band", "value": "9", "pages": [
@@ -4882,6 +4941,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] },
       { "name": "3 Band", "value": "10,11", "pages": [
@@ -4900,6 +4962,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] },
       { "name": "10 Band 2/3 Oct", "value": "12,13", "pages": [
@@ -4925,6 +4990,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] },
       { "name": "4 Band JMPRE-1", "value": "15", "pages": [
@@ -4944,6 +5012,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"BLOCK_BYPASSMODE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
         ] }
       ] }
     ]
@@ -6867,6 +6938,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"High Cut","paramName":"PITCH_LPFREQ","paramId":null,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1059,145"}},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Key","paramName":"PITCH_KEY","paramId":null,"widget":"dropdown","rawWidget":"dropdownTight","placement":{"positionExact":"5,155"}},
+          {"label":"Scale","paramName":"PITCH_SCALE","paramId":null,"widget":"dropdown","rawWidget":"dropdownTight","placement":{"positionExact":"5,235"}},
         ] }
       ] },
       { "name": "Quad Diatonic", "value": "5", "pages": [
@@ -6898,6 +6972,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"High Cut","paramName":"PITCH_LPFREQ","paramId":null,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1059,145"}},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Key","paramName":"PITCH_KEY","paramId":null,"widget":"dropdown","rawWidget":"dropdownTight","placement":{"positionExact":"5,155"}},
+          {"label":"Scale","paramName":"PITCH_SCALE","paramId":null,"widget":"dropdown","rawWidget":"dropdownTight","placement":{"positionExact":"5,235"}},
         ] },
         { "name": "Voice 3 & 4", "rows": [
           { "section": "parameters", "controls": [
@@ -6927,6 +7004,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"High Cut","paramName":"PITCH_LPFREQ","paramId":null,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1059,145"}},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Key","paramName":"PITCH_KEY","paramId":null,"widget":"dropdown","rawWidget":"dropdownTight","placement":{"positionExact":"5,155"}},
+          {"label":"Scale","paramName":"PITCH_SCALE","paramId":null,"widget":"dropdown","rawWidget":"dropdownTight","placement":{"positionExact":"5,235"}},
         ] }
       ] },
       { "name": "Classic Whammy", "value": "6", "pages": [
@@ -7033,6 +7113,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Key","paramName":"PITCH_KEY","paramId":null,"widget":"dropdown","rawWidget":"dropdownTight","placement":{"positionExact":"5,155"}},
+          {"label":"Scale","paramName":"PITCH_SCALE","paramId":null,"widget":"dropdown","rawWidget":"dropdownTight","placement":{"positionExact":"5,235"}},
         ] }
       ] },
       { "name": "Custom Shifter", "value": "11", "pages": [
@@ -7061,6 +7144,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"High Cut","paramName":"PITCH_LPFREQ","paramId":null,"widget":"knob","rawWidget":"knobCompact","placement":{"positionExact":"1059,145"}},
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Key","paramName":"PITCH_KEY","paramId":null,"widget":"dropdown","rawWidget":"dropdownTight","placement":{"positionExact":"5,155"}},
         ] },
         { "name": "Voice 1 Scale", "rows": [
           { "section": "parameters", "controls": [
@@ -7889,6 +7974,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Tracking\nMode","paramName":"SYNTH_PD_RANGE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"4,220"}},
         ] },
         { "name": "Voice 2", "rows": [
           { "section": "parameters", "controls": [
@@ -7910,6 +7997,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Tracking\nMode","paramName":"SYNTH_PD_RANGE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"4,220"}},
         ] },
         { "name": "Voice 3", "rows": [
           { "section": "parameters", "controls": [
@@ -7931,6 +8020,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Tracking\nMode","paramName":"SYNTH_PD_RANGE","paramId":null,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"4,220"}},
         ] }
       ] }
     ]

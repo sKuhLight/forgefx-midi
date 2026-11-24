@@ -107,6 +107,8 @@ import { runTargetRangesTests, TARGET_RANGES_CASE_COUNT } from './convert/target
 import { runGen3TaperTests, GEN3_TAPER_CASE_COUNT } from './convert/gen3-taper.test.js';
 import { runEnumParamsTests, ENUM_PARAMS_CASE_COUNT } from './convert/enum-params.test.js';
 import { runSerialCloseTests, SERIAL_CLOSE_CASE_COUNT } from './shared/serial-close.test.js';
+import { runEditorLayoutPageControlsTests, EDITOR_LAYOUT_PAGE_CONTROLS_CASE_COUNT } from './editorLayouts-page-controls.test.js';
+import { runGenLayoutPageControlsTests, GEN_LAYOUT_PAGE_CONTROLS_CASE_COUNT } from './scripts/gen-editor-layouts-page-controls.test.js';
 import { runGridGuardTests, GRID_GUARD_CASE_COUNT } from './gen3/presetbody-grid-guard.test.js';
 import { runLiveGridShuntTests, LIVE_GRID_SHUNT_CASE_COUNT } from './gen3/live-grid-shunt.test.js';
 import { runTaperDecodeTests, TAPER_DECODE_CASE_COUNT } from './gen3/taper-decode.test.js';
@@ -230,6 +232,8 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `convert/gen3-taper (${GEN3_TAPER_CASE_COUNT} cases)`, run: runGen3TaperTests },
   { name: `convert/enum-params (${ENUM_PARAMS_CASE_COUNT} cases)`, run: runEnumParamsTests },
   { name: `shared/serial-close (${SERIAL_CLOSE_CASE_COUNT} cases)`, run: runSerialCloseTests },
+  { name: `editorLayouts/page controls (${EDITOR_LAYOUT_PAGE_CONTROLS_CASE_COUNT} cases)`, run: runEditorLayoutPageControlsTests },
+  { name: `scripts/gen-editor-layouts page controls (${GEN_LAYOUT_PAGE_CONTROLS_CASE_COUNT} cases)`, run: runGenLayoutPageControlsTests },
   { name: `gen3/presetbody-grid-guard (${GRID_GUARD_CASE_COUNT} cases)`, run: runGridGuardTests },
   { name: `gen3/live-grid-shunt (${LIVE_GRID_SHUNT_CASE_COUNT} cases)`, run: runLiveGridShuntTests },
   { name: `gen3/taper-decode (${TAPER_DECODE_CASE_COUNT} cases)`, run: runTaperDecodeTests },

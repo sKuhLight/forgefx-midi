@@ -115,8 +115,18 @@ export interface EditorLayoutPage {
   name: string;
   /** Editor page number, when specified. */
   pageNum?: number;
-  /** Rows in editor (top→bottom) order. */
+  /** Rows in editor (top→bottom) order. Empty only on a page whose controls are all page-level. */
   rows: EditorLayoutRow[];
+  /**
+   * Controls the editor places directly on the page, outside its row sections
+   * (section titles, separators, page-wide selectors and switches), in editor
+   * document order. Same shape as a row control; most carry
+   * `placement.positionExact`. Decorative entries are included verbatim. A
+   * parameter of another family without a cross-block reference keeps its
+   * `paramName`, but its `paramId` is null: that id is not one of this block's.
+   * Absent when the page has none.
+   */
+  pageControls?: EditorLayoutControl[];
   /** Firmware gate for the whole page, when present. */
   fw?: EditorFwRange;
   /**

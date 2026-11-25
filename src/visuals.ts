@@ -55,7 +55,7 @@
 import type { EditorLayoutPage } from './editorLayouts.js';
 
 /** Visual families the client knows how to draw. */
-export type VisualKind = 'dynamics' | 'lfo' | 'response' | 'decay' | 'echo' | 'adsr' | 'cabAlign' | 'eq';
+export type VisualKind = 'dynamics' | 'lfo' | 'response' | 'decay' | 'echo' | 'adsr' | 'cabAlign' | 'eq' | 'dynaCab';
 
 /** Stable visual keys (unique per block). The client prefixes them, e.g. `graph:dynamics`. */
 export type VisualKey =
@@ -69,6 +69,7 @@ export type VisualKey =
   | 'adsr1'
   | 'adsr2'
   | 'cabAlign'
+  | 'dynaCab'
   | 'inputEq'
   | 'outputEq'
   | 'reverbEq'
@@ -145,7 +146,13 @@ export type VisualRole =
   | 'mode'
   // cabAlign
   | 'delay1'
-  | 'delay2';
+  | 'delay2'
+  // dynaCab: the mic on the cab (position 0..1 along the cone, distance 0..1 from it), the selected
+  // cab and mic names
+  | 'position'
+  | 'distance'
+  | 'cabType'
+  | 'mic';
 
 /** A resolved visual for one block on one device (the wire shape a server serves). */
 export interface VisualEqBand {
@@ -201,9 +208,9 @@ export interface VisualDef {
 /** The two roles a compressor/gate transfer curve needs; without both only gain reduction is shown. */
 export const DYNAMICS_CURVE_ROLES: readonly VisualRole[] = ['threshold', 'ratio'];
 
-export const VISUAL_KINDS: readonly VisualKind[] = ['dynamics', 'lfo', 'response', 'decay', 'echo', 'adsr', 'cabAlign', 'eq'];
+export const VISUAL_KINDS: readonly VisualKind[] = ['dynamics', 'lfo', 'response', 'decay', 'echo', 'adsr', 'cabAlign', 'eq', 'dynaCab'];
 export const VISUAL_KEYS: readonly VisualKey[] = [
-  'dynamics', 'lfo', 'lfo1', 'lfo2', 'response', 'decay', 'echo', 'adsr1', 'adsr2', 'cabAlign', 'inputEq', 'outputEq', 'reverbEq', 'sidechainEq',
+  'dynamics', 'lfo', 'lfo1', 'lfo2', 'response', 'decay', 'echo', 'adsr1', 'adsr2', 'cabAlign', 'dynaCab', 'inputEq', 'outputEq', 'reverbEq', 'sidechainEq',
 ];
 
 /** A CONTROLLERS LFO (n = 1 | 2). */
@@ -442,6 +449,20 @@ export const BLOCK_VISUAL_DEFS: Readonly<Record<string, readonly VisualDef[]>> =
       // float row under the 'enum' unit), so the client fits the axis to the two delays itself.
       roles: { delay1: 'CABINET_DELAY1', delay2: 'CABINET_DELAY2' },
       requires: [['delay1', 'delay2']],
+    },
+    {
+      key: 'dynaCab',
+      kind: 'dynaCab',
+      title: 'DynaCab mic',
+      // Slot 1's DynaCab controls: the mic's position on the cone (R) and its distance from it (Z), with
+      // the selected cab and mic for the caption. The client draws a cab silhouette with the mic on it.
+      roles: {
+        position: 'CABINET_DYNACAB_R1',
+        distance: 'CABINET_DYNACAB_Z1',
+        cabType: 'CABINET_DYNACAB_TYPE1',
+        mic: 'CABINET_DYNACAB_MIC1',
+      },
+      requires: [['position', 'distance']],
     },
   ],
 };
@@ -727,6 +748,27 @@ export function stampGraphKeys(family: string, pages: readonly EditorLayoutPage[
     const changed = rows.some((r, i) => r !== page.rows[i]) || pageControls?.some((c, i) => c !== page.pageControls?.[i]);
     return changed ? { ...page, rows, ...(pageControls ? { pageControls } : {}) } : page;
   });
+  // CABINET: the DynaCab page has no graph widget of its own (the device draws the mic on the cab in a
+  // special control); give it the mic graphic's slot where the DynaCab controls are, so the client can draw
+  // the cab with the mic on it at the place the page shows those controls.
+  if (family === 'CABINET') {
+    const dyna = BLOCK_VISUAL_DEFS.CABINET?.find((d) => d.key === 'dynaCab');
+    if (dyna && !stamped.some((page) => controlsOn(page).some((c) => c.graphKey === dyna.key))) {
+      const index = stamped.findIndex((page) => {
+        const names = new Set(controlsOn(page).map((c) => c.paramName));
+        return names.has(dyna.roles.position ?? null) && names.has(dyna.roles.distance ?? null);
+      });
+      if (index >= 0) {
+        const page = stamped[index]!;
+        stamped[index] = {
+          ...page,
+          pageControls: [...(page.pageControls ?? []), {
+            label: dyna.title, paramName: null, paramId: null, widget: 'graph', rawWidget: 'graph_cab', graphKey: dyna.key,
+          }],
+        };
+      }
+    }
+  }
   // Some models/variants do not have an explicit visual slot. Offer these displays on the page
   // with their inputs, without assuming page names or adding a second copy beside a real slot.
   const visual = family === 'CHORUS' || family === 'COMP' ? BLOCK_VISUAL_DEFS[family]?.[0] : undefined;

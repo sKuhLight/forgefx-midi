@@ -31,7 +31,7 @@ import { FM9_PARAMS_BY_FAMILY, FM9_LAYOUTS } from '../src/gen3/fm9/index.js';
 import { PARAMS_BY_FAMILY as AXE3_PARAMS_BY_FAMILY, AXE3_LAYOUTS } from '../src/gen3/axe-fx-iii/index.js';
 import type { DeviceEditorLayouts, EditorLayoutPage } from '../src/editorLayouts.js';
 
-export const VISUALS_CASE_COUNT = 15;
+export const VISUALS_CASE_COUNT = 16;
 
 type Catalog = Readonly<Record<string, readonly VisualCatalogParam[]>>;
 const DEVICES: ReadonlyArray<{ model: Gen3VisualModel; byte: number; catalog: Catalog; layouts: DeviceEditorLayouts }> = [
@@ -490,6 +490,40 @@ function ampEq(): void {
   }
 }
 
+// ── 16. DynaCab: the mic graphic's slot on the page with the DynaCab controls ──
+function dynaCab(): void {
+  const def = BLOCK_VISUAL_DEFS.CABINET?.find((d) => d.key === 'dynaCab');
+  if (!def) fail('CABINET has no dynaCab visual');
+  eq(def.kind, 'dynaCab', 'dynaCab kind');
+  eq(def.requires.map((g) => g.join('+')).join(','), 'position+distance', 'dynaCab needs the mic on the cab');
+  const all = (p: EditorLayoutPage) => [...p.rows.flatMap((r) => r.controls), ...(p.pageControls ?? [])];
+  for (const d of DEVICES) {
+    const served = byKey(blockVisuals(d.model, 'CABINET'), 'dynaCab');
+    if (!served) fail(`${d.model}: CABINET serves no dynaCab visual`);
+    eq(served.title, 'DynaCab mic', `${d.model} dynaCab title`);
+    eq(served.roles.position, idOf(d.catalog, 'CABINET', 'CABINET_DYNACAB_R1'), `${d.model} dynaCab position`);
+    eq(served.roles.distance, idOf(d.catalog, 'CABINET', 'CABINET_DYNACAB_Z1'), `${d.model} dynaCab distance`);
+    eq(served.roles.cabType, idOf(d.catalog, 'CABINET', 'CABINET_DYNACAB_TYPE1'), `${d.model} dynaCab cab`);
+    eq(served.roles.mic, idOf(d.catalog, 'CABINET', 'CABINET_DYNACAB_MIC1'), `${d.model} dynaCab mic`);
+    for (const v of d.layouts.CABINET!.variants) {
+      const pages = stampGraphKeys('CABINET', v.pages);
+      const withSlot = pages.filter((p) => all(p).some((c) => c.graphKey === 'dynaCab'));
+      const dynaPages = pages.filter((p) => {
+        const names = new Set(all(p).map((c) => c.paramName));
+        return names.has('CABINET_DYNACAB_R1') && names.has('CABINET_DYNACAB_Z1');
+      });
+      eq(withSlot.length, dynaPages.length ? 1 : 0, `${d.model} ${v.name}: one dynaCab slot`);
+      if (dynaPages.length) {
+        eq(withSlot[0]!.name, dynaPages[0]!.name, `${d.model} ${v.name}: dynaCab slot on the DynaCab page`);
+        eq(all(withSlot[0]!).filter((c) => c.graphKey === 'dynaCab').length, 1, `${d.model} ${v.name}: no second dynaCab slot`);
+      }
+      // the mic graphic is offered only while the layout shows its controls
+      const offered = resolveBlockVisuals(d.catalog.CABINET, 'CABINET', null, { layoutParamIds: layoutParamIds(pages), pages });
+      eq(byKey(offered, 'dynaCab') != null, dynaPages.length > 0, `${d.model} ${v.name}: dynaCab offered with its page`);
+    }
+  }
+}
+
 export function runVisualsTests(): void {
   symbolsResolveEverywhere();
   idsAreDeviceOwn();
@@ -506,4 +540,5 @@ export function runVisualsTests(): void {
   presentIds();
   deviceGating();
   ampEq();
+  dynaCab();
 }

@@ -313,3 +313,57 @@ export {
   type EditorWidgetKind,
   type EditorFwRange,
 } from '../editorLayouts.js';
+
+// READ-ONLY definition walk (action 0x0D pseudo-registers 0x07DD / 0x07DC / 0x07EB) and the
+// special-table reads (action 0x12). No write builder exists on this path; see ./readFrame.ts.
+export {
+  AM4_PARAM_COUNT_PID_HIGH,
+  AM4_PARAM_DEFINITION_PID_HIGH,
+  AM4_PARAM_LABEL_PID_HIGH,
+  AM4_LABEL_TYPECODE_CLASSES,
+  AM4_LABEL_FLAG,
+  buildReadBlockDescriptor,
+  buildReadParamDefinition,
+  buildReadParamLabel,
+  parseBlockDescriptor,
+  parseParamDefinition,
+  parseParamLabel,
+  am4DefinitionWalk,
+} from './definitionWalk.js';
+export type {
+  Am4BlockDescriptor,
+  Am4ParamDefinition,
+  Am4ParamLabel,
+  Am4DefinitionWalkOptions,
+  Am4DefinitionWalkResult,
+} from './definitionWalk.js';
+export {
+  AM4_READ_MODEL_AM4,
+  VP4_READ_MODEL_VP4,
+  AM4_READ_ACTION_LONG,
+  AM4_READ_ACTION_NAME,
+  AM4_READ_ACTIONS,
+  isAm4ReadModel,
+  buildAm4ReadFrame,
+  parseAm4ReadFrame,
+  requestAm4Read,
+} from './readFrame.js';
+export type { Am4ReadFrame, Am4ReadTransport, Am4ReadOptions, Am4ReadStats } from './readFrame.js';
+export {
+  AM4_CAB_NAME_PID_LOW,
+  AM4_CAB_NAME_PID_HIGH,
+  AM4_CAB_USER_SLOTS,
+  AM4_CAB_SCRATCHPAD_INDICES,
+  buildReadAm4CabName,
+  parseAm4CabNameReply,
+  readAm4CabNames,
+  am4CabBankTable,
+  readAm4PresetNames,
+} from './specialTables.js';
+export type {
+  Am4CabNameReply,
+  Am4CabNameEntry,
+  Am4CabNameRead,
+  Am4PresetNameEntry,
+  Am4PresetNameRead,
+} from './specialTables.js';

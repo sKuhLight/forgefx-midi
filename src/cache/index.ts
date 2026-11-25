@@ -186,3 +186,59 @@ export type {
   TypecodeTaperRule,
   TypecodeUnitRule,
 } from './typecodeRules.js';
+
+// Per-model constants of the gen-3 definition walk and the read-only request builders that use
+// them (the walk grammar is model-generic; only these data constants differ).
+export {
+  GEN3_WALK_PROFILES,
+  gen3WalkProfile,
+  GEN3_LABEL_TYPECODE_CLASSES,
+  gen3TypecodeClass,
+  GEN3_BLOCK_DESCRIPTOR_SUB,
+  GEN3_PRESET_NAME_SUB,
+  gen3BlockSweepOrdinals,
+  buildBlockDescriptorQuery,
+  buildPresetNameQuery,
+  buildCabBankQuery,
+} from './gen3WalkModel.js';
+export type { Gen3WalkProfile, Gen3EffectIdRow } from './gen3WalkModel.js';
+
+// Reply decoding for the block descriptor (device-supplied parameter counts), the preset-name
+// read and the raw cab/IR bank record read.
+export {
+  decodeBlockDescriptor,
+  decodePresetNameReply,
+  decodeCabBankRecordReply,
+  readBlockParamCounts,
+  readPresetNames,
+  readCabBankRecords,
+} from './gen3WalkReplies.js';
+export type {
+  Gen3BlockDescriptor,
+  Gen3PresetNameReply,
+  Gen3CabBankRecordReply,
+  Gen3ReadOptions,
+  Gen3ReadStats,
+  Gen3BlockParamCounts,
+  Gen3PresetName,
+  Gen3PresetNameRead,
+  Gen3CabBankRecordRead,
+  Gen3CabBankRead,
+} from './gen3WalkReplies.js';
+
+// Special tables (ids >= 0xFF00): record construction and the profile-safe / local-only merge.
+export {
+  PRESET_NAME_TABLE_ID,
+  CAB_BANK_TABLE_ID_MIN,
+  CAB_BANK_TABLE_ID_MAX,
+  CACHE_PRESET_NAME_SECTION,
+  CACHE_CAB_BANK_SECTION,
+  isCabBankTableId,
+  presetNameTableRecord,
+  cabBankTableRecord,
+  specialTableRecords,
+  mergeSpecialTables,
+  mergeSpecialTablesLocal,
+  userTableIds,
+} from './specialTables.js';
+export type { PresetNameTable, CabBankTable, SpecialTables } from './specialTables.js';

@@ -25,28 +25,29 @@
  * from F0 through the last body byte, masked to 7 bits. Gen-3 model bytes:
  * FM3 0x11, FM9 0x12, Axe-Fx III 0x10.
  *
- * Query body (15 bytes) addresses view × block × param × sub:
- *     [VIEW, 0, BLOCK, 0, PARAM_LO, PARAM_HI, SUB, 0,0,0,0,0,0,0,0]
- *   body[0] VIEW  = 0x1c definition record, 0x1f enum label,
- *                   0x00 formatted value string, 0x2e large value dump
- *   body[2] BLOCK = parameter section address (swept 0..127)
- *   body[4] PARAM_LO = param & 0x7f      body[5] PARAM_HI = param >> 7
- *   body[6] SUB_LO   = sub & 0x7f        body[7] SUB_HIGH = sub >> 7
- * PARAM and SUB are thus 14-bit values, each split into a low/high 7-bit pair
- * (hardware-verified, including both high bytes non-zero in one query); the
- * 14-bit SUB range is what makes the 1024-label enum cap reachable.
+ * Query header (15 bytes), the same shape as the reply header:
+ *     u16 sub | u16 a (block) | u16 b (param) | u32 c | u16 | u16 n
+ *   sub  = 0x1c definition record, 0x1f enum label, 0x00 formatted value string
+ *          (device-served: no gen-3 definition path builds this view, the catalog views are
+ *          0x1a / 0x52), 0x2e grid/preset-layout blob
+ *   a    = parameter section address (effect id, swept 0..127 by default)
+ *   b    = param id inside the block
+ *   c    = the label ordinal for a 0x1f query (the parameter's raw value), else 0
+ *   n    = raw payload bytes (0 for these queries)
+ * Each u16 is a little-endian septet pair; block, param and the c low part are 14-bit values
+ * (hardware-verified, including both high septets non-zero in one query).
  *
- * Reply: `inner = frame[6:-2]`.
- *   inner[0]     = view echo          inner[4] = param-low echo
- *   inner[6]     = TAG: 0x3a "changed since last read" / 0x00 "re-read" — BOTH
- *                  carry payload, so decode is TAG-INDEPENDENT (driven by the
- *                  length word). 0x03 / 0x01 = genuine no-payload sentinel;
- *                  an enum ordinal past the end of the value range (sub > max)
- *                  answers cnt = 0 under tag 0x40 — any cnt = 0 reply is
- *                  treated as no-payload regardless of tag.
- *   inner[13:15] = u16 LE `cnt` = raw payload byte count
- *   inner[15:…]  = a CONTINUOUS MSB-first septet stream (ceil(cnt*8/7) septets)
- *                  yielding exactly `cnt` raw bytes.
+ * Reply: `inner = frame[6:-2]`, the same 15-byte header.
+ *   inner[0:2]   = sub echo         inner[2:4] = a echo          inner[4:6] = b echo
+ *   inner[6:11]  = the c word (four septets plus a high-nibble byte). This is NOT a tag: a
+ *                  label reply's c low septet is the ordinal it answers, so 1 and 3 are real
+ *                  labels, not no-payload sentinels.
+ *   inner[13:15] = the raw payload count as a two-septet u16 (`inner[13] | inner[14] << 7`;
+ *                  the 590-byte status reply's `70 03` is 496)
+ *   inner[15:…]  = a CONTINUOUS MSB-first septet stream (ceil(cnt*8/7) septets) yielding
+ *                  exactly `cnt` raw bytes.
+ * Decode is count-driven: any cnt = 0 reply is no-payload — the past-the-end label answer and
+ * the end of an effect table included — whatever the c bytes read.
  *
  * Definition record (view 0x1c) = 36 raw bytes, little-endian:
  *     u32 id, u32 tc, f32 min, f32 max, f32 scale, f32 def, f32 step, u32 0, u32 0
@@ -62,16 +63,14 @@
  * `buildDeviceCache` reads as a range's `scale`. So `scale != 0` says nothing
  * about whether a param has a label list.
  *
- * Enum labels (view 0x1f): one septet-ASCII label per SUB ordinal. The SUB
- * ordinal is the parameter's RAW VALUE (min..max), NOT an index into the value
- * list: values[i] lives at sub = min + i (hardware-verified; the two coincide
- * only when min = 0). Raw values below min can still answer with a label, but
- * those are outside the value list and are not part of the walk. The label
- * range does NOT self-terminate cleanly — it spills into a shared label pool —
- * so the walk is bounded by the definition's value count (max−min+1),
- * hard-capped, and ends early on the first end-sentinel/empty reply. Past-end
- * ordinals (sub > max) answer with cnt = 0 under tag 0x40 — end-of-list
- * detection keys off cnt == 0, tag-independent.
+ * Enum labels (view 0x1f): one septet-ASCII label per c ordinal. The ordinal is the parameter's
+ * RAW VALUE (min..max), NOT an index into the value list: values[i] lives at c = min + i
+ * (hardware-verified; the two coincide only when min = 0). Raw values below min can still answer
+ * with a label, but those are outside the value list and are not part of the walk. The label
+ * range does NOT self-terminate cleanly — it spills into a shared label pool — so the walk is
+ * bounded by the definition's value count (max−min+1), hard-capped, and ends early on the first
+ * empty reply. Past-end ordinals answer with cnt = 0 — end-of-list detection keys off cnt == 0,
+ * never off the c bytes.
  *
  * kind: the wire typecode is ambiguous (e.g. tc=16 is used by both enum and
  * float params), so kind is derived from the numeric record and, decisively,
@@ -86,16 +85,27 @@
  * kind).
  *
  * Which definitions are label-walked (a 0x1f query against a param WITHOUT a
- * label list is out of contract, see `couldBeEnum`): those with `scale` 0 and
- * integral bounds (as always), and — only when the CALLER names the param as a
- * label list (`enumHintByBlock`, from a catalog or a byte-exact cache) — one
- * with a non-zero `scale` whose bounds fit that list (see `hintedListFit`).
- * Many genuine lists have a non-zero default ordinal (an amp's tube type, a
- * reverb type, every tempo division, the foot-controller assignments), and the
- * device's own data offers no SAFE sign of a list for them: their formatted
- * value is often number-like ('12 dB/OCT', '1536', '-10 dBV'), and some
- * continuous or integer params display words ('OFF', 'INFINITE', a note name).
- * The formatted value only corroborates a hint whose list has grown.
+ * label list is out of contract, see `couldBeEnum`): a definition whose own wire record says it
+ * has labels (a non-zero `labelTable` word at +0x1C together with a typecode class of
+ * {1,10,11,12} — the device's own label-table gate, class 2 excluded), and — as before — those
+ * with `scale` 0 and integral bounds, plus, only when the CALLER names the param as a label list
+ * (`enumHintByBlock`), one with a non-zero `scale` whose bounds fit that list (see
+ * `hintedListFit`). Many genuine lists have a non-zero default ordinal (an amp's tube type, a
+ * reverb type, every tempo division, the foot-controller assignments); the device's own label
+ * word is the safe sign for them, and it removes the label-capable-class params that have no
+ * list. Where a firmware leaves the word zero, the older numeric heuristic still applies.
+ * Labels are POSITIONAL by arrival order: the label reply carries block + param but no ordinal
+ * (the label handler receives a constant 0), so the walk must request ordinals ascending and
+ * must never reorder or parallelise them for one param.
+ *
+ * ── Per-model constants and device-supplied parameter counts ─────────────────
+ * The walk grammar is model-generic; only five data constants differ per build and live in
+ * `gen3WalkModel.ts` (message-object size, 0x2E grid-blob size, cab-record stride, block-type
+ * ordinal bound, cab-bank sub-op). Parameter counts are NEVER fixed in-memory constants: a block's count
+ * is device-supplied by the func 0x01 sub 0x01 descriptor (56-byte payload: count at
+ * `payload+0x04`; 80-byte payload: `+0x1C`). Read is with `readBlockParamCounts` and pass the
+ * result as `paramCountByBlock`; a reported count may only TIGHTEN a block's query bound, never
+ * widen it (see `blockPlan`).
  *
  * Empty slots: the device answers an unused slot with an empty-slot definition
  * (typecode 0, all-zero body). Inner empty slots become the all-zero float
@@ -219,9 +229,7 @@
  */
 import { fractalChecksum } from '../shared/checksum.js';
 import { buildSetParameterContinuous } from '../gen3/axe-fx-iii/setParam.js';
-import { AXE3_EFFECT_ID_TABLE } from '../gen3/axe-fx-iii/effectIds.js';
-import { FM3_EFFECT_ID_TABLE } from '../gen3/fm3/effectIds.js';
-import { FM9_EFFECT_ID_TABLE } from '../gen3/fm9/effectIds.js';
+import { GEN3_LABEL_TYPECODE_CLASSES, gen3TypecodeClass, gen3WalkProfile } from './gen3WalkModel.js';
 import type { RecordSource } from './buildProfile.js';
 import type { LiveSourceScope } from './profileDoc.js';
 import type { CacheRecord, EnumRecord, FloatRecord, FloatTaper } from './types.js';
@@ -240,7 +248,12 @@ export const VIEW_DEFINITION = 0x1c;
 export const VIEW_ENUM_LABEL = 0x1f;
 export const VIEW_VALUE = 0x00;
 
-/** Reply TAG bytes (inner[6]) that carry NO payload (sentinels). */
+/**
+ * Legacy no-payload guard for the definition view only. Under the corrected header `inner[6]` is
+ * the low septet of `c`, so this cannot fire on a real definition reply (its c is 0); it is kept
+ * because the synthetic slots suite pins a sentinel-shaped cnt = 0 frame as a gap, not a table
+ * end. See `isNoPayloadReply` for the follow-up.
+ */
 const TAG_SENTINELS = new Set([0x01, 0x03]);
 
 // ---------------------------------------------------------------------------
@@ -248,16 +261,18 @@ const TAG_SENTINELS = new Set([0x01, 0x03]);
 // ---------------------------------------------------------------------------
 
 function buildQuery(model: number, view: number, block: number, param: number, sub: number): Uint8Array {
+  // Header: u16 sub | u16 a | u16 b | u32 c | u16 | u16 n. The walk's c word never exceeds 14
+  // bits (a label ordinal or 0), so only the two low septets are written.
   const body = new Array<number>(15).fill(0);
-  body[0] = view & 0x7f;
-  body[2] = block & 0x7f; // BLOCK_LO
-  body[3] = (block >> 7) & 0x7f; // BLOCK_HI — reaches effectId>=128 (Synth 130-133,
+  body[0] = view & 0x7f; // sub, low septet
+  body[2] = block & 0x7f; // a (block) low
+  body[3] = (block >> 7) & 0x7f; // a high — reaches effectId>=128 (Synth 130-133,
   //                                Mixer 128/129). HW-verified FM3 fw12.00 2026-07-16;
-  //                                symmetric to the param (body[5]) / sub (body[7]) splits.
-  body[4] = param & 0x7f; // PARAM_LO
-  body[5] = (param >> 7) & 0x7f; // PARAM_HI
-  body[6] = sub & 0x7f; // SUB_LO
-  body[7] = (sub >> 7) & 0x7f; // SUB_HIGH
+  //                                symmetric to the param (body[5]) splits.
+  body[4] = param & 0x7f; // b (param) low
+  body[5] = (param >> 7) & 0x7f; // b high
+  body[6] = sub & 0x7f; // c, low septet
+  body[7] = (sub >> 7) & 0x7f; // c, next septet
   const core = [...MFR, model & 0x7f, FN_SELFDESCRIBE, ...body];
   return Uint8Array.from([...core, fractalChecksum(core), 0xf7]);
 }
@@ -345,6 +360,17 @@ export interface LiveDefinition {
    *  as the range's `scale`. */
   def: number;
   step: number;
+  /**
+   * The u32 at offset 28 (wire `+0x1C`): the device's value-label table word. Together with a
+   * typecode class of {1,10,11,12} a non-zero value is the device's "this parameter HAS a label
+   * list" signal — only its non-zero-ness is significant, and the cache never stores it.
+   */
+  labelTable: number;
+  /**
+   * The u32 at offset 32 (wire `+0x20`). Only its low 16 bits form the flags word; the bit
+   * meanings are not recovered, so it is exposed verbatim and not interpreted.
+   */
+  flags: number;
 }
 
 /** Any decoded self-describe reply, or `null` for a sentinel / no payload. */
@@ -372,10 +398,10 @@ function classifyKind(mn: number, mx: number, scale: number, st: number): 'enum'
 }
 
 /**
- * Decode ONE self-describe reply frame. Returns a typed result, or `null` when
- * the frame is not a func-0x01 reply, is a sentinel (tag 0x03/0x01), or carries
- * no payload. Decode is TAG-INDEPENDENT: a 0x3a "fresh" and a 0x00 "re-read"
- * reply with the same payload decode identically.
+ * Decode ONE self-describe reply frame. Returns a typed result, or `null` when the frame is not
+ * a func-0x01 reply or carries no payload (cnt = 0). The decode is COUNT-DRIVEN, never keyed on
+ * `inner[6]`: that byte is the low septet of the wire `c` word, and a label reply echoes the
+ * requested ordinal there (1 and 3 are ordinary labels, not sentinels).
  */
 export function decodeReply(frame: Uint8Array): LiveReply {
   const n = frame.length;
@@ -394,10 +420,9 @@ export function decodeReply(frame: Uint8Array): LiveReply {
   if (inner.length < 7) return null;
   const selector = inner[0]!;
   const param = inner[4]!;
-  const tag = inner[6]!;
-  if (TAG_SENTINELS.has(tag)) return null;
   if (inner.length < 15) return null;
-  const cnt = inner[13]! | (inner[14]! << 8);
+  // Payload count: a two-septet u16 (`inner[13] | inner[14] << 7`), not a raw u16.
+  const cnt = inner[13]! | (inner[14]! << 7);
   if (cnt < 1) return null;
   if (inner.length < 15 + septetLen(cnt)) return null;
   const raw = decodeSeptetStream(inner, cnt, 15);
@@ -422,6 +447,8 @@ export function decodeReply(frame: Uint8Array): LiveReply {
     const scale = dv.getFloat32(16, true);
     const def = dv.getFloat32(20, true);
     const step = dv.getFloat32(24, true);
+    const labelTable = dv.getUint32(28, true);
+    const flags = dv.getUint32(32, true);
     if ([min, max, scale, def, step].every((x) => Number.isFinite(x))) {
       return {
         view: 'definition',
@@ -435,6 +462,8 @@ export function decodeReply(frame: Uint8Array): LiveReply {
         scale,
         def,
         step,
+        labelTable,
+        flags,
       };
     }
   }
@@ -515,11 +544,15 @@ function isFillerDefinition(d: LiveDefinition): boolean {
 }
 
 /**
- * A well-formed self-describe reply echoing `view` whose payload count is 0 (under an ordinary tag).
- * Under the definition view this is how an effect table answers past its end (FM3 fw 13.0), as
- * opposed to the empty-slot definition of an unused slot inside it. A sentinel-tagged reply (0x01 /
- * 0x03) is NOT taken as a table end: it was never seen there, so it keeps its old meaning (a
- * non-slot answer that ends a run as a gap).
+ * A well-formed self-describe reply echoing `view` whose payload count is 0. Under the definition
+ * view this is how an effect table answers past its end (FM3 fw 13.0), as opposed to the
+ * empty-slot definition of an unused slot inside it.
+ *
+ * The `inner[6]` guard is a legacy of the old "tag" reading. Under the corrected header that byte
+ * is the low septet of `c`, and a definition reply carries c = 0, so it cannot fire on a real
+ * definition answer; keeping it preserves the synthetic sentinel-as-gap case the slots suite pins.
+ * FOLLOW-UP: drop the guard once a capture (or the replay suite) covers a definition reply whose
+ * c low septet is 1/3 and which is a genuine table end.
  */
 function isNoPayloadReply(frame: Uint8Array, view: number): boolean {
   const n = frame.length;
@@ -527,8 +560,9 @@ function isNoPayloadReply(frame: Uint8Array, view: number): boolean {
     return false;
   }
   const inner = frame.subarray(6, n - 2);
+  // Count: a two-septet u16 (`inner[13] | inner[14] << 7`), not a raw u16.
   if (inner.length < 15 || inner[0] !== view || TAG_SENTINELS.has(inner[6]!)) return false;
-  return (inner[13]! | (inner[14]! << 8)) === 0;
+  return (inner[13]! | (inner[14]! << 7)) === 0;
 }
 
 /**
@@ -615,15 +649,30 @@ function judgeDefinition(d: LiveDefinition, seen: ReadonlyMap<number, readonly L
 }
 
 /**
+ * The device's own label-list signal: a typecode class in {1,10,11,12} AND a non-zero wire
+ * `+0x1C` label-table word. The class alone is not enough (11-13 % of label-capable-class params
+ * carry no list), and class 2 is deliberately excluded.
+ */
+function hasLabelSignal(d: LiveDefinition): boolean {
+  return d.labelTable !== 0 && GEN3_LABEL_TYPECODE_CLASSES.has(gen3TypecodeClass(d.tc));
+}
+
+/**
  * A definition COULD be an enum worth a 0x1f label walk on its own numbers when its bounds are
  * integral and the value count is within the cap — regardless of `step` (an enum with a non-zero
- * step is still an enum, decided by whether labels exist). A definition with a non-zero `scale` is
- * NEVER label-walked on its numbers alone: a 0x1f label query against a param with no label list is
- * out of contract for the device — the FM3 hard-freezes on it (power-cycle recovery) — and the
+ * step is still an enum, decided by whether labels exist). A definition with a non-zero `scale`
+ * is NEVER label-walked on its numbers alone: a 0x1f label query against a param with no label list
+ * is out of contract for the device — the FM3 hard-freezes on it (power-cycle recovery) — and the
  * numbers cannot tell such a list apart from a continuous or integer param (see "kind" above).
- * Only a caller hint can (`hintedListFit`).
+ * Only a caller hint can (`hintedListFit`) — or the device's own label-table signal, which is the
+ * label-table gate and is trusted whatever the `scale` slot reads.
  */
 function couldBeEnum(d: LiveDefinition, cap: number): boolean {
+  if (hasLabelSignal(d)) {
+    if (!integral(d.min) || !integral(d.max)) return false;
+    const span = Math.round(d.max - d.min + 1);
+    return span >= 1 && span <= cap;
+  }
   if (d.kind === 'enum') return true;
   if (d.scale !== 0) return false;
   if (!integral(d.min) || !integral(d.max)) return false;
@@ -1185,6 +1234,21 @@ export interface LiveWalkOptions {
    */
   paramBoundByBlock?: Record<number, number>;
   /**
+   * Device-reported parameter count per block (key = block address), as answered by the func 0x01
+   * sub 0x01 block descriptor (`readBlockParamCounts` in ./gen3WalkReplies.ts builds it). A count
+   * is the device's own slot count for the block: params 0..count-1 exist, nothing beyond. It can
+   * only TIGHTEN the walk — `ceiling = min(ceiling, count - 1)` — never widen it, so a bogus or
+   * stale large count cannot make the walk query past the caller's bound (`maxParamId`,
+   * `paramBoundByBlock`) or past a known size's lookahead. Count 0 skips the block (no query). When
+   * the count tightens the ceiling it also marks ids below it as a known table (no stop run inside
+   * it), so a sparse table keeps its late rows. Non-integers, negatives and non-finite values are
+   * ignored as if the block had no entry.
+   *
+   * A count far past a table's end is the known freeze trigger, which is why this option never
+   * widens: the device's answer bounds the walk, the caller's bound still holds above it.
+   */
+  paramCountByBlock?: Record<number, number>;
+  /**
    * Explicit param ids per block (key = block address), queried AFTER the block's contiguous walk:
    * known ids beyond its ceiling, e.g. the far ids of a non-contiguous section, taken from the
    * shipped catalog or a local editor cache — never guessed. Off unless given. Per listed id: ONE
@@ -1353,8 +1417,11 @@ function walkAbsentRunLimit(opts: LiveWalkOptions): number {
 /**
  * A block's walk plan. `ceiling`: the highest id queried, inclusive — the caller's HARD bound when
  * given (wins over `maxParamId` both ways), else a known size's `size - 1 + absentRunLimit` capped
- * by `maxParamId`, else `maxParamId`. `knownSize`: ids below it are walked without the stop run
- * (0 = none known); past it the normal stop run applies, so appended params are found.
+ * by `maxParamId`, else `maxParamId`. A device-reported parameter count (`paramCountByBlock`) may
+ * only LOWER the ceiling to `count - 1` (count 0 = skip) and, when it does, marks the counted ids as
+ * a known table; it never raises the ceiling or the known size. `knownSize`: ids below it are walked
+ * without the stop run (0 = none known); past it the normal stop run applies, so appended params
+ * are found.
  */
 function blockPlan(opts: LiveWalkOptions, block: number): BlockPlan {
   const maxParamId = walkMaxParamId(opts);
@@ -1364,9 +1431,30 @@ function blockPlan(opts: LiveWalkOptions, block: number): BlockPlan {
   const size = opts.paramKnownSizeByBlock?.[block];
   const hardBound = bound !== undefined && Number.isInteger(bound) ? bound : undefined;
   const knownSize = size !== undefined && Number.isInteger(size) && size >= 0 ? Math.min(MAX_WIRE_PARAM_ID + 1, size) : undefined;
-  if (hardBound !== undefined) return { ceiling: clampParamBound(hardBound), knownSize: knownSize ?? 0 };
-  if (knownSize !== undefined) return { ceiling: Math.min(maxParamId, clampParamBound(knownSize - 1 + walkAbsentRunLimit(opts))), knownSize };
-  return { ceiling: maxParamId, knownSize: 0 };
+  let ceiling: number;
+  let known: number;
+  if (hardBound !== undefined) {
+    ceiling = clampParamBound(hardBound);
+    known = knownSize ?? 0;
+  } else if (knownSize !== undefined) {
+    ceiling = Math.min(maxParamId, clampParamBound(knownSize - 1 + walkAbsentRunLimit(opts)));
+    known = knownSize;
+  } else {
+    ceiling = maxParamId;
+    known = 0;
+  }
+  // Device-supplied parameter count: TIGHTEN only. `counted < ceiling` proves every id below the
+  // count was already inside the caller's scope; the count then bounds the walk and suspends the
+  // stop run inside the counted table. A count that would not lower the ceiling changes nothing.
+  const count = opts.paramCountByBlock?.[block];
+  if (count !== undefined && Number.isInteger(count) && count >= 0) {
+    const counted = clampParamBound(count - 1);
+    if (counted < ceiling) {
+      ceiling = counted;
+      known = Math.max(known, Math.min(count, counted + 1));
+    }
+  }
+  return { ceiling, knownSize: known };
 }
 
 /** The usable listed ids of a block (`paramIdsByBlock`): integers above `ceiling`, at most 16383, unique, ascending. */
@@ -1579,16 +1667,11 @@ async function pace(ms: number, signal: AbortSignal | undefined, sleep?: (ms: nu
  */
 const ACTION_BLOCK_FAMILIES: ReadonlySet<string> = new Set(['LOOPER', 'TONEMATCH', 'RTA', 'IRPLAYER']);
 
-/** Gen-3 model bytes whose effect-id roster the codec carries. */
-const MODEL_AXE_FX_III = 0x10;
-const MODEL_FM3 = 0x11;
-const MODEL_FM9 = 0x12;
-
 /**
  * The block addresses a FULL-mode sweep may write to on `model` — an ALLOW-list: the placeable
  * signal-chain blocks of the model's own effect-id table, i.e. every family it classifies
- * `addressing: 'block'`, expanded by the table's instance count (FM3 `FM3_EFFECT_ID_TABLE`, FM9
- * `FM9_EFFECT_ID_TABLE`, Axe-Fx III `AXE3_EFFECT_ID_TABLE`). An Axe-Fx III entry whose family binding
+ * `addressing: 'block'`, expanded by the table's instance count (the model's roster from
+ * `gen3WalkModel.ts`; see `GEN3_WALK_PROFILES`). An Axe-Fx III entry whose family binding
  * is only `confidence: 'roster'` (documented in the shared roster, never bound on a unit) is never
  * swept. Everything else is walked read-only:
  *   - block 0, the system selector (on an Axe-Fx III it answers hundreds of definitions, many of
@@ -1605,11 +1688,9 @@ const MODEL_FM9 = 0x12;
  */
 function sweepableBlocks(model: number): ReadonlySet<number> {
   const out = new Set<number>();
-  type Entry = { family: string; firstId: number | null; instances: number; addressing: string; confidence?: string };
-  const table: readonly Entry[] | undefined =
-    model === MODEL_FM3 ? FM3_EFFECT_ID_TABLE : model === MODEL_FM9 ? FM9_EFFECT_ID_TABLE : model === MODEL_AXE_FX_III ? AXE3_EFFECT_ID_TABLE : undefined;
-  if (!table) return out;
-  for (const e of table) {
+  const profile = gen3WalkProfile(model);
+  if (!profile) return out;
+  for (const e of profile.effectIds) {
     if (e.addressing !== 'block' || e.firstId === null || ACTION_BLOCK_FAMILIES.has(e.family) || e.confidence === 'roster') continue;
     for (let i = 0; i < e.instances; i++) out.add(e.firstId + i);
   }
@@ -2042,11 +2123,12 @@ export async function liveWalkDetailed(transport: LiveTransport, opts: LiveWalkO
         const labels: string[] = [];
         let emptyList = false;
         const lo = Math.round(def.min);
-        // SPECULATIVE probes (def not positively enum-kind) never open a list at a
-        // high absolute sub: every hardware-verified enum starts at a small ordinal,
-        // and an out-of-contract high-sub 0x1f (e.g. a 430..450 pitch range) is the
-        // FORGEFX-32 freeze trigger. Positively-classified enums keep the full range.
-        const speculative = def.kind !== 'enum';
+        // SPECULATIVE probes (def not positively enum-kind and without the device's own label
+        // signal) never open a list at a high absolute sub: every hardware-verified enum starts at
+        // a small ordinal, and an out-of-contract high-sub 0x1f (e.g. a 430..450 pitch range) is the
+        // FORGEFX-32 freeze trigger. Positively-classified enums and label-signalled definitions
+        // (the device said it HAS labels) keep the full range.
+        const speculative = def.kind !== 'enum' && !hasLabelSignal(def);
         // A label list the caller names for this param (`enumHintByBlock`), if any: the only way a
         // definition the numeric rule refuses (a non-zero `scale`) is label-walked. ANY entry the
         // caller made for the param — even one too malformed to use — keeps FULL mode from sweeping it.

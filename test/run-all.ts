@@ -125,6 +125,9 @@ import { runLiveGridShuntTests, LIVE_GRID_SHUNT_CASE_COUNT } from './gen3/live-g
 import { runTaperDecodeTests, TAPER_DECODE_CASE_COUNT } from './gen3/taper-decode.test.js';
 import { runParamsRangesAgreeTests, PARAMS_RANGES_AGREE_CASE_COUNT } from './gen3/params-ranges-agree.test.js';
 import { runEnumOverlayDeviceTruthTests, ENUM_OVERLAY_DEVICE_TRUTH_CASE_COUNT } from './gen3/enum-overlay-device-truth.test.js';
+import { runGen3WalkModel, GEN3_WALK_MODEL_CASE_COUNT } from './cache/gen3-walk-model.test.js';
+import { runSpecialTables, SPECIAL_TABLES_CASE_COUNT } from './cache/special-tables.test.js';
+import { runAm4DefinitionWalk, AM4_DEFINITION_WALK_CASE_COUNT } from './am4/definition-walk.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -258,6 +261,9 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `gen3/presetbody-grid-guard (${GRID_GUARD_CASE_COUNT} cases)`, run: runGridGuardTests },
   { name: `gen3/live-grid-shunt (${LIVE_GRID_SHUNT_CASE_COUNT} cases)`, run: runLiveGridShuntTests },
   { name: `gen3/taper-decode (${TAPER_DECODE_CASE_COUNT} cases)`, run: runTaperDecodeTests },
+  { name: `cache/gen3-walk-model (${GEN3_WALK_MODEL_CASE_COUNT} cases)`, run: runGen3WalkModel },
+  { name: `cache/special-tables (${SPECIAL_TABLES_CASE_COUNT} cases)`, run: runSpecialTables },
+  { name: `am4/definition-walk (${AM4_DEFINITION_WALK_CASE_COUNT} read-only cases)`, run: runAm4DefinitionWalk },
 ];
 
 let failures = 0;

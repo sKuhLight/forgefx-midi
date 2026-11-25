@@ -345,6 +345,7 @@ export {
   CPU_SLOPE,
   buildCpuPoll,
   isCpuResponse,
+  parseCpuPercent,
   parseCpuRawLoad,
   cpuPercentFromRaw,
   buildSetTempoViaParam,

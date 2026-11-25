@@ -16,9 +16,8 @@
  *     float32 at pos 12 → dB = 10·log10(v). These are the REAL calibrated
  *     leveling meters (matched FM3-Edit's readout to ~1 dB); the 0x2E
  *     bytes-35/36 meters saturate and are NOT used.
- *   CPU — fn 0x01 sub 0x2E returns a ≥590-byte system-status frame; byte 37
- *     is the block DSP load → CPU% ≈ base + raw·slope (base 32, slope 0.5,
- *     matched to the FM3 front panel).
+ *   CPU — fn 0x01 sub 0x2E returns preset status and the routing grid.
+ *     CPU load is a float32 percentage at offset 0x0C of its unpacked payload.
  *   TEMPO WRITE — the fn 0x14 SET does not take on FM3; FM3-Edit writes the
  *     global-tempo parameter instead (fn 0x01 typed SET, effectId 2
  *     (Controllers), paramId 0x20, value = float32 BPM).
@@ -300,27 +299,65 @@ export function buildLooperControl(effectId: number, controlPid: number, on: boo
 
 // ── CPU load ───────────────────────────────────────────────────────────
 
-/** Minimum length of the fn 0x01 sub 0x2E system-status frame. */
+/** @deprecated Historical minimum observed frame length. Use `isCpuResponse` to match a reply. */
 export const CPU_RESPONSE_MIN_LEN = 590;
-/** Byte offset of the block-DSP-load field inside the system-status frame. */
+/** @deprecated Raw byte used by the old estimate. Use `parseCpuPercent` instead. */
 export const CPU_RAW_OFFSET = 37;
-/** CPU% ≈ base + raw·slope (matched to the FM3 front-panel readout). */
+/** @deprecated Coefficient of the old estimate. Use `parseCpuPercent` instead. */
 export const CPU_BASE = 32;
+/** @deprecated Coefficient of the old estimate. Use `parseCpuPercent` instead. */
 export const CPU_SLOPE = 0.5;
 
-/** Poll the system-status block (heavy ≥590-byte read — poll sparingly). */
+const STATUS_LENGTH_OFFSET = 19;
+const STATUS_PAYLOAD_OFFSET = 21;
+const CPU_PERCENT_OFFSET = 0x0c;
+const CPU_PAYLOAD_BYTES = CPU_PERCENT_OFFSET + 4;
+const CPU_PACKED_BYTES = Math.ceil(CPU_PAYLOAD_BYTES * 8 / 7);
+/** FM3 model byte — the only model with observed sub 0x2E replies. */
+const MODEL_BYTE_FM3 = 0x11;
+
+/** Poll preset status and the routing grid (poll sparingly). */
 export function buildCpuPoll(modelByte: number): number[] {
   return envelope(FN_PARAMETER, [SUB_SYSTEM_STATUS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], modelByte);
 }
-/** True for a system-status reply. */
+/** True for a preset-status reply with a complete declared payload.
+ *  Reply layout: `F0 00 01 74 <model> 01 2E` + 14-bit sub/field words, the
+ *  14-bit payload BYTE COUNT at 19..20, the septet payload from 21, checksum +
+ *  `F7`. The frame length is `21 + ceil(count*8/7) + 2` (590 for a 496-byte FM3
+ *  payload, 755 for 640 bytes), so the count — not a per-model constant — sizes it.
+ *  Field 4 (bytes 17..18) is additionally required to be 0 on FM3, the only model
+ *  with observed status replies; it is not constrained on the other model bytes. */
 export function isCpuResponse(frame: readonly number[]): boolean {
-  return frame[5] === FN_PARAMETER && frame[6] === SUB_SYSTEM_STATUS && frame.length >= CPU_RESPONSE_MIN_LEN;
+  if (
+    frame.length < STATUS_PAYLOAD_OFFSET + CPU_PACKED_BYTES + 2 ||
+    frame[0] !== SYSEX_START ||
+    !FRACTAL_MFR_PREFIX.every((byte, i) => frame[i + 1] === byte) ||
+    frame[5] !== FN_PARAMETER ||
+    frame[6] !== SUB_SYSTEM_STATUS ||
+    frame[7] !== 0 || // 14-bit sub-op/selector high byte
+    frame[frame.length - 1] !== SYSEX_END ||
+    fractalChecksum(frame.slice(0, -2)) !== frame[frame.length - 2]
+  ) return false;
+  if (frame[4] === MODEL_BYTE_FM3 && (frame[17] !== 0 || frame[18] !== 0)) return false;
+  const length = frame[STATUS_LENGTH_OFFSET] | (frame[STATUS_LENGTH_OFFSET + 1] << 7);
+  return length >= CPU_PAYLOAD_BYTES && STATUS_PAYLOAD_OFFSET + Math.ceil(length * 8 / 7) + 2 === frame.length;
 }
-/** Raw block-DSP-load byte. */
+
+/** Decode the CPU percentage, or return `null` for an invalid reply. */
+export function parseCpuPercent(frame: readonly number[]): number | null {
+  if (!isCpuResponse(frame)) return null;
+  // The payload is one continuous MSB-first septet stream (no per-chunk re-alignment);
+  // the CPU load is a float32 little-endian percentage at payload offset 0x0C.
+  const payload = decodeSeptetStream(frame, CPU_PAYLOAD_BYTES, STATUS_PAYLOAD_OFFSET);
+  const percent = new DataView(payload.buffer, payload.byteOffset, payload.byteLength).getFloat32(CPU_PERCENT_OFFSET, true);
+  return Number.isFinite(percent) && percent >= 0 && percent <= 100 ? percent : null;
+}
+
+/** @deprecated Raw byte used by the old estimate. Use `parseCpuPercent` instead. */
 export function parseCpuRawLoad(frame: readonly number[]): number {
   return frame[CPU_RAW_OFFSET] ?? 0;
 }
-/** Raw load byte → CPU percent, 1-decimal rounded (reference math). */
+/** @deprecated Preserve the old estimate for existing callers. Use `parseCpuPercent` instead. */
 export function cpuPercentFromRaw(raw: number, base = CPU_BASE, slope = CPU_SLOPE): number {
   return Math.round((base + raw * slope) * 10) / 10;
 }

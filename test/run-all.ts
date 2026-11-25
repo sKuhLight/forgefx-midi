@@ -139,6 +139,8 @@ import { runFasBundleTests, FAS_BUNDLE_CASE_COUNT } from './gen3/fas-bundle.test
 import { runFasSetlistTests, FAS_SETLIST_CASE_COUNT } from './gen3/fas-setlists.test.js';
 import { runSystemDumpTests, SYSTEM_DUMP_CASE_COUNT } from './gen3/system-dump.test.js';
 import { runFullResIrTests, FULLRES_IR_CASE_COUNT } from './gen3/fullres-ir.test.js';
+import { runPresetBodyRecordTests, PRESETBODY_RECORDS_CASE_COUNT } from './gen3/fm3/presetbody-records.test.js';
+import { runPresetSynthTrailingTests, PRESET_SYNTH_TRAILING_CASE_COUNT } from './gen3/fm3/preset-synth-trailing.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -286,6 +288,8 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `gen3/fasSetlists (${FAS_SETLIST_CASE_COUNT} cases)`, run: runFasSetlistTests },
   { name: `gen3/systemDump (${SYSTEM_DUMP_CASE_COUNT} cases)`, run: runSystemDumpTests },
   { name: `gen3/fullResIr (${FULLRES_IR_CASE_COUNT} cases)`, run: runFullResIrTests },
+  { name: `fm3/presetbody-records (${PRESETBODY_RECORDS_CASE_COUNT} prelude/chain record cases)`, run: runPresetBodyRecordTests },
+  { name: `fm3/preset-synth-trailing (${PRESET_SYNTH_TRAILING_CASE_COUNT} trailing-boundary cases)`, run: runPresetSynthTrailingTests },
 ];
 
 let failures = 0;

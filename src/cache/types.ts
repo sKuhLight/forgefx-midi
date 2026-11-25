@@ -144,6 +144,7 @@ export interface DeviceParam {
  * displayMax 10 and `taper: 'linear'` whatever their definition's min/max are (and
  * `display = value * scale` does not hold for them). Such a row carries no `unit`, and a
  * row whose walk observed a unit or a non-linear taper is not derived this way at all.
+ * AM4/VP4 enum bounds are raw ordinals and use the pass-through scale (0).
  * Placeholder (unused) wire slots carry an all-zero float row.
  */
 export interface RangeDef {

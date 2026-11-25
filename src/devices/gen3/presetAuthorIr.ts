@@ -64,6 +64,7 @@ import {
 import {
   buildGen3Body,
   hasSynthModel,
+  scaffoldTrailingSize,
   type SynthPreset,
   type SynthPlacedBlock,
   type SynthSkip,
@@ -468,19 +469,27 @@ const SYNTH_BLOCK_HEADER_WORDS = 23;
 const SYNTH_HEADER_PRELUDE_GAP = 12;
 
 /**
- * Slice a scaffold body into its carried regions: prelude [0..firstEffectBlock]
- * and trailing [lastEffectBlockEnd..decompSize]. Located by a CHAIN WALK (from the
- * two-consecutive-25×1-modifier chain start), keying each record by the grid
- * effect id in its signature (12 bytes below the walk header) — robust where
- * `decodeGen3Body` under-counts the walk block list (FM9/III, FORGEFXMID-41) and
- * where a family's header lacks the 8-zero findBlockHeader signature (Axe-Fx III
- * Output). The chain start (= prelude length) is thereby per-device (FM3 0x120e,
- * FM9 0x1eb6, III 0x141e for the bundled scaffolds).
+ * Slice a scaffold body into its carried regions: prelude [0..firstEffectBlock] and
+ * trailing [end of the full chain walk..decompSize]. Located by a CHAIN WALK (from the
+ * two-consecutive-25×1-modifier chain start), keying each record by the grid effect id in
+ * its signature (12 bytes below the walk header) — robust where `decodeGen3Body`
+ * under-counts the walk block list (FM9/III, FORGEFXMID-41) and where a family's header
+ * lacks the 8-zero findBlockHeader signature (Axe-Fx III Output). The chain start
+ * (= prelude length) is thereby per-device (FM3 0x120e, FM9 0x1eb6, III 0x141e for the
+ * bundled scaffolds).
+ *
+ * The trailing boundary is the end of the FULL geometric chain walk (advance while
+ * cols/rows stay sane), i.e. the model's fixed tail — not the end of the last
+ * grid-placed effect. A chain can end with preset-scoped records the synthesizer does
+ * not re-emit (e.g. a 257×1 Scene MIDI record); anchoring on the last grid block would
+ * carry them into the new body. The walk is bounded by the model's measured tail size
+ * and only trusted when it tiles the chain exactly up to it.
  */
 function sliceScaffoldRegions(
   body: Uint8Array,
   decompSize: number,
   gridBases: ReadonlySet<number>,
+  trailingSize: number,
 ): { prelude: Uint8Array; trailing: Uint8Array } {
   const u16 = (o: number): number => (body[o]! | (body[o + 1]! << 8)) & 0xffff;
   const eidBaseOf = (eid: number): number | null => {
@@ -521,7 +530,24 @@ function sliceScaffoldRegions(
   if (firstEffect < 0 || lastEffectEnd < 0) {
     throw new Error('authorGen3PresetFromIRFull: scaffold chain has no grid-placed effect blocks');
   }
-  return { prelude: body.slice(0, firstEffect), trailing: body.slice(lastEffectEnd, decompSize) };
+
+  // Trailing = the scaffold's fixed tail: the bytes after the FULL geometric chain
+  // walk, not just after the last grid-placed effect block. Fall back to the last
+  // grid-placed effect when the walk does not tile the chain up to the tail (a
+  // scaffold from another firmware can carry a differently sized tail).
+  let chainEnd = lastEffectEnd;
+  const tailStart = decompSize - trailingSize;
+  if (tailStart >= chainStart) {
+    let walk = chainStart;
+    while (walk + SYNTH_BLOCK_HEADER_WORDS * 2 <= tailStart) {
+      const cols = u16(walk + 30);
+      const rows = u16(walk + 32);
+      if (cols === 0 || rows === 0 || cols > 500 || rows > 8) break;
+      walk += (SYNTH_BLOCK_HEADER_WORDS + cols * rows) * 2;
+    }
+    if (walk === tailStart) chainEnd = tailStart;
+  }
+  return { prelude: body.slice(0, firstEffect), trailing: body.slice(chainEnd, decompSize) };
 }
 
 export interface AuthorIrFullResult {
@@ -586,7 +612,12 @@ export function authorGen3PresetFromIRFull(
     }
     if (base != null) gridBases.add(base);
   }
-  const { prelude, trailing } = sliceScaffoldRegions(scaffoldBody, decompSize, gridBases);
+  const { prelude, trailing } = sliceScaffoldRegions(
+    scaffoldBody,
+    decompSize,
+    gridBases,
+    scaffoldTrailingSize(modelId),
+  );
 
   const { body: newBody, placed, skipped } = buildGen3Body(ir, { prelude, trailing }, modelId);
 

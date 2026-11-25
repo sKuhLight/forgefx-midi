@@ -56,6 +56,9 @@ import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam } from '.
  * (./profileDoc.ts, persisted as `meta.derivedRevision`): such documents re-derive on load (`needsRederive`),
  * format-1 documents are unaffected. The codec version (`meta.derivedWith`) is informational only — a development
  * build reports package.json, a release the git tag, so it does not order derivations.
+ *
+ * The AM4/VP4 enum-bound correction needs no bump: those value-list bounds are raw ordinals that pass through
+ * with scale 0 (the record's default field is not a scale), while every gen-3 derived row is byte-identical.
  */
 export const CACHE_SCHEMA = 1;
 
@@ -158,7 +161,9 @@ export async function buildCache(
     }
   }
 
-  const data = buildDeviceCache(records, params, seeds);
+  const data = buildDeviceCache(records, params, seeds, {
+    enumBoundsAreOrdinals: opts.model === 0x14 || opts.model === 0x15,
+  });
 
   const meta: BuiltCache['meta'] = {
     schema: CACHE_SCHEMA,

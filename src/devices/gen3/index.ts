@@ -115,6 +115,7 @@ export {
   hasSynthModel,
   defaultScaffold,
   defaultScaffoldSyx,
+  scaffoldTrailingSize,
   FM3_BLOCK_GEOMETRY,
   FM9_BLOCK_GEOMETRY,
   AXE3_BLOCK_GEOMETRY,

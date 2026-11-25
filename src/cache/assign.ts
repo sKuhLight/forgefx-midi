@@ -426,6 +426,8 @@ function assignSections(
 // ---------------------------------------------------------------------------
 
 export interface BuildDeviceCacheOptions {
+  /** AM4/VP4 value-list bounds are ordinals and must pass through without scaling. */
+  enumBoundsAreOrdinals?: boolean;
   /**
    * Only these seeded families must WIN their own vote (default: all seeds).
    * Cross-device builds pass a subset when some seeds are trusted from a
@@ -476,15 +478,20 @@ const DEFAULT_ROSTER_OVERRIDES: Record<string, string> = { DELAY: 'DELAY_MODEL' 
  * assigned family: display bounds (typecode-0x52 knob rule included), scale, step, typecode,
  * `enumCount`, device unit and measured taper, plus the cleaned label list of an enum record.
  */
-export function rangeRowOf(r: CacheRecord): { row: RangeDef; labels?: string[] } {
+export function rangeRowOf(
+  r: CacheRecord,
+  opts: { enumBoundsAreOrdinals?: boolean } = {},
+): { row: RangeDef; labels?: string[] } {
   const measured = measuredTaper(r);
   const knob =
     r.kind === 'float' && r.tc === KNOB_TYPECODE && !r.unit && (measured === undefined || measured.shape === 'linear');
+  // AM4/VP4 value-list bounds are raw ordinals; the record's default field is their count, not a scale.
+  const scale = r.kind === 'enum' && opts.enumBoundsAreOrdinals ? 0 : r.def;
   const entry: RangeDef = {
     kind: r.kind,
-    displayMin: knob ? KNOB_DISPLAY_MIN : displayOf(r.min, r.def),
-    displayMax: knob ? KNOB_DISPLAY_MAX : displayOf(r.max, r.def),
-    scale: f32clean(r.def),
+    displayMin: knob ? KNOB_DISPLAY_MIN : displayOf(r.min, scale),
+    displayMax: knob ? KNOB_DISPLAY_MAX : displayOf(r.max, scale),
+    scale: f32clean(scale),
     step: f32clean(r.step),
     typecode: r.tc,
   };
@@ -619,7 +626,9 @@ export function buildDeviceCacheDetailed(
     const eo: Record<string, string[]> = {};
     const rg: Record<number, RangeDef> = {};
     for (const pid of [...sec.keys()].sort((a, b) => a - b)) {
-      const { row, labels } = rangeRowOf(sec.get(pid)!);
+      const { row, labels } = rangeRowOf(sec.get(pid)!, {
+        enumBoundsAreOrdinals: opts.enumBoundsAreOrdinals,
+      });
       if (labels !== undefined) eo[String(pid)] = labels;
       rg[pid] = row;
     }

@@ -9,6 +9,13 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { effectRoster, blockRefForEid, slugForEffectId, blockInstances } from '../../../src/devices/gen3/roster.js';
+import { listBlockTypes, swapBlockType } from '../../../src/devices/gen3/presetAuthor.js';
+import {
+  decodeGen3PresetDump,
+  MODEL_AXE_FX_III,
+  MODEL_FM3,
+  MODEL_FM9,
+} from '../../../src/devices/gen3/presetBody.js';
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 
@@ -19,7 +26,7 @@ interface RosterFixture {
   instances: Record<string, number>;
 }
 
-export const FM3_ROSTER_CASE_COUNT = 4;
+export const FM3_ROSTER_CASE_COUNT = 6;
 
 export function runGen3RosterTests(): void {
   const exp = JSON.parse(readFileSync(join(FIXTURES, 'roster.expected.json'), 'utf8')) as RosterFixture;
@@ -44,5 +51,42 @@ export function runGen3RosterTests(): void {
     if (blockInstances(slug) !== count) fail(`blockInstances('${slug}') = ${blockInstances(slug)}, server golden ${count}`);
   }
 
-  if (blockInstances('nonexistent') !== 4) fail(`blockInstances default must be 4`);
+  if (blockInstances('nonexistent') !== 4) fail('blockInstances default must be 4');
+
+  const fm3 = listBlockTypes('Amp');
+  const axe3 = listBlockTypes('Amp', MODEL_AXE_FX_III);
+  const fm9 = listBlockTypes('Amp', MODEL_FM9);
+  for (const [name, types, count] of [
+    ['FM3', fm3, 331],
+    ['Axe-Fx III', axe3, 336],
+    ['FM9', fm9, 336],
+  ] as const) {
+    if (types.length !== count || types.some((type, i) => type.id !== i || !type.name)) {
+      fail(name + ' must have a complete amp roster in ordinal order');
+    }
+  }
+  if (fm3[173]?.name !== 'FAS Brootalz' || fm3[283]?.name !== 'Deluxe Tweed'
+    || axe3[283]?.name !== 'Deluxe Tweed Bright' || axe3[335]?.name !== 'Brit JVM Crunch Red') {
+    fail('amp roster is missing a previously unnamed or model-specific ordinal');
+  }
+  if (axe3.some((type, i) => type.name !== fm9[i]?.name)
+    || fm3.some((type, i) => i !== 283 && type.name !== axe3[i]?.name)) {
+    fail('amp roster labels diverged outside the documented model-specific ordinals');
+  }
+
+  // Verify the author and body decoder agree when a preset uses these ordinals.
+  for (const [model, fixture, ordinal, name] of [
+    [MODEL_FM3, 'preset-5.syx', 173, 'FAS Brootalz'],
+    [MODEL_AXE_FX_III, '../../axe-fx-iii/fixtures/devs-gift-of-tone.syx', 283, 'Deluxe Tweed Bright'],
+    [MODEL_FM9, '../../fm9/fixtures/devs-gift-of-tone.syx', 335, 'Brit JVM Crunch Red'],
+  ] as const) {
+    const original = new Uint8Array(readFileSync(join(FIXTURES, fixture)));
+    const swap = swapBlockType(original, 'Amp', name);
+    const decoded = decodeGen3PresetDump(swap.syx, model);
+    const amp = decoded.blocks?.find((block) => block.block === 'Amp');
+    if (swap.typeId !== ordinal || !decoded.crc_valid
+      || amp?.channels?.A?.type_id !== ordinal || amp.channels.A.type !== name) {
+      fail('amp type did not round-trip on model ' + model + ' at ordinal ' + ordinal);
+    }
+  }
 }

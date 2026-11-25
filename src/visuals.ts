@@ -72,7 +72,9 @@ export type VisualKey =
   | 'inputEq'
   | 'outputEq'
   | 'reverbEq'
-  | 'sidechainEq';
+  | 'sidechainEq'
+  /** A block's own EQ (PEQ / GEQ): the graph slot graph_peq / the family's page carries it. */
+  | 'eq';
 
 /**
  * Normalised key of a layout graph slot: a {@link VisualKey}, or `'eq'` for the parametric-EQ
@@ -583,6 +585,37 @@ export function resolveBlockVisuals(
     if (low != null) bands.push({ key: 'lowCut', shape: 'lowcut', freq: low, q: id('REVERB_LOWQ') });
     if (high != null) bands.push({ key: 'highCut', shape: 'highcut', freq: high, q: id('REVERB_HIGHQ') });
     if (bands.length) out.push({ key: 'reverbEq', kind: 'eq', title: 'Reverb EQ', mode: 'parametric', roles: {}, bands });
+  }
+  // PEQ: five bell bands, their own freq / Q / gain / type params (a real parametric curve, so the band
+  // knobs need not be read as faders)
+  if (family === 'PEQ') {
+    const id = (symbol: string) => {
+      const resolved = byName.get(symbol);
+      return resolved != null && (!present || present.has(resolved)) && (!inLayout || inLayout.has(resolved)) ? resolved : undefined;
+    };
+    const bands: VisualEqBand[] = [];
+    for (const n of [1, 2, 3, 4, 5]) {
+      const freq = id(`PEQ_FREQ${n}`);
+      const gain = id(`PEQ_GAIN${n}`);
+      if (freq != null && gain != null) {
+        bands.push({ key: `band${n}`, shape: 'bell', freq, gain, q: id(`PEQ_Q${n}`), type: id(`PEQ_TYPE${n}`) });
+      }
+    }
+    if (bands.length) out.push({ key: 'eq', kind: 'eq', title: 'EQ', mode: 'parametric', roles: {}, bands });
+  }
+  // GEQ: ten graphic bands; the centres come from the selected graphic-EQ model on the device (the client
+  // spaces them evenly, the type names the frequencies)
+  if (family === 'GEQ') {
+    const id = (symbol: string) => {
+      const resolved = byName.get(symbol);
+      return resolved != null && (!present || present.has(resolved)) && (!inLayout || inLayout.has(resolved)) ? resolved : undefined;
+    };
+    const bands: VisualEqBand[] = [];
+    for (const n of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]) {
+      const gain = id(`GEQ_GAIN${n}`);
+      if (gain != null) bands.push({ key: `band${n}`, gain });
+    }
+    if (bands.length) out.push({ key: 'eq', kind: 'eq', title: 'EQ', mode: 'graphic', roles: {}, bands });
   }
   return out;
 }

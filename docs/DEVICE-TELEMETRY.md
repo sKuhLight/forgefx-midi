@@ -131,8 +131,7 @@ are implemented + exported but **never called by ForgeFX**. III spec cmd `0x0F`,
 bit0 Record · bit1 Play · bit2 Overdub · bit3 Once · bit4 Reverse · bit5 Half (Axe‑Fx III third‑party MIDI spec).
 
 **Action:** add a driver `looperState()` + a `looper` `DeviceEvent`; poll while a Looper block
-is open (or on a `changed`). `LOOPER_LEVEL` pid (III/FM9 tables; **missing from `fm3/meters.ts`**
-though pid 22 exists in FM3 firmware — one‑line add after a pid check).
+is open (or on a `changed`). `LOOPER_LEVEL` pid 22 is now in the III/FM9/FM3 monitor tables.
 
 ---
 
@@ -143,13 +142,17 @@ level indicator; pressing record again while playing drops straight into overdub
 waveform live). All of it rides fn `0x01` on the Looper effectId (FM3 = **eid 166**), decoded from the
 capture:
 
-- **Waveform** — `sub 0x23` poll (`buildLooperWaveformPoll(eid, model)`); reply is a ~609-byte frame whose
-  payload (bytes 12..len-2) is **~595 raw 7-bit envelope magnitudes (0..127)**, one per display column.
-  `parseLooperWaveform()` → normalized 0..1 array. (NOT a float; NOT the gen-3 graph channel.)
+- **Waveform** — `sub 0x23` poll (`buildLooperWaveformPoll(eid, model)`); it is the block
+  graph-curve channel at slot 0, so the reply is the same **609-byte container** as every other
+  curve (21-byte header, 512-byte payload count at bytes 19–20, one continuous MSB-first septet
+  stream from byte 21, checksum + F7) and decodes to **128 float32 LE envelope magnitudes**,
+  all zero while the loop is empty. `parseLooperWaveform()` → those 128 device values (not a
+  normalized 0..1 array). See the container table below.
 - **Playhead position** — `sub 0x19` monitor poll at **pid 14**, a 0..1 position (`buildBlockMonitorPoll`
   + `parseBlockMonitorNorm`). 0 before playback, ramps 0→1 across the loop.
-- **Level** — `sub 0x19` monitor poll at **pid 22** (`LOOPER_LEVEL`); a live 0..1-ish level. (Its FM3
-  catalog range is 0..0, so a monitor-table entry needs an explicit dB range — III/FM9 use −80…20.)
+- **Level** — `sub 0x19` monitor poll at **pid 22** (`LOOPER_LEVEL`); a live 0..1-ish level. The
+  monitor tables carry it on III/FM9/FM3 with an explicit −80…20 dB span (the param's own catalog
+  range is unhelpful).
 - **Transport state** (record/play/overdub/reverse/half) — read as Looper block params (the `sub 0x1a`
   60-byte param frames + `sub 0x39` momentary reads on eid 166); exact field→button map not yet pinned
   (needs correlating the capture against the button presses). The III/FM9 spec also exposes a top-level
@@ -178,22 +181,48 @@ presses.
 ## Formerly absent — now decoded
 
 1. **RTA spectrum bands** — ~~unknown~~ **DECODED (gen-3)**: `fn 0x01 sub 0x23` with
-   `(eid 174+n, graphIndex 0)`; reply is a float32 array of `(1<<RTA_NUMBANDS)<<5` =
-   **32/64/128** bands. Display transform: `clamp(10*log10f(x), -110, +10) / 120`.
+   `(eid 174+n, graphIndex 0)`; reply is the curve container, declaring 128/256/512 payload
+   bytes for 32/64/128 bands → that many float32 linear magnitudes, sliced to
+   `(1<<RTA_NUMBANDS)<<5` = **32/64/128** bands.
+   Display transform: `clamp(10*log10f(x), -110, +10) / 120`.
    `RTA_BAND`/`RTA_FREQ` are **never polled** (zero code references) — the older
    "indexed pid 4 read" hypothesis is dead. FM3 firmware lacks the RTA block.
-2. **Looper waveform** — ~~unknown~~ **DECODED** (FM3 capture 2026-07-04): a dedicated fn 0x01 `sub 0x23`
-   read on the Looper eid, ~595 raw 7-bit magnitudes — NOT the generic graph channel. See §3 above.
-3. **Graph curves** (PEQ/EQ/amp/comp-transfer/LFO-scope/ADSR/modifier) — ~~local~~ **DECODED
-   (gen-3)**: device-fed via `fn 0x01 sub 0x23 (effectId, graphIndex)`; reply is a
-   float32 array (length in the frame, ≤512 B = 128 floats) written into the graph's
-   curve slot. `graphIndex` is the wire curve slot, valued per widget (`graph_cab` uses
-   0..3). Fetched on state change (page open, parameter echo, type/zoom), not as a
-   periodic poll. `AxeAskGraphN`/`pollBlockGraphs` remain FracPad-only names, but the
-   official editors do have this opcode. Live markers (`COMP_XMARK`, `MOD_XMARK`,
-   `ADSR*_XMARK`) still ride the `sub 0x19` page poll. The Cab Align page's
-   `CABINET_AUTO_ALIGN` is a plain param write — the alignment runs on the unit and the
-   editor re-fetches the curves.
+2. **Looper waveform** — ~~unknown~~ **DECODED** (FM3 capture 2026-07-04): the block
+   graph-curve channel (`sub 0x23`) at the Looper eid, slot 0 — same 609-byte container
+   and same 128 float32 values as any other curve; the values are the loop envelope
+   magnitudes. See §3 above.
+3. **Graph curves** (PEQ/EQ/amp/comp-transfer/LFO-scope/ADSR/modifier/cab) — ~~local~~ **DECODED
+   (gen-3)**: device-fed via `fn 0x01 sub 0x23 (effectId, graphIndex)`; the reply is the
+   container below, carrying the full 512 payload bytes → 128 float32 magnitudes written into
+   the graph's curve slot. `graphIndex` is the wire curve slot, valued per widget (`graph_cab`
+   uses 0..3). Fetched on state change (page open, parameter echo, type/zoom), not as a
+   periodic poll. Live markers (`COMP_XMARK`, `MOD_XMARK`, `ADSR*_XMARK`) still ride the
+   `sub 0x19` page poll. The Cab Align page's `CABINET_AUTO_ALIGN` is a plain param
+   write — the alignment runs on the unit and the editor re-fetches the curves.
+
+### The `sub 0x23` reply container (proven)
+
+All multi-byte fields are little-endian 14-bit septets except the payload stream:
+
+| bytes | field |
+|---|---|
+| 0–4 | `F0 00 01 74 <model>` |
+| 5 | `0x01` (fn) |
+| 6–7 | selector `0x23` |
+| 8–9 | echoed effectId |
+| 10–11 | echoed curve slot (0..3) |
+| 12–16 | revision word (5 septets → uint32) |
+| 17–18 | status (no curve data when non-zero) |
+| 19–20 | declared payload byte count: positive multiple of 4, at most 512 (512 for cab/PEQ/filter/looper; 128/256/512 for the 32/64/128-band RTA) |
+| 21… | `ceil(count·8/7)` septets, one continuous MSB-first stream → `count` bytes → `count/4` float32 LE |
+| last 2 | XOR checksum, `F7` |
+
+A full-size reply is 512 payload bytes → 586 septets → **609 wire bytes = 128 float32
+values**; the frame length is always `21 + ceil(count·8/7) + 2`. The RTA declares only its
+band count (32/64/128 bands = 128/256/512 bytes). A request is 23 bytes:
+`F0 00 01 74 <model> 01 23 00 <eid lo hi> <slot lo hi> 00×9 <cs> F7`. The same header shape
+carries the `sub 0x2E` status block with a different declared count (496 bytes FM3 /
+640 FM9+III); the declared count is the discriminator.
 
 ## Still absent / gaps — need a capture or new codec
 
@@ -236,11 +265,10 @@ presses.
 1. **Per‑block meters from the bulk read we already do** (DORMANT #1) — biggest visible win, no new
    device traffic. Verify the pid value scaling live first.
 2. **Looper transport state** (DORMANT #2) — parser already exists; add event + poll.
-3. **`LOOPER_LEVEL` for FM3** — one‑line table add after a pid check.
-4. **RTA bands** — needs the one capture to decide wire vs. editor‑FFT; then codec.
-5. **Looper waveform** — ~~unknown~~ **DECODED** (FM3 capture 2026-07-04): a dedicated fn 0x01 `sub 0x23`
-   read on the Looper eid, ~595 raw 7-bit magnitudes — NOT the generic graph channel. The
-   `AxeAskGraphN`/`Axe3Graph` channel is a FracPad III feature, not used by the official editors.
+3. **`LOOPER_LEVEL` for FM3** — done: `fm3/meters.ts` now carries pid 22 (−80…20 dB).
+4. **RTA bands** — **DECODED**: the `sub 0x23` curve array, 32/64/128 bands; see §“Formerly absent”.
+5. **Looper waveform** — **DECODED**: the same `sub 0x23` container at the Looper eid, slot 0
+   (128 float32 envelope values), not a raw 7-bit stream. See §3.
 6. **AM4 telemetry / VP4** — fresh RE passes; low priority (AM4 metering wire‑confirmed absent).
 
 ---

@@ -316,5 +316,9 @@ export {
   cpuPercentFromRaw,
   buildSetTempoViaParam,
   type Gen3OutputMeter,
+  GRAPH_CURVE_HEADER_LEN,
+  GRAPH_CURVE_VALUE_COUNT,
+  GRAPH_CURVE_SEPTETS,
+  GRAPH_CURVE_WIRE_LEN,
 } from './telemetry.js';
 export { SUB_ACTION_GET_RAW_VALUE, buildGetRawParamValue, isGen3ReadPollFrame } from './readPolls.js';

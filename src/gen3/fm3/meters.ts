@@ -78,6 +78,7 @@ export const FM3_MONITOR_PARAMS: Readonly<Record<string, Fm3MonitorParamDef>> = 
   CABINET_VUMETER: { family: 'CABINET', pid: 61, role: 'vu', minDb: -40, maxDb: 20, widgetConfirmed: true },
   CONTROLLERS_ENV_GAINMONITOR: { family: 'CONTROLLERS', pid: 109, role: 'detector', widgetConfirmed: true },
   VOLUME_METER: { family: 'VOLUME', pid: 14, role: 'level', widgetConfirmed: true },
+  LOOPER_LEVEL: { family: 'LOOPER', pid: 22, role: 'level', minDb: -80, maxDb: 20, widgetConfirmed: true },
 };
 
 /** Monitor params of one block family, `[paramName, def]` pairs (empty if none). */

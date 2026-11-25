@@ -29,6 +29,7 @@
  * (frames silently ignored by the device) kept re-emerging.
  */
 import { fractalChecksum } from '../../shared/checksum.js';
+import { decodeSeptetStream } from '../../shared/septetStream.js';
 import { decode5SeptetFloat32, encode5SeptetFloat32 } from './setParam.js';
 
 const SYSEX_START = 0xf0;
@@ -152,103 +153,103 @@ export function parseBlockMonitorNorm(frame: readonly number[]): number {
   return Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0;
 }
 
-// ── looper waveform (Looper block; FM3 capture 2026-07-04) ───────────────
-// The looper page's live waveform is streamed via fn 0x01 sub 0x23 addressed at the Looper effectId
-// (FM3: eid 166). The reply is a ~609-byte frame whose payload (bytes 12..len-2) is ~595 RAW 7-bit
-// envelope magnitudes (0..127), one per display column — NOT a float. The playhead position and the
-// looper level ride the ordinary block-monitor poll (sub 0x19): position at pid 14, level at pid 22
-// (both via `buildBlockMonitorPoll`/`parseBlockMonitorNorm`). Model-generic across gen-3 loopers
-// (FM3 renders the waveform too, contrary to older notes; FM9/III share the block).
-export const SUB_LOOPER_WAVEFORM = 0x23;
-export function buildLooperWaveformPoll(effectId: number, modelByte: number): number[] {
-  const e14 = [effectId & 0x7f, (effectId >> 7) & 0x7f];
-  return envelope(FN_PARAMETER, [SUB_LOOPER_WAVEFORM, 0x00, ...e14, 0, 0, 0, 0, 0, 0, 0, 0, 0], modelByte);
-}
-/** True for a looper-waveform reply (the long fn 0x01 sub 0x23 frame at `effectId`). */
-export function isLooperWaveformResponse(frame: readonly number[], effectId: number): boolean {
-  return frame[5] === FN_PARAMETER && frame[6] === SUB_LOOPER_WAVEFORM
-    && (((frame[8] ?? 0) | ((frame[9] ?? 0) << 7)) === effectId)
-    && frame.length > 100;
-}
-/** Decode the looper waveform envelope → normalized 0..1 magnitudes (one per display column).
- *  Payload = raw 7-bit samples between the 12-byte header and the checksum+F7. */
-export function parseLooperWaveform(frame: readonly number[]): number[] {
-  const out: number[] = [];
-  for (let i = 12; i < frame.length - 2; i++) out.push((frame[i] ?? 0) / 127);
-  return out;
-}
-
 // ── block graph curves (EQ/PEQ/filter/comp transfer/LFO/ADSR/modifier/cab/RTA) ──
 // Every `graph_*` widget on a block page gets its curve FROM THE DEVICE: fn 0x01 sub 0x23
 // with the block's effectId and a curve-slot index (`graphIndex`, 0..3 — the CAB page uses
-// 0..3 for its four cab traces). The reply payload is a little-endian float32 array of
-// magnitude values (editor-side cap 512 bytes = 128 values), preceded by the echoed eid +
-// slot. It is fetched on state change (page open, parameter echo, type/zoom), NOT polled.
+// 0..3 for its four cab traces). The reply is a fixed container:
 //
-// This is the same opcode the Looper page uses for its waveform — that is slot 0 of the same
-// channel, except the Looper's payload is raw 7-bit envelope bytes rather than float32, so the
-// two are separated by the caller's request (see `parseLooperWaveform`).
+//   bytes 0..4    F0 00 01 74 <model>
+//   byte  5       0x01 (fn)
+//   bytes 6..7    selector 0x23, 14-bit LE
+//   bytes 8..9    echoed effectId, 14-bit LE
+//   bytes 10..11  echoed curve slot, 14-bit LE
+//   bytes 12..16  revision word, 5 septets → uint32
+//   bytes 17..18  status, 14-bit LE (no data when non-zero)
+//   bytes 19..20  declared payload byte count, 14-bit LE (positive multiple of 4, <= 512;
+//                 512 for the full-size cab/PEQ/filter/looper curves)
+//   bytes 21..    one continuous MSB-first 7-bit stream → count bytes → count/4 float32 LE
+//   last two      XOR checksum, F7
+//
+// 512 payload bytes need 586 septets, so a full-size curve reply is exactly 21 + 586 + 2 = 609
+// bytes = 128 float32 magnitudes. 512 is the proven cab/PEQ/filter/looper size; the RTA sends
+// its band counts (32/64/128 bands = 128/256/512 payload bytes), so a reply declares any
+// positive multiple of 4 up to 512 and the frame length follows from that count. The fn 0x01
+// sub 0x2E status block uses the same header shape with a different declared count (496 bytes
+// FM3 / 640 FM9+III); the declared count, not the frame length alone, identifies the payload.
+//
+// Fetched on state change (page open, parameter echo, type/zoom), NOT polled.
 //
 // Widgets that also name a live marker (`COMP_XMARK`, `MOD_XMARK`, `ADSR*_XMARK`) still need
-// the ordinary `sub 0x19` monitor poll for the marker position; the curve comes from here.
+// the ordinary `sub 0x19` state read for the marker position; the curve comes from here.
 export const SUB_GRAPH_CURVE = 0x23;
-/** Largest graph payload the editors accept (512 B = 128 float32 values). */
+/** Fixed header length in front of the septet stream. */
+export const GRAPH_CURVE_HEADER_LEN = 21;
+/** Largest declared payload size: 512 B = 128 float32 values (the full-size curves). */
 export const GRAPH_CURVE_MAX_BYTES = 0x200;
-/** Largest wire length of a graph reply (128 values × 5 septets + 12 header + 2 footer). */
-export const GRAPH_CURVE_MAX_WIRE_LEN = 128 * 5 + 14;
+/** Float32 values in a full-size (512-byte) curve reply. */
+export const GRAPH_CURVE_VALUE_COUNT = GRAPH_CURVE_MAX_BYTES / 4;
+/** Septets needed to carry `GRAPH_CURVE_MAX_BYTES` (ceil(512·8/7)). */
+export const GRAPH_CURVE_SEPTETS = Math.ceil((GRAPH_CURVE_MAX_BYTES * 8) / 7);
+/** Exact wire length of a full-size curve reply: header + septets + checksum + F7. */
+export const GRAPH_CURVE_WIRE_LEN = GRAPH_CURVE_HEADER_LEN + GRAPH_CURVE_SEPTETS + 2;
+/** Largest wire length a curve reply can have (alias kept for callers). */
+export const GRAPH_CURVE_MAX_WIRE_LEN = GRAPH_CURVE_WIRE_LEN;
 /** Curve-slot indices a single block page can expose. */
 export const GRAPH_CURVE_SLOTS = 4;
-/** Build the `fn 0x01 sub 0x23 (effectId, graphIndex)` curve fetch. */
+/** Build the `fn 0x01 sub 0x23 (effectId, graphIndex)` curve fetch (23 bytes). */
 export function buildGraphCurvePoll(effectId: number, graphIndex: number, modelByte: number): number[] {
   const e14 = [effectId & 0x7f, (effectId >> 7) & 0x7f];
-  const g32 = [graphIndex & 0x7f, (graphIndex >> 7) & 0x7f, 0, 0];
-  return envelope(FN_PARAMETER, [SUB_GRAPH_CURVE, 0x00, ...e14, ...g32, 0, 0, 0, 0, 0, 0, 0], modelByte);
+  const g14 = [graphIndex & 0x7f, (graphIndex >> 7) & 0x7f];
+  return envelope(FN_PARAMETER, [SUB_GRAPH_CURVE, 0x00, ...e14, ...g14, 0, 0, 0, 0, 0, 0, 0, 0, 0], modelByte);
 }
+
+/** Declared payload byte count (bytes 19–20, 14-bit LE). */
+function declaredByteCount(frame: readonly number[]): number {
+  return (frame[19] ?? 0) | ((frame[20] ?? 0) << 7);
+}
+
+/** First reason `frame` is not a curve reply container, or null when it is one. */
+function graphCurveContainerError(frame: readonly number[]): string | null {
+  if (frame.length < GRAPH_CURVE_HEADER_LEN + 2) return `length ${frame.length} is shorter than the header`;
+  if (frame[0] !== SYSEX_START || frame[frame.length - 1] !== SYSEX_END) return 'framing';
+  if (frame[1] !== 0x00 || frame[2] !== 0x01 || frame[3] !== 0x74) return 'manufacturer id';
+  if (frame[5] !== FN_PARAMETER) return `function byte 0x${(frame[5] ?? 0).toString(16)} != 0x01`;
+  if (frame[6] !== SUB_GRAPH_CURVE || frame[7] !== 0x00) return 'selector is not 0x23';
+  const status = (frame[17] ?? 0) | ((frame[18] ?? 0) << 7);
+  if (status !== 0) return `status ${status} carries no curve data`;
+  const count = declaredByteCount(frame);
+  if (count <= 0 || count % 4 !== 0) return `declared byte count ${count} is not a positive multiple of 4`;
+  if (count > GRAPH_CURVE_MAX_BYTES) return `declared byte count ${count} exceeds ${GRAPH_CURVE_MAX_BYTES}`;
+  const expected = GRAPH_CURVE_HEADER_LEN + Math.ceil((count * 8) / 7) + 2;
+  if (frame.length !== expected) return `length ${frame.length} != ${expected} for declared count ${count}`;
+  if (fractalChecksum(frame.slice(0, -2)) !== frame[frame.length - 2]) return 'checksum';
+  return null;
+}
+
 /** True for a `sub 0x23` reply carrying the curve for `effectId` slot `graphIndex`. */
 export function isGraphCurveResponse(frame: readonly number[], effectId: number, graphIndex: number): boolean {
-  return frame[5] === FN_PARAMETER && frame[6] === SUB_GRAPH_CURVE
-    && (((frame[8] ?? 0) | ((frame[9] ?? 0) << 7)) === effectId)
-    && (((frame[10] ?? 0) | ((frame[11] ?? 0) << 7)) === graphIndex)
-    && frame.length >= 14 && frame.length <= GRAPH_CURVE_MAX_WIRE_LEN;
+  if (graphCurveContainerError(frame) !== null) return false;
+  const eid = (frame[8] ?? 0) | ((frame[9] ?? 0) << 7);
+  const slot = (frame[10] ?? 0) | ((frame[11] ?? 0) << 7);
+  return eid === effectId && slot === graphIndex;
 }
-/** Decode a graph-curve reply → the magnitude array.
- *  Fractal floats on the wire are 5 septets per value (same as a single-value read), so a
- *  128-value curve is 640 payload bytes; an 8-bit-aligned float32 array is accepted too
- *  because the payload length disambiguates (a 5-septet payload is always a multiple of 5
- *  and never contains a byte above 0x7f). */
+
+/** Decode a graph-curve reply → `count / 4` float32 magnitudes (128 for a full-size reply).
+ *  Throws when the frame is not a valid curve container or is truncated. */
 export function parseGraphCurve(frame: readonly number[]): number[] {
-  const start = 12;
-  const end = Math.max(start, frame.length - 2);
-  const width = end - start;
+  const error = graphCurveContainerError(frame);
+  if (error !== null) throw new Error(`Graph curve reply rejected: ${error}.`);
+  const count = declaredByteCount(frame);
+  const raw = decodeSeptetStream(frame, count, GRAPH_CURVE_HEADER_LEN);
+  if (raw.length !== count) {
+    throw new Error(`Graph curve reply truncated: ${raw.length} of ${count} payload bytes.`);
+  }
+  const view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
   const out: number[] = [];
-  if (width > 0 && width % 5 === 0) {
-    let septetSafe = true;
-    for (let i = start; i < end; i++) {
-      if ((frame[i] ?? 0) > 0x7f) { septetSafe = false; break; }
-    }
-    if (septetSafe) {
-      for (let i = start; i + 4 < end; i += 5) {
-        out.push(decode5SeptetFloat32(frame[i] ?? 0, frame[i + 1] ?? 0, frame[i + 2] ?? 0, frame[i + 3] ?? 0, frame[i + 4] ?? 0));
-      }
-      return out;
-    }
-  }
-  for (let i = start; i + 3 < end; i += 4) {
-    out.push(decodeFloat32LE(frame[i] ?? 0, frame[i + 1] ?? 0, frame[i + 2] ?? 0, frame[i + 3] ?? 0));
-  }
+  for (let i = 0; i < count / 4; i++) out.push(view.getFloat32(i * 4, true));
   return out;
 }
 
-/** Little-endian float32 from four wire bytes. */
-function decodeFloat32LE(b0: number, b1: number, b2: number, b3: number): number {
-  const u = ((b0 & 0xff) | ((b1 & 0xff) << 8) | ((b2 & 0xff) << 16) | ((b3 & 0xff) << 24)) >>> 0;
-  const sign = u >>> 31 ? -1 : 1;
-  const exp = (u >>> 23) & 0xff;
-  const mant = u & 0x7fffff;
-  if (exp === 0xff) return mant ? Number.NaN : sign * Number.POSITIVE_INFINITY;
-  if (exp === 0) return sign * mant * Math.pow(2, -149);
-  return sign * (1 + mant / 0x800000) * Math.pow(2, exp - 127);
-}
 /** RTA band count from the `RTA_NUMBANDS` selector: `(1 << v) << 5` → 32 / 64 / 128. */
 export function rtaBandCount(numBandsSelector: number): number {
   return (1 << (numBandsSelector & 0x1f)) << 5;
@@ -261,6 +262,27 @@ export function parseRtaBands(frame: readonly number[], numBandsSelector: number
     const db = 10 * Math.log10(v > 0 ? v : 1e-12);
     return Math.max(0, Math.min(1, (Math.max(-110, Math.min(10, db)) + 110) / 120));
   });
+}
+
+// ── looper waveform (Looper block) ──────────────────────────────────────
+// The Looper's live waveform is the block graph-curve channel: fn 0x01 sub 0x23 at the
+// Looper effectId with curve slot 0, answered by the same 609-byte container. The 128
+// decoded float32 values are the loop envelope magnitudes (all zero while the loop is
+// empty) — they are not a normalized 0..1 display array. The playhead and level ride the
+// ordinary `sub 0x19` state read: playhead at pid 14 (`LOOPER_STOP` carries the position,
+// not a stop flag) and level at pid 22.
+export const SUB_LOOPER_WAVEFORM = SUB_GRAPH_CURVE;
+/** Poll the looper waveform: the curve fetch at slot 0. */
+export function buildLooperWaveformPoll(effectId: number, modelByte: number): number[] {
+  return buildGraphCurvePoll(effectId, 0, modelByte);
+}
+/** True for a looper-waveform reply (the curve container at `effectId`, slot 0). */
+export function isLooperWaveformResponse(frame: readonly number[], effectId: number): boolean {
+  return isGraphCurveResponse(frame, effectId, 0);
+}
+/** Decode the looper waveform → the 128 envelope magnitudes (device values, not normalized). */
+export function parseLooperWaveform(frame: readonly number[]): number[] {
+  return parseGraphCurve(frame);
 }
 
 // ── looper transport control (Record / Play / Stop / Overdub / Undo / Once / Reverse / Half) ──

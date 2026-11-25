@@ -12,6 +12,7 @@ import { runFirmwareTests, FIRMWARE_CASE_COUNT } from './shared/firmware.test.js
 import { runFirmwareTransferTests, FIRMWARE_TRANSFER_CASE_COUNT } from './shared/firmwaretransfer.test.js';
 import { runQueryFunctionsTests, QUERY_FUNCTIONS_CASE_COUNT } from './shared/queryfunctions.test.js';
 import { runAm4SetParamTests, AM4_GOLDEN_CASE_COUNT } from './am4/setparam.test.js';
+import { runAm4CabNameTests, AM4_CABNAME_CASE_COUNT } from './am4/cabname.test.js';
 import { runAm4BlockLayoutTests, AM4_BLOCK_LAYOUT_CASE_COUNT } from './am4/blocklayout.test.js';
 import { runAm4DecodeTests, AM4_DECODE_CASE_COUNT } from './am4/decode.test.js';
 import {
@@ -49,6 +50,7 @@ import { runAxeFxIIICalibrationTest } from './gen3/axe-fx-iii/calibration.test.j
 import { runGen3RoutingTests, GEN3_ROUTING_CASE_COUNT } from './gen3/axe-fx-iii/routing.test.js';
 import { runGen3SubactionTests, GEN3_SUBACTION_CASE_COUNT } from './gen3/axe-fx-iii/subactions.test.js';
 import { runGen3ReadPollsTests, GEN3_READPOLLS_CASE_COUNT } from './gen3/axe-fx-iii/readpolls.test.js';
+import { runGen3GraphsTests, GEN3_GRAPHS_CASE_COUNT } from './gen3/graphs.test.js';
 import { runGen3GridLayoutTests, GEN3_GRIDLAYOUT_CASE_COUNT } from './gen3/axe-fx-iii/gridlayout.test.js';
 import { runModernFamilyTests, MODERN_FAMILY_CASE_COUNT } from './gen3/modern-family/catalog.test.js';
 import { runBoundCodecTests, BOUNDCODEC_CASE_COUNT } from './gen3/modern-family/boundcodec.test.js';
@@ -127,6 +129,10 @@ import { runLiveGridShuntTests, LIVE_GRID_SHUNT_CASE_COUNT } from './gen3/live-g
 import { runTaperDecodeTests, TAPER_DECODE_CASE_COUNT } from './gen3/taper-decode.test.js';
 import { runParamsRangesAgreeTests, PARAMS_RANGES_AGREE_CASE_COUNT } from './gen3/params-ranges-agree.test.js';
 import { runEnumOverlayDeviceTruthTests, ENUM_OVERLAY_DEVICE_TRUTH_CASE_COUNT } from './gen3/enum-overlay-device-truth.test.js';
+import { runSharedSeptetStreamTests, SHARED_SEPTETSTREAM_CASE_COUNT } from './shared/septetstream.test.js';
+import { runSharedPollTimingTests, SHARED_POLLTIMING_CASE_COUNT } from './shared/polltiming.test.js';
+import { runGen3VisualDataTests, GEN3_VISUALDATA_CASE_COUNT } from './gen3/visualdata.test.js';
+import { runAm4VisualDataTests, AM4_VISUALDATA_CASE_COUNT } from './am4/visualdata.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -146,6 +152,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `shared/firmwareTransfer (${FIRMWARE_TRANSFER_CASE_COUNT} cases)`, run: runFirmwareTransferTests },
   { name: `shared/queryFunctions (${QUERY_FUNCTIONS_CASE_COUNT} cases)`, run: runQueryFunctionsTests },
   { name: `am4/setparam (${AM4_GOLDEN_CASE_COUNT} goldens)`, run: runAm4SetParamTests },
+{ name: `am4/cabname (${AM4_CABNAME_CASE_COUNT} cab-name cases)`, run: runAm4CabNameTests },
   { name: `am4/blocklayout (${AM4_BLOCK_LAYOUT_CASE_COUNT} cases)`, run: runAm4BlockLayoutTests },
   { name: `am4/decode (${AM4_DECODE_CASE_COUNT} cases)`, run: runAm4DecodeTests },
   {
@@ -183,6 +190,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `axe-fx-iii/routing (${GEN3_ROUTING_CASE_COUNT} goldens)`, run: runGen3RoutingTests },
   { name: `axe-fx-iii/subactions (${GEN3_SUBACTION_CASE_COUNT} goldens)`, run: runGen3SubactionTests },
   { name: `axe-fx-iii/readPolls (${GEN3_READPOLLS_CASE_COUNT} byte-identity cases)`, run: runGen3ReadPollsTests },
+{ name: `gen3/graphs (${GEN3_GRAPHS_CASE_COUNT} curve-channel cases)`, run: runGen3GraphsTests },
   { name: `axe-fx-iii/gridlayout (${GEN3_GRIDLAYOUT_CASE_COUNT} goldens)`, run: runGen3GridLayoutTests },
   { name: `modern-family/catalog (${MODERN_FAMILY_CASE_COUNT} goldens)`, run: runModernFamilyTests },
   { name: `modern-family/boundcodec (${BOUNDCODEC_CASE_COUNT} model bytes, full surface)`, run: runBoundCodecTests },
@@ -262,6 +270,10 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `gen3/presetbody-grid-guard (${GRID_GUARD_CASE_COUNT} cases)`, run: runGridGuardTests },
   { name: `gen3/live-grid-shunt (${LIVE_GRID_SHUNT_CASE_COUNT} cases)`, run: runLiveGridShuntTests },
   { name: `gen3/taper-decode (${TAPER_DECODE_CASE_COUNT} cases)`, run: runTaperDecodeTests },
+  { name: `shared/septetStream (${SHARED_SEPTETSTREAM_CASE_COUNT} cases)`, run: runSharedSeptetStreamTests },
+  { name: `shared/pollTiming (${SHARED_POLLTIMING_CASE_COUNT} cases)`, run: runSharedPollTimingTests },
+  { name: `gen3/visualData (${GEN3_VISUALDATA_CASE_COUNT} cases)`, run: runGen3VisualDataTests },
+  { name: `am4/visualData (${AM4_VISUALDATA_CASE_COUNT} cases)`, run: runAm4VisualDataTests },
 ];
 
 let failures = 0;

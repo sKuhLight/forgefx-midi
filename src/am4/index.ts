@@ -64,8 +64,16 @@ export {
   buildSwitchScene,
   buildSwitchPreset,
   buildSaveToLocation,
-  buildGetPresetName,
-  buildGetAllParams,
+  buildGetPresetName,  buildGetAllParams,
+  buildGetCabName,
+  parseGetCabNameResponse,
+  CAB_NAME_PID_LOW,
+  CAB_NAME_PID_HIGH,
+  CAB_NAME_SLOT_MAX,
+  CAB_NAME_EMPTY_SENTINEL,
+  CAB_RESOLUTION_BY_ATTRIBUTE,
+  type GetCabNameResponse,
+  type CabResolution,
   buildReadParam,
   buildRequestActiveBufferDump,
   buildRequestStoredPresetDump,
@@ -313,3 +321,15 @@ export {
   type EditorWidgetKind,
   type EditorFwRange,
 } from '../editorLayouts.js';
+
+// Per-block visual data — the action 0x0D / pidHigh 0x7DE..0x7E1 curve read
+// (128-byte payload = 32 float32 values per slot). See `visualData.ts`.
+export {
+  AM4_CURVE_PID_HIGH_BASE,
+  AM4_CURVE_SLOTS,
+  AM4_CURVE_FLOAT_COUNT,
+  AM4_CURVE_PAYLOAD_BYTES,
+  buildAm4CurvePoll,
+  isAm4CurveResponse,
+  parseAm4CurveResponse,
+} from './visualData.js';

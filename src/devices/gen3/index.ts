@@ -133,3 +133,24 @@ export type {
 
 export { validateGen3Preset } from './presetValidate.js';
 export type { Gen3ValidationResult } from './presetValidate.js';
+
+// Per-block visual data descriptors (curves, markers, meters) for the modern
+// family; every frame is delegated to the existing gen-3 builders. See
+// `visualData.ts`.
+export {
+  gen3VisualModelByte,
+  gen3VisualFamilies,
+  gen3BlockVisual,
+  gen3VisualParam,
+  buildGen3VisualCurvePoll,
+  isGen3VisualCurveResponse,
+  parseGen3VisualCurve,
+  buildGen3VisualValuePoll,
+  isGen3VisualValueResponse,
+  parseGen3VisualValue,
+  gen3VisualMeterDb,
+  type Gen3VisualModel,
+  type Gen3VisualEncoding,
+  type Gen3VisualParamDef,
+  type Gen3BlockVisual,
+} from './visualData.js';

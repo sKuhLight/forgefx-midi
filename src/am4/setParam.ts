@@ -1235,3 +1235,143 @@ export function parseGetPresetNameResponse(
     isEmpty: name === PRESET_NAME_EMPTY_SENTINEL,
   };
 }
+
+// ── cab / IR name read (user bank + scratchpads) ─────────────────────────
+// Same message family as READ_PRESET_NAME: action 0x0012, payload = u32 slot,
+// but a different register pair. Slot space doubles as the bank discriminator:
+//   0..255    user cab bank
+//   0x100/1   the two scratchpads
+// Nothing else in the frame says which bank — the caller chooses by index.
+// The device answers one name per request (no bulk read), ascending, ~3000 ms
+// timeout; a full user-bank refresh is 256 round trips.
+export const CAB_NAME_PID_LOW = 0x003e;
+export const CAB_NAME_PID_HIGH = 0x000c;
+export const CAB_NAME_SLOT_MIN = 0;
+export const CAB_NAME_SLOT_MAX = 0x101;
+export const CAB_NAME_BYTES = 32;
+export const CAB_NAME_EMPTY_SENTINEL = '<EMPTY>';
+
+/** IR resolution class from the reply's attribute byte (255 = empty slot).
+ *  AM4-Edit shows these as the picker's icon column. */
+export type CabResolution = 'standard' | 'ultra' | 'full' | 'empty' | 'unknown';
+export const CAB_RESOLUTION_BY_ATTRIBUTE: Readonly<Record<number, CabResolution>> = {
+  0: 'standard',
+  1: 'ultra',
+  2: 'full',
+  255: 'empty',
+};
+
+/**
+ * Build a cab-name read for `slot` (0..255 user, 0x100/0x101 scratchpad).
+ *
+ * Wire shape (same encoder as READ_PRESET_NAME, different register pair):
+ *
+ *   F0 00 01 74 15 01 [3E 00] [0C 00] [12 00] [00 00] [04 00]
+ *                     [5 packed bytes — u32 LE slot] <cs> F7
+ *
+ * 23 bytes. Read-only: no SET, no rename, no CAB-group transfer.
+ */
+export function buildGetCabName(slot: number): number[] {
+  if (!Number.isInteger(slot) || slot < CAB_NAME_SLOT_MIN || slot > CAB_NAME_SLOT_MAX) {
+    throw new Error(`Cab slot must be integer ${CAB_NAME_SLOT_MIN}..${CAB_NAME_SLOT_MAX}, got ${slot}.`);
+  }
+  const raw = new Uint8Array(4);
+  new DataView(raw.buffer).setUint32(0, slot, true);
+  const packed = Array.from(packValue(raw));
+  const body: number[] = [
+    AM4_MODEL_ID,
+    FUNC_PARAM_RW,
+    ...encode14(CAB_NAME_PID_LOW),
+    ...encode14(CAB_NAME_PID_HIGH),
+    ...encode14(ACTION_READ_PRESET_NAME),
+    ...encode14(0x0000),
+    ...encode14(raw.length),
+    ...packed,
+  ];
+  const head = [SYSEX_START, ...FRACTAL_MFR, ...body];
+  return [...head, fractalChecksum(head), SYSEX_END];
+}
+
+/** Result of parsing a cab-name response. */
+export interface GetCabNameResponse {
+  slot: number;
+  name: string;
+  isEmpty: boolean;
+  /** From the attribute byte after the 32-byte name field; `undefined` when
+   *  the reply carries only the name (`hdr4 == 32`). */
+  resolution?: CabResolution;
+  /** Raw attribute byte, when present. */
+  attribute?: number;
+}
+
+/**
+ * Parse a cab-name response. Validates envelope, manufacturer ID, model byte,
+ * function, action, the `0x3E/0x0C` register pair, and the checksum.
+ *
+ * The 32-byte name field uses the same packing as READ_PRESET_NAME: 7 raw
+ * bytes → 8 wire septets, with a partial trailing chunk carrying its own
+ * length. `hdr4` is the raw byte count (32, or 33 when the attribute byte is
+ * included), so the packed length is derived from it rather than hardcoded.
+ */
+export function parseGetCabNameResponse(
+  bytes: number[] | Uint8Array,
+  expectedSlot: number,
+): GetCabNameResponse {
+  const arr = Array.isArray(bytes) ? bytes : Array.from(bytes);
+  if (arr.length < 20) throw new Error(`Cab-name response too short (${arr.length} bytes).`);
+  if (arr[0] !== SYSEX_START || arr[arr.length - 1] !== SYSEX_END) {
+    throw new Error('Cab-name response missing F0/F7 envelope.');
+  }
+  for (let i = 0; i < FRACTAL_MFR.length; i++) {
+    if (arr[1 + i] !== FRACTAL_MFR[i]) throw new Error('Cab-name response manufacturer ID mismatch.');
+  }
+  if (arr[4] !== AM4_MODEL_ID) {
+    throw new Error(`Cab-name response device ID 0x${arr[4]!.toString(16)} != AM4 (0x15).`);
+  }
+  if (arr[5] !== FUNC_PARAM_RW) {
+    throw new Error(`Cab-name response function byte 0x${arr[5]!.toString(16)} != 0x01.`);
+  }
+  const pidLow = arr[6]! | (arr[7]! << 7);
+  const pidHigh = arr[8]! | (arr[9]! << 7);
+  const action = arr[10]! | (arr[11]! << 7);
+  const hdr4 = arr[14]! | (arr[15]! << 7);
+  if (pidLow !== CAB_NAME_PID_LOW) {
+    throw new Error(`Cab-name response pidLow 0x${pidLow.toString(16)} != 0x003e.`);
+  }
+  if (pidHigh !== CAB_NAME_PID_HIGH) {
+    throw new Error(`Cab-name response pidHigh 0x${pidHigh.toString(16)} != 0x000c.`);
+  }
+  if (action !== ACTION_READ_PRESET_NAME) {
+    throw new Error(`Cab-name response action 0x${action.toString(16)} != 0x0012.`);
+  }
+  if (hdr4 < CAB_NAME_BYTES || hdr4 > CAB_NAME_BYTES + 1) {
+    throw new Error(`Cab-name response hdr4 ${hdr4} not in {32, 33}.`);
+  }
+  const csIdx = arr.length - 2;
+  const expectedCs = fractalChecksum(arr.slice(0, csIdx));
+  if (arr[csIdx] !== expectedCs) {
+    throw new Error(
+      `Cab-name response checksum mismatch: got 0x${arr[csIdx]!.toString(16)}, expected 0x${expectedCs.toString(16)}.`,
+    );
+  }
+  const packedLen = Math.floor(hdr4 / 7) * 8 + (hdr4 % 7 ? (hdr4 % 7) + 1 : 0);
+  if (arr.length !== 16 + packedLen + 2) {
+    throw new Error(`Cab-name response length ${arr.length} does not match hdr4 ${hdr4}.`);
+  }
+  const packed = new Uint8Array(arr.slice(16, 16 + packedLen));
+  const raw = unpackValueChunked(packed, hdr4);
+  const ascii = String.fromCharCode(...Array.from(raw.slice(0, CAB_NAME_BYTES)));
+  const nulIdx = ascii.indexOf('\0');
+  const name = (nulIdx >= 0 ? ascii.slice(0, nulIdx) : ascii).trimEnd();
+  const out: GetCabNameResponse = {
+    slot: expectedSlot,
+    name,
+    isEmpty: name === '' || name === CAB_NAME_EMPTY_SENTINEL,
+  };
+  if (hdr4 > CAB_NAME_BYTES) {
+    const attribute = raw[CAB_NAME_BYTES] ?? 255;
+    out.attribute = attribute;
+    out.resolution = CAB_RESOLUTION_BY_ATTRIBUTE[attribute] ?? 'unknown';
+  }
+  return out;
+}

@@ -141,6 +141,9 @@ import { runSystemDumpTests, SYSTEM_DUMP_CASE_COUNT } from './gen3/system-dump.t
 import { runFullResIrTests, FULLRES_IR_CASE_COUNT } from './gen3/fullres-ir.test.js';
 import { runPresetBodyRecordTests, PRESETBODY_RECORDS_CASE_COUNT } from './gen3/fm3/presetbody-records.test.js';
 import { runPresetSynthTrailingTests, PRESET_SYNTH_TRAILING_CASE_COUNT } from './gen3/fm3/preset-synth-trailing.test.js';
+import { runGen3WalkModel, GEN3_WALK_MODEL_CASE_COUNT } from './cache/gen3-walk-model.test.js';
+import { runSpecialTables, SPECIAL_TABLES_CASE_COUNT } from './cache/special-tables.test.js';
+import { runAm4DefinitionWalk, AM4_DEFINITION_WALK_CASE_COUNT } from './am4/definition-walk.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -290,6 +293,9 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `gen3/fullResIr (${FULLRES_IR_CASE_COUNT} cases)`, run: runFullResIrTests },
   { name: `fm3/presetbody-records (${PRESETBODY_RECORDS_CASE_COUNT} prelude/chain record cases)`, run: runPresetBodyRecordTests },
   { name: `fm3/preset-synth-trailing (${PRESET_SYNTH_TRAILING_CASE_COUNT} trailing-boundary cases)`, run: runPresetSynthTrailingTests },
+  { name: `cache/gen3-walk-model (${GEN3_WALK_MODEL_CASE_COUNT} cases)`, run: runGen3WalkModel },
+  { name: `cache/special-tables (${SPECIAL_TABLES_CASE_COUNT} cases)`, run: runSpecialTables },
+  { name: `am4/definition-walk (${AM4_DEFINITION_WALK_CASE_COUNT} read-only cases)`, run: runAm4DefinitionWalk },
 ];
 
 let failures = 0;

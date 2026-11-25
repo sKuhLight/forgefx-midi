@@ -111,6 +111,12 @@ import { runLiveGridShuntTests, LIVE_GRID_SHUNT_CASE_COUNT } from './gen3/live-g
 import { runTaperDecodeTests, TAPER_DECODE_CASE_COUNT } from './gen3/taper-decode.test.js';
 import { runParamsRangesAgreeTests, PARAMS_RANGES_AGREE_CASE_COUNT } from './gen3/params-ranges-agree.test.js';
 import { runEnumOverlayDeviceTruthTests, ENUM_OVERLAY_DEVICE_TRUTH_CASE_COUNT } from './gen3/enum-overlay-device-truth.test.js';
+import { runZipTests, ZIP_CASE_COUNT } from './shared/zip.test.js';
+import { runXmlTests, XML_CASE_COUNT } from './shared/xml.test.js';
+import { runFasBundleTests, FAS_BUNDLE_CASE_COUNT } from './gen3/fas-bundle.test.js';
+import { runFasSetlistTests, FAS_SETLIST_CASE_COUNT } from './gen3/fas-setlists.test.js';
+import { runSystemDumpTests, SYSTEM_DUMP_CASE_COUNT } from './gen3/system-dump.test.js';
+import { runFullResIrTests, FULLRES_IR_CASE_COUNT } from './gen3/fullres-ir.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -230,6 +236,12 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `gen3/presetbody-grid-guard (${GRID_GUARD_CASE_COUNT} cases)`, run: runGridGuardTests },
   { name: `gen3/live-grid-shunt (${LIVE_GRID_SHUNT_CASE_COUNT} cases)`, run: runLiveGridShuntTests },
   { name: `gen3/taper-decode (${TAPER_DECODE_CASE_COUNT} cases)`, run: runTaperDecodeTests },
+  { name: `shared/zip (${ZIP_CASE_COUNT} cases)`, run: runZipTests },
+  { name: `shared/xml (${XML_CASE_COUNT} cases)`, run: runXmlTests },
+  { name: `gen3/fasBundle (${FAS_BUNDLE_CASE_COUNT} cases)`, run: runFasBundleTests },
+  { name: `gen3/fasSetlists (${FAS_SETLIST_CASE_COUNT} cases)`, run: runFasSetlistTests },
+  { name: `gen3/systemDump (${SYSTEM_DUMP_CASE_COUNT} cases)`, run: runSystemDumpTests },
+  { name: `gen3/fullResIr (${FULLRES_IR_CASE_COUNT} cases)`, run: runFullResIrTests },
 ];
 
 let failures = 0;

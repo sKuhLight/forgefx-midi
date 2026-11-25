@@ -82,3 +82,31 @@ export type {
   LineageLookupHit,
   LineageLookupResult,
 } from './lineageLookup.js';
+
+// ── Offline file-container primitives ───────────────────────────────
+export { decodeUtf8, encodeUtf8 } from './utf8.js';
+export {
+  DEFAULT_ZIP_LIMITS,
+  zipCrc32,
+  assertSafeEntryName,
+  readZipArchive,
+  writeStoredZipArchive,
+} from './zipArchive.js';
+export type { ZipEntry, ZipLimits } from './zipArchive.js';
+export {
+  DEFAULT_XML_LIMITS,
+  isWhitespaceText,
+  parseXml,
+  parseXmlString,
+  serializeXml,
+  xmlAttribute,
+  xmlChildren,
+} from './xml.js';
+export type {
+  XmlAttribute,
+  XmlElement,
+  XmlLimits,
+  XmlSerializeOptions,
+} from './xml.js';
+export { XTEA_DELTA, XTEA_CYCLES, decryptXteaPairs } from './xtea.js';
+export type { XteaRecordKey, XteaDecryptOptions } from './xtea.js';

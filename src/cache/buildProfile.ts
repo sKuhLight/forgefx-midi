@@ -47,6 +47,18 @@ import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam } from '.
  *
  * Policy: Schema stays 1 until the first release that carries it; after a release, every change to derived
  * output bumps it. (No bump while unreleased: the consuming runtime's schema gate lands in the same bundle.)
+ * Precisely: bump `CACHE_SCHEMA` when an existing derived field changes value or meaning for the same raw input;
+ * additive derived fields bump nothing (a profile document's `sections`, `blockMap`, `provenance`, `coverage`
+ * and the synthetic `section:<tag>` / `block:<eid>` family keys were added without a bump, see ./profileDoc.ts).
+ * A format-2 profile document (it carries its raw sources) re-derives on any bump; a format-1 document (derived
+ * tables only) goes stale on the next bump. A derivation change that needs no bump but must still reach stored
+ * format-2 documents (a better block matcher, a restricted vote) raises the integer `DERIVATION_REVISION`
+ * (./profileDoc.ts, persisted as `meta.derivedRevision`): such documents re-derive on load (`needsRederive`),
+ * format-1 documents are unaffected. The codec version (`meta.derivedWith`) is informational only — a development
+ * build reports package.json, a release the git tag, so it does not order derivations.
+ *
+ * The AM4/VP4 enum-bound correction needs no bump: those value-list bounds are raw ordinals that pass through
+ * with scale 0 (the record's default field is not a scale), while every gen-3 derived row is byte-identical.
  */
 export const CACHE_SCHEMA = 1;
 
@@ -149,7 +161,9 @@ export async function buildCache(
     }
   }
 
-  const data = buildDeviceCache(records, params, seeds);
+  const data = buildDeviceCache(records, params, seeds, {
+    enumBoundsAreOrdinals: opts.model === 0x14 || opts.model === 0x15,
+  });
 
   const meta: BuiltCache['meta'] = {
     schema: CACHE_SCHEMA,

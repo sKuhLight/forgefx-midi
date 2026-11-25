@@ -20,7 +20,7 @@
  * One fixture is also captured as the DEFAULT SCAFFOLD: its prelude
  * [0x000 .. 0x120E] (word0/1 + scene-name region + grid + fixed setup + scene
  * controllers + the 32 modifier slots) and its trailing region
- * [lastBlockEnd .. decompSize]. buildGen3Body overwrites scene names + grid in
+ * [tailStart .. decompSize]. buildGen3Body overwrites scene names + grid in
  * the prelude and appends a fresh block chain, but keeps the modifier/scene-
  * controller prelude and the trailing region verbatim.
  *
@@ -46,6 +46,8 @@ const OUT_DIR = join(REPO, 'src/devices/gen3/fm3');
 const OUT = join(OUT_DIR, 'blockTemplates.generated.ts');
 
 const BLOCK_HEADER_WORDS = 23;
+const FM3_CHAIN_START = 0x120e;
+const FM3_TRAILING_BYTES = 3832;
 
 /** Preference order: the first fixture that carries a family provides its
  *  canonical template. preset-5 is deliberately LAST so its own blocks are not
@@ -95,6 +97,25 @@ function decodeBody(file: string): { body: Uint8Array; decompSize: number } {
   return { body: dec.body, decompSize: dec.decompSize };
 }
 
+function scaffoldTailStart(body: Uint8Array, decompSize: number): number {
+  const start = decompSize - FM3_TRAILING_BYTES;
+  if (decompSize !== body.length || start < FM3_CHAIN_START ||
+    u16(body, start + 30) !== 350 || u16(body, start + 32) !== 1) {
+    throw new Error('FM3 scaffold is missing its fixed trailing sections');
+  }
+  // Follow the geometry of every record, including records the public decoder
+  // does not identify. The last surfaced block does not delimit the chain.
+  let pos = FM3_CHAIN_START;
+  while (pos + BLOCK_HEADER_WORDS * 2 <= start) {
+    const cols = u16(body, pos + 30);
+    const rows = u16(body, pos + 32);
+    if (cols === 0 || rows === 0 || cols > 500 || rows > 8) break;
+    pos += (BLOCK_HEADER_WORDS + cols * rows) * 2;
+  }
+  if (pos !== start) throw new Error(`FM3 scaffold chain ends at 0x${pos.toString(16)}, expected 0x${start.toString(16)}`);
+  return start;
+}
+
 function main(): void {
   const files = readdirSync(FIX).filter((f) => f.endsWith('.syx')).sort();
   const missingPref = FIXTURE_PREFERENCE.filter((f) => !files.includes(f));
@@ -135,18 +156,8 @@ function main(): void {
 
   // Capture the default scaffold's prelude + trailing.
   const { body: scafBody, decompSize: scafSize } = decodeBody(SCAFFOLD_FIXTURE);
-  const scafDecoded = decodeGen3Body(scafBody, MODEL_FM3);
-  const scafBlocks = scafDecoded.blocks ?? [];
-  if (scafBlocks.length === 0) throw new Error('scaffold has no blocks');
-  const first = scafBlocks[0];
-  const PRELUDE_END = 0x120e;
-  if (first.offset !== PRELUDE_END) {
-    throw new Error(`scaffold first block at 0x${first.offset.toString(16)}, expected 0x120e`);
-  }
-  const last = scafBlocks[scafBlocks.length - 1];
-  const lastEnd = last.offset + (BLOCK_HEADER_WORDS + last.cols * last.rows) * 2;
-  const prelude = Array.from(scafBody.subarray(0, PRELUDE_END));
-  const trailing = Array.from(scafBody.subarray(lastEnd, scafSize));
+  const prelude = Array.from(scafBody.subarray(0, FM3_CHAIN_START));
+  const trailing = Array.from(scafBody.subarray(scaffoldTailStart(scafBody, scafSize)));
   // Capture the FULL scaffold `.syx` dump bytes verbatim — the raw-patch header
   // + SysEx framing are needed to synthesize a preset with NO caller-supplied
   // base (authorGen3PresetFromIRFull parses these back out).
@@ -161,7 +172,7 @@ function main(): void {
     `// decoded via decodeGen3Body. Each template is the VERBATIM walk-record byte\n` +
     `// slice body[offset .. offset+(23+cols*rows)*2] for a block family (the clone\n` +
     `// source the synthesizer overlays a type + params onto). The default scaffold is\n` +
-    `// ${SCAFFOLD_FIXTURE}: prelude [0x000..0x120E] + trailing [lastBlockEnd..decompSize].\n` +
+    `// ${SCAFFOLD_FIXTURE}: prelude [0x000..0x120E] + fixed trailing sections.\n` +
     `/* eslint-disable */\n\n`;
 
   const iface =
@@ -221,7 +232,7 @@ function main(): void {
     ` *  is kept). */\n` +
     `export const FM3_SCAFFOLD_FIXTURE = ${JSON.stringify(SCAFFOLD_FIXTURE)};\n` +
     `export const FM3_SCAFFOLD_PRELUDE: readonly number[] = [${prelude.join(',')}];\n` +
-    `/** Default scaffold trailing region [lastBlockEnd..decompSize], carried verbatim. */\n` +
+    `/** Default scaffold's fixed trailing sections, carried verbatim. */\n` +
     `export const FM3_SCAFFOLD_TRAILING: readonly number[] = [${trailing.join(',')}];\n` +
     `/** Full default scaffold .syx dump (${SCAFFOLD_FIXTURE}) carried verbatim — the\n` +
     ` *  raw-patch header + SysEx framing that authorGen3PresetFromIRFull re-parses to\n` +

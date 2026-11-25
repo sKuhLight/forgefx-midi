@@ -12,12 +12,39 @@
 // III's `__block_layout.xml` mining).
 export {
   AXE_FX_III_BLOCKS,
+  gen3RosterSpan,
   resolveBlock,
   resolveEffectId,
 } from './blockTypes.js';
 export type { AxeFxIIIBlock, ConfidenceTag } from './blockTypes.js';
+
+// Axe-Fx III effectId <-> family table (FORGEFX-45). Entries are `verified` or `roster`
+// (documented id, no device binding yet: served read-only). See `effectIds.ts`.
+export {
+  AXE3_EFFECT_ID_TABLE,
+  AXE3_EFFECT_IDS,
+  AXE3_FAMILY_BY_EFFECT_ID,
+  axe3EffectId,
+  axe3EffectIdEntry,
+  axe3CrossBlockEffectId,
+  type Axe3EffectIdEntry,
+  type Axe3EffectAddressing,
+  type Axe3EffectIdConfidence,
+} from './effectIds.js';
 export { PARAMS, PARAMS_BY_FAMILY, PARAM_BY_KEY, FAMILIES } from './params.js';
 export type { Unit, Param } from './params.js';
+
+/**
+ * Firmware the bundled Axe-Fx III tables (ranges, enum labels, layouts) were derived from.
+ * A device on another firmware can differ from the catalog; consumers compare against this
+ * to tell "matches the catalog" from "may have drifted".
+ *
+ * `firmware` is formatted `${major}.${minor}` (for example `'32.6'`); `null` means unknown.
+ */
+export const AXE3_CATALOG_BASELINE: Readonly<{ firmware: string | null }> = { firmware: '32.6' };
+
+/** Section inventory of the catalog's editor cache (tags, families, record counts). See `catalogSections.ts`. */
+export { AXE3_CATALOG_SECTIONS } from './catalogSections.js';
 
 // Discrete-ordinal classification overlay (param firmware symbol -> maxOrdinal).
 // Params the enum/range paths classify continuous but the device treats as
@@ -249,6 +276,8 @@ export { AXE3_LAYOUTS } from './layouts.generated.js';
 export {
   normalizeWidget,
   EDITOR_WIDGET_KINDS,
+  parseCrossToken,
+  crossBlockEffectId,
   type DeviceEditorLayouts,
   type EditorBlockLayout,
   type EditorLayoutVariant,
@@ -257,6 +286,10 @@ export {
   type EditorLayoutControl,
   type EditorControlPlacement,
   type EditorCrossBlockRef,
+  type EditorCrossToken,
+  type CrossBlockRefKey,
+  type FamilyFirstEffectIds,
+  type CrossBlockSpanLookup,
   type EditorWidgetKind,
   type EditorFwRange,
 } from '../../editorLayouts.js';
@@ -295,6 +328,15 @@ export {
   buildLooperWaveformPoll,
   isLooperWaveformResponse,
   parseLooperWaveform,
+  SUB_GRAPH_CURVE,
+  GRAPH_CURVE_MAX_BYTES,
+  GRAPH_CURVE_MAX_WIRE_LEN,
+  GRAPH_CURVE_SLOTS,
+  buildGraphCurvePoll,
+  isGraphCurveResponse,
+  parseGraphCurve,
+  rtaBandCount,
+  parseRtaBands,
   SUB_LOOPER_CONTROL,
   buildLooperControl,
   CPU_RESPONSE_MIN_LEN,
@@ -303,9 +345,14 @@ export {
   CPU_SLOPE,
   buildCpuPoll,
   isCpuResponse,
+  parseCpuPercent,
   parseCpuRawLoad,
   cpuPercentFromRaw,
   buildSetTempoViaParam,
   type Gen3OutputMeter,
+  GRAPH_CURVE_HEADER_LEN,
+  GRAPH_CURVE_VALUE_COUNT,
+  GRAPH_CURVE_SEPTETS,
+  GRAPH_CURVE_WIRE_LEN,
 } from './telemetry.js';
 export { SUB_ACTION_GET_RAW_VALUE, buildGetRawParamValue, isGen3ReadPollFrame } from './readPolls.js';

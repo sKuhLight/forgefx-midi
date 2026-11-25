@@ -4,9 +4,9 @@
  *
  * ─── APPROACH: scaffold-anchored template-clone (NOT zero-build) ──────────
  * A clean FM3 scaffold supplies three regions VERBATIM:
- *   - the prelude [0x000 .. 0x120E]: word0/1, the scene-name region, the grid,
+ *   - the prelude [0x000 .. chainStart]: word0/1, the scene-name region, the grid,
  *     the fixed setup, the scene controllers, and the 32 modifier slots;
- *   - the trailing region [after the last block .. decompSize];
+ *   - the trailing region [after the last chain record .. decompSize];
  * and the synthesizer REPLACES wholesale, inside that carried image:
  *   - the scene names (body 0x004), the routing grid (body 0x104), and the
  *     ENTIRE block chain (0x120E →).
@@ -802,6 +802,12 @@ export function defaultScaffold(modelId: number = MODEL_FM3): { prelude: Uint8Ar
     prelude: Uint8Array.from(model.scaffoldPrelude),
     trailing: Uint8Array.from(model.scaffoldTrailing),
   };
+}
+
+/** Size (bytes) of the model's FIXED trailing region — everything after the block
+ *  chain. Measured per model (FM3/III 3832, FM9 736), never derived from a block list. */
+export function scaffoldTrailingSize(modelId: number = MODEL_FM3): number {
+  return getSynthModel(modelId).scaffoldTrailing.length;
 }
 
 /**

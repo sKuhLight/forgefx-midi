@@ -38,6 +38,12 @@ export interface EnumRecord extends RecordBase {
   values: string[];
   x: number;
   wireIds?: number[];
+  /**
+   * Byte-source walks with `parseCacheRecords(buf, { nameSpans: true })` only: where each entry
+   * of `values` sits in the buffer, as `[offset, byteLength]` of its name bytes (after the
+   * entry's u32 length; `byteLength` 0 for an empty name). Absent otherwise.
+   */
+  nameSpans?: ReadonlyArray<readonly [offset: number, byteLength: number]>;
 }
 
 /**
@@ -138,6 +144,7 @@ export interface DeviceParam {
  * displayMax 10 and `taper: 'linear'` whatever their definition's min/max are (and
  * `display = value * scale` does not hold for them). Such a row carries no `unit`, and a
  * row whose walk observed a unit or a non-linear taper is not derived this way at all.
+ * AM4/VP4 enum bounds are raw ordinals and use the pass-through scale (0).
  * Placeholder (unused) wire slots carry an all-zero float row.
  */
 export interface RangeDef {

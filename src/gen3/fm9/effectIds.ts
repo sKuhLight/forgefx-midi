@@ -18,6 +18,7 @@ import {
   FM3_EFFECT_IDS,
   FM3_FAMILY_BY_EFFECT_ID,
   fm3EffectId,
+  fm3CrossBlockEffectId,
   type Fm3EffectIdEntry,
   type Fm3EffectAddressing,
 } from '../fm3/effectIds.js';
@@ -40,3 +41,10 @@ export const FM9_FAMILY_BY_EFFECT_ID: Readonly<Record<number, string>> = FM3_FAM
 
 /** Resolve `(family, instance)` → effectId. See `fm3EffectId`. */
 export const fm9EffectId = fm3EffectId;
+
+/**
+ * Owning effectId of an FM9 editor-layout cross-block reference, bounded by the
+ * FM9's instance count for the referenced family (the FM9 shares the FM3
+ * table). See `fm3CrossBlockEffectId`.
+ */
+export const fm9CrossBlockEffectId = fm3CrossBlockEffectId;

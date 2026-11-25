@@ -64,8 +64,16 @@ export {
   buildSwitchScene,
   buildSwitchPreset,
   buildSaveToLocation,
-  buildGetPresetName,
-  buildGetAllParams,
+  buildGetPresetName,  buildGetAllParams,
+  buildGetCabName,
+  parseGetCabNameResponse,
+  CAB_NAME_PID_LOW,
+  CAB_NAME_PID_HIGH,
+  CAB_NAME_SLOT_MAX,
+  CAB_NAME_EMPTY_SENTINEL,
+  CAB_RESOLUTION_BY_ATTRIBUTE,
+  type GetCabNameResponse,
+  type CabResolution,
   buildReadParam,
   buildRequestActiveBufferDump,
   buildRequestStoredPresetDump,
@@ -300,6 +308,7 @@ export { AM4_LAYOUTS } from './editorLayouts.generated.js';
 export {
   normalizeWidget,
   EDITOR_WIDGET_KINDS,
+  parseCrossToken,
   type DeviceEditorLayouts,
   type EditorBlockLayout,
   type EditorLayoutVariant,
@@ -308,6 +317,72 @@ export {
   type EditorLayoutControl,
   type EditorControlPlacement,
   type EditorCrossBlockRef,
+  type EditorCrossToken,
   type EditorWidgetKind,
   type EditorFwRange,
 } from '../editorLayouts.js';
+
+// Per-block visual data — the action 0x0D / pidHigh 0x7DE..0x7E1 curve read
+// (128-byte payload = 32 float32 values per slot). See `visualData.ts`.
+export {
+  AM4_CURVE_PID_HIGH_BASE,
+  AM4_CURVE_SLOTS,
+  AM4_CURVE_FLOAT_COUNT,
+  AM4_CURVE_PAYLOAD_BYTES,
+  buildAm4CurvePoll,
+  isAm4CurveResponse,
+  parseAm4CurveResponse,
+} from './visualData.js';
+// READ-ONLY definition walk (action 0x0D pseudo-registers 0x07DD / 0x07DC / 0x07EB) and the
+// special-table reads (action 0x12). No write builder exists on this path; see ./readFrame.ts.
+export {
+  AM4_PARAM_COUNT_PID_HIGH,
+  AM4_PARAM_DEFINITION_PID_HIGH,
+  AM4_PARAM_LABEL_PID_HIGH,
+  AM4_LABEL_TYPECODE_CLASSES,
+  AM4_LABEL_FLAG,
+  buildReadBlockDescriptor,
+  buildReadParamDefinition,
+  buildReadParamLabel,
+  parseBlockDescriptor,
+  parseParamDefinition,
+  parseParamLabel,
+  am4DefinitionWalk,
+} from './definitionWalk.js';
+export type {
+  Am4BlockDescriptor,
+  Am4ParamDefinition,
+  Am4ParamLabel,
+  Am4DefinitionWalkOptions,
+  Am4DefinitionWalkResult,
+} from './definitionWalk.js';
+export {
+  AM4_READ_MODEL_AM4,
+  VP4_READ_MODEL_VP4,
+  AM4_READ_ACTION_LONG,
+  AM4_READ_ACTION_NAME,
+  AM4_READ_ACTIONS,
+  isAm4ReadModel,
+  buildAm4ReadFrame,
+  parseAm4ReadFrame,
+  requestAm4Read,
+} from './readFrame.js';
+export type { Am4ReadFrame, Am4ReadTransport, Am4ReadOptions, Am4ReadStats } from './readFrame.js';
+export {
+  AM4_CAB_NAME_PID_LOW,
+  AM4_CAB_NAME_PID_HIGH,
+  AM4_CAB_USER_SLOTS,
+  AM4_CAB_SCRATCHPAD_INDICES,
+  buildReadAm4CabName,
+  parseAm4CabNameReply,
+  readAm4CabNames,
+  am4CabBankTable,
+  readAm4PresetNames,
+} from './specialTables.js';
+export type {
+  Am4CabNameReply,
+  Am4CabNameEntry,
+  Am4CabNameRead,
+  Am4PresetNameEntry,
+  Am4PresetNameRead,
+} from './specialTables.js';

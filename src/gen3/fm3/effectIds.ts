@@ -45,6 +45,9 @@
  * gen-3 roster changes, change it in `AXE_FX_III_BLOCKS` and mirror here.
  */
 
+import { crossBlockEffectId, type CrossBlockRefKey } from '../../editorLayouts.js';
+import { gen3RosterSpan } from '../axe-fx-iii/blockTypes.js';
+
 /** How a family is addressed on the wire. */
 export type Fm3EffectAddressing =
   /** Placeable signal-chain block; `effectId = firstId + (instance-1)`. */
@@ -182,6 +185,25 @@ export const FM3_FAMILY_BY_EFFECT_ID: Readonly<Record<number, string>> = Object.
     FM3_EFFECT_ID_TABLE.filter((e) => e.firstId !== null).map((e) => [e.firstId as number, e.family]),
   ),
 );
+
+/**
+ * Owning effectId of an FM3 editor-layout cross-block reference
+ * (`control.crossBlock`), from its token instance and resolved family:
+ * `ID_GLOBAL` → 1, `ID_FOOTCONTROLLER` → 199, `ID_OUTPUT2` → 43,
+ * `ID_DISTORT1` → 58. `MOD` / `PRESET` refs, unknown families and an instance
+ * beyond `instanceCount` give null.
+ *
+ * `instanceCount` is the connected device's instance count for the
+ * referenced family (the host's per-device instance limits; 1 for singletons).
+ * It is deliberately not taken from this table, whose `instances` column is
+ * not a device bound for every family. The instance is additionally capped by
+ * the id span the shared gen-3 roster reserves (`gen3RosterSpan`), so an
+ * oversized count cannot reach the next family's ids (`ID_OUTPUT5` is never
+ * 46). See `crossBlockEffectId`.
+ */
+export function fm3CrossBlockEffectId(ref: CrossBlockRefKey, instanceCount: number): number | null {
+  return crossBlockEffectId(ref, FM3_EFFECT_IDS, instanceCount, gen3RosterSpan);
+}
 
 /**
  * Resolve a `(family, instance)` to a concrete effectId.

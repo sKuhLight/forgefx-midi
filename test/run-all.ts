@@ -111,6 +111,8 @@ import { runLiveGridShuntTests, LIVE_GRID_SHUNT_CASE_COUNT } from './gen3/live-g
 import { runTaperDecodeTests, TAPER_DECODE_CASE_COUNT } from './gen3/taper-decode.test.js';
 import { runParamsRangesAgreeTests, PARAMS_RANGES_AGREE_CASE_COUNT } from './gen3/params-ranges-agree.test.js';
 import { runEnumOverlayDeviceTruthTests, ENUM_OVERLAY_DEVICE_TRUTH_CASE_COUNT } from './gen3/enum-overlay-device-truth.test.js';
+import { runPresetBodyRecordTests, PRESETBODY_RECORDS_CASE_COUNT } from './gen3/fm3/presetbody-records.test.js';
+import { runPresetSynthTrailingTests, PRESET_SYNTH_TRAILING_CASE_COUNT } from './gen3/fm3/preset-synth-trailing.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -230,6 +232,8 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `gen3/presetbody-grid-guard (${GRID_GUARD_CASE_COUNT} cases)`, run: runGridGuardTests },
   { name: `gen3/live-grid-shunt (${LIVE_GRID_SHUNT_CASE_COUNT} cases)`, run: runLiveGridShuntTests },
   { name: `gen3/taper-decode (${TAPER_DECODE_CASE_COUNT} cases)`, run: runTaperDecodeTests },
+  { name: `fm3/presetbody-records (${PRESETBODY_RECORDS_CASE_COUNT} prelude/chain record cases)`, run: runPresetBodyRecordTests },
+  { name: `fm3/preset-synth-trailing (${PRESET_SYNTH_TRAILING_CASE_COUNT} trailing-boundary cases)`, run: runPresetSynthTrailingTests },
 ];
 
 let failures = 0;

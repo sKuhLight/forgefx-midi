@@ -25,7 +25,7 @@ RE/codec · **GAP** = wire shape unknown, needs a capture.
 | Telemetry | III `0x10` | FM3 `0x11` | FM9 `0x12` | AM4 `0x15` | Codec status | Cheapest next step |
 |---|---|---|---|---|---|---|
 | Output levels (out1/2 L/R) | ✅ | ✅ | ✅ | ⛔ | **DONE** | — |
-| CPU load | ✅ push* | ✅ poll | ✅ | ⛔ | **DONE** (gen3 poll) | — |
+| CPU load | ✅ poll | ✅ poll | ✅ poll | ⛔ | **DONE** (gen3 poll, sub `0x2E`) | — |
 | Tuner (Hz/note/cents) | ✅ | ✅ | ✅ | 🟡polls | **DONE** for gen-3; AM4 parser absent | decode AM4 `action=0x0010` |
 | Tempo / BPM | ✅ | ✅ | ✅ | 🟡polls | **DONE** for gen-3; AM4 parser absent | decode AM4 `action=0x0010` |
 | Scene change | ✅ | ✅ | ✅ | ✅(4) | **DONE** | — |
@@ -39,8 +39,9 @@ RE/codec · **GAP** = wire shape unknown, needs a capture.
 | Graph curves (PEQ/EQ/comp/LFO/ADSR) | ✅w | ✅w | ✅w | — | **ABSENT/GAP** | capture `AskGraphN` |
 | All AM4 live telemetry | — | — | — | 🟡 | **CAPTURED, UNMAPPED** | correlate `action=0x0010` |
 
-`*` III pushes CPU/meters as its own messages (`AxeCpu`, `Axe3In/OutMeters`) but over USB the
-editors poll; the genuine unsolicited pushes (tempo down‑beat `0x10`, tuner `0x11`) are
+There is no CPU or meter *push* message on USB: those channel names are third‑party vocabulary,
+not protocol messages, and appear in no Fractal editor — the editors poll the status/monitor reads
+below. The genuine unsolicited pushes (tempo down‑beat `0x10`, tuner `0x11`) are
 **5‑pin DIN only, never USB** (Axe‑Fx III third‑party MIDI spec). `w` = editor renders a graph widget.
 `ed` = FM3 firmware has the block but FM3‑Edit renders no widget. `fw` = registers exist in
 firmware, no editor graph.
@@ -54,8 +55,14 @@ All gen‑3; AM4 has none of these on the wire (see below).
 - **Output levels** — `buildOutputMeterPoll` / `parseOutputMeterRms` / `meterRmsToDb`
   (`gen3/axe-fx-iii/telemetry.ts:109‑122`, 5‑septet float32 RMS → `10·log10`, clamp −40…+6 dB).
   ForgeFX `registryCore.#pollMeters()` round‑robins the 4 outputs → SSE `{type:'meters'}`.
-- **CPU** — `buildCpuPoll`/`parseCpuRawLoad`/`cpuPercentFromRaw` (`telemetry.ts:139‑151`,
-  `32 + raw·0.5`). `#pollMeters()` every ~8th tick → SSE `{type:'cpu'}`.
+- **CPU** — `buildCpuPoll` / `isCpuResponse` / `parseCpuPercent` (`telemetry.ts`). fn `0x01`
+  sub `0x2E` is **preset status + the routing/grid blob**, not a value dump: a 14‑bit payload
+  BYTE COUNT at frame bytes 19‑20 sizes a **continuous MSB‑first septet stream** from byte 21
+  (frame length `21 + ceil(count·8/7) + 2`), and the device load is a **float32 LE percentage
+  at payload offset `0x0C`**, no scaling. Payload counts: **496** (FM3, 590‑byte frame) /
+  **640** (III, FM9; 755‑byte frame). `#pollMeters()` every ~8th tick → SSE `{type:'cpu'}`.
+  The old `CPU_RAW_OFFSET = 37` / `32 + raw·0.5` estimate is **deprecated** (wrong offset and
+  wrong encoding) and kept only for callers that still read it.
 - **Tuner** — `buildTunerPageOpen/Close/Poll`, `parseTunerFreqHz` (`telemetry.ts:65‑81`). FM3
   byte‑confirmed: fn `0x01` sub `0x19`, field `0x02` = fundamental Hz as float32 @ frame off 12.
 - **Tempo** — `buildSetTempoViaParam` + `parseTempoResponse`; III cmd `0x14`.

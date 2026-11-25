@@ -389,6 +389,8 @@ function assignSections(
 // ---------------------------------------------------------------------------
 
 export interface BuildDeviceCacheOptions {
+  /** AM4/VP4 value-list bounds are ordinals and must pass through without scaling. */
+  enumBoundsAreOrdinals?: boolean;
   /**
    * Only these seeded families must WIN their own vote (default: all seeds).
    * Cross-device builds pass a subset when some seeds are trusted from a
@@ -472,11 +474,12 @@ export function buildDeviceCache(
       const measured = measuredTaper(r);
       const knob =
         r.kind === 'float' && r.tc === KNOB_TYPECODE && !r.unit && (measured === undefined || measured.shape === 'linear');
+      const scale = r.kind === 'enum' && opts.enumBoundsAreOrdinals ? 0 : r.def;
       const entry: RangeDef = {
         kind: r.kind,
-        displayMin: knob ? KNOB_DISPLAY_MIN : displayOf(r.min, r.def),
-        displayMax: knob ? KNOB_DISPLAY_MAX : displayOf(r.max, r.def),
-        scale: f32clean(r.def),
+        displayMin: knob ? KNOB_DISPLAY_MIN : displayOf(r.min, scale),
+        displayMax: knob ? KNOB_DISPLAY_MAX : displayOf(r.max, scale),
+        scale: f32clean(scale),
         step: f32clean(r.step),
         typecode: r.tc,
       };

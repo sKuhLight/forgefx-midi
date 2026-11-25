@@ -45,8 +45,10 @@ import type { BuiltCacheData, CacheRecord, CacheWalkIssue, DeviceParam } from '.
  * displayMax 10, taper 'linear', no unit) instead of the definition's `(min, max) * scale`, matching the shipped
  * catalogs.
  *
- * Policy: Schema stays 1 until the first release that carries it; after a release, every change to derived
- * output bumps it. (No bump while unreleased: the consuming runtime's schema gate lands in the same bundle.)
+ * Policy: the schema stays 1 while changes are additive. The AM4/VP4 enum-bound correction is
+ * additive: those value-list bounds are raw ordinals and pass through with scale 0 (the record's
+ * default field is not a scale), while every gen-3 derived row is byte-identical to before, so an
+ * already-persisted cache keeps serving correctly.
  */
 export const CACHE_SCHEMA = 1;
 
@@ -149,7 +151,9 @@ export async function buildCache(
     }
   }
 
-  const data = buildDeviceCache(records, params, seeds);
+  const data = buildDeviceCache(records, params, seeds, {
+    enumBoundsAreOrdinals: opts.model === 0x14 || opts.model === 0x15,
+  });
 
   const meta: BuiltCache['meta'] = {
     schema: CACHE_SCHEMA,

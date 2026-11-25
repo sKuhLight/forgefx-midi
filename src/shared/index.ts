@@ -82,3 +82,4 @@ export type {
   LineageLookupHit,
   LineageLookupResult,
 } from './lineageLookup.js';
+export { decodeSeptetStream } from './septetStream.js';

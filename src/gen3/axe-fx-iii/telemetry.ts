@@ -16,9 +16,8 @@
  *     float32 at pos 12 → dB = 10·log10(v). These are the REAL calibrated
  *     leveling meters (matched FM3-Edit's readout to ~1 dB); the 0x2E
  *     bytes-35/36 meters saturate and are NOT used.
- *   CPU — fn 0x01 sub 0x2E returns a ≥590-byte system-status frame; byte 37
- *     is the block DSP load → CPU% ≈ base + raw·slope (base 32, slope 0.5,
- *     matched to the FM3 front panel).
+ *   CPU — fn 0x01 sub 0x2E returns preset status and the routing grid.
+ *     CPU load is a float32 percentage at offset 0x0C of its unpacked payload.
  *   TEMPO WRITE — the fn 0x14 SET does not take on FM3; FM3-Edit writes the
  *     global-tempo parameter instead (fn 0x01 typed SET, effectId 2
  *     (Controllers), paramId 0x20, value = float32 BPM).
@@ -153,46 +152,136 @@ export function parseBlockMonitorNorm(frame: readonly number[]): number {
   return Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0;
 }
 
-// ── looper waveform ────────────────────────────────────────────────────
-// Trace 0 carries the loop envelope. The playhead and level use the ordinary block-monitor poll.
-export const SUB_LOOPER_WAVEFORM = 0x23;
-const GRAPH_PAYLOAD_OFFSET = 21;
-const GRAPH_HEADER_END = GRAPH_PAYLOAD_OFFSET + 2;
-const read14 = (frame: readonly number[], offset: number) => (frame[offset] ?? 0) | ((frame[offset + 1] ?? 0) << 7);
-
-export function buildLooperWaveformPoll(effectId: number, modelByte: number): number[] {
+// ── block graph curves (EQ/PEQ/filter/comp transfer/LFO/ADSR/modifier/cab/RTA) ──
+// Every `graph_*` widget on a block page gets its curve FROM THE DEVICE: fn 0x01 sub 0x23
+// with the block's effectId and a curve-slot index (`graphIndex`, 0..3 — the CAB page uses
+// 0..3 for its four cab traces). The reply is a fixed container:
+//
+//   bytes 0..4    F0 00 01 74 <model>
+//   byte  5       0x01 (fn)
+//   bytes 6..7    selector 0x23, 14-bit LE
+//   bytes 8..9    echoed effectId, 14-bit LE
+//   bytes 10..11  echoed curve slot, 14-bit LE
+//   bytes 12..16  revision word, 5 septets → uint32
+//   bytes 17..18  status, 14-bit LE (no data when non-zero)
+//   bytes 19..20  declared payload byte count, 14-bit LE (positive multiple of 4, <= 512;
+//                 512 for the full-size cab/PEQ/filter/looper curves)
+//   bytes 21..    one continuous MSB-first 7-bit stream → count bytes → count/4 float32 LE
+//   last two      XOR checksum, F7
+//
+// 512 payload bytes need 586 septets, so a full-size curve reply is exactly 21 + 586 + 2 = 609
+// bytes = 128 float32 magnitudes. 512 is the proven cab/PEQ/filter/looper size; the RTA sends
+// its band counts (32/64/128 bands = 128/256/512 payload bytes), so a reply declares any
+// positive multiple of 4 up to 512 and the frame length follows from that count. The fn 0x01
+// sub 0x2E status block uses the same header shape with a different declared count (496 bytes
+// FM3 / 640 FM9+III); the declared count, not the frame length alone, identifies the payload.
+//
+// Fetched on state change (page open, parameter echo, type/zoom), NOT polled.
+//
+// Widgets that also name a live marker (`COMP_XMARK`, `MOD_XMARK`, `ADSR*_XMARK`) still need
+// the ordinary `sub 0x19` state read for the marker position; the curve comes from here.
+export const SUB_GRAPH_CURVE = 0x23;
+/** Fixed header length in front of the septet stream. */
+export const GRAPH_CURVE_HEADER_LEN = 21;
+/** Largest declared payload size: 512 B = 128 float32 values (the full-size curves). */
+export const GRAPH_CURVE_MAX_BYTES = 0x200;
+/** Float32 values in a full-size (512-byte) curve reply. */
+export const GRAPH_CURVE_VALUE_COUNT = GRAPH_CURVE_MAX_BYTES / 4;
+/** Septets needed to carry `GRAPH_CURVE_MAX_BYTES` (ceil(512·8/7)). */
+export const GRAPH_CURVE_SEPTETS = Math.ceil((GRAPH_CURVE_MAX_BYTES * 8) / 7);
+/** Exact wire length of a full-size curve reply: header + septets + checksum + F7. */
+export const GRAPH_CURVE_WIRE_LEN = GRAPH_CURVE_HEADER_LEN + GRAPH_CURVE_SEPTETS + 2;
+/** Largest wire length a curve reply can have (alias kept for callers). */
+export const GRAPH_CURVE_MAX_WIRE_LEN = GRAPH_CURVE_WIRE_LEN;
+/** Curve-slot indices a single block page can expose. */
+export const GRAPH_CURVE_SLOTS = 4;
+/** Build the `fn 0x01 sub 0x23 (effectId, graphIndex)` curve fetch (23 bytes). */
+export function buildGraphCurvePoll(effectId: number, graphIndex: number, modelByte: number): number[] {
   const e14 = [effectId & 0x7f, (effectId >> 7) & 0x7f];
-  const trace = [0, 0];
-  const revisionStatusAndLength = Array<number>(9).fill(0);
-  return envelope(FN_PARAMETER, [SUB_LOOPER_WAVEFORM, 0, ...e14, ...trace, ...revisionStatusAndLength], modelByte);
+  const g14 = [graphIndex & 0x7f, (graphIndex >> 7) & 0x7f];
+  return envelope(FN_PARAMETER, [SUB_GRAPH_CURVE, 0x00, ...e14, ...g14, 0, 0, 0, 0, 0, 0, 0, 0, 0], modelByte);
 }
 
-function loopTraceByteCount(frame: readonly number[]): number {
-  const nbytes = read14(frame, 19);
-  if (nbytes <= 0 || nbytes % 4 !== 0) return 0;
-  if (frame.length !== GRAPH_HEADER_END + Math.ceil(nbytes * 8 / 7)) return 0;
-  if (frame[0] !== SYSEX_START || frame.at(-1) !== SYSEX_END ||
-      !FRACTAL_MFR_PREFIX.every((byte, i) => frame[i + 1] === byte)) return 0;
-  if (frame[5] !== FN_PARAMETER || read14(frame, 6) !== SUB_LOOPER_WAVEFORM ||
-      read14(frame, 10) !== 0 || read14(frame, 17) !== 0) return 0;
-  return fractalChecksum(frame.slice(0, -2)) === frame.at(-2) ? nbytes : 0;
+/** Declared payload byte count (bytes 19–20, 14-bit LE). */
+function declaredByteCount(frame: readonly number[]): number {
+  return (frame[19] ?? 0) | ((frame[20] ?? 0) << 7);
 }
 
-/** True for a valid looper envelope at `effectId`. */
-export function isLooperWaveformResponse(frame: readonly number[], effectId: number): boolean {
-  return read14(frame, 8) === effectId && loopTraceByteCount(frame) > 0;
+/** First reason `frame` is not a curve reply container, or null when it is one. */
+function graphCurveContainerError(frame: readonly number[]): string | null {
+  if (frame.length < GRAPH_CURVE_HEADER_LEN + 2) return `length ${frame.length} is shorter than the header`;
+  if (frame[0] !== SYSEX_START || frame[frame.length - 1] !== SYSEX_END) return 'framing';
+  if (frame[1] !== 0x00 || frame[2] !== 0x01 || frame[3] !== 0x74) return 'manufacturer id';
+  if (frame[5] !== FN_PARAMETER) return `function byte 0x${(frame[5] ?? 0).toString(16)} != 0x01`;
+  if (frame[6] !== SUB_GRAPH_CURVE || frame[7] !== 0x00) return 'selector is not 0x23';
+  const status = (frame[17] ?? 0) | ((frame[18] ?? 0) << 7);
+  if (status !== 0) return `status ${status} carries no curve data`;
+  const count = declaredByteCount(frame);
+  if (count <= 0 || count % 4 !== 0) return `declared byte count ${count} is not a positive multiple of 4`;
+  if (count > GRAPH_CURVE_MAX_BYTES) return `declared byte count ${count} exceeds ${GRAPH_CURVE_MAX_BYTES}`;
+  const expected = GRAPH_CURVE_HEADER_LEN + Math.ceil((count * 8) / 7) + 2;
+  if (frame.length !== expected) return `length ${frame.length} != ${expected} for declared count ${count}`;
+  if (fractalChecksum(frame.slice(0, -2)) !== frame[frame.length - 2]) return 'checksum';
+  return null;
 }
 
-/** Decode the little-endian float samples carried in the graph reply's septet stream. */
-export function parseLooperWaveform(frame: readonly number[]): number[] {
-  const nbytes = loopTraceByteCount(frame);
-  if (nbytes === 0) return [];
-  const raw = decodeSeptetStream(frame, nbytes, GRAPH_PAYLOAD_OFFSET);
-  const samples = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
-  return Array.from({ length: nbytes / 4 }, (_, i) => {
-    const value = samples.getFloat32(i * 4, true);
-    return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0;
+/** True for a `sub 0x23` reply carrying the curve for `effectId` slot `graphIndex`. */
+export function isGraphCurveResponse(frame: readonly number[], effectId: number, graphIndex: number): boolean {
+  if (graphCurveContainerError(frame) !== null) return false;
+  const eid = (frame[8] ?? 0) | ((frame[9] ?? 0) << 7);
+  const slot = (frame[10] ?? 0) | ((frame[11] ?? 0) << 7);
+  return eid === effectId && slot === graphIndex;
+}
+
+/** Decode a graph-curve reply → `count / 4` float32 magnitudes (128 for a full-size reply).
+ *  Throws when the frame is not a valid curve container or is truncated. */
+export function parseGraphCurve(frame: readonly number[]): number[] {
+  const error = graphCurveContainerError(frame);
+  if (error !== null) throw new Error(`Graph curve reply rejected: ${error}.`);
+  const count = declaredByteCount(frame);
+  const raw = decodeSeptetStream(frame, count, GRAPH_CURVE_HEADER_LEN);
+  if (raw.length !== count) {
+    throw new Error(`Graph curve reply truncated: ${raw.length} of ${count} payload bytes.`);
+  }
+  const view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+  const out: number[] = [];
+  for (let i = 0; i < count / 4; i++) out.push(view.getFloat32(i * 4, true));
+  return out;
+}
+
+/** RTA band count from the `RTA_NUMBANDS` selector: `(1 << v) << 5` → 32 / 64 / 128. */
+export function rtaBandCount(numBandsSelector: number): number {
+  return (1 << (numBandsSelector & 0x1f)) << 5;
+}
+/** Convert raw RTA linear magnitudes → 0..1 display heights over the editor's 120 dB span
+ *  (`clamp(10·log10(v), −110, +10)`, scaled by 1/120). Cab/EQ curves need no conversion. */
+export function parseRtaBands(frame: readonly number[], numBandsSelector: number): number[] {
+  const bands = parseGraphCurve(frame).slice(0, rtaBandCount(numBandsSelector));
+  return bands.map((v) => {
+    const db = 10 * Math.log10(v > 0 ? v : 1e-12);
+    return Math.max(0, Math.min(1, (Math.max(-110, Math.min(10, db)) + 110) / 120));
   });
+}
+
+// ── looper waveform (Looper block) ──────────────────────────────────────
+// The Looper's live waveform is the block graph-curve channel: fn 0x01 sub 0x23 at the
+// Looper effectId with curve slot 0, answered by the same 609-byte container. The 128
+// decoded float32 values are the loop envelope magnitudes (all zero while the loop is
+// empty) — they are not a normalized 0..1 display array. The playhead and level ride the
+// ordinary `sub 0x19` state read: playhead at pid 14 (`LOOPER_STOP` carries the position,
+// not a stop flag) and level at pid 22.
+export const SUB_LOOPER_WAVEFORM = SUB_GRAPH_CURVE;
+/** Poll the looper waveform: the curve fetch at slot 0. */
+export function buildLooperWaveformPoll(effectId: number, modelByte: number): number[] {
+  return buildGraphCurvePoll(effectId, 0, modelByte);
+}
+/** True for a looper-waveform reply (the curve container at `effectId`, slot 0). */
+export function isLooperWaveformResponse(frame: readonly number[], effectId: number): boolean {
+  return isGraphCurveResponse(frame, effectId, 0);
+}
+/** Decode the looper waveform → the 128 envelope magnitudes (device values, not normalized). */
+export function parseLooperWaveform(frame: readonly number[]): number[] {
+  return parseGraphCurve(frame);
 }
 
 // ── looper transport control (Record / Play / Stop / Overdub / Undo / Once / Reverse / Half) ──
@@ -210,27 +299,65 @@ export function buildLooperControl(effectId: number, controlPid: number, on: boo
 
 // ── CPU load ───────────────────────────────────────────────────────────
 
-/** Minimum length of the fn 0x01 sub 0x2E system-status frame. */
+/** @deprecated Historical minimum observed frame length. Use `isCpuResponse` to match a reply. */
 export const CPU_RESPONSE_MIN_LEN = 590;
-/** Byte offset of the block-DSP-load field inside the system-status frame. */
+/** @deprecated Raw byte used by the old estimate. Use `parseCpuPercent` instead. */
 export const CPU_RAW_OFFSET = 37;
-/** CPU% ≈ base + raw·slope (matched to the FM3 front-panel readout). */
+/** @deprecated Coefficient of the old estimate. Use `parseCpuPercent` instead. */
 export const CPU_BASE = 32;
+/** @deprecated Coefficient of the old estimate. Use `parseCpuPercent` instead. */
 export const CPU_SLOPE = 0.5;
 
-/** Poll the system-status block (heavy ≥590-byte read — poll sparingly). */
+const STATUS_LENGTH_OFFSET = 19;
+const STATUS_PAYLOAD_OFFSET = 21;
+const CPU_PERCENT_OFFSET = 0x0c;
+const CPU_PAYLOAD_BYTES = CPU_PERCENT_OFFSET + 4;
+const CPU_PACKED_BYTES = Math.ceil(CPU_PAYLOAD_BYTES * 8 / 7);
+/** FM3 model byte — the only model with observed sub 0x2E replies. */
+const MODEL_BYTE_FM3 = 0x11;
+
+/** Poll preset status and the routing grid (poll sparingly). */
 export function buildCpuPoll(modelByte: number): number[] {
   return envelope(FN_PARAMETER, [SUB_SYSTEM_STATUS, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], modelByte);
 }
-/** True for a system-status reply. */
+/** True for a preset-status reply with a complete declared payload.
+ *  Reply layout: `F0 00 01 74 <model> 01 2E` + 14-bit sub/field words, the
+ *  14-bit payload BYTE COUNT at 19..20, the septet payload from 21, checksum +
+ *  `F7`. The frame length is `21 + ceil(count*8/7) + 2` (590 for a 496-byte FM3
+ *  payload, 755 for 640 bytes), so the count — not a per-model constant — sizes it.
+ *  Field 4 (bytes 17..18) is additionally required to be 0 on FM3, the only model
+ *  with observed status replies; it is not constrained on the other model bytes. */
 export function isCpuResponse(frame: readonly number[]): boolean {
-  return frame[5] === FN_PARAMETER && frame[6] === SUB_SYSTEM_STATUS && frame.length >= CPU_RESPONSE_MIN_LEN;
+  if (
+    frame.length < STATUS_PAYLOAD_OFFSET + CPU_PACKED_BYTES + 2 ||
+    frame[0] !== SYSEX_START ||
+    !FRACTAL_MFR_PREFIX.every((byte, i) => frame[i + 1] === byte) ||
+    frame[5] !== FN_PARAMETER ||
+    frame[6] !== SUB_SYSTEM_STATUS ||
+    frame[7] !== 0 || // 14-bit sub-op/selector high byte
+    frame[frame.length - 1] !== SYSEX_END ||
+    fractalChecksum(frame.slice(0, -2)) !== frame[frame.length - 2]
+  ) return false;
+  if (frame[4] === MODEL_BYTE_FM3 && (frame[17] !== 0 || frame[18] !== 0)) return false;
+  const length = frame[STATUS_LENGTH_OFFSET] | (frame[STATUS_LENGTH_OFFSET + 1] << 7);
+  return length >= CPU_PAYLOAD_BYTES && STATUS_PAYLOAD_OFFSET + Math.ceil(length * 8 / 7) + 2 === frame.length;
 }
-/** Raw block-DSP-load byte. */
+
+/** Decode the CPU percentage, or return `null` for an invalid reply. */
+export function parseCpuPercent(frame: readonly number[]): number | null {
+  if (!isCpuResponse(frame)) return null;
+  // The payload is one continuous MSB-first septet stream (no per-chunk re-alignment);
+  // the CPU load is a float32 little-endian percentage at payload offset 0x0C.
+  const payload = decodeSeptetStream(frame, CPU_PAYLOAD_BYTES, STATUS_PAYLOAD_OFFSET);
+  const percent = new DataView(payload.buffer, payload.byteOffset, payload.byteLength).getFloat32(CPU_PERCENT_OFFSET, true);
+  return Number.isFinite(percent) && percent >= 0 && percent <= 100 ? percent : null;
+}
+
+/** @deprecated Raw byte used by the old estimate. Use `parseCpuPercent` instead. */
 export function parseCpuRawLoad(frame: readonly number[]): number {
   return frame[CPU_RAW_OFFSET] ?? 0;
 }
-/** Raw load byte → CPU percent, 1-decimal rounded (reference math). */
+/** @deprecated Preserve the old estimate for existing callers. Use `parseCpuPercent` instead. */
 export function cpuPercentFromRaw(raw: number, base = CPU_BASE, slope = CPU_SLOPE): number {
   return Math.round((base + raw * slope) * 10) / 10;
 }

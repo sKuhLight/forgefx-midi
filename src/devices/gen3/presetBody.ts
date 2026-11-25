@@ -27,6 +27,9 @@
  */
 
 import { TYPE_BINARY_IDS } from './gen3BodyTables.js';
+import { AXE3_ENUM_OVERRIDES } from '../../gen3/axe-fx-iii/enumOverrides.generated.js';
+import { FM3_ROSTERS } from '../../gen3/fm3/rosters.generated.js';
+import { FM9_AMP_ROSTER } from '../../gen3/fm9/rosters.generated.js';
 import { decodeRawPatch } from './presetHuffman.js';
 import { parsePresetDump } from './presetDump.js';
 
@@ -295,8 +298,20 @@ function u16(data: Uint8Array, off: number): number {
 function scale10(raw: number): number {
   return Math.round((raw / 65535) * 1000) / 100;
 }
-function typeName(block: string, id: number): string | undefined {
-  return TYPE_BINARY_IDS[block]?.[id];
+const FM3_AMP_TYPES: Readonly<Record<number, string>> = Object.fromEntries(
+  FM3_ROSTERS.amp.map(({ value, name }) => [value, name]),
+);
+
+/** Preset type ordinals match each device's live selector values. */
+export function presetTypeRoster(block: string, modelId: number): Readonly<Record<number, string>> {
+  if (block !== 'Amp') return TYPE_BINARY_IDS[block] ?? {};
+  if (modelId === MODEL_AXE_FX_III) return AXE3_ENUM_OVERRIDES.DISTORT['0'];
+  if (modelId === MODEL_FM9) return FM9_AMP_ROSTER;
+  return FM3_AMP_TYPES;
+}
+
+function typeName(block: string, id: number, modelId: number): string | undefined {
+  return presetTypeRoster(block, modelId)[id];
 }
 
 // ── public output shapes ──────────────────────────────────────────────
@@ -357,6 +372,8 @@ export interface Gen3PresetBody {
 }
 
 const CHANNEL_LETTERS = ['A', 'B', 'C', 'D'] as const;
+const SCENE_MIDI_EID = 190;
+const SCENE_MIDI_NAME = 'Scene MIDI';
 
 // ── grid (column-major, 2 words/cell: effect id + routing flag) ────────
 const GRID_BASE = 0x104;
@@ -374,7 +391,7 @@ function parseGrid(data: Uint8Array, rows: number, cols: number): Gen3GridCell[]
         cell.name = `Shunt ${eid - 1023}`;
         cell.is_shunt = true;
       } else {
-        cell.name = effectName(eid) ?? `eid_${eid}`;
+        cell.name = eid === SCENE_MIDI_EID ? SCENE_MIDI_NAME : effectName(eid) ?? `eid_${eid}`;
       }
       const fromRows: number[] = [];
       for (let r = 0; r < rows; r++) if (flag & (1 << r)) fromRows.push(r);
@@ -385,8 +402,8 @@ function parseGrid(data: Uint8Array, rows: number, cols: number): Gen3GridCell[]
   return out;
 }
 
-// ── block-chain start: first of two consecutive 25x1 modifier blocks ───
-function findBlockChainStart(data: Uint8Array): number {
+// ── record-walk start: first of two consecutive 25x1 modifier blocks ───
+function findRecordWalkStart(data: Uint8Array): number {
   const size = (BLOCK_HEADER_WORDS + 25) * 2;
   for (let off = 0x200; off < data.length - 70; off += 2) {
     if (u16(data, off + 30) !== 25 || u16(data, off + 32) !== 1) continue;
@@ -403,6 +420,7 @@ function walkBlocks(
   chainStart: number,
   profile: DeviceProfile,
   placedEids: ReadonlySet<number>,
+  modelId: number,
 ): Gen3Block[] {
   const { typeLocations } = profile;
   const results: Gen3Block[] = [];
@@ -412,6 +430,7 @@ function walkBlocks(
     const rows = u16(data, pos + 32); // header word 16
     if (cols === 0 || rows === 0 || cols > 500 || rows > 8) break;
     const size = (BLOCK_HEADER_WORDS + cols * rows) * 2;
+    if (pos + size > data.length) break;
     if (cols === 25 && rows === 1) { pos += size; continue; } // modifier slot
 
     // IDENTIFY the block by its grid-effect-id SIGNATURE — the u16 twelve bytes
@@ -425,6 +444,15 @@ function walkBlocks(
     // above and the per-channel stride below.
     const sigEid = pos >= HEADER_SIGNATURE_GAP ? u16(data, pos - HEADER_SIGNATURE_GAP) : 0;
     if (!placedEids.has(sigEid)) { pos += size; continue; }
+    // This preset-scoped record occupies a grid cell in the dump, but has no
+    // instance range or ordinary block channels. Keep it out of EFFECT_BASES.
+    if (sigEid === SCENE_MIDI_EID) {
+      if (cols === 257 && rows === 1) {
+        results.push({ block: SCENE_MIDI_NAME, cols, rows, offset: pos, params_offset: pos + BLOCK_HEADER_WORDS * 2 });
+      }
+      pos += size;
+      continue;
+    }
     const blockName = effectFamily(sigEid);
     if (!blockName) { pos += size; continue; } // signature is not a grid effect id
 
@@ -481,7 +509,7 @@ function walkBlocks(
       if (locKind === 'header') {
         const typeId = u16(data, pos + locOffset * 2);
         block.type_id = typeId;
-        const tn = typeName(blockName, typeId);
+        const tn = typeName(blockName, typeId, modelId);
         if (tn) block.type = tn;
         if (rows >= 4 && cols > 6) {
           // Per-channel header-type: channel ch's type id lives at the PREVIOUS
@@ -493,7 +521,7 @@ function walkBlocks(
             if (ch === 0) tid = typeId;
             else { const prevBase = paramsStart + (ch - 1) * cols * 2; tid = u16(data, prevBase + nextChTypeIdx * 2); }
             const c: Gen3BlockChannel = { type_id: tid };
-            const n = typeName(blockName, tid);
+            const n = typeName(blockName, tid, modelId);
             if (n) c.type = n;
             channels[CHANNEL_LETTERS[ch]] = c;
           }
@@ -507,7 +535,7 @@ function walkBlocks(
           const base = paramsStart + ch * cols * 2;
           const tid = u16(data, base + shift + AMP_PARAM_OFFSETS.type);
           const c: Gen3BlockChannel = { type_id: tid };
-          const n = typeName('Amp', tid);
+          const n = typeName('Amp', tid, modelId);
           if (n) c.type = n;
           for (const [param, off] of Object.entries(AMP_PARAM_OFFSETS)) {
             if (param === 'type') continue;
@@ -523,7 +551,7 @@ function walkBlocks(
           const base = paramsStart + ch * cols * 2;
           const tid = u16(data, base + locOffset * 2);
           const c: Gen3BlockChannel = { type_id: tid };
-          const n = typeName(blockName, tid);
+          const n = typeName(blockName, tid, modelId);
           if (n) c.type = n;
           channels[CHANNEL_LETTERS[ch]] = c;
         }
@@ -531,7 +559,7 @@ function walkBlocks(
       } else {
         const typeId = u16(data, paramsStart + locOffset * 2);
         block.type_id = typeId;
-        const tn = typeName(blockName, typeId);
+        const tn = typeName(blockName, typeId, modelId);
         if (tn) block.type = tn;
       }
     }
@@ -543,25 +571,38 @@ function walkBlocks(
 }
 
 // ── modifiers ─────────────────────────────────────────────────────────
-const MODIFIER_PRE_CHAIN_START = 0x240;
-const MODIFIER_FIRST_WORD = 502;
-const MODIFIER_ENTRY_SIZE = 48;
-const MODIFIER_MAX_ENTRIES = 12;
+const MODIFIER_ENTRY_BYTES = 96;
+const MODIFIER_ENTRY_COUNT = 32;
+const MODIFIER_MARKER_OFFSET = 30;
+const MODIFIER_SELF_INDEX_OFFSET = 54;
 
-function extractPreChainModifiers(data: Uint8Array): Gen3Modifier[] {
+/** The pre-chain table starts at the walk's first marker, 30 bytes after the
+ *  walk offset. Its last entry is clipped by the first block header. */
+function preChainModifierBase(data: Uint8Array, walkStart: number): number | undefined {
+  const base = walkStart + MODIFIER_MARKER_OFFSET;
+  const last = base + (MODIFIER_ENTRY_COUNT - 1) * MODIFIER_ENTRY_BYTES;
+  if (walkStart < 0 || last + 24 > data.length || u16(data, last) !== 25 || u16(data, last + 2) !== 1) return undefined;
+  // The first two markers are already checked by the walk finder. Check an
+  // index as well to distinguish the table from ordinary chain modifiers.
+  const aligned = u16(data, base + MODIFIER_SELF_INDEX_OFFSET) === 4 ||
+    u16(data, base + MODIFIER_ENTRY_BYTES + MODIFIER_SELF_INDEX_OFFSET) === 5;
+  return aligned ? base : undefined;
+}
+
+function extractPreChainModifiers(data: Uint8Array, base: number): Gen3Modifier[] {
   const out: Gen3Modifier[] = [];
-  for (let i = 0; i < MODIFIER_MAX_ENTRIES; i++) {
-    const wordStart = MODIFIER_FIRST_WORD + i * MODIFIER_ENTRY_SIZE;
-    const abs = MODIFIER_PRE_CHAIN_START + wordStart * 2;
-    if (abs + 12 * 2 > data.length) break;
-    if (u16(data, abs) !== 25) break; // marker
+  for (let i = 0; i < MODIFIER_ENTRY_COUNT; i++) {
+    const abs = base + i * MODIFIER_ENTRY_BYTES;
+    if (u16(data, abs) !== 25 || u16(data, abs + 2) !== 1) continue;
+    // The last slot's index word is occupied by the first block's eid.
+    if (i < MODIFIER_ENTRY_COUNT - 1 && u16(data, abs + MODIFIER_SELF_INDEX_OFFSET) !== i + 4) continue;
     const sourceId = u16(data, abs + 2 * 2);
-    const targetEid = u16(data, abs + 10 * 2);
+    const target = effectName(u16(data, abs + 10 * 2));
+    if (!target) continue;
     const paramNum = u16(data, abs + 11 * 2);
-    if (targetEid === 0 && paramNum === 0 && sourceId === 0) continue;
     out.push({
       source: MODIFIER_SOURCE_NAMES[sourceId] ?? `source_${sourceId}`,
-      target: effectName(targetEid) ?? `eid_${targetEid}`,
+      target,
       param: paramNum,
       origin: 'pre-chain',
     });
@@ -595,23 +636,38 @@ function extractChainModifiers(data: Uint8Array, chainStart: number): Gen3Modifi
   return out;
 }
 
-// ── scene controllers: pre-chain block 0, 4 controllers x 8 scenes ─────
-const SCENE_CTRL_BLOCK_START = 0x240;
-const SCENE_CTRL_VALUE_OFFSET = 42;
-function extractSceneControllers(data: Uint8Array): Gen3SceneController[] {
+// ── scene controllers: parameter words 72..103 of Controllers record 0 ─────
+// The four channel records follow a `(wordsPerSlot, 4)` header; word `n` is the
+// CONTROLLERS paramId `n`, so SCENE1..4_VAL1..8 sit at words 72..103.
+//
+// LIMITATION (open item): the values are always read from controller slot 0 (the
+// live slot in the factory bank). The per-scene slot selector at body 0x1CE
+// (8 u16, one per scene, values 0..3 = slot A..D) is recovered but NOT decoded: it
+// is all-zero in all ten FM3 fixtures, and its position on FM9/III is not pinned.
+// Do not guess the scene→slot mapping until a fixture proves it.
+const CONTROLLERS_LAYOUTS: Readonly<Record<number, { base: number; wordsPerSlot: number }>> = {
+  [MODEL_FM3]: { base: 0x1f2, wordsPerSlot: 130 },
+  [MODEL_AXE_FX_III]: { base: 0x282, wordsPerSlot: 178 },
+  [MODEL_FM9]: { base: 0xe9a, wordsPerSlot: 130 },
+};
+const SCENE_CTRL_VALUE_WORD = 72;
+
+function extractSceneControllers(data: Uint8Array, modelId: number): Gen3SceneController[] {
+  const layout = CONTROLLERS_LAYOUTS[modelId];
+  if (!layout) return [];
+  const { base, wordsPerSlot } = layout;
+  const firstValue = base + SCENE_CTRL_VALUE_WORD * 2;
+  if (firstValue + 64 > data.length || u16(data, base - 4) !== wordsPerSlot || u16(data, base - 2) !== 4) return [];
   const out: Gen3SceneController[] = [];
   for (let sc = 0; sc < 4; sc++) {
-    const off = SCENE_CTRL_BLOCK_START + (SCENE_CTRL_VALUE_OFFSET + sc * 8) * 2;
-    if (off + 16 > data.length) break;
+    const off = firstValue + sc * 16;
     const raw: number[] = [];
     for (let i = 0; i < 8; i++) raw.push(u16(data, off + i * 2));
-    if (raw.some((v) => v !== 0)) {
-      out.push({
-        controller: `Scene Controller ${sc + 1}`,
-        values: raw.map((v) => Math.round((v / 65535) * 1000) / 10),
-        raw,
-      });
-    }
+    out.push({
+      controller: `Scene Controller ${sc + 1}`,
+      values: raw.map((v) => Math.round((v / 65535) * 1000) / 10),
+      raw,
+    });
   }
   return out;
 }
@@ -629,6 +685,9 @@ function asciiName(data: Uint8Array, start: number, len: number): string {
 /**
  * Decode a gen-3 decompressed patch body into a structured snapshot. `body` is
  * `decodeRawPatch(...).body`; `modelId` is the SysEx model byte (0x10/0x11/0x12).
+ *
+ * `scene_controllers` is read from Controllers channel slot 0 only; the per-scene
+ * slot selector is not decoded (see the `CONTROLLERS_LAYOUTS` note).
  */
 export function decodeGen3Body(body: Uint8Array, modelId: number): Gen3PresetBody {
   const profile = getProfile(modelId);
@@ -650,7 +709,9 @@ export function decodeGen3Body(body: Uint8Array, modelId: number): Gen3PresetBod
     out.grid = parseGrid(body, profile.gridRows, profile.gridCols);
   }
 
-  const chainStart = findBlockChainStart(body);
+  const walkStart = findRecordWalkStart(body);
+  const modifierBase = preChainModifierBase(body, walkStart);
+  const chainStart = modifierBase === undefined ? walkStart : walkStart + MODIFIER_ENTRY_COUNT * MODIFIER_ENTRY_BYTES;
   if (chainStart >= 0) {
     // Gate the chain walk to the effect ids the grid places — the block chain
     // holds a record per placed block (keyed by its offset-12 grid-eid
@@ -659,26 +720,24 @@ export function decodeGen3Body(body: Uint8Array, modelId: number): Gen3PresetBod
     const placedEids = new Set<number>(
       (out.grid ?? []).filter((c) => !c.is_shunt && c.effect_id > 0).map((c) => c.effect_id),
     );
-    out.blocks = walkBlocks(body, chainStart, profile, placedEids);
+    out.blocks = walkBlocks(body, chainStart, profile, placedEids, modelId);
     const amp = out.blocks.find((b) => b.block === 'Amp');
     if (amp?.channels) out.amp1 = amp.channels;
   }
 
   // Merge pre-chain + chain modifiers, de-duping on (target, param).
-  const pre = extractPreChainModifiers(body);
+  const pre = modifierBase === undefined ? [] : extractPreChainModifiers(body, modifierBase);
   const chain = chainStart >= 0 ? extractChainModifiers(body, chainStart) : [];
-  const seen = new Set(pre.map((m) => `${m.target} ${m.param}`));
+  const seen = new Set(pre.map((m) => `${m.target}\u0000${m.param}`));
   const merged = [...pre];
   for (const m of chain) {
-    const key = `${m.target} ${m.param}`;
+    const key = `${m.target}\u0000${m.param}`;
     if (!seen.has(key)) { merged.push(m); seen.add(key); }
   }
   if (merged.length) out.modifiers = merged;
 
-  if (body.length >= SCENE_CTRL_BLOCK_START + SCENE_CTRL_VALUE_OFFSET * 2 + 64) {
-    const sc = extractSceneControllers(body);
-    if (sc.length) out.scene_controllers = sc;
-  }
+  const sceneControllers = extractSceneControllers(body, modelId);
+  if (sceneControllers.length) out.scene_controllers = sceneControllers;
 
   return out;
 }

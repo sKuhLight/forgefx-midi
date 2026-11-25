@@ -206,13 +206,37 @@ function paramsByFamily(params: readonly DeviceParam[]): Map<string, DeviceParam
   return out;
 }
 
+/**
+ * Split a byte-identical section group (ascending tags) by owner for a restricted vote: the tags
+ * that the same families may take (`ownerKey`) form one group. A tag no family may take (key '')
+ * joins the group of the nearest lower tag a family may take when `follow` is set (a copy of a known
+ * table, e.g. the modifier slots after the modifier block), else the group of the other such tags.
+ * So a family never loses its own section to an identical lower one it may not take.
+ */
+function splitByOwner(group: readonly number[], ownerKey: (tag: number) => string, follow: boolean): number[][] {
+  const byKey = new Map<string, number[]>();
+  let lastOwned: string | null = null;
+  for (const t of group) {
+    let key = ownerKey(t);
+    if (key !== '') lastOwned = key;
+    else if (follow && lastOwned !== null) key = lastOwned;
+    let g = byKey.get(key);
+    if (!g) byKey.set(key, (g = []));
+    g.push(t);
+  }
+  return [...byKey.values()];
+}
+
 function assignSections(
   bySec: Map<number, Sec>,
   famParams: Map<string, DeviceParam[]>,
   seeds: Record<string, number>,
   assertSeeds?: Set<string>,
+  allowFamily?: (family: string, tag: number) => boolean,
+  unownedTwinsFollow = false,
 ): Assignment {
   const allTags = [...bySec.keys()].sort((a, b) => a - b);
+  const fams = [...famParams.keys()];
 
   const degenerate = allTags.filter((t) => informativeSize(bySec.get(t)!) === 0);
   const degenSet = new Set(degenerate);
@@ -233,7 +257,19 @@ function assignSections(
     }
     g.push(t);
   }
-  const groups = [...groupsBySig.values()];
+  let groups = [...groupsBySig.values()];
+  if (allowFamily) {
+    // A restricted vote checks the group's first tag only, so first split every group by owner:
+    // identical tables of different owners (or an owner's table and an identical one nobody may
+    // take) are separate candidates. Without a restriction nothing changes (`buildCache` parity).
+    const keys = new Map<number, string>();
+    const ownerKey = (t: number): string => {
+      let k = keys.get(t);
+      if (k === undefined) keys.set(t, (k = fams.filter((f) => allowFamily(f, t)).join('\u0000')));
+      return k;
+    };
+    groups = groups.flatMap((g) => splitByOwner(g, ownerKey, unownedTwinsFollow)).sort((a, b) => a[0]! - b[0]!);
+  }
   const groupOf = new Map<number, number[]>();
   for (const g of groups) for (const t of g) groupOf.set(t, g);
   const reps = groups.map((g) => g[0]);
@@ -263,10 +299,11 @@ function assignSections(
     return s;
   };
 
-  const fams = [...famParams.keys()];
   const pairScores: Array<[string, number, number]> = [];
   for (const fam of fams) {
     for (const t of reps) {
+      // A restricted vote (profile documents): the family never takes this section group.
+      if (allowFamily && !allowFamily(fam, t)) continue;
       const sc = score(fam, bySec.get(t)!);
       if (sc > 0) pairScores.push([fam, t, sc]);
     }
@@ -389,6 +426,8 @@ function assignSections(
 // ---------------------------------------------------------------------------
 
 export interface BuildDeviceCacheOptions {
+  /** AM4/VP4 value-list bounds are ordinals and must pass through without scaling. */
+  enumBoundsAreOrdinals?: boolean;
   /**
    * Only these seeded families must WIN their own vote (default: all seeds).
    * Cross-device builds pass a subset when some seeds are trusted from a
@@ -401,9 +440,107 @@ export interface BuildDeviceCacheOptions {
    * delay block's user-facing model list; `DELAY_TYPE` is the routing enum).
    */
   rosterSelectorOverrides?: Record<string, string>;
+  /**
+   * Section tag -> record count of the section as the source declared it, including records the
+   * caller left out of `records` (a profile's editor-cache source omits the user name tables).
+   * Replaces the counted records for every listed tag, so `rangeSections[F].recordCount` and
+   * `unmappedSections[].recordCount` stay exact. Tags not listed keep the counted value; the
+   * option never adds a section that has no ordinary record.
+   */
+  declaredCounts?: Readonly<Record<number, number>>;
+  /**
+   * Restricts the section vote: a family may be voted onto a section only when this returns true.
+   * Byte-identical sections are first split by owner (the families this allows on each tag; see
+   * `unownedTwinsFollow` for the tags it allows none on), then the check applies to the section the
+   * vote picks (a group's first tag); the group's further tags follow it as instances. Seed anchors
+   * are not checked. Absent (the default, and always in `buildCache`): every family may take every
+   * section, and identical sections stay one group.
+   *
+   * A profile document passes it when the catalog allows it (./profileDoc.ts): in a live walk's
+   * block-address space a block may only take the family whose reserved effect-id span holds it; in
+   * the editor-cache tag space, with a catalog section inventory, a section may only take the family
+   * the inventory lists for its tag (a tag the inventory does not list takes none).
+   */
+  allowFamily?: (family: string, tag: number) => boolean;
+  /**
+   * With `allowFamily`: a section no family may take that is byte-identical to a lower section a
+   * family may take stays in that section's group (it follows the family as a further instance — a
+   * copy of a known table, e.g. the modifier slots after the modifier block). Default false: such
+   * sections form their own group and stay unassigned.
+   */
+  unownedTwinsFollow?: boolean;
 }
 
 const DEFAULT_ROSTER_OVERRIDES: Record<string, string> = { DELAY: 'DELAY_MODEL' };
+
+/**
+ * The derived row of one ordinary record, exactly as `buildDeviceCache` derives it for an
+ * assigned family: display bounds (typecode-0x52 knob rule included), scale, step, typecode,
+ * `enumCount`, device unit and measured taper, plus the cleaned label list of an enum record.
+ */
+export function rangeRowOf(
+  r: CacheRecord,
+  opts: { enumBoundsAreOrdinals?: boolean } = {},
+): { row: RangeDef; labels?: string[] } {
+  const measured = measuredTaper(r);
+  const knob =
+    r.kind === 'float' && r.tc === KNOB_TYPECODE && !r.unit && (measured === undefined || measured.shape === 'linear');
+  // AM4/VP4 value-list bounds are raw ordinals; the record's default field is their count, not a scale.
+  const scale = r.kind === 'enum' && opts.enumBoundsAreOrdinals ? 0 : r.def;
+  const entry: RangeDef = {
+    kind: r.kind,
+    displayMin: knob ? KNOB_DISPLAY_MIN : displayOf(r.min, scale),
+    displayMax: knob ? KNOB_DISPLAY_MAX : displayOf(r.max, scale),
+    scale: f32clean(scale),
+    step: f32clean(r.step),
+    typecode: r.tc,
+  };
+  let labels: string[] | undefined;
+  if (r.kind === 'enum') {
+    entry.enumCount = r.count;
+    labels = cleanLabels(r.values);
+  }
+  if (r.unit) entry.unit = r.unit; // device-true unit from the live-walk (view 0x00)
+  // device-true taper from a FULL-mode live-walk sweep (reliable fits only;
+  // 'flat'/'unknown' are unreliable and carry no taper). 'custom' also keeps
+  // its sample points. Same threading pattern as `unit` above.
+  if (measured) {
+    entry.taper = measured.shape;
+    if (measured.shape === 'custom') entry.taperPoints = measured.points.map(([n, v]) => [n, v] as const);
+  } else if (knob) {
+    entry.taper = 'linear'; // typecode-0x52 knob: linear 0..10 (no measured taper to prefer)
+  }
+  return labels === undefined ? { row: entry } : { row: entry, labels };
+}
+
+/** One section (cache section tag, or block address of a live walk) as `buildDeviceCacheDetailed` saw it. */
+export interface DeviceCacheSection {
+  /** Section tag (editor cache) or block address (live walk). */
+  tag: number;
+  /** Assigned family, also for a further instance tag of the family; `null` when unassigned. */
+  family: string | null;
+  /** A further tag of the family's instance group (not the group's first tag). */
+  instance: boolean;
+  /**
+   * First tag of the byte-identical section group this section belongs to, when that is another
+   * tag (assigned or not: the voter groups identical tables before it votes; a restricted vote
+   * splits the groups by owner first, see `allowFamily`). Absent for a group's first tag and for a
+   * section identical to no other.
+   */
+  instanceOf?: number;
+  /** Parameter slots: ordinary records incl. placeholder slots (the family stride rule). */
+  stride: number;
+  /** Declared record count incl. special table records (and `declaredCounts`). */
+  recordCount: number;
+  /** pid -> record (ordinary ids only, placeholder slots included), ascending pid order. */
+  rows: ReadonlyMap<number, CacheRecord>;
+}
+
+/** `buildDeviceCache` output plus every section it saw (assigned or not), ascending by tag. */
+export interface DeviceCacheDetail {
+  data: BuiltCacheData;
+  sections: DeviceCacheSection[];
+}
 
 /**
  * Build the device-true cache tables from decoded records + a param catalog.
@@ -418,6 +555,20 @@ export function buildDeviceCache(
   seeds: Record<string, number>,
   opts: BuildDeviceCacheOptions = {},
 ): BuiltCacheData {
+  return buildDeviceCacheDetailed(records, params, seeds, opts).data;
+}
+
+/**
+ * `buildDeviceCache`, plus the per-section view a profile needs: every section with ordinary
+ * records, its assigned family (or none), slot count, declared record count and rows. `data` is
+ * exactly what `buildDeviceCache` returns for the same input.
+ */
+export function buildDeviceCacheDetailed(
+  records: readonly CacheRecord[],
+  params: readonly DeviceParam[],
+  seeds: Record<string, number>,
+  opts: BuildDeviceCacheOptions = {},
+): DeviceCacheDetail {
   // by_sec: ordinary records only (id < 0xff00), first occurrence per id wins.
   const bySec = new Map<number, Sec>();
   const declared = new Map<number, number>(); // section tag -> total record count
@@ -450,6 +601,11 @@ export function buildDeviceCache(
       declared.set(tag, (declared.get(tag) ?? 0) + 1);
     }
   }
+  if (opts.declaredCounts) {
+    for (const [tag, n] of Object.entries(opts.declaredCounts)) {
+      if (declared.has(Number(tag))) declared.set(Number(tag), n);
+    }
+  }
 
   const famParams = paramsByFamily(params);
   const { familyToTag, groupOf, unmappedFamilies, unmappedTags } = assignSections(
@@ -457,6 +613,8 @@ export function buildDeviceCache(
     famParams,
     seeds,
     opts.assertSeeds,
+    opts.allowFamily,
+    opts.unownedTwinsFollow === true,
   );
 
   const enumOverrides: Record<string, Record<string, string[]>> = {};
@@ -468,33 +626,11 @@ export function buildDeviceCache(
     const eo: Record<string, string[]> = {};
     const rg: Record<number, RangeDef> = {};
     for (const pid of [...sec.keys()].sort((a, b) => a - b)) {
-      const r = sec.get(pid)!;
-      const measured = measuredTaper(r);
-      const knob =
-        r.kind === 'float' && r.tc === KNOB_TYPECODE && !r.unit && (measured === undefined || measured.shape === 'linear');
-      const entry: RangeDef = {
-        kind: r.kind,
-        displayMin: knob ? KNOB_DISPLAY_MIN : displayOf(r.min, r.def),
-        displayMax: knob ? KNOB_DISPLAY_MAX : displayOf(r.max, r.def),
-        scale: f32clean(r.def),
-        step: f32clean(r.step),
-        typecode: r.tc,
-      };
-      if (r.kind === 'enum') {
-        entry.enumCount = r.count;
-        eo[String(pid)] = cleanLabels(r.values);
-      }
-      if (r.unit) entry.unit = r.unit; // device-true unit from the live-walk (view 0x00)
-      // device-true taper from a FULL-mode live-walk sweep (reliable fits only;
-      // 'flat'/'unknown' are unreliable and carry no taper). 'custom' also keeps
-      // its sample points. Same threading pattern as `unit` above.
-      if (measured) {
-        entry.taper = measured.shape;
-        if (measured.shape === 'custom') entry.taperPoints = measured.points.map(([n, v]) => [n, v] as const);
-      } else if (knob) {
-        entry.taper = 'linear'; // typecode-0x52 knob: linear 0..10 (no measured taper to prefer)
-      }
-      rg[pid] = entry;
+      const { row, labels } = rangeRowOf(sec.get(pid)!, {
+        enumBoundsAreOrdinals: opts.enumBoundsAreOrdinals,
+      });
+      if (labels !== undefined) eo[String(pid)] = labels;
+      rg[pid] = row;
     }
     if (Object.keys(eo).length > 0) enumOverrides[fam] = eo;
     ranges[fam] = rg;
@@ -545,13 +681,40 @@ export function buildDeviceCache(
     wireStride: bySec.get(t)?.size ?? 0,
   }));
 
+  // Per-section view: every tag with ordinary records, assigned (family or further instance) or not.
+  const famOfTag = new Map<number, { family: string; instance: boolean }>();
+  for (const [fam, tag] of familyToTag) {
+    for (const t of groupOf.get(tag) ?? [tag]) famOfTag.set(t, { family: fam, instance: t !== tag });
+  }
+  const sections: DeviceCacheSection[] = [...bySec.keys()]
+    .sort((a, b) => a - b)
+    .map((tag) => {
+      const sec = bySec.get(tag)!;
+      const rows = new Map<number, CacheRecord>();
+      for (const pid of [...sec.keys()].sort((a, b) => a - b)) rows.set(pid, sec.get(pid)!);
+      const f = famOfTag.get(tag);
+      const first = (groupOf.get(tag) ?? [tag])[0]!;
+      return {
+        tag,
+        family: f ? f.family : null,
+        instance: f ? f.instance : false,
+        ...(first !== tag ? { instanceOf: first } : {}),
+        stride: sec.size,
+        recordCount: declared.get(tag) ?? sec.size,
+        rows,
+      };
+    });
+
   return {
-    enumOverrides,
-    ranges,
-    rangeSections,
-    rosters,
-    cabIrs,
-    unmappedSections,
-    unmappedFamilies,
+    data: {
+      enumOverrides,
+      ranges,
+      rangeSections,
+      rosters,
+      cabIrs,
+      unmappedSections,
+      unmappedFamilies,
+    },
+    sections,
   };
 }

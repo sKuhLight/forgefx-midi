@@ -18,6 +18,7 @@
  *      (measured 90.2% ranges / 93.3% enums on this cache; principled misses
  *      are log10-scaled knobs the linear voter can't reproduce + the
  *      chorus 20->27 firmware roster delta).
+ *   6. AM4/VP4 preserve enum ordinal bounds and keep the observed float scaling.
  *
  * `src/cache/*` + `src/am4/cacheBuild.ts` stay browser-safe; this TEST may use
  * `node:fs`. The bytes arm re-serialises the fixture records back to raw cache
@@ -34,7 +35,7 @@ import { encodeCache } from './buildprofile.test.js';
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures');
 
-export const AM4_CACHE_CASE_COUNT = 5;
+export const AM4_CACHE_CASE_COUNT = 6;
 
 /** Strip the `meta`/identity envelope so only derived data is compared. */
 function dataOf(c: BuiltCache): Record<string, unknown> {
@@ -195,4 +196,23 @@ export async function runAm4Cache(): Promise<void> {
     `  cache/am4: agreement vs shipped catalog — ranges ${rMatch}/${rTotal} (${rPct.toFixed(1)}%), ` +
       `enums ${eMatch}/${eTotal} (${ePct.toFixed(1)}%)`,
   );
+
+  // ---- Case 6: same range rules on both models ---------------------------
+  // VP4 shares the AM4 record format. Use the decoded AM4 fixture to exercise
+  // the VP4 derivation path independently of device-specific catalog naming.
+  const vp4 = await buildCache({ kind: 'bytes', buf }, AM4_CACHE_PARAMS, AM4_SEEDS, { model: 0x14 });
+  for (const profile of [built, vp4]) {
+    // The six-value list has ordinal bounds 0..5 and def=2. Multiplying
+    // by its default used to report a maximum of 10.
+    const wave = profile.ranges.phaser?.[11];
+    if (wave?.displayMin !== 0 || wave.displayMax !== 5 || wave.scale !== 0 || wave.enumCount !== 6) {
+      fail(`model 0x${profile.model!.toString(16)} altered enum bounds: ${JSON.stringify(wave)}`);
+    }
+    // Positive evidence that float records cannot all use the same rule:
+    // cache bounds for amp balance are -1..1, displayed as -100..100.
+    const balance = profile.ranges.amp?.[cp['amp.balance']!.pidHigh];
+    if (balance?.displayMin !== -100 || balance.displayMax !== 100 || balance.scale !== 100) {
+      fail(`model 0x${profile.model!.toString(16)} altered float scaling: ${JSON.stringify(balance)}`);
+    }
+  }
 }

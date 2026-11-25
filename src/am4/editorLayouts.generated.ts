@@ -22,7 +22,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Chorus",
     "family": "CHORUS",
     "variants": [
-      { "name": "0,2,4,9,17,18,19", "value": "0,2,4,9,17,18,19", "fw": {"lt":"2,01"}, "pages": [
+      { "name": "0,2,4,9,17,18,19", "value": "0,2,4,9,17,18,19", "selectorParamName": "CHORUS_TYPE", "fw": {"lt":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -41,7 +41,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "10,11,12", "value": "10,11,12", "fw": {"lt":"2,01"}, "pages": [
+      { "name": "10,11,12", "value": "10,11,12", "selectorParamName": "CHORUS_TYPE", "fw": {"lt":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mode","paramName":"CHORUS_MODE","paramId":27,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
@@ -58,7 +58,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "15", "value": "15", "fw": {"lt":"2,01"}, "pages": [
+      { "name": "15", "value": "15", "selectorParamName": "CHORUS_TYPE", "fw": {"lt":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Left\nDepth","paramName":"CHORUS_DEPTHL","paramId":28,"widget":"knob","rawWidget":"knob"},
@@ -79,7 +79,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "16", "value": "16", "fw": {"lt":"2,01"}, "pages": [
+      { "name": "16", "value": "16", "selectorParamName": "CHORUS_TYPE", "fw": {"lt":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate Left","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -103,7 +103,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "Default", "value": null, "fw": {"lt":"2,01"}, "pages": [
+      { "name": "Default", "value": null, "selectorParamName": "CHORUS_TYPE", "fw": {"lt":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -124,7 +124,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "0,2,4,18,19,20,22,23,25", "value": "0,2,4,18,19,20,22,23,25", "fw": {"gtet":"2,01"}, "pages": [
+      { "name": "0,2,4,18,19,20,22,23,25", "value": "0,2,4,18,19,20,22,23,25", "selectorParamName": "CHORUS_TYPE", "fw": {"gtet":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -144,7 +144,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "1", "value": "1", "fw": {"gtet":"2,01"}, "pages": [
+      { "name": "1", "value": "1", "selectorParamName": "CHORUS_TYPE", "fw": {"gtet":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -164,7 +164,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "3,5,6,7,8,13,14", "value": "3,5,6,7,8,13,14", "fw": {"gtet":"2,01"}, "pages": [
+      { "name": "3,5,6,7,8,13,14", "value": "3,5,6,7,8,13,14", "selectorParamName": "CHORUS_TYPE", "fw": {"gtet":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -186,7 +186,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "9,17", "value": "9,17", "fw": {"gtet":"2,01"}, "pages": [
+      { "name": "9,17", "value": "9,17", "selectorParamName": "CHORUS_TYPE", "fw": {"gtet":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -206,7 +206,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "10,11,12", "value": "10,11,12", "fw": {"gtet":"2,01"}, "pages": [
+      { "name": "10,11,12", "value": "10,11,12", "selectorParamName": "CHORUS_TYPE", "fw": {"gtet":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -223,7 +223,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "15", "value": "15", "fw": {"gtet":"2,01"}, "pages": [
+      { "name": "15", "value": "15", "selectorParamName": "CHORUS_TYPE", "fw": {"gtet":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Left\nDepth","paramName":"CHORUS_DEPTHL","paramId":28,"widget":"knob","rawWidget":"knob"},
@@ -244,7 +244,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "16", "value": "16", "fw": {"gtet":"2,01"}, "pages": [
+      { "name": "16", "value": "16", "selectorParamName": "CHORUS_TYPE", "fw": {"gtet":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate Left","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -268,7 +268,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "21", "value": "21", "fw": {"gtet":"2,01"}, "pages": [
+      { "name": "21", "value": "21", "selectorParamName": "CHORUS_TYPE", "fw": {"gtet":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -287,7 +287,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "24", "value": "24", "fw": {"gtet":"2,01"}, "pages": [
+      { "name": "24", "value": "24", "selectorParamName": "CHORUS_TYPE", "fw": {"gtet":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -306,7 +306,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "26", "value": "26", "fw": {"gtet":"2,01"}, "pages": [
+      { "name": "26", "value": "26", "selectorParamName": "CHORUS_TYPE", "fw": {"gtet":"2,01"}, "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"CHORUS_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -756,7 +756,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Delay",
     "family": "DELAY",
     "variants": [
-      { "name": "0", "value": "0", "pages": [
+      { "name": "0", "value": "0", "selectorParamName": "DELAY_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -797,7 +797,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "1", "value": "1", "pages": [
+      { "name": "1", "value": "1", "selectorParamName": "DELAY_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -839,7 +839,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "2", "value": "2", "pages": [
+      { "name": "2", "value": "2", "selectorParamName": "DELAY_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -880,7 +880,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "3", "value": "3", "pages": [
+      { "name": "3", "value": "3", "selectorParamName": "DELAY_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time L","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -929,7 +929,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "4", "value": "4", "pages": [
+      { "name": "4", "value": "4", "selectorParamName": "DELAY_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -972,7 +972,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "5", "value": "5", "pages": [
+      { "name": "5", "value": "5", "selectorParamName": "DELAY_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -1043,7 +1043,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "6", "value": "6", "pages": [
+      { "name": "6", "value": "6", "selectorParamName": "DELAY_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -1071,7 +1071,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "7", "value": "7", "pages": [
+      { "name": "7", "value": "7", "selectorParamName": "DELAY_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"DELAY_TIME","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -1112,7 +1112,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27", "value": "8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27", "pages": [
+      { "name": "8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27", "value": "8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27", "selectorParamName": "DELAY_TYPE", "pages": [
         { "name": "Mod/EQ", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Modulation\nRate","paramName":"DELAY_RATE1","paramId":22,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -1136,85 +1136,9 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     ]
   },
   "DISTORT": {
-    "editorName": "Global",
+    "editorName": "Amp",
     "family": "DISTORT",
     "variants": [
-      { "name": "Global", "value": null, "pages": [
-        { "name": "Audio", "pageNum": 0, "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Input Meter","paramName":"INPUT_METERS","paramId":65520,"widget":"meter","rawWidget":"meterGainInput","placement":{"positionExact":"140,130"},"crossBlock":{"effect":"ID_INPUT1","family":null,"paramName":"INPUT_METERS","paramId":65520}},
-            {"label":"Input Pad","paramName":"GLOBAL_IN1_TRIM","paramId":47,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
-            {"label":"Input Source","paramName":"GLOBAL_IN1_SOURCE","paramId":52,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"col":1}},
-            {"label":"SPDIF\nIn Level","paramName":"GLOBAL_AESLEVEL","paramId":101,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
-            {"label":"PLAYBACK LEVEL","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"690,4"}},
-            {"label":"USB 1/2\nLevel","paramName":"GLOBAL_USBLEVEL1","paramId":99,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
-            {"label":"USB 3/4\nLevel","paramName":"GLOBAL_USBLEVEL2","paramId":100,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
-            {"label":"USB 3/4\nRecord Source","paramName":"GLOBAL_USB78_SOURCE","paramId":98,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":7},"fw":{"gtet":"1,02"}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"[Split Mode: OUT L = Cab Sim, OUT R = No Cab Sim]","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelBold","placement":{"positionExact":"415,335"}},
-            {"label":"Output Mode","paramName":"GLOBAL_OUT1_CONFIG","paramId":48,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
-            {"label":"Output Phase","paramName":"GLOBAL_OUT1_PHASE","paramId":49,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
-            {"label":"SPDIF\nInput Mode","paramName":"GLOBAL_INSPDIF_CONFIG","paramId":162,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":3},"fw":{"gtet":"2,00"}},
-          ] }
-        ] },
-        { "name": "Footswitches", "pageNum": 1, "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"Tap Amp in FX Mode","paramName":"GLOBAL_TAP_AMP_FX_MODE","paramId":147,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"140,28"}},
-            {"label":"Tap Current Ch. in Amp Mode","paramName":"GLOBAL_TAP_AMP_CH_AMP_MODE","paramId":148,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"274,28"}},
-            {"label":"Press & Hold Mode","paramName":"GLOBAL_PRESSHOLD_MODE","paramId":146,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"408,28"},"fw":{"lt":"2,01"}},
-            {"label":"Press & Hold Mode","paramName":"GLOBAL_PRESSHOLD_MODE","paramId":146,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"408,28"},"fw":{"gtet":"2,01"}},
-            {"label":"Press & Hold 1","paramName":"GLOBAL_FS_PRESS_HOLD1","paramId":132,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"542,28"}},
-            {"label":"Press & Hold 2","paramName":"GLOBAL_FS_PRESS_HOLD2","paramId":133,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"676,28"}},
-            {"label":"Press & Hold 3","paramName":"GLOBAL_FS_PRESS_HOLD3","paramId":134,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"810,28"}},
-            {"label":"Press & Hold 4","paramName":"GLOBAL_FS_PRESS_HOLD4","paramId":135,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"944,28"}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"Hold Timeout","paramName":"GLOBAL_FC_HOLD_TIMEOUT","paramId":57,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"140,202"}},
-            {"label":"Tap 1+2","paramName":"GLOBAL_FS_1_2","paramId":null,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"542,202"},"fw":{"gtet":"2,01"}},
-            {"label":"Tap 2+3","paramName":"GLOBAL_FS_2_3","paramId":null,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"676,202"},"fw":{"gtet":"2,01"}},
-            {"label":"Tap 3+4","paramName":"GLOBAL_FS_3_4","paramId":null,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"810,202"},"fw":{"gtet":"2,01"}},
-          ] }
-        ] },
-        { "name": "MIDI/Remote", "pageNum": 2, "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"GENERAL","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"140,4"}},
-            {"label":"MIDI Channel","paramName":"GLOBAL_MIDI_CHAN","paramId":58,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
-            {"label":"MIDI Thru","paramName":"GLOBAL_MIDI_THRU","paramId":109,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
-            {"label":"Receive MIDI PC","paramName":"GLOBAL_MIDI_PROG_CHANGE","paramId":59,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":2}},
-            {"label":"Send MIDI PC","paramName":"GLOBAL_SEND_MIDIPC","paramId":63,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":3}},
-            {"label":"Ignore Redundant PC","paramName":"GLOBAL_NO_REDUNDANT_PC","paramId":60,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":4}},
-          ] }
-        ] },
-        { "name": "Global", "pageNum": 3, "rows": [
-          { "section": "parameters", "controls": [
-            {"label":"GENERAL","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"140,4"},"fw":{"lt":"1,02"}},
-            {"label":"Startup Mode","paramName":"GLOBAL_STARTUP_MODE","paramId":137,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0},"fw":{"lt":"1,02"}},
-            {"label":"Gapless Changes","paramName":"GLOBAL_GAP_FILL","paramId":143,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1},"fw":{"lt":"1,02"}},
-            {"label":"Spillover","paramName":"GLOBAL_DELAYSPILL","paramId":15,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":2},"fw":{"lt":"1,02"}},
-            {"label":"Default Scene","paramName":"GLOBAL_DEFAULT_SCENE","paramId":86,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":3},"fw":{"lt":"1,02"}},
-            {"label":"Tap Tempo Mode","paramName":"GLOBAL_TAP_TEMPO_MODE","paramId":46,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":4},"fw":{"lt":"1,02"}},
-            {"label":"AC Line Frequency","paramName":"GLOBAL_LINEFREQ","paramId":90,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":5},"fw":{"lt":"1,02"}},
-            {"label":"Noisegate Offset","paramName":"GLOBAL_GATE_OFFSET","paramId":45,"widget":"knob","rawWidget":"knob","placement":{"col":6},"fw":{"lt":"1,02"}},
-            {"label":"GENERAL","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"140,4"},"fw":{"gtet":"1,02"}},
-            {"label":"Automatic AM4 Bypass","paramName":"GLOBAL_AUTO_TRUEBYPASS","paramId":129,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0},"fw":{"gtet":"1,02"}},
-            {"label":"Startup Mode","paramName":"GLOBAL_STARTUP_MODE","paramId":137,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1},"fw":{"gtet":"1,02"}},
-            {"label":"Gapless Changes","paramName":"GLOBAL_GAP_FILL","paramId":143,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":2},"fw":{"gtet":"1,02"}},
-            {"label":"Spillover","paramName":"GLOBAL_DELAYSPILL","paramId":15,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":3},"fw":{"gtet":"1,02"}},
-            {"label":"Default Scene","paramName":"GLOBAL_DEFAULT_SCENE","paramId":86,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":4},"fw":{"gtet":"1,02"}},
-            {"label":"Tap Tempo Mode","paramName":"GLOBAL_TAP_TEMPO_MODE","paramId":46,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":5},"fw":{"gtet":"1,02"}},
-            {"label":"AC Line Frequency","paramName":"GLOBAL_LINEFREQ","paramId":90,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":6},"fw":{"gtet":"1,02"}},
-            {"label":"Noisegate Offset","paramName":"GLOBAL_GATE_OFFSET","paramId":45,"widget":"knob","rawWidget":"knob","placement":{"col":7},"fw":{"gtet":"1,02"}},
-          ] },
-          { "section": "parameters", "controls": [
-            {"label":"MODELING","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"142,178"}},
-            {"label":"Power Amp Modeling","paramName":"GLOBAL_PWRAMPBYP","paramId":150,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
-            {"label":"Cab Modeling","paramName":"GLOBAL_CABINETBYP","paramId":149,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
-            {"label":"Speaker Imp. Curve","paramName":"GLOBAL_SPRK_MODEL","paramId":151,"widget":"dropdown","rawWidget":"dropdown2","placement":{"col":2}},
-            {"label":"","paramName":null,"paramId":null,"widget":"unknown","rawWidget":"","placement":{"col":4}},
-          ] }
-        ] }
-      ] },
       { "name": "Amp", "value": null, "pages": [
         { "name": "Amp", "pageNum": 0, "value": "7,8,93", "selectorParamName": "DISTORT_TYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -3771,7 +3695,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Filter",
     "family": "FILTER",
     "variants": [
-      { "name": "0", "value": "0", "pages": [
+      { "name": "0", "value": "0", "selectorParamName": "FILTER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
@@ -3788,7 +3712,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "1,2,3,7", "value": "1,2,3,7", "pages": [
+      { "name": "1,2,3,7", "value": "1,2,3,7", "selectorParamName": "FILTER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
@@ -3829,7 +3753,26 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "4,5,6,9,10,11", "value": "4,5,6,9,10,11", "pages": [
+      { "name": "4,5,6,9,10,11", "value": "4,5,6,9,10,11", "selectorParamName": "FILTER_TYPE", "pages": [
+        { "name": "Config", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Order","paramName":"FILTER_ORDER","paramId":14,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Frequency","paramName":"FILTER_FREQ","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":1}},
+            {"label":"Q","paramName":"FILTER_Q","paramId":12,"widget":"knob","rawWidget":"knob","placement":{"col":2}},
+            {"label":"Gain","paramName":"FILTER_GAIN","paramId":13,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"Low Cut","paramName":"FILTER_LOWCUT","paramId":18,"widget":"knob","rawWidget":"knob","placement":{"col":4}},
+            {"label":"High Cut","paramName":"FILTER_HICUT","paramId":19,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Level","paramName":"BLOCK_LEVEL","paramId":null,"widget":"knob","rawWidget":"knob"},
+          ] },
+          { "section": "mixer", "controls": [
+            {"label":"Bypass","paramName":"BLOCK_BYPASS","paramId":null,"widget":"button","rawWidget":"btnBypass"},
+          ] }
+        ] },
         { "name": "Modulation", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
@@ -3852,7 +3795,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "8", "value": "8", "pages": [
+      { "name": "8", "value": "8", "selectorParamName": "FILTER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
@@ -3893,7 +3836,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "12,13", "value": "12,13", "pages": [
+      { "name": "12,13", "value": "12,13", "selectorParamName": "FILTER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
@@ -3912,7 +3855,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "14", "value": "14", "pages": [
+      { "name": "14", "value": "14", "selectorParamName": "FILTER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
@@ -3953,7 +3896,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "15,17", "value": "15,17", "pages": [
+      { "name": "15,17", "value": "15,17", "selectorParamName": "FILTER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mode","paramName":"FILTER_EVFTYPE","paramId":29,"widget":"dropdown","rawWidget":"dropdown1"},
@@ -3978,7 +3921,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "16", "value": "16", "pages": [
+      { "name": "16", "value": "16", "selectorParamName": "FILTER_TYPE", "pages": [
         { "name": "Filter", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Mode","paramName":"FILTER_EVFTYPE","paramId":29,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
@@ -4003,7 +3946,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "Default", "value": null, "pages": [
+      { "name": "Default", "value": null, "selectorParamName": "FILTER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_filter","placement":{"positionExact":"126,5"}},
@@ -4030,7 +3973,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Flanger",
     "family": "FLANGER",
     "variants": [
-      { "name": "0,2,7,8,9,10,11,12,15,18,19,20,21,24,30", "value": "0,2,7,8,9,10,11,12,15,18,19,20,21,24,30", "pages": [
+      { "name": "0,2,7,8,9,10,11,12,15,18,19,20,21,24,30", "value": "0,2,7,8,9,10,11,12,15,18,19,20,21,24,30", "selectorParamName": "FLANGER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4052,7 +3995,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "1,3,5,16,22,23,25,26,28,29", "value": "1,3,5,16,22,23,25,26,28,29", "pages": [
+      { "name": "1,3,5,16,22,23,25,26,28,29", "value": "1,3,5,16,22,23,25,26,28,29", "selectorParamName": "FLANGER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4074,7 +4017,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "4,6,17,27", "value": "4,6,17,27", "pages": [
+      { "name": "4,6,17,27", "value": "4,6,17,27", "selectorParamName": "FLANGER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4094,7 +4037,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "13,31", "value": "13,31", "pages": [
+      { "name": "13,31", "value": "13,31", "selectorParamName": "FLANGER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4111,7 +4054,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "14", "value": "14", "pages": [
+      { "name": "14", "value": "14", "selectorParamName": "FLANGER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"FLANGER_RATE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4164,7 +4107,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Drive",
     "family": "FUZZ",
     "variants": [
-      { "name": "0,7", "value": "0,7", "pages": [
+      { "name": "0,7", "value": "0,7", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4176,7 +4119,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "1", "value": "1", "pages": [
+      { "name": "1", "value": "1", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Sustain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -4193,7 +4136,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "2,3,4,5,6,8,9,11,12,13,14,18,20,21,22,23,28,29,30,32,33,35,37,40,41,43,47,52,53,71", "value": "2,3,4,5,6,8,9,11,12,13,14,18,20,21,22,23,28,29,30,32,33,35,37,40,41,43,47,52,53,71", "pages": [
+      { "name": "2,3,4,5,6,8,9,11,12,13,14,18,20,21,22,23,28,29,30,32,33,35,37,40,41,43,47,52,53,71", "value": "2,3,4,5,6,8,9,11,12,13,14,18,20,21,22,23,28,29,30,32,33,35,37,40,41,43,47,52,53,71", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4205,7 +4148,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "10", "value": "10", "pages": [
+      { "name": "10", "value": "10", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4217,7 +4160,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "15,46,72", "value": "15,46,72", "pages": [
+      { "name": "15,46,72", "value": "15,46,72", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4229,7 +4172,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "16", "value": "16", "pages": [
+      { "name": "16", "value": "16", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4243,7 +4186,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "17", "value": "17", "pages": [
+      { "name": "17", "value": "17", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4262,7 +4205,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "19,24,25,27,55,56,62", "value": "19,24,25,27,55,56,62", "pages": [
+      { "name": "19,24,25,27,55,56,62", "value": "19,24,25,27,55,56,62", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4275,7 +4218,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "26", "value": "26", "pages": [
+      { "name": "26", "value": "26", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4288,7 +4231,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "31", "value": "31", "pages": [
+      { "name": "31", "value": "31", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4301,7 +4244,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "34", "value": "34", "pages": [
+      { "name": "34", "value": "34", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4315,7 +4258,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "36", "value": "36", "pages": [
+      { "name": "36", "value": "36", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Blend","paramName":"FUZZ_MIX","paramId":14,"widget":"knob","rawWidget":"knob"},
@@ -4339,7 +4282,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "38", "value": "38", "pages": [
+      { "name": "38", "value": "38", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4352,7 +4295,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "39", "value": "39", "pages": [
+      { "name": "39", "value": "39", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4365,7 +4308,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "42,48,49,51", "value": "42,48,49,51", "pages": [
+      { "name": "42,48,49,51", "value": "42,48,49,51", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4377,7 +4320,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "44", "value": "44", "pages": [
+      { "name": "44", "value": "44", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4390,7 +4333,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "45", "value": "45", "pages": [
+      { "name": "45", "value": "45", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4403,7 +4346,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "50", "value": "50", "pages": [
+      { "name": "50", "value": "50", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4415,7 +4358,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "54", "value": "54", "pages": [
+      { "name": "54", "value": "54", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4427,7 +4370,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "57", "value": "57", "pages": [
+      { "name": "57", "value": "57", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4439,7 +4382,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "58", "value": "58", "pages": [
+      { "name": "58", "value": "58", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Boost","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4457,7 +4400,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "59", "value": "59", "pages": [
+      { "name": "59", "value": "59", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Overdrive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4468,7 +4411,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "60", "value": "60", "pages": [
+      { "name": "60", "value": "60", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4481,7 +4424,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "61", "value": "61", "pages": [
+      { "name": "61", "value": "61", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4494,7 +4437,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "63", "value": "63", "pages": [
+      { "name": "63", "value": "63", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Bass","paramName":"FUZZ_LOW","paramId":20,"widget":"knob","rawWidget":"knob"},
@@ -4506,7 +4449,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "64,65", "value": "64,65", "pages": [
+      { "name": "64,65", "value": "64,65", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Volume","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4519,7 +4462,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "66", "value": "66", "pages": [
+      { "name": "66", "value": "66", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4533,7 +4476,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "67", "value": "67", "pages": [
+      { "name": "67", "value": "67", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4547,7 +4490,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "68,70", "value": "68,70", "pages": [
+      { "name": "68,70", "value": "68,70", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4561,7 +4504,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "69", "value": "69", "pages": [
+      { "name": "69", "value": "69", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Gain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4574,7 +4517,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "73", "value": "73", "pages": [
+      { "name": "73", "value": "73", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Sustain","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -4588,7 +4531,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "74,75", "value": "74,75", "pages": [
+      { "name": "74,75", "value": "74,75", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE2","paramId":49,"widget":"knob","rawWidget":"knob"},
@@ -4607,7 +4550,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "76", "value": "76", "pages": [
+      { "name": "76", "value": "76", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Drive","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4623,7 +4566,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "77", "value": "77", "pages": [
+      { "name": "77", "value": "77", "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Distortion","paramName":"FUZZ_DRIVE","paramId":11,"widget":"knob","rawWidget":"knob"},
@@ -4636,7 +4579,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "Default", "value": null, "pages": [
+      { "name": "Default", "value": null, "selectorParamName": "FUZZ_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Authentic layout will be provided in an upcoming editor release.","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel"},
@@ -4657,7 +4600,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "GateExpander",
     "family": "GATE",
     "variants": [
-      { "name": "0", "value": "0", "pages": [
+      { "name": "0", "value": "0", "selectorParamName": "GATE_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"GATE_THRESH","paramId":10,"widget":"knob","rawWidget":"knob"},
@@ -4678,7 +4621,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "1,2", "value": "1,2", "pages": [
+      { "name": "1,2", "value": "1,2", "selectorParamName": "GATE_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"GATE_THRESH","paramId":10,"widget":"knob","rawWidget":"knob"},
@@ -4699,7 +4642,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "3", "value": "3", "pages": [
+      { "name": "3", "value": "3", "selectorParamName": "GATE_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Threshold","paramName":"GATE_THRESH","paramId":10,"widget":"knob","rawWidget":"knob"},
@@ -5015,6 +4958,93 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
         ], "pageControls": [
           {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":21,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"1,128"}},
           {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"13,285"}},
+        ] }
+      ] }
+    ]
+  },
+  "GLOBAL": {
+    "editorName": "Global",
+    "family": "GLOBAL",
+    "variants": [
+      { "name": "Global", "value": null, "pages": [
+        { "name": "Audio", "pageNum": 0, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Input Meter","paramName":"INPUT_METERS","paramId":65520,"widget":"meter","rawWidget":"meterGainInput","placement":{"positionExact":"140,130"},"crossBlock":{"effect":"ID_INPUT1","family":null,"paramName":"INPUT_METERS","paramId":65520}},
+            {"label":"Input Pad","paramName":"GLOBAL_IN1_TRIM","paramId":47,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Input Source","paramName":"GLOBAL_IN1_SOURCE","paramId":52,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"col":1}},
+            {"label":"SPDIF\nIn Level","paramName":"GLOBAL_AESLEVEL","paramId":101,"widget":"knob","rawWidget":"knob","placement":{"col":3}},
+            {"label":"PLAYBACK LEVEL","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"690,4"}},
+            {"label":"USB 1/2\nLevel","paramName":"GLOBAL_USBLEVEL1","paramId":99,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"USB 3/4\nLevel","paramName":"GLOBAL_USBLEVEL2","paramId":100,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+            {"label":"USB 3/4\nRecord Source","paramName":"GLOBAL_USB78_SOURCE","paramId":98,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":7},"fw":{"gtet":"1,02"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"[Split Mode: OUT L = Cab Sim, OUT R = No Cab Sim]","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelBold","placement":{"positionExact":"415,335"}},
+            {"label":"Output Mode","paramName":"GLOBAL_OUT1_CONFIG","paramId":48,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Output Phase","paramName":"GLOBAL_OUT1_PHASE","paramId":49,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
+            {"label":"SPDIF\nInput Mode","paramName":"GLOBAL_INSPDIF_CONFIG","paramId":162,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":3},"fw":{"gtet":"2,00"}},
+          ] }
+        ] },
+        { "name": "Footswitches", "pageNum": 1, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"Tap Amp in FX Mode","paramName":"GLOBAL_TAP_AMP_FX_MODE","paramId":147,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"140,28"}},
+            {"label":"Tap Current Ch. in Amp Mode","paramName":"GLOBAL_TAP_AMP_CH_AMP_MODE","paramId":148,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"274,28"}},
+            {"label":"Press & Hold Mode","paramName":"GLOBAL_PRESSHOLD_MODE","paramId":146,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"408,28"},"fw":{"lt":"2,01"}},
+            {"label":"Press & Hold Mode","paramName":"GLOBAL_PRESSHOLD_MODE","paramId":146,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"408,28"},"fw":{"gtet":"2,01"}},
+            {"label":"Press & Hold 1","paramName":"GLOBAL_FS_PRESS_HOLD1","paramId":132,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"542,28"}},
+            {"label":"Press & Hold 2","paramName":"GLOBAL_FS_PRESS_HOLD2","paramId":133,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"676,28"}},
+            {"label":"Press & Hold 3","paramName":"GLOBAL_FS_PRESS_HOLD3","paramId":134,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"810,28"}},
+            {"label":"Press & Hold 4","paramName":"GLOBAL_FS_PRESS_HOLD4","paramId":135,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"944,28"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"Hold Timeout","paramName":"GLOBAL_FC_HOLD_TIMEOUT","paramId":57,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"140,202"}},
+            {"label":"Tap 1+2","paramName":"GLOBAL_FS_1_2","paramId":null,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"542,202"},"fw":{"gtet":"2,01"}},
+            {"label":"Tap 2+3","paramName":"GLOBAL_FS_2_3","paramId":null,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"676,202"},"fw":{"gtet":"2,01"}},
+            {"label":"Tap 3+4","paramName":"GLOBAL_FS_3_4","paramId":null,"widget":"dropdown","rawWidget":"dropdown1p5","placement":{"positionExact":"810,202"},"fw":{"gtet":"2,01"}},
+          ] }
+        ] },
+        { "name": "MIDI/Remote", "pageNum": 2, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"GENERAL","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"140,4"}},
+            {"label":"MIDI Channel","paramName":"GLOBAL_MIDI_CHAN","paramId":58,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"MIDI Thru","paramName":"GLOBAL_MIDI_THRU","paramId":109,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
+            {"label":"Receive MIDI PC","paramName":"GLOBAL_MIDI_PROG_CHANGE","paramId":59,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":2}},
+            {"label":"Send MIDI PC","paramName":"GLOBAL_SEND_MIDIPC","paramId":63,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":3}},
+            {"label":"Ignore Redundant PC","paramName":"GLOBAL_NO_REDUNDANT_PC","paramId":60,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":4}},
+          ] }
+        ] },
+        { "name": "Global", "pageNum": 3, "rows": [
+          { "section": "parameters", "controls": [
+            {"label":"GENERAL","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"140,4"},"fw":{"lt":"1,02"}},
+            {"label":"Startup Mode","paramName":"GLOBAL_STARTUP_MODE","paramId":137,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0},"fw":{"lt":"1,02"}},
+            {"label":"Gapless Changes","paramName":"GLOBAL_GAP_FILL","paramId":143,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1},"fw":{"lt":"1,02"}},
+            {"label":"Spillover","paramName":"GLOBAL_DELAYSPILL","paramId":15,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":2},"fw":{"lt":"1,02"}},
+            {"label":"Default Scene","paramName":"GLOBAL_DEFAULT_SCENE","paramId":86,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":3},"fw":{"lt":"1,02"}},
+            {"label":"Tap Tempo Mode","paramName":"GLOBAL_TAP_TEMPO_MODE","paramId":46,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":4},"fw":{"lt":"1,02"}},
+            {"label":"AC Line Frequency","paramName":"GLOBAL_LINEFREQ","paramId":90,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":5},"fw":{"lt":"1,02"}},
+            {"label":"Noisegate Offset","paramName":"GLOBAL_GATE_OFFSET","paramId":45,"widget":"knob","rawWidget":"knob","placement":{"col":6},"fw":{"lt":"1,02"}},
+            {"label":"GENERAL","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"140,4"},"fw":{"gtet":"1,02"}},
+            {"label":"Automatic AM4 Bypass","paramName":"GLOBAL_AUTO_TRUEBYPASS","paramId":129,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0},"fw":{"gtet":"1,02"}},
+            {"label":"Startup Mode","paramName":"GLOBAL_STARTUP_MODE","paramId":137,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1},"fw":{"gtet":"1,02"}},
+            {"label":"Gapless Changes","paramName":"GLOBAL_GAP_FILL","paramId":143,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":2},"fw":{"gtet":"1,02"}},
+            {"label":"Spillover","paramName":"GLOBAL_DELAYSPILL","paramId":15,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":3},"fw":{"gtet":"1,02"}},
+            {"label":"Default Scene","paramName":"GLOBAL_DEFAULT_SCENE","paramId":86,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":4},"fw":{"gtet":"1,02"}},
+            {"label":"Tap Tempo Mode","paramName":"GLOBAL_TAP_TEMPO_MODE","paramId":46,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":5},"fw":{"gtet":"1,02"}},
+            {"label":"AC Line Frequency","paramName":"GLOBAL_LINEFREQ","paramId":90,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":6},"fw":{"gtet":"1,02"}},
+            {"label":"Noisegate Offset","paramName":"GLOBAL_GATE_OFFSET","paramId":45,"widget":"knob","rawWidget":"knob","placement":{"col":7},"fw":{"gtet":"1,02"}},
+          ] },
+          { "section": "parameters", "controls": [
+            {"label":"MODELING","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"142,178"}},
+            {"label":"Power Amp Modeling","paramName":"GLOBAL_PWRAMPBYP","paramId":150,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":0}},
+            {"label":"Cab Modeling","paramName":"GLOBAL_CABINETBYP","paramId":149,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":1}},
+            {"label":"Speaker Imp. Curve","paramName":"GLOBAL_SPRK_MODEL","paramId":151,"widget":"dropdown","rawWidget":"dropdown2","placement":{"col":2}},
+            {"label":"Amp->Cab Type Linking","paramName":"GLOBAL_DYNACAB_SYNC","paramId":158,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":4}},
+            {"label":"DISPLAY","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"692,178"}},
+            {"label":"LCD Contrast","paramName":"GLOBAL_LCD_CONTRAST","paramId":56,"widget":"knob","rawWidget":"knob","placement":{"col":5}},
+            {"label":"Switch LED\nBright","paramName":"GLOBAL_FC_RING_BRIGHT_LEVEL","paramId":88,"widget":"knob","rawWidget":"knob","placement":{"col":6}},
+            {"label":"Switch LED\nDim","paramName":"GLOBAL_FC_RING_DIM_LEVEL","paramId":89,"widget":"knob","rawWidget":"knob","placement":{"col":7}},
+            {"label":"Fade Timeout","paramName":"GLOBAL_SELECT_FADE","paramId":145,"widget":"dropdown","rawWidget":"dropdown1","placement":{"col":8}},
+          ] }
         ] }
       ] }
     ]
@@ -6631,7 +6661,8 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
             {"label":"The AM4 can automatically transmit up to four MIDI messages per scene.","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelConfigurable","placement":{"positionExact":"240,255"}},
             {"label":"The available message types are Program Change (PC) and Control Change (CC).","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelConfigurable","placement":{"positionExact":"240,271"}},
             {"label":"Buttons allow you to test individual messages or the entire MIDI sequence for a scene.","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelConfigurable","placement":{"positionExact":"240,287"}},
-            {"label":"","paramName":null,"paramId":null,"widget":"unknown","rawWidget":""},
+            {"label":"For Global MIDI options, open SETUP > MIDI (top right).","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelConfigurable","placement":{"positionExact":"240,303"}},
+            {"label":"Clear All","paramName":"PATCH_SCENE_MIDI_CLEAR","paramId":null,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"1068,300"}},
           ] }
         ] }
       ] }
@@ -6683,7 +6714,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Phaser",
     "family": "PHASER",
     "variants": [
-      { "name": "5,10", "value": "5,10", "pages": [
+      { "name": "5,10", "value": "5,10", "selectorParamName": "PHASER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"PHASER_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -6702,7 +6733,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "7", "value": "7", "pages": [
+      { "name": "7", "value": "7", "selectorParamName": "PHASER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"PHASER_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -6723,7 +6754,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "Default", "value": null, "pages": [
+      { "name": "Default", "value": null, "selectorParamName": "PHASER_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"PHASER_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -7753,7 +7784,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Reverb",
     "family": "REVERB",
     "variants": [
-      { "name": "9,10,11,27,28,40,71", "value": "9,10,11,27,28,40,71", "pages": [
+      { "name": "9,10,11,27,28,40,71", "value": "9,10,11,27,28,40,71", "selectorParamName": "REVERB_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -7782,7 +7813,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "15,16,17,51,66,67,68,69,77,78", "value": "15,16,17,51,66,67,68,69,77,78", "pages": [
+      { "name": "15,16,17,51,66,67,68,69,77,78", "value": "15,16,17,51,66,67,68,69,77,78", "selectorParamName": "REVERB_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -7809,7 +7840,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "54,55,56,57,58,59,60,61,62,70", "value": "54,55,56,57,58,59,60,61,62,70", "pages": [
+      { "name": "54,55,56,57,58,59,60,61,62,70", "value": "54,55,56,57,58,59,60,61,62,70", "selectorParamName": "REVERB_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -7836,7 +7867,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "63,64,65,72", "value": "63,64,65,72", "pages": [
+      { "name": "63,64,65,72", "value": "63,64,65,72", "selectorParamName": "REVERB_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Verb Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -7867,7 +7898,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "Default", "value": null, "pages": [
+      { "name": "Default", "value": null, "selectorParamName": "REVERB_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Time","paramName":"REVERB_TIME","paramId":11,"widget":"knob","rawWidget":"knob","placement":{"col":0}},
@@ -8030,7 +8061,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
     "editorName": "Tremolo",
     "family": "TREMOLO",
     "variants": [
-      { "name": "1", "value": "1", "pages": [
+      { "name": "1", "value": "1", "selectorParamName": "TREMOLO_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -8051,7 +8082,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "6", "value": "6", "pages": [
+      { "name": "6", "value": "6", "selectorParamName": "TREMOLO_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},
@@ -8070,7 +8101,7 @@ export const AM4_LAYOUTS: DeviceEditorLayouts = {
           ] }
         ] }
       ] },
-      { "name": "Default", "value": null, "pages": [
+      { "name": "Default", "value": null, "selectorParamName": "TREMOLO_TYPE", "pages": [
         { "name": "Config", "pageNum": 0, "rows": [
           { "section": "parameters", "controls": [
             {"label":"Rate","paramName":"TREMOLO_RATE","paramId":12,"widget":"knob","rawWidget":"knob"},

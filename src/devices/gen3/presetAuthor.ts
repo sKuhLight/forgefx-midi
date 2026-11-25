@@ -24,7 +24,6 @@
  * FM3-only. See the repo NOTICE + README Credits.
  */
 
-import { TYPE_BINARY_IDS } from './gen3BodyTables.js';
 import {
   decodeRawPatch,
   reencodeRawPatch,
@@ -33,7 +32,7 @@ import {
   encode16to3,
   RAW_PATCH_CRC_OFFSET,
 } from './presetHuffman.js';
-import { decodeGen3Body, getProfile, typeFieldByteOffset, type Gen3Block } from './presetBody.js';
+import { decodeGen3Body, getProfile, MODEL_FM3, presetTypeRoster, typeFieldByteOffset, type Gen3Block } from './presetBody.js';
 import {
   parsePresetDump,
   serializePresetDump,
@@ -122,16 +121,16 @@ export interface BlockTypeOption {
 }
 
 /** All named effect-types for a block family (e.g. "Amp", "Reverb", "Drive"). */
-export function listBlockTypes(blockName: string): BlockTypeOption[] {
-  const map = TYPE_BINARY_IDS[blockName] ?? {};
+export function listBlockTypes(blockName: string, modelId = MODEL_FM3): BlockTypeOption[] {
+  const map = presetTypeRoster(blockName, modelId);
   return Object.entries(map)
     .map(([id, name]) => ({ id: Number(id), name }))
     .sort((a, b) => a.id - b.id);
 }
 
 /** Resolve a type query (exact name, else unique substring) to its ordinal. */
-function resolveTypeId(blockName: string, query: string): BlockTypeOption {
-  const options = listBlockTypes(blockName);
+function resolveTypeId(blockName: string, query: string, modelId: number): BlockTypeOption {
+  const options = listBlockTypes(blockName, modelId);
   if (options.length === 0) {
     throw new Error(`No type roster for block "${blockName}"`);
   }
@@ -187,7 +186,7 @@ export function swapBlockType(
     throw new Error(`No "${blockName}" block in this preset. Present blocks: ${present}`);
   }
 
-  const option = resolveTypeId(blockName, typeQuery);
+  const option = resolveTypeId(blockName, typeQuery, parsed.modelId);
   const offset = typeFieldByteOffset(target, channel, profile);
 
   const newBody = body.slice();

@@ -19,7 +19,9 @@
  * (Axe-Fx II cache). Auto-detect: try 0x2e then 0x0e, accept the first whose
  * whole first section parses within the walk's bounds (fallback: the classic
  * 1<=tag<=64 && 1<=count<=8192 check). id=0xffff is a name table (plain enumTail);
- * ids 0xfff0..0xfffe are cab/IR tables (tableTail).
+ * ids 0xfff0..0xfffe are cab/IR tables (tableTail). The 0x2e-byte preamble is a
+ * header with version fields (`readCacheHeader`, ./header.ts); user name tables
+ * are blanked by `redactCacheUserNames` (./redact.ts).
  *
  * Names: a name may be EMPTY (len 0) — device-synced caches carry them (an
  * empty first entry in a user cab/IR table, an empty last entry in a mode
@@ -166,6 +168,14 @@ export interface ParseCacheOptions {
    * Default false (strict). An unsupported cache revision still throws.
    */
   tolerant?: boolean;
+  /**
+   * Also report where each name's bytes sit: every enum record (and cab/IR table) gets
+   * `nameSpans`, one `[offset, byteLength]` per entry of `values` — the bytes after the entry's
+   * u32 length (`byteLength` 0 for an empty name; UTF-8 names count bytes, not characters).
+   * Default false: the walk result is then byte-identical to a walk without the option (no
+   * `nameSpans` key at all).
+   */
+  nameSpans?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -182,6 +192,7 @@ export function parseCacheRecords(buf: Uint8Array, opts: ParseCacheOptions = {})
   const N = buf.length;
   const dv = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
   const tolerant = opts.tolerant === true;
+  const wantSpans = opts.nameSpans === true;
 
   const u16 = (o: number) => dv.getUint16(o, true);
   const u32 = (o: number) => dv.getUint32(o, true);
@@ -269,6 +280,17 @@ export function parseCacheRecords(buf: Uint8Array, opts: ParseCacheOptions = {})
         values: vals,
         x: 0,
       };
+      if (wantSpans) {
+        // Re-walk the (already validated) name list: u32 len, then len name bytes.
+        const spans: Array<readonly [number, number]> = [];
+        let p = off + 26;
+        for (let i = 0; i < count; i++) {
+          const L = u32(p);
+          spans.push([p + 4, L]);
+          p += 4 + L;
+        }
+        rec.nameSpans = spans;
+      }
       if (isTable) {
         // cab/IR table record: tail = u16 0, u32 cnt, cnt x u32 wire-ids
         const z = u16(end);

@@ -16,11 +16,25 @@ export {
 export { FM3_ROSTERS, type Fm3TypeModel } from './rosters.generated.js';
 export { FM3_ENUM_OVERRIDES } from './enumOverrides.js';
 export { FM3_CAB_IRS } from './cabIrs.generated.js';
+
+/**
+ * Firmware the bundled FM3 tables (ranges, enum labels, strides, layouts) were derived from.
+ * A device on another firmware can differ from the catalog; consumers compare against this
+ * to tell "matches the catalog" from "may have drifted".
+ *
+ * `firmware` is formatted `${major}.${minor}` (for example `'12.0'`); `null` means unknown.
+ */
+export const FM3_CATALOG_BASELINE: Readonly<{ firmware: string | null }> = { firmware: '12.0' };
+
+/** Section inventory of the catalog's editor cache (tags, families, record counts). See `catalogSections.ts`. */
+export { FM3_CATALOG_SECTIONS } from './catalogSections.js';
+
 export {
   FM3_EFFECT_ID_TABLE,
   FM3_EFFECT_IDS,
   FM3_FAMILY_BY_EFFECT_ID,
   fm3EffectId,
+  fm3CrossBlockEffectId,
   type Fm3EffectIdEntry,
   type Fm3EffectAddressing,
 } from './effectIds.js';
@@ -28,6 +42,8 @@ export { FM3_LAYOUTS } from './layouts.generated.js';
 export {
   normalizeWidget,
   EDITOR_WIDGET_KINDS,
+  parseCrossToken,
+  crossBlockEffectId,
   type DeviceEditorLayouts,
   type EditorBlockLayout,
   type EditorLayoutVariant,
@@ -36,6 +52,10 @@ export {
   type EditorLayoutControl,
   type EditorControlPlacement,
   type EditorCrossBlockRef,
+  type EditorCrossToken,
+  type CrossBlockRefKey,
+  type FamilyFirstEffectIds,
+  type CrossBlockSpanLookup,
   type EditorWidgetKind,
   type EditorFwRange,
 } from '../../editorLayouts.js';
@@ -64,6 +84,7 @@ export {
   type GraphSlotKey,
   type GraphSlotContext,
 } from '../../visuals.js';
+export { gen3RosterSpan } from '../axe-fx-iii/blockTypes.js';
 export {
   FM3_FC_EFFECT_ID,
   FM3_FC_SWITCHES,

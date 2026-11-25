@@ -9,7 +9,7 @@
 import { FM3_MONITOR_PARAMS, fm3MonitorParamsFor, fm3MonitorDb } from '../../../src/gen3/fm3/index.js';
 import { FM3_PARAMS } from '../../../src/gen3/fm3/params.js';
 
-const EXPECTED_ENTRY_COUNT = 16;
+const EXPECTED_ENTRY_COUNT = 17;
 
 export const FM3_METERS_CASE_COUNT = EXPECTED_ENTRY_COUNT;
 

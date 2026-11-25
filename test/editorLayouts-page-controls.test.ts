@@ -56,16 +56,46 @@ const GEN3_ONLY_THERE: Record<string, string[]> = {
 
 const GOLDENS: Record<string, Golden> = {
   FM3: {
-    pages: 258, controls: 490, paramControls: 198, params: 20,
-    unresolved: [], foreign: { 'MULTITAP/DELAY_HOLD': 7 }, onlyThere: GEN3_ONLY_THERE,
+    pages: 335, controls: 696, paramControls: 228, params: 24,
+    unresolved: [], foreign: {},
+    onlyThere: {
+      DELAY: ['DELAY_MAXDEPTH'],
+      DISTORT: ['DISTORT_EQONOFF', 'DISTORT_EQPOSITION', 'DISTORT_EQTYPE', 'DISTORT_ZEROEQ'],
+      FUZZ: ['FUZZ_EQON'],
+      GEQ: ['GEQ_MASTERQ', 'GEQ_ZEROEQ'],
+      LOOPER: ['LOOPER_END_TRIM', 'LOOPER_HALF', 'LOOPER_START_TRIM'],
+      MULTICOMP: ['MULTICOMP_GAINMON1', 'MULTICOMP_GAINMON2', 'MULTICOMP_GAINMON3'],
+      MULTITAP: ['MULTITAP_FBKRET', 'MULTITAP_FBKSEND', 'MULTITAP_FEEDBACK'],
+      SYNTH: ['SYNTH_PD_RANGE'],
+    },
   },
   FM9: {
-    pages: 219, controls: 403, paramControls: 155, params: 24,
-    unresolved: [], foreign: { 'MULTITAP/DELAY_HOLD': 4 }, onlyThere: GEN3_ONLY_THERE,
+    pages: 283, controls: 575, paramControls: 183, params: 28,
+    unresolved: [], foreign: {},
+    onlyThere: {
+      DELAY: ['DELAY_MAXDEPTH'],
+      DISTORT: ['DISTORT_EQONOFF', 'DISTORT_EQPOSITION', 'DISTORT_EQTYPE', 'DISTORT_ZEROEQ'],
+      FUZZ: ['FUZZ_EQON'],
+      GEQ: ['GEQ_MASTERQ', 'GEQ_ZEROEQ'],
+      LOOPER: ['LOOPER_END_TRIM', 'LOOPER_HALF', 'LOOPER_START_TRIM'],
+      MULTICOMP: ['MULTICOMP_GAINMON1', 'MULTICOMP_GAINMON2', 'MULTICOMP_GAINMON3'],
+      MULTITAP: ['MULTITAP_FBKRET', 'MULTITAP_FBKSEND', 'MULTITAP_FEEDBACK'],
+      SYNTH: ['SYNTH_PD_RANGE'],
+    },
   },
   III: {
-    pages: 243, controls: 531, paramControls: 265, params: 24,
-    unresolved: [], foreign: { 'MULTITAP/DELAY_HOLD': 4 }, onlyThere: GEN3_ONLY_THERE,
+    pages: 318, controls: 731, paramControls: 293, params: 28,
+    unresolved: [], foreign: {},
+    onlyThere: {
+      DELAY: ['DELAY_MAXDEPTH'],
+      DISTORT: ['DISTORT_EQONOFF', 'DISTORT_EQPOSITION', 'DISTORT_EQTYPE', 'DISTORT_ZEROEQ'],
+      FUZZ: ['FUZZ_EQON'],
+      GEQ: ['GEQ_MASTERQ', 'GEQ_ZEROEQ'],
+      LOOPER: ['LOOPER_END_TRIM', 'LOOPER_HALF', 'LOOPER_START_TRIM'],
+      MULTICOMP: ['MULTICOMP_GAINMON1', 'MULTICOMP_GAINMON2', 'MULTICOMP_GAINMON3'],
+      MULTITAP: ['MULTITAP_FBKRET', 'MULTITAP_FBKSEND', 'MULTITAP_FEEDBACK'],
+      SYNTH: ['SYNTH_PD_RANGE'],
+    },
   },
   AM4: {
     pages: 28, controls: 60, paramControls: 60, params: 8,

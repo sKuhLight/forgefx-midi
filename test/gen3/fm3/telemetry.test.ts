@@ -209,8 +209,14 @@ export function runFm3TelemetryTests(): void {
   assertEq(buildLooperWaveformPoll(looper, FM3).length, 23, 'full looper trace request');
   assertEq(isLooperWaveformResponse(wave, looper), true, 'looper trace response');
   assertEq(isLooperWaveformResponse(wave, looper + 1), false, 'looper response for another block');
-  assertEq(parseLooperWaveform(wave), [0, 0.25, 0.75, 1, 0], 'decode packed waveform magnitudes');
-  assertEq(parseLooperWaveform(wave.slice(0, -2)), [], 'reject truncated waveform');
+  assertEq(parseLooperWaveform(wave), [0, 0.25, 0.75, 1.125, -0.5], 'decode packed waveform magnitudes (raw device values)');
+  let truncated = '';
+  try {
+    parseLooperWaveform(wave.slice(0, -2));
+  } catch (e) {
+    truncated = (e as Error).message;
+  }
+  if (!truncated) throw new Error('[fm3/telemetry] truncated waveform not rejected');
 
   // ── model-byte discipline: frames carry the byte they were built with ──
   for (const mb of [0x10, 0x11, 0x12]) {

@@ -183,17 +183,19 @@ function layoutNarrowing(): void {
   eq(rolesOf(resolveBlockVisuals(catalog, 'REVERB', null, { layoutParamIds: [1, 54] })[0]), 'time', 'roles narrowed to what the layout shows');
   eq(resolveBlockVisuals(catalog, 'REVERB', null, { layoutParamIds: [9] }).length, 0, 'layout without the required role → dropped');
   eq(rolesOf(resolveBlockVisuals(catalog, 'REVERB', [1, 9], { layoutParamIds: [1, 7, 9] })[0]), 'predelay,time', 'present set and layout both apply');
-  // real data: the pitch-only reverb variant alone shows no decay param; with the Default variant's
-  // controls added (what the server passes for such an add-on variant) the decay visual is back
+  // real data: the shift-capable REVERB variants resolve their pages from the source's catch-all rule, so
+  // every variant that lists decay-bearing pages keeps the decay visual; the "layout without the decay
+  // params drops it" case is covered above with a synthetic catalog (the current source has no variant
+  // whose only page is Pitch Shift)
   for (const d of DEVICES) {
-    const pitchOnly = d.layouts.REVERB!.variants.find((v) => v.value === '1,2,3,6,7,8,9,10');
-    if (!pitchOnly) fail(`${d.model}: no REVERB '1,2,3,6,7,8,9,10' variant`);
-    eq(pitchOnly.pages.map((p) => p.name).join(','), 'Pitch Shift', `${d.model} REVERB pitch-only variant pages`);
-    eq(byKey(withLayout(d.model, 'REVERB', pitchOnly.pages), 'decay'), undefined, `${d.model} pitch-only variant alone → no decay (strict)`);
+    const shift = d.layouts.REVERB!.variants.find((v) => v.value === '1,2,3,6,7,8,9,10');
+    if (!shift) fail(`${d.model}: no REVERB '1,2,3,6,7,8,9,10' variant`);
+    if (!layoutParamIds(shift.pages).size) fail(`${d.model}: shift variant resolves no parameter`);
+    if (byKey(withLayout(d.model, 'REVERB', shift.pages), 'decay')?.roles.time == null) fail(`${d.model} shift variant → decay with time`);
     const dflt = d.layouts.REVERB!.variants.find((v) => v.value === null);
     if (!dflt) fail(`${d.model}: no REVERB Default variant`);
-    const union = new Set([...layoutParamIds(pitchOnly.pages), ...layoutParamIds(dflt.pages)]);
-    if (byKey(blockVisuals(d.model, 'REVERB', null, { layoutParamIds: union }), 'decay')?.roles.time == null) fail(`${d.model} pitch-only ∪ Default → decay with time`);
+    const union = new Set([...layoutParamIds(shift.pages), ...layoutParamIds(dflt.pages)]);
+    if (byKey(blockVisuals(d.model, 'REVERB', null, { layoutParamIds: union }), 'decay')?.roles.time == null) fail(`${d.model} shift ∪ Default → decay with time`);
   }
 }
 
@@ -240,14 +242,21 @@ function controllers(): void {
   }
 }
 
-// ── 8. DELAY resolves without a layout ────────────────────────────────────
+// ── 8. DELAY: a shipped layout narrows the echo; without one it still resolves ────────────────
 function delayWithoutLayout(): void {
   for (const d of DEVICES) {
-    eq(d.layouts.DELAY, undefined, `${d.model} ships no DELAY layout (the case this covers)`);
+    const layout = d.layouts.DELAY;
     const echo = byKey(blockVisuals(d.model, 'DELAY'), 'echo');
     eq(echo?.kind, 'echo', `${d.model} DELAY echo offered`);
     eq(echo?.title, 'Echo train', `${d.model} DELAY title`);
     eq(rolesOf(echo), 'feedback,feedbackR,masterFeedback,routing,spread,tempo,tempoR,time,timeR,timeRatio', `${d.model} DELAY roles`);
+    // the source ships a Delay layout on FM3/FM9/III now (AM4 has none): its Time/FB variant keeps the
+    // echo, narrowing the roles through the ids the page shows
+    if (layout) {
+      const timed = layout.variants.find((v) => v.pages.some((p) => p.name === 'Time/FB'));
+      if (!timed) fail(`${d.model}: DELAY layout without a Time/FB variant`);
+      if (byKey(withLayout(d.model, 'DELAY', timed.pages), 'echo')?.roles.time == null) fail(`${d.model} DELAY Time/FB variant: echo without time`);
+    }
   }
 }
 

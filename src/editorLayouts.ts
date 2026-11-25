@@ -17,6 +17,7 @@
  * and joins every control's editor symbol (`parameterName`) against the
  * device's own parameter catalog to resolve a wire `paramId`.
  */
+import type { GraphSlotKey } from './visuals.js';
 
 /**
  * Normalised widget kind. The editor XML uses ~90 fine-grained `type` values
@@ -186,6 +187,14 @@ export interface EditorLayoutControl {
   crossBlock?: EditorCrossBlockRef;
   /** Per-control firmware gate, when present. */
   fw?: EditorFwRange;
+  /**
+   * Graph slots only: the normalised visual key this slot is for (see `graphSlotKey` /
+   * `stampGraphKeys` in `visuals.ts`). Absent in the generated layout data; a server stamps it
+   * on the layouts it serves. Absent = the slot has no visual. A stamped key may still have NO
+   * served visual (the current variant lacks the visual's required params, or the key is `'eq'`);
+   * a client treats such a slot as a gap.
+   */
+  graphKey?: GraphSlotKey;
 }
 
 /** One row of controls (editor order). */
@@ -202,8 +211,18 @@ export interface EditorLayoutPage {
   name: string;
   /** Editor page number, when specified. */
   pageNum?: number;
-  /** Rows in editor (top→bottom) order. */
+  /** Rows in editor (top→bottom) order. Empty only on a page whose controls are all page-level. */
   rows: EditorLayoutRow[];
+  /**
+   * Controls the editor places directly on the page, outside its row sections
+   * (section titles, separators, page-wide selectors and switches), in editor
+   * document order. Same shape as a row control; most carry
+   * `placement.positionExact`. Decorative entries are included verbatim. A
+   * parameter of another family without a cross-block reference keeps its
+   * `paramName`, but its `paramId` is null: that id is not one of this block's.
+   * Absent when the page has none.
+   */
+  pageControls?: EditorLayoutControl[];
   /** Firmware gate for the whole page, when present. */
   fw?: EditorFwRange;
   /**

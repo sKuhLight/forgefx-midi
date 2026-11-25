@@ -55,6 +55,31 @@ export {
   type EditorWidgetKind,
   type EditorFwRange,
 } from '../../editorLayouts.js';
+// Block visuals (read-only graph displays): role tables + graph-slot normalisation. Pure; bind it
+// to this device's catalog with `resolveBlockVisuals(FM9_PARAMS_BY_FAMILY[family], family, …)`
+// or use `blockVisuals(model, …)` from `devices/gen3`.
+export {
+  BLOCK_VISUAL_DEFS,
+  DYNAMICS_CURVE_ROLES,
+  VISUAL_KINDS,
+  VISUAL_KEYS,
+  resolveBlockVisuals,
+  visualFamilies,
+  graphSlotKey,
+  stampGraphKeys,
+  layoutParamIds,
+  type BlockVisual,
+  type VisualDef,
+  type VisualKind,
+  type VisualKey,
+  type VisualMode,
+  type VisualRole,
+  type VisualRefinement,
+  type VisualCatalogParam,
+  type ResolveVisualsOptions,
+  type GraphSlotKey,
+  type GraphSlotContext,
+} from '../../visuals.js';
 export { gen3RosterSpan } from '../axe-fx-iii/blockTypes.js';
 export {
   FM9_MONITOR_PARAMS,

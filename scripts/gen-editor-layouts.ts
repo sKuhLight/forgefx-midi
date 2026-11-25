@@ -6,8 +6,10 @@
  * `<DEV>_LAYOUTS` data files that implement the v2 schema in
  * `src/editorLayouts.ts`. Document order in the XML == on-screen order and is
  * preserved (controls left→right per row, rows top→bottom, pages in tab
- * order). Every control's editor symbol (`parameterName`) is joined against
- * the device's own parameter catalog to resolve a wire `paramId`.
+ * order). Controls the editor places directly on a page, outside its row
+ * sections, are kept as that page's `pageControls`. Every control's editor
+ * symbol (`parameterName`) is joined against the device's own parameter
+ * catalog to resolve a wire `paramId`.
  *
  * SOURCE ROOT (local editor material — never hard-coded here):
  *   Set FORGEFX_MIDI_EDITOR_XML_ROOT to a directory tree that holds the editor
@@ -31,8 +33,8 @@
  *
  * Run: FORGEFX_MIDI_EDITOR_XML_ROOT=... npx tsx scripts/gen-editor-layouts.ts
  */
-import { readdirSync, readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
-import { join, dirname, relative, resolve as resolvePath } from 'node:path';
+import { readdirSync, readFileSync, realpathSync, writeFileSync, existsSync, statSync } from 'node:fs';
+import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   normalizeWidget,
@@ -285,13 +287,41 @@ function buildControl(ec: XmlNode, resolve: Resolver, editorBlock: string): Edit
   return ctrl;
 }
 
-function buildPages(variantNode: XmlNode, resolve: Resolver, editorBlock: string): EditorLayoutPage[] {
+/**
+ * A page-level control. A parameter the catalog files under another family than
+ * the layout's own keeps its symbol but gets no id: that id belongs to the other
+ * family's id space and names an unrelated parameter of this block. A
+ * cross-block reference names its owner and keeps its id; row controls are
+ * emitted as joined.
+ */
+function buildPageControl(ec: XmlNode, resolve: Resolver, editorBlock: string, ownerFamily: string): EditorLayoutControl {
+  const ctrl = buildControl(ec, resolve, editorBlock);
+  if (ctrl.paramName && !ctrl.crossBlock) {
+    const { family } = resolve(ctrl.paramName, editorBlock);
+    if (family !== null && family !== ownerFamily) ctrl.paramId = null;
+  }
+  return ctrl;
+}
+
+/**
+ * The pages of one `EffectVariant` of the layout family `ownerFamily`. A page
+ * holds controls in two places: in the `<Row>`s of its `<Parameters>` /
+ * `<Mixer>` sections (`rows`), and directly under the `<Page>` (`pageControls`,
+ * document order, same shape as a row control). A page without rows is dropped
+ * unless one of its page-level controls has a parameter symbol.
+ */
+export function buildPages(variantNode: XmlNode, resolve: Resolver, editorBlock: string, ownerFamily: string): EditorLayoutPage[] {
   const pages: EditorLayoutPage[] = [];
   for (const pageNode of variantNode.children.filter((c) => c.tag === 'Page')) {
     const pa = pageNode.attrs;
     const rows: EditorLayoutRow[] = [];
+    const pageControls: EditorLayoutControl[] = [];
     // Sections appear as <Parameters> and <Mixer>, each holding <Row>s.
     for (const section of pageNode.children) {
+      if (section.tag === 'EditorControl') {
+        pageControls.push(buildPageControl(section, resolve, editorBlock, ownerFamily));
+        continue;
+      }
       let sectionName: 'parameters' | 'mixer' | null = null;
       if (section.tag === 'Parameters') sectionName = 'parameters';
       else if (section.tag === 'Mixer') sectionName = 'mixer';
@@ -309,7 +339,9 @@ function buildPages(variantNode: XmlNode, resolve: Resolver, editorBlock: string
     if (fw) page.fw = fw;
     if (pa.value !== undefined) page.value = pa.value;
     if (pa.parameterName !== undefined) page.selectorParamName = pa.parameterName;
-    if (page.rows.length) pages.push(page); // drop pages with no controls
+    if (pageControls.length) page.pageControls = pageControls;
+    // drop pages with nothing to edit (no rows, and no page-level parameter)
+    if (page.rows.length || pageControls.some((c) => c.paramName)) pages.push(page);
   }
   return pages;
 }
@@ -534,7 +566,7 @@ export function splitVariantByPageSelectors(base: EditorLayoutVariant, family?: 
   for (const sig of order) {
     const g = groups.get(sig)!;
     const outPages: EditorLayoutPage[] = g.idxs.map((idx) => {
-      // Drop the now-redundant page-level selector; keep fw / pageNum / rows.
+      // Drop the now-redundant page-level selector; keep fw / pageNum / rows / pageControls.
       const { value: _v, selectorParamName: _s, ...rest } = pages[idx];
       return rest as EditorLayoutPage;
     });
@@ -588,7 +620,7 @@ export function parseBlockLayout(
     for (const vn of variantNodes) {
       const own = ownPrefixMode(vn);
       const family = own !== null && knownFamilies.has(own) ? own : componentFamily;
-      const pages = buildPages(vn, resolve, editorName);
+      const pages = buildPages(vn, resolve, editorName, family);
       if (!pages.length) continue;
       const variant: EditorLayoutVariant = {
         name: vn.attrs.name ?? '',
@@ -640,7 +672,7 @@ function parseAmpLayouts(files: string[], resolve: Resolver, fwCeiling: number):
     const group = firstChild(ecs, 'EffectVariants');
     if (!group) continue;
     for (const vn of group.children.filter((c) => c.tag === 'EffectVariant')) {
-      const pages = buildPages(vn, resolve, 'Amp');
+      const pages = buildPages(vn, resolve, 'Amp', 'DISTORT');
       if (!pages.length) continue;
       const name = vn.attrs.name ?? '';
       const fw = fwFrom(vn.attrs);
@@ -734,11 +766,13 @@ function sortedFamilyMap(m: Map<string, EditorBlockLayout>): DeviceEditorLayouts
 
 function countStats(layouts: DeviceEditorLayouts) {
   let variants = 0, pages = 0, controls = 0, withParam = 0, joined = 0;
+  let pagesWithPageControls = 0, pageControls = 0;
   for (const fam of Object.values(layouts)) {
     for (const v of fam.variants) {
       variants++;
       for (const p of v.pages) {
         pages++;
+        if (p.pageControls) { pagesWithPageControls++; pageControls += p.pageControls.length; }
         for (const r of p.rows) {
           for (const c of r.controls) {
             controls++;
@@ -748,7 +782,7 @@ function countStats(layouts: DeviceEditorLayouts) {
       }
     }
   }
-  return { families: Object.keys(layouts).length, variants, pages, controls, withParam, joined };
+  return { families: Object.keys(layouts).length, variants, pages, controls, withParam, joined, pagesWithPageControls, pageControls };
 }
 
 /**
@@ -756,7 +790,7 @@ function countStats(layouts: DeviceEditorLayouts) {
  * layout files), so the data files stay reviewable and diff-clean instead of
  * exploding to one scalar per line.
  */
-function serialize(layouts: DeviceEditorLayouts): string {
+export function serialize(layouts: DeviceEditorLayouts): string {
   const j = (v: unknown) => JSON.stringify(v);
   const lines: string[] = ['{'];
   const famKeys = Object.keys(layouts);
@@ -784,6 +818,10 @@ function serialize(layouts: DeviceEditorLayouts): string {
           r.controls.forEach((c) => lines.push(`            ${j(c)},`));
           lines.push(`          ] }${ri < p.rows.length - 1 ? ',' : ''}`);
         });
+        if (p.pageControls) {
+          lines.push(`        ], "pageControls": [`);
+          p.pageControls.forEach((c) => lines.push(`          ${j(c)},`));
+        }
         lines.push(`        ] }${pi < v.pages.length - 1 ? ',' : ''}`);
       });
       lines.push(`      ] }${vi < block.variants.length - 1 ? ',' : ''}`);
@@ -881,6 +919,9 @@ function headerFor(deviceLabel: string, sourceNote: string, constName: string): 
     `// (tabs), each page its rows, each row its controls in editor order. Every`,
     `// control's paramId is the join of its editor parameterName against the`,
     `// device parameter catalog (null when the name has no catalog entry).`,
+    `// Controls the editor places directly on a page, outside its rows, are in that`,
+    `// page's optional \`pageControls\` (editor order, same shape as a row control;`,
+    `// its paramId is also null when the parameter belongs to another family).`,
     `// Firmware-versioned amp variants are all retained; the one pinned to the`,
     `// current firmware ceiling carries \`pinned: true\`. Access:`,
     `// \`${constName}.REVERB.variants[0].pages\`.`,
@@ -952,7 +993,8 @@ async function main() {
     emit(outFile, constName, headerFor(dev.label, sourceNote, constName), layouts);
     console.log(
       `\n${dev.label}: families=${stats.families} variants=${stats.variants} pages=${stats.pages} ` +
-        `controls=${stats.controls} paramCtrls=${stats.withParam} joined=${stats.joined} (${rate}%)`,
+        `controls=${stats.controls} paramCtrls=${stats.withParam} joined=${stats.joined} (${rate}%) ` +
+        `pageControls=${stats.pageControls} on ${stats.pagesWithPageControls} pages`,
     );
     console.log(`  -> ${outFile}`);
     targets.push({ file: outFile, constName, label: dev.label });
@@ -983,12 +1025,13 @@ async function main() {
   console.log(`\nWidget kinds: ${EDITOR_WIDGET_KINDS.join(', ')}`);
 }
 
-/** True when this file is the process entry (not imported, e.g. by the generator unit test). */
+/** True when this file is the process entry (not imported, e.g. by the generator unit test): the entry path may
+ *  lack the extension and may lead through a link, so real paths are compared. */
 function isEntry(): boolean {
   const argv1 = process.argv[1];
   if (!argv1) return false;
-  const norm = (p: string) => (process.platform === 'win32' ? p.toLowerCase() : p);
-  return norm(resolvePath(argv1)) === norm(fileURLToPath(import.meta.url));
+  const self = realpathSync.native(fileURLToPath(import.meta.url));
+  return [argv1, `${argv1}.ts`].some((p) => existsSync(p) && realpathSync.native(p) === self);
 }
 
 if (isEntry()) {

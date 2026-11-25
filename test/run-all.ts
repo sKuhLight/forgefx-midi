@@ -111,6 +111,7 @@ import { runLiveWalkScope, LIVEWALK_SCOPE_CASE_COUNT } from './cache/livewalk-sc
 import { runShare, SHARE_CASE_COUNT } from './cache/share.test.js';
 import { runSpotCheckSuite, SPOT_CHECK_CASE_COUNT } from './cache/spot-check.test.js';
 import { runEditorLayoutsTests, EDITOR_LAYOUTS_CASE_COUNT } from './editorLayouts.test.js';
+import { runVisualsTests, VISUALS_CASE_COUNT } from './visuals.test.js';
 import { runEditorLayoutFamiliesTests, EDITOR_LAYOUT_FAMILIES_CASE_COUNT } from './editorLayouts-families.test.js';
 import { runCrossBlockEffectIdTests, CROSSBLOCK_EFFECTID_CASE_COUNT } from './gen3/crossblock-effectid.test.js';
 import { runGenEditorLayoutsTests, GEN_EDITOR_LAYOUTS_CASE_COUNT } from './scripts/gen-editor-layouts.test.js';
@@ -124,11 +125,14 @@ import { runTargetRangesTests, TARGET_RANGES_CASE_COUNT } from './convert/target
 import { runGen3TaperTests, GEN3_TAPER_CASE_COUNT } from './convert/gen3-taper.test.js';
 import { runEnumParamsTests, ENUM_PARAMS_CASE_COUNT } from './convert/enum-params.test.js';
 import { runSerialCloseTests, SERIAL_CLOSE_CASE_COUNT } from './shared/serial-close.test.js';
+import { runEditorLayoutPageControlsTests, EDITOR_LAYOUT_PAGE_CONTROLS_CASE_COUNT } from './editorLayouts-page-controls.test.js';
+import { runGenLayoutPageControlsTests, GEN_LAYOUT_PAGE_CONTROLS_CASE_COUNT } from './scripts/gen-editor-layouts-page-controls.test.js';
 import { runGridGuardTests, GRID_GUARD_CASE_COUNT } from './gen3/presetbody-grid-guard.test.js';
 import { runLiveGridShuntTests, LIVE_GRID_SHUNT_CASE_COUNT } from './gen3/live-grid-shunt.test.js';
 import { runTaperDecodeTests, TAPER_DECODE_CASE_COUNT } from './gen3/taper-decode.test.js';
 import { runParamsRangesAgreeTests, PARAMS_RANGES_AGREE_CASE_COUNT } from './gen3/params-ranges-agree.test.js';
 import { runEnumOverlayDeviceTruthTests, ENUM_OVERLAY_DEVICE_TRUTH_CASE_COUNT } from './gen3/enum-overlay-device-truth.test.js';
+import { runBlockStateTests, BLOCK_STATE_CASE_COUNT } from './gen3/block-state.test.js';
 import { runSharedSeptetStreamTests, SHARED_SEPTETSTREAM_CASE_COUNT } from './shared/septetstream.test.js';
 import { runSharedPollTimingTests, SHARED_POLLTIMING_CASE_COUNT } from './shared/polltiming.test.js';
 import { runGen3VisualDataTests, GEN3_VISUALDATA_CASE_COUNT } from './gen3/visualdata.test.js';
@@ -264,6 +268,7 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `cache/share (${SHARE_CASE_COUNT} cases, sanitizer + fact hash goldens)`, run: runShare },
   { name: `cache/spot-check (${SPOT_CHECK_CASE_COUNT} cases, target selection + read-only runner)`, run: runSpotCheckSuite },
   { name: `editorLayouts (${EDITOR_LAYOUTS_CASE_COUNT} devices)`, run: runEditorLayoutsTests },
+  { name: `visuals (${VISUALS_CASE_COUNT} cases: per-device role ids, required roles, strict layout narrowing, COMP/GATE/TREMOLO variants, CONTROLLERS, DELAY without layout, graph-slot keys, AMP Input/Output EQ)`, run: runVisualsTests },
   { name: `editorLayouts/families (${EDITOR_LAYOUT_FAMILIES_CASE_COUNT} cases)`, run: runEditorLayoutFamiliesTests },
   { name: `gen3/crossblock-effectid (${CROSSBLOCK_EFFECTID_CASE_COUNT} cases)`, run: runCrossBlockEffectIdTests },
   { name: `scripts/gen-editor-layouts (${GEN_EDITOR_LAYOUTS_CASE_COUNT} cases)`, run: runGenEditorLayoutsTests },
@@ -278,9 +283,12 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `convert/gen3-taper (${GEN3_TAPER_CASE_COUNT} cases)`, run: runGen3TaperTests },
   { name: `convert/enum-params (${ENUM_PARAMS_CASE_COUNT} cases)`, run: runEnumParamsTests },
   { name: `shared/serial-close (${SERIAL_CLOSE_CASE_COUNT} cases)`, run: runSerialCloseTests },
+  { name: `editorLayouts/page controls (${EDITOR_LAYOUT_PAGE_CONTROLS_CASE_COUNT} cases)`, run: runEditorLayoutPageControlsTests },
+  { name: `scripts/gen-editor-layouts page controls (${GEN_LAYOUT_PAGE_CONTROLS_CASE_COUNT} cases)`, run: runGenLayoutPageControlsTests },
   { name: `gen3/presetbody-grid-guard (${GRID_GUARD_CASE_COUNT} cases)`, run: runGridGuardTests },
   { name: `gen3/live-grid-shunt (${LIVE_GRID_SHUNT_CASE_COUNT} cases)`, run: runLiveGridShuntTests },
   { name: `gen3/taper-decode (${TAPER_DECODE_CASE_COUNT} cases)`, run: runTaperDecodeTests },
+  { name: `gen3/block-state (${BLOCK_STATE_CASE_COUNT} cases: Scene Ignore + Bypass Mode per model)`, run: runBlockStateTests },
   { name: `shared/septetStream (${SHARED_SEPTETSTREAM_CASE_COUNT} cases)`, run: runSharedSeptetStreamTests },
   { name: `shared/pollTiming (${SHARED_POLLTIMING_CASE_COUNT} cases)`, run: runSharedPollTimingTests },
   { name: `gen3/visualData (${GEN3_VISUALDATA_CASE_COUNT} cases)`, run: runGen3VisualDataTests },

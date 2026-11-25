@@ -8,6 +8,9 @@
 // (tabs), each page its rows, each row its controls in editor order. Every
 // control's paramId is the join of its editor parameterName against the
 // device parameter catalog (null when the name has no catalog entry).
+// Controls the editor places directly on a page, outside its rows, are in that
+// page's optional `pageControls` (editor order, same shape as a row control;
+// its paramId is also null when the parameter belongs to another family).
 // Firmware-versioned amp variants are all retained; the one pinned to the
 // current firmware ceiling carries `pinned: true`. Access:
 // `AXE3_LAYOUTS.REVERB.variants[0].pages`.
@@ -98,6 +101,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Input\nMode","paramName":"CABINET_INPUTSEL","paramId":42,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,230"}},
         ] },
         { "name": "Cab", "pageNum": 0, "fw": {"gtet":"22,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -165,6 +170,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Input\nMode","paramName":"CABINET_INPUTSEL","paramId":42,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,230"}},
         ] },
         { "name": "Cab More...", "pageNum": 1, "fw": {"lt":"5,09"}, "rows": [
           { "section": "mixer", "controls": [
@@ -175,6 +182,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Requires firmware 5.08 or greater.","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel"},
         ] },
         { "name": "Cab More...", "pageNum": 1, "fw": {"lt":"22,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -323,6 +332,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"TONE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"FILTERS","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"},"fw":{"lt":"11,02"}},
+          {"label":"FILTERS","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"},"fw":{"gtet":"11,02"}},
         ] },
         { "name": "Room/Air", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -349,6 +362,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"ROOM","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"AIR","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Align", "pageNum": 4, "fw": {"lt":"22,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -525,6 +541,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Input\nMode","paramName":"CABINET_INPUTSEL","paramId":42,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,230"}},
         ] },
         { "name": "Cab 1+2", "pageNum": 0, "fw": {"gtet":"22,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -572,6 +590,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Input\nMode","paramName":"CABINET_INPUTSEL","paramId":42,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,230"}},
         ] },
         { "name": "Cab More...", "pageNum": 1, "fw": {"lt":"5,09"}, "rows": [
           { "section": "mixer", "controls": [
@@ -582,6 +602,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Requires firmware 5.08 or greater.","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel"},
         ] },
         { "name": "Cab More...", "pageNum": 1, "fw": {"lt":"22,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -721,6 +743,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"TONE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"FILTERS","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"},"fw":{"lt":"11,02"}},
+          {"label":"FILTERS","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"},"fw":{"gtet":"11,02"}},
         ] },
         { "name": "Room/Air", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -747,6 +773,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CABINET_BYPASS","paramId":32,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CABINET_SCENEIGNORE","paramId":84,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"ROOM","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"AIR","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Align", "pageNum": 4, "fw": {"lt":"22,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -971,6 +1000,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CHORUS_BYPASS","paramId":15,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CHORUS_SCENEIGNORE","paramId":28,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LEFT","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"RIGHT","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Expert", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
@@ -1350,6 +1382,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"CHORUS_BYPASS","paramId":15,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"CHORUS_SCENEIGNORE","paramId":28,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LEFT","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"RIGHT","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Expert", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
@@ -2783,6 +2818,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"High Cut","paramName":"CONTROLLERS_LFO2HICUT","paramId":170,"widget":"knob","rawWidget":"knob","fw":{"gtet":"12,10"}},
             {"label":"Quantize","paramName":"CONTROLLERS_LFO2QUANTIZE","paramId":105,"widget":"knob","rawWidget":"knob"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "LFO 1 + 2", "pageNum": 1, "fw": {"gtet":"23,0"}, "rows": [
           { "section": "parameters", "controls": [
@@ -2811,6 +2849,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"High Cut","paramName":"CONTROLLERS_LFO2HICUT","paramId":170,"widget":"knob","rawWidget":"knob","placement":{"col":9}},
             {"label":"Quantize","paramName":"CONTROLLERS_LFO2QUANTIZE","paramId":105,"widget":"knob","rawWidget":"knob","placement":{"col":10}},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "ADSR 1", "pageNum": 2, "fw": {"lt":"19,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -2955,6 +2996,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Manual 4","paramName":"CONTROLLERS_MANUAL4","paramId":163,"widget":"knob","rawWidget":"knob","fw":{"gtet":"6,00"}},
             {"label":"Manual 5","paramName":"CONTROLLERS_MANUAL5","paramId":164,"widget":"knob","rawWidget":"knob","fw":{"gtet":"6,00"}},
           ] }
+        ], "pageControls": [
+          {"label":"ENVELOPE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"},"fw":{"lt":"11,02"}},
+          {"label":"ENVELOPE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"},"fw":{"gtet":"11,02"}},
+          {"label":"MANUAL","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"},"fw":{"gtet":"6,00"}},
         ] },
         { "name": "Scene Ctrl 1+2", "pageNum": 6, "rows": [
           { "section": "parameters", "controls": [
@@ -2981,6 +3026,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Set All","paramName":"CONTROLLERS_SCENE2_SET_ALL","paramId":65521,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"1070,284"}},
             {"label":"0","paramName":"CONTROLLERS_SCENE2_VAL_ALL","paramId":65525,"widget":"readout","rawWidget":"readoutValueFloat","placement":{"positionExact":"1155,284"}},
           ] }
+        ], "pageControls": [
+          {"label":"SCENE CONTROLLER 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"SCENE CONTROLLER 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Scene Ctrl 3+4", "pageNum": 7, "rows": [
           { "section": "parameters", "controls": [
@@ -3007,6 +3055,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Set All","paramName":"CONTROLLERS_SCENE4_SET_ALL","paramId":65523,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"1070,284"}},
             {"label":"0","paramName":"CONTROLLERS_SCENE4_VAL_ALL","paramId":65527,"widget":"readout","rawWidget":"readoutValueFloat","placement":{"positionExact":"1155,284"}},
           ] }
+        ], "pageControls": [
+          {"label":"SCENE CONTROLLER 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"SCENE CONTROLLER 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "CS per Scene", "pageNum": 8, "rows": [
           { "section": "parameters", "controls": [
@@ -3186,6 +3237,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Repeat Stack/Hold","paramName":"DELAY_HOLD","paramId":27,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"},"fw":{"lt":"24,00"}},
         ] },
         { "name": "More", "pageNum": 1, "fw": {"lt":"17,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -3344,6 +3397,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -3386,6 +3441,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -3414,6 +3471,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"562,209"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"gtet":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -3511,6 +3571,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Repeat Stack/Hold","paramName":"DELAY_HOLD","paramId":27,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"},"fw":{"lt":"24,00"}},
         ] },
         { "name": "More", "pageNum": 1, "fw": {"lt":"17,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -3669,6 +3731,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -3711,6 +3775,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -3739,6 +3805,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"562,209"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"gtet":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -3833,6 +3902,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Repeat Stack/Hold","paramName":"DELAY_HOLD","paramId":27,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"},"fw":{"lt":"24,00"}},
         ] },
         { "name": "More", "pageNum": 1, "fw": {"lt":"17,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -3991,6 +4062,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4033,6 +4106,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4061,6 +4136,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"562,209"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"gtet":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4165,6 +4243,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Repeat Stack/Hold","paramName":"DELAY_HOLD","paramId":27,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"},"fw":{"lt":"24,00"}},
         ] },
         { "name": "More", "pageNum": 1, "fw": {"lt":"17,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4323,6 +4403,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4365,6 +4447,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4393,6 +4477,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"562,209"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"gtet":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4489,6 +4576,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Repeat Stack/Hold","paramName":"DELAY_HOLD","paramId":27,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"},"fw":{"lt":"24,00"}},
         ] },
         { "name": "More", "pageNum": 1, "fw": {"lt":"17,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4626,6 +4715,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4668,6 +4759,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4696,6 +4789,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"562,209"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"gtet":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4793,6 +4889,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Repeat Stack/Hold","paramName":"DELAY_HOLD","paramId":27,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"},"fw":{"lt":"24,00"}},
         ] },
         { "name": "More", "pageNum": 1, "fw": {"lt":"17,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4951,6 +5049,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -4993,6 +5093,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5021,6 +5123,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"562,209"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"gtet":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5180,6 +5285,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Repeat Stack/Hold","paramName":"DELAY_HOLD","paramId":27,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"},"fw":{"lt":"24,00"}},
         ] },
         { "name": "More", "pageNum": 1, "fw": {"lt":"17,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5335,6 +5442,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5377,6 +5486,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5405,6 +5516,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"562,209"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"gtet":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5501,6 +5615,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Repeat Stack/Hold","paramName":"DELAY_HOLD","paramId":27,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"},"fw":{"lt":"24,00"}},
         ] },
         { "name": "More", "pageNum": 1, "fw": {"lt":"17,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5659,6 +5775,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5701,6 +5819,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5729,6 +5849,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"562,209"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"gtet":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5836,6 +5959,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "Modulation", "pageNum": 2, "fw": {"gtet":"23,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5878,6 +6003,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"DELAY_SCENEIGNORE","paramId":83,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO Depth Range","paramName":"DELAY_MAXDEPTH","paramId":67,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,281"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"lt":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -5906,6 +6033,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"DELAY_BYPASSMODE","paramId":20,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"DELAY_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"BAND 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"BAND 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"562,209"}},
         ] },
         { "name": "EQ", "pageNum": 3, "fw": {"gtet":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -8740,6 +8870,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"DISTORT_BYPASSMODE","paramId":23,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"INPUT BOOST","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,209"}},
         ] },
         { "name": "Preamp", "pageNum": 2, "fw": {"gtet":"16,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -8809,6 +8941,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"DISTORT_BYPASSMODE","paramId":23,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"POWER TUBES","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"390,29"}},
         ] },
         { "name": "Power Amp", "pageNum": 3, "fw": {"gtet":"16,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -9139,6 +9273,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "1,4", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -9161,6 +9300,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "2", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -9181,6 +9325,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "5", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -9201,6 +9350,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "6", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -9221,6 +9375,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "7", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -9240,6 +9399,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "8,9", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -9258,6 +9422,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "10", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -9277,6 +9446,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Dynamics", "pageNum": 9, "fw": {"lt":"16,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -9309,6 +9483,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"OUTPUT COMPRESSOR","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"562,29"}},
+          {"label":"CATHODE FOLLOWER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"},"fw":{"lt":"5,00"}},
+          {"label":"CATHODE FOLLOWER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"},"fw":{"gtet":"5,00"}},
         ] },
         { "name": "Dynamics", "pageNum": 9, "fw": {"gtet":"16,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -11422,6 +11600,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "1,4", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -11444,6 +11627,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "2", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -11464,6 +11652,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "5", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -11484,6 +11677,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "6", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -11504,6 +11702,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "7", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -11523,6 +11726,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "8,9", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -11541,6 +11749,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "10", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -11560,6 +11773,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Dynamics", "pageNum": 9, "fw": {"lt":"16,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -11592,6 +11810,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"OUTPUT COMPRESSOR","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"562,29"}},
+          {"label":"CATHODE FOLLOWER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"},"fw":{"lt":"5,00"}},
+          {"label":"CATHODE FOLLOWER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"},"fw":{"gtet":"5,00"}},
         ] },
         { "name": "Dynamics", "pageNum": 9, "fw": {"gtet":"16,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -13929,6 +14151,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "1,4", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -13951,6 +14178,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "2", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -13971,6 +14203,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "5", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -13991,6 +14228,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "6", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -14011,6 +14253,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "7", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -14030,6 +14277,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "8,9", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -14048,6 +14300,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "10", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -14067,6 +14324,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Dynamics", "pageNum": 9, "rows": [
           { "section": "parameters", "controls": [
@@ -16315,6 +16577,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "1,4", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -16337,6 +16604,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "2", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -16357,6 +16629,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "5", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -16377,6 +16654,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "6", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -16397,6 +16679,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "7", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -16416,6 +16703,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "8,9", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -16434,6 +16726,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Output EQ", "pageNum": 8, "value": "10", "selectorParamName": "DISTORT_EQTYPE", "rows": [
           { "section": "parameters", "controls": [
@@ -16453,6 +16750,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"DISTORT_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"DISTORT_SCENEIGNORE","paramId":135,"widget":"button","rawWidget":"btnIgnoreScene"},
           ] }
+        ], "pageControls": [
+          {"label":"Type","paramName":"DISTORT_EQTYPE","paramId":92,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,50"}},
+          {"label":"Location","paramName":"DISTORT_EQPOSITION","paramId":110,"widget":"dropdown","rawWidget":"dropdown1p5Tight1Line","placement":{"positionExact":"305,125"}},
+          {"label":"Zero All","paramName":"DISTORT_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"331,225"}},
+          {"label":"Off / On","paramName":"DISTORT_EQONOFF","paramId":126,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"325,275"}},
         ] },
         { "name": "Dynamics", "pageNum": 9, "rows": [
           { "section": "parameters", "controls": [
@@ -17169,6 +17471,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FLANGER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FLANGER_SCENEIGNORE","paramId":32,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"TZF","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"TONE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] }
       ] }
     ]
@@ -17314,6 +17619,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -17340,6 +17648,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -17370,6 +17680,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -17400,6 +17712,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -17542,6 +17856,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -17570,6 +17887,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -17600,6 +17919,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -17630,6 +17951,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -17770,6 +18093,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -17798,6 +18124,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -17828,6 +18156,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -17966,6 +18296,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -17992,6 +18325,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18022,6 +18357,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18052,6 +18389,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18192,6 +18531,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18218,6 +18560,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18248,6 +18592,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18278,6 +18624,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18418,6 +18766,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18444,6 +18795,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18474,6 +18827,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18504,6 +18859,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18648,6 +19005,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18674,6 +19034,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18704,6 +19066,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18734,6 +19098,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18888,6 +19254,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18914,6 +19283,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18944,6 +19315,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -18974,6 +19347,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19116,6 +19491,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19142,6 +19520,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19172,6 +19552,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19202,6 +19584,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19344,6 +19728,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19370,6 +19757,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19400,6 +19789,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19430,6 +19821,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19572,6 +19965,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19600,6 +19996,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19630,6 +20028,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19768,6 +20168,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19794,6 +20197,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19824,6 +20229,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19854,6 +20261,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -19996,6 +20405,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20022,6 +20434,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20052,6 +20466,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20082,6 +20498,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20237,6 +20655,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20265,6 +20686,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20295,6 +20718,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20435,6 +20860,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"12,15"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20461,6 +20889,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"FUZZ_BYPASSMODE","paramId":5,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20491,6 +20921,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20521,6 +20953,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20644,6 +21078,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20674,6 +21111,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20704,6 +21143,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20827,6 +21268,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20857,6 +21301,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -20887,6 +21333,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21011,6 +21459,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21041,6 +21492,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21071,6 +21524,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21194,6 +21649,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21224,6 +21682,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21254,6 +21714,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21377,6 +21839,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21407,6 +21872,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21437,6 +21904,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21560,6 +22029,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21590,6 +22062,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21620,6 +22094,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21743,6 +22219,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21773,6 +22252,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21803,6 +22284,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21927,6 +22410,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21957,6 +22443,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -21987,6 +22475,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -22110,6 +22600,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -22234,6 +22727,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -22345,6 +22841,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -22375,6 +22874,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -22405,6 +22906,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -22529,6 +23032,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"27,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -22559,6 +23065,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -22589,6 +23097,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -22712,6 +23222,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -22826,6 +23339,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -22856,6 +23372,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -22980,6 +23498,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -23103,6 +23624,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -23133,6 +23657,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -23258,6 +23784,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -23381,6 +23910,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -23503,6 +24035,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -23533,6 +24068,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -23656,6 +24193,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -23686,6 +24226,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -23809,6 +24351,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"lt":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -23839,6 +24384,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LO FI","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,209"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -23964,6 +24511,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -24091,6 +24641,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -24214,6 +24767,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"27,3"}, "rows": [
           { "section": "parameters", "controls": [
@@ -24336,6 +24892,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] },
         { "name": "Advanced", "pageNum": 3, "fw": {"gtet":"29,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -24462,6 +25021,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"FUZZ_BYPASS","paramId":7,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"FUZZ_SCENEIGNORE","paramId":39,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"toggle","rawWidget":"toggle","placement":{"positionExact":"196,230"},"fw":{"lt":"12,00"}},
+          {"label":"Graphic EQ","paramName":"FUZZ_EQON","paramId":21,"widget":"dropdown","rawWidget":"dropdown1","placement":{"positionExact":"196,230"},"fw":{"gtet":"12,00"}},
         ] }
       ] }
     ]
@@ -24733,6 +25295,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] },
       { "name": "8 Band", "value": "1,5", "pages": [
@@ -24757,6 +25322,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] },
       { "name": "7 Band", "value": "2,6", "pages": [
@@ -24780,6 +25348,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] },
       { "name": "Boss GE-7", "value": "16", "pages": [
@@ -24803,6 +25374,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] },
       { "name": "Boss GE-7B", "value": "17", "pages": [
@@ -24826,6 +25400,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] },
       { "name": "5 Band Active", "value": "3,7", "pages": [
@@ -24847,6 +25424,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] },
       { "name": "5 Band Passive", "value": "8", "pages": [
@@ -24868,6 +25448,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] },
       { "name": "5 Band Mark", "value": "14", "pages": [
@@ -24889,6 +25472,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] },
       { "name": "4 Band", "value": "9", "pages": [
@@ -24909,6 +25495,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] },
       { "name": "3 Band", "value": "10,11", "pages": [
@@ -24928,6 +25517,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] },
       { "name": "10 Band 2/3 Oct", "value": "12,13", "pages": [
@@ -24954,6 +25546,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] },
       { "name": "4 Band JMPRE-1", "value": "15", "pages": [
@@ -24974,6 +25569,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"GEQ_BYPASS","paramId":18,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"GEQ_SCENEIGNORE","paramId":19,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Master Q","paramName":"GEQ_MASTERQ","paramId":16,"widget":"knob","rawWidget":"knob","placement":{"positionExact":"196,128"}},
+          {"label":"Zero All","paramName":"GEQ_ZEROEQ","paramId":65520,"widget":"button","rawWidget":"btnRectangle","placement":{"positionExact":"202,275"}},
         ] }
       ] }
     ]
@@ -25062,6 +25660,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"USB Output Mapping","paramName":"GLOBAL_USB_MAPPING","paramId":132,"widget":"dropdown","rawWidget":"dropdownThin2Line","placement":{"positionExact":"817,315"}},
             {"label":"USB Buffer Size","paramName":"GLOBAL_USB_OUTEP_BUFF_SIZE","paramId":99,"widget":"dropdown","rawWidget":"dropdownThin2Line","placement":{"positionExact":"945,315"}},
           ] }
+        ], "pageControls": [
+          {"label":"INPUT CONFIG","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"OUTPUT CONFIG","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"545,29"}},
+          {"label":"DIGITAL I/O","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,285"}},
         ] },
         { "name": "Audio", "pageNum": 1, "fw": {"gtet":"14,7"}, "rows": [
           { "section": "parameters", "controls": [
@@ -25607,6 +26209,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"IRPLAYER_BYPASSMODE","paramId":9,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"IRPLAYER_BYPASS","paramId":10,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"FILTERS","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "IR Player", "pageNum": 0, "fw": {"gtet":"17"}, "rows": [
           { "section": "parameters", "controls": [
@@ -25688,6 +26292,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"LOOPER_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"LOOPER_BYPASS","paramId":4,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_looper","placement":{"positionExact":"305,183"}},
+          {"label":"Trim Start","paramName":"LOOPER_START_TRIM","paramId":16,"widget":"knob","rawWidget":"knobMini","placement":{"positionExact":"305,298"}},
+          {"label":"Trim End","paramName":"LOOPER_END_TRIM","paramId":17,"widget":"knob","rawWidget":"knobMini","placement":{"positionExact":"645,298"}},
+          {"label":"Speed","paramName":"LOOPER_HALF","paramId":20,"widget":"dropdown","rawWidget":"dropdown1Tight1Line","placement":{"positionExact":"473,312"}},
         ] },
         { "name": "Config", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
@@ -25738,6 +26347,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"LOOPER_BYPASSMODE","paramId":3,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"LOOPER_BYPASS","paramId":4,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"Graph","paramName":null,"paramId":null,"widget":"graph","rawWidget":"graph_looper","placement":{"positionExact":"305,183"}},
+          {"label":"Trim Start","paramName":"LOOPER_START_TRIM","paramId":16,"widget":"knob","rawWidget":"knobMini","placement":{"positionExact":"305,298"}},
+          {"label":"Trim End","paramName":"LOOPER_END_TRIM","paramId":17,"widget":"knob","rawWidget":"knobMini","placement":{"positionExact":"645,298"}},
+          {"label":"Speed","paramName":"LOOPER_HALF","paramId":20,"widget":"dropdown","rawWidget":"dropdown1Tight1Line","placement":{"positionExact":"473,312"}},
         ] },
         { "name": "Config", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
@@ -26050,6 +26664,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Release","paramName":"MOD_RELEASE","paramId":15,"widget":"knob","rawWidget":"knob"},
             {"label":"Off Value","paramName":"MOD_OFFVAL","paramId":12,"widget":"knob","rawWidget":"knob"},
           ] }
+        ], "pageControls": [
+          {"label":"Source","paramName":"MOD_CTRLID","paramId":0,"widget":"dropdown","rawWidget":"dropdownCompact2","placement":{"positionExact":"10,10"}},
+          {"label":"Auto Engage","paramName":"MOD_AUTOENGAGE","paramId":10,"widget":"dropdown","rawWidget":"dropdownCompact","placement":{"positionExact":"165,10"}},
+          {"label":"PC Reset","paramName":"MOD_PCRESET","paramId":11,"widget":"dropdown","rawWidget":"dropdownCompact","placement":{"positionExact":"275,10"}},
+          {"label":"Update Rate","paramName":"MOD_RATE","paramId":16,"widget":"dropdown","rawWidget":"dropdownCompact","placement":{"positionExact":"385,10"}},
         ] },
         { "name": "Modifier", "pageNum": 0, "fw": {"gtet":"2,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -26125,6 +26744,13 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"MULTICOMP_BYPASS","paramId":27,"widget":"button","rawWidget":"btnBypass","placement":{"positionExact":"1174,330"}},
             {"label":"Scene\nIgnore","paramName":"MULTICOMP_SCENEIGNORE","paramId":36,"widget":"button","rawWidget":"btnIgnoreScene","placement":{"positionExact":"1174,365"},"fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LOW","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelBold","placement":{"positionExact":"387,25"}},
+          {"label":"MID","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelBold","placement":{"positionExact":"646,25"}},
+          {"label":"HIGH","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelBold","placement":{"positionExact":"943,25"}},
+          {"label":"Low","paramName":"MULTICOMP_GAINMON1","paramId":28,"widget":"meter","rawWidget":"meterGainVertNoReadout","placement":{"positionExact":"491,56"}},
+          {"label":"Mid","paramName":"MULTICOMP_GAINMON2","paramId":29,"widget":"meter","rawWidget":"meterGainVertNoReadout","placement":{"positionExact":"791,56"}},
+          {"label":"High","paramName":"MULTICOMP_GAINMON3","paramId":30,"widget":"meter","rawWidget":"meterGainVertNoReadout","placement":{"positionExact":"1093,56"}},
         ] },
         { "name": "Advanced", "rows": [
           { "section": "parameters", "controls": [
@@ -26215,6 +26841,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"FILTER 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"FILTER 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,209"}},
         ] },
         { "name": "Delays 3+4", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
@@ -26254,6 +26885,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"FILTER 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,29"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"FILTER 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,209"}},
         ] },
         { "name": "Time Mod", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
@@ -26287,6 +26923,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Chorus", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -26320,6 +26959,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CHORUS 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"CHORUS 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"CHORUS 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"CHORUS 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "More...", "pageNum": 4, "rows": [
           { "section": "parameters", "controls": [
@@ -26562,6 +27206,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Chorus", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -26595,6 +27242,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CHORUS 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"CHORUS 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"CHORUS 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"CHORUS 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "Comb Filters", "pageNum": 4, "rows": [
           { "section": "parameters", "controls": [
@@ -26632,6 +27284,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"COMB 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,29"}},
+          {"label":"COMB 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"730,29"}},
+          {"label":"COMB 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
+          {"label":"COMB 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"730,209"}},
         ] },
         { "name": "Ring Mods", "pageNum": 5, "rows": [
           { "section": "parameters", "controls": [
@@ -26665,6 +27322,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"RING MOD 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"RING MOD 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"RING MOD 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"RING MOD 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "More...", "pageNum": 6, "rows": [
           { "section": "parameters", "controls": [
@@ -26748,6 +27410,12 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"FREQUENCY","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,29"}},
+          {"label":"MASTER COMB","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"MASTER RING MOD","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
+          {"label":"MASTER TIME MOD","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,209"}},
         ] },
         { "name": "Master", "pageNum": 7, "fw": {"gtet":"13,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -26858,6 +27526,14 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"420,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"800,29"}},
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"420,209"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"800,209"}},
+          {"label":"Feedback","paramName":"MULTITAP_FEEDBACK","paramId":63,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,50"}},
+          {"label":"Feedback\nSend","paramName":"MULTITAP_FBKSEND","paramId":59,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"305,180"}},
+          {"label":"Feedback\nReturn","paramName":"MULTITAP_FBKRET","paramId":60,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"305,285"}},
         ] },
         { "name": "Filter", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
@@ -26892,6 +27568,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "Time Mod", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
@@ -26925,6 +27606,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Chorus", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -26958,6 +27642,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CHORUS 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"CHORUS 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"CHORUS 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"CHORUS 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "Comb Filters", "pageNum": 4, "rows": [
           { "section": "parameters", "controls": [
@@ -26995,6 +27684,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"COMB 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,29"}},
+          {"label":"COMB 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"730,29"}},
+          {"label":"COMB 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
+          {"label":"COMB 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"730,209"}},
         ] },
         { "name": "Ring Mods", "pageNum": 5, "rows": [
           { "section": "parameters", "controls": [
@@ -27028,6 +27722,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"RING MOD 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"RING MOD 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"RING MOD 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"RING MOD 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "More...", "pageNum": 6, "rows": [
           { "section": "parameters", "controls": [
@@ -27111,6 +27810,12 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"FREQUENCY","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,29"}},
+          {"label":"MASTER COMB","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"MASTER RING MOD","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
+          {"label":"MASTER TIME MOD","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,209"}},
         ] },
         { "name": "Master", "pageNum": 7, "fw": {"gtet":"13,02"}, "rows": [
           { "section": "parameters", "controls": [
@@ -27225,6 +27930,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "LFO+Env", "rows": [
           { "section": "parameters", "controls": [
@@ -27257,6 +27967,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
         ] }
       ] },
       { "name": "Quad Tape Delay", "value": "4", "fw": {"lt":"27,02"}, "pages": [
@@ -27296,6 +28008,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"420,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"715,29"}},
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"420,209"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"715,209"}},
         ] },
         { "name": "Mix/Filter", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
@@ -27335,6 +28052,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,29"}},
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,209"}},
         ] },
         { "name": "Time Mod", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
@@ -27368,6 +28090,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "More...", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -27524,6 +28249,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"FILTER 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"FILTER 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,209"}},
         ] },
         { "name": "Delays 3+4", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
@@ -27563,6 +28293,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"FILTER 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,29"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"FILTER 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,209"}},
         ] },
         { "name": "Time Mod", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
@@ -27596,6 +28331,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Chorus", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -27629,6 +28367,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CHORUS 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"CHORUS 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"CHORUS 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"CHORUS 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "More...", "pageNum": 4, "rows": [
           { "section": "parameters", "controls": [
@@ -27823,6 +28566,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"FILTER 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"FILTER 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,209"}},
         ] },
         { "name": "Delays 3+4", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
@@ -27862,6 +28610,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"FILTER 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,29"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"FILTER 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,209"}},
         ] },
         { "name": "Time Mod", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -27895,6 +28648,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Chorus", "pageNum": 4, "rows": [
           { "section": "parameters", "controls": [
@@ -27928,6 +28684,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CHORUS 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"CHORUS 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"CHORUS 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"CHORUS 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "More...", "pageNum": 5, "rows": [
           { "section": "parameters", "controls": [
@@ -28171,6 +28932,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Chorus", "pageNum": 4, "rows": [
           { "section": "parameters", "controls": [
@@ -28204,6 +28968,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CHORUS 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"CHORUS 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"CHORUS 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"CHORUS 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "Comb Filters", "pageNum": 5, "rows": [
           { "section": "parameters", "controls": [
@@ -28241,6 +29010,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"COMB 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,29"}},
+          {"label":"COMB 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"730,29"}},
+          {"label":"COMB 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
+          {"label":"COMB 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"730,209"}},
         ] },
         { "name": "Ring Mods", "pageNum": 6, "rows": [
           { "section": "parameters", "controls": [
@@ -28274,6 +29048,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"RING MOD 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"RING MOD 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"RING MOD 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"RING MOD 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "More...", "pageNum": 7, "rows": [
           { "section": "parameters", "controls": [
@@ -28426,6 +29205,14 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"420,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"800,29"}},
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"420,209"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"800,209"}},
+          {"label":"Feedback","paramName":"MULTITAP_FEEDBACK","paramId":63,"widget":"knob","rawWidget":"knobMiniReadout","placement":{"positionExact":"305,50"}},
+          {"label":"Feedback\nSend","paramName":"MULTITAP_FBKSEND","paramId":59,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"305,180"}},
+          {"label":"Feedback\nReturn","paramName":"MULTITAP_FBKRET","paramId":60,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"305,285"}},
         ] },
         { "name": "Filter", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
@@ -28460,6 +29247,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "Time Mod", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -28493,6 +29285,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Chorus", "pageNum": 4, "rows": [
           { "section": "parameters", "controls": [
@@ -28526,6 +29321,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CHORUS 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"CHORUS 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"CHORUS 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"CHORUS 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "Comb Filters", "pageNum": 5, "rows": [
           { "section": "parameters", "controls": [
@@ -28563,6 +29363,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"COMB 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,29"}},
+          {"label":"COMB 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"730,29"}},
+          {"label":"COMB 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"475,209"}},
+          {"label":"COMB 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"730,209"}},
         ] },
         { "name": "Ring Mods", "pageNum": 6, "rows": [
           { "section": "parameters", "controls": [
@@ -28596,6 +29401,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"RING MOD 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"RING MOD 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"RING MOD 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"RING MOD 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "More...", "pageNum": 7, "rows": [
           { "section": "parameters", "controls": [
@@ -28735,6 +29545,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "Filter", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
@@ -28801,6 +29616,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
         ] }
       ] },
       { "name": "Quad Tape Delay gtet 27.02", "value": "4", "fw": {"gtet":"27,02"}, "pages": [
@@ -28874,6 +29691,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"420,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"715,29"}},
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"420,209"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"715,209"}},
         ] },
         { "name": "Mix/Filter", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
@@ -28913,6 +29735,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,29"}},
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,209"}},
         ] },
         { "name": "Time Mod", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -28946,6 +29773,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "More...", "pageNum": 4, "rows": [
           { "section": "parameters", "controls": [
@@ -29099,6 +29929,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"FILTER 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,29"}},
+          {"label":"DELAY 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"FILTER 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,209"}},
         ] },
         { "name": "Delays 3+4", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
@@ -29138,6 +29973,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"DELAY 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"FILTER 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,29"}},
+          {"label":"DELAY 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"FILTER 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"815,209"}},
         ] },
         { "name": "Time Mod", "pageNum": 3, "rows": [
           { "section": "parameters", "controls": [
@@ -29171,6 +30011,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"LFO 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Chorus", "pageNum": 4, "rows": [
           { "section": "parameters", "controls": [
@@ -29204,6 +30047,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"MULTITAP_SCENEIGNORE","paramId":115,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"MULTITAP_BYPASS","paramId":37,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CHORUS 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"CHORUS 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"CHORUS 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"CHORUS 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "More...", "pageNum": 5, "rows": [
           { "section": "parameters", "controls": [
@@ -29451,6 +30299,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass\nMode","paramName":"PHASER_BYPASSMODE","paramId":14,"widget":"dropdown","rawWidget":"dropdown1Tight"},
             {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,29"}},
         ] },
         { "name": "Advanced", "pageNum": 1, "fw": {"lt":"12,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -29504,6 +30354,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LFO","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "More", "pageNum": 1, "fw": {"lt":"23,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -29526,6 +30378,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"VCR","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"PHOTOCELL","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,29"}},
         ] },
         { "name": "Phaser", "pageNum": 0, "fw": {"lt":"27,04"}, "rows": [
           { "section": "parameters", "controls": [
@@ -29600,6 +30455,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PHASER_BYPASS","paramId":16,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PHASER_SCENEIGNORE","paramId":31,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"VCR","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"PHOTOCELL","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,29"}},
         ] },
         { "name": "Basic", "pageNum": 0, "fw": {"gtet":"27,04"}, "rows": [
           { "section": "parameters", "controls": [
@@ -29922,6 +30780,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
         ] }
       ] },
       { "name": "Quad Detune", "value": "1", "pages": [
@@ -29960,6 +30820,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"602,29"}},
+          {"label":"VOICE 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"VOICE 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"602,209"}},
         ] },
         { "name": "Delay", "rows": [
           { "section": "parameters", "controls": [
@@ -29997,6 +30862,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"602,29"}},
+          {"label":"VOICE 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"VOICE 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"602,209"}},
         ] },
         { "name": "Modulation", "rows": [
           { "section": "parameters", "controls": [
@@ -30025,6 +30895,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
         ] }
       ] },
       { "name": "Dual Shift", "value": "2", "pages": [
@@ -30066,6 +30938,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,29"}},
+          {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"648,56"}},
         ] },
         { "name": "Master+Mod", "rows": [
           { "section": "parameters", "controls": [
@@ -30151,6 +31027,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,29"}},
+          {"label":"VOICE 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"VOICE 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,209"}},
         ] },
         { "name": "Delay", "rows": [
           { "section": "parameters", "controls": [
@@ -30183,6 +31064,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"517,29"}},
+          {"label":"VOICE 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"VOICE 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"517,209"}},
         ] },
         { "name": "Master+Mod", "rows": [
           { "section": "parameters", "controls": [
@@ -30266,6 +31152,14 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"430,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"430,209"}},
+          {"label":"Key","paramName":"PITCH_KEY","paramId":8,"widget":"dropdown","rawWidget":"dropdownCompact","placement":{"positionExact":"305,30"}},
+          {"label":"Learn","paramName":"PITCH_LEARN","paramId":101,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"317,100"}},
+          {"label":"Scale","paramName":"PITCH_SCALE","paramId":9,"widget":"dropdown","rawWidget":"dropdownCompact","placement":{"positionExact":"305,235"}},
+          {"label":"Temperament","paramName":"PITCH_TEMPERAMENT","paramId":108,"widget":"dropdown","rawWidget":"dropdownCompact","placement":{"positionExact":"305,310"},"fw":{"gtet":"2,00"}},
+          {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"421,56"}},
         ] },
         { "name": "Master+Mod", "pageNum": 1, "fw": {"lt":"27,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -30303,6 +31197,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,29"}},
+          {"label":"SHIFTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Master+Mod", "pageNum": 1, "fw": {"lt":"31,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -30339,6 +31237,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,29"}},
+          {"label":"SHIFTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Master+Mod", "pageNum": 1, "fw": {"gtet":"31,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -30407,6 +31309,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CUSTOM SCALE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
         ] }
       ] },
       { "name": "Quad Harmony", "value": "5", "pages": [
@@ -30449,6 +31353,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,29"}},
+          {"label":"VOICE 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"VOICE 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,209"}},
         ] },
         { "name": "Delay", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
@@ -30483,6 +31392,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"VOICE 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"VOICE 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "Key/Scale", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
@@ -30520,6 +31434,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CUSTOM SCALE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"536,56"}},
         ] },
         { "name": "Master+Mod", "pageNum": 3, "fw": {"lt":"27,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -30557,6 +31474,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,29"}},
+          {"label":"SHIFTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Master+Mod", "pageNum": 3, "fw": {"lt":"31,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -30593,6 +31514,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"645,29"}},
+          {"label":"SHIFTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Master+Mod", "pageNum": 3, "fw": {"gtet":"31,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -30697,6 +31622,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"1 OCTAVE DOWN","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"2 OCTAVES DOWN","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
         ] }
       ] },
       { "name": "Crystal Echoes", "value": "8", "pages": [
@@ -30737,6 +31665,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Splice", "rows": [
           { "section": "parameters", "controls": [
@@ -30777,6 +31708,12 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"SPLICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"CROSSFADE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"},"fw":{"lt":"12,08"}},
+          {"label":"DIFFUSION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"},"fw":{"gtet":"12,08"}},
+          {"label":"SPLICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,209"}},
         ] },
         { "name": "Master", "rows": [
           { "section": "parameters", "controls": [
@@ -30808,6 +31745,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
         ] }
       ] },
       { "name": "Advanced Whammy", "value": "9", "pages": [
@@ -30873,6 +31812,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Step 15\nShift","paramName":"PITCH_STEP15","paramId":91,"widget":"knob","rawWidget":"knob"},
             {"label":"Step 16\nShift","paramName":"PITCH_STEP16","paramId":92,"widget":"knob","rawWidget":"knob"},
           ] }
+        ], "pageControls": [
+          {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"570,56"}},
         ] },
         { "name": "Key/Scale", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
@@ -30910,6 +31851,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CUSTOM SCALE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"536,56"}},
         ] },
         { "name": "Master+Dyn", "pageNum": 2, "fw": {"lt":"27,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -30946,6 +31890,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"SHIFTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Master+Dyn", "pageNum": 2, "fw": {"lt":"31,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -30982,6 +31929,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"SHIFTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Master+Dyn", "pageNum": 2, "fw": {"gtet":"31,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -31054,6 +32004,13 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"430,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"430,209"}},
+          {"label":"Key","paramName":"PITCH_KEY","paramId":8,"widget":"dropdown","rawWidget":"dropdownCompact","placement":{"positionExact":"305,70"}},
+          {"label":"Learn","paramName":"PITCH_LEARN","paramId":101,"widget":"toggle","rawWidget":"toggleCompact","placement":{"positionExact":"317,150"}},
+          {"label":"Temperament","paramName":"PITCH_TEMPERAMENT","paramId":108,"widget":"dropdown","rawWidget":"dropdownCompact","placement":{"positionExact":"305,290"},"fw":{"gtet":"2,00"}},
+          {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"421,56"}},
         ] },
         { "name": "Master+Mod", "pageNum": 1, "fw": {"lt":"27,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -31195,6 +32152,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,29"}},
+          {"label":"VOICE 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"VOICE 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,209"}},
         ] },
         { "name": "Delay", "rows": [
           { "section": "parameters", "controls": [
@@ -31231,6 +32193,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"600,29"}},
+          {"label":"VOICE 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"VOICE 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"600,209"}},
         ] },
         { "name": "Master+Mod", "rows": [
           { "section": "parameters", "controls": [
@@ -31316,6 +32283,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,29"}},
+          {"label":"VOICE 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"VOICE 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"657,209"}},
         ] },
         { "name": "Delay", "pageNum": 1, "rows": [
           { "section": "parameters", "controls": [
@@ -31352,6 +32324,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"VOICE 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"VOICE 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"600,29"}},
+          {"label":"VOICE 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"VOICE 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"600,209"}},
         ] },
         { "name": "Key/Scale", "pageNum": 2, "rows": [
           { "section": "parameters", "controls": [
@@ -31389,6 +32366,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"CUSTOM SCALE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"560,29"}},
+          {"label":"Seperator","paramName":null,"paramId":null,"widget":"label","rawWidget":"labelSeperator","placement":{"positionExact":"536,56"}},
         ] },
         { "name": "Master+Mod", "pageNum": 3, "fw": {"lt":"27,00"}, "rows": [
           { "section": "parameters", "controls": [
@@ -31427,6 +32407,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"730,29"}},
+          {"label":"SHIFTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Master+Mod", "pageNum": 3, "fw": {"lt":"31,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -31464,6 +32448,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"PITCH_SCENEIGNORE","paramId":111,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"PITCH_BYPASS","paramId":44,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"730,29"}},
+          {"label":"SHIFTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
         ] },
         { "name": "Master+Mod", "pageNum": 3, "fw": {"gtet":"31,03"}, "rows": [
           { "section": "parameters", "controls": [
@@ -31661,6 +32649,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PLEX_BYPASS","paramId":78,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PLEX_SCENEIGNORE","paramId":94,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"TONE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"817,29"}},
+          {"label":"INPUT DIFFUSION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"817,209"}},
         ] },
         { "name": "Mod+Dyn", "rows": [
           { "section": "parameters", "controls": [
@@ -31695,6 +32686,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PLEX_BYPASS","paramId":78,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PLEX_SCENEIGNORE","paramId":94,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"INPUT ENVELOPE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"}},
         ] },
         { "name": "Filter", "rows": [
           { "section": "parameters", "controls": [
@@ -31769,6 +32764,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PLEX_BYPASS","paramId":78,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PLEX_SCENEIGNORE","paramId":94,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"TONE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"817,29"}},
+          {"label":"INPUT DIFFUSION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"817,209"}},
         ] },
         { "name": "Mod+Dyn", "rows": [
           { "section": "parameters", "controls": [
@@ -31803,6 +32801,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PLEX_BYPASS","paramId":78,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PLEX_SCENEIGNORE","paramId":94,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"INPUT ENVELOPE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"}},
         ] },
         { "name": "Filter", "rows": [
           { "section": "parameters", "controls": [
@@ -31877,6 +32879,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PLEX_BYPASS","paramId":78,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PLEX_SCENEIGNORE","paramId":94,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"TONE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"817,29"}},
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"INPUT DIFFUSION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"817,209"}},
         ] },
         { "name": "Time", "rows": [
           { "section": "parameters", "controls": [
@@ -32031,6 +33037,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PLEX_BYPASS","paramId":78,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PLEX_SCENEIGNORE","paramId":94,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"INPUT ENVELOPE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"}},
         ] },
         { "name": "Filter", "rows": [
           { "section": "parameters", "controls": [
@@ -32106,6 +33116,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PLEX_BYPASS","paramId":78,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PLEX_SCENEIGNORE","paramId":94,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"TONE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"817,29"}},
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"INPUT DIFFUSION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"817,209"}},
         ] },
         { "name": "Time", "rows": [
           { "section": "parameters", "controls": [
@@ -32250,6 +33264,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PLEX_BYPASS","paramId":78,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PLEX_SCENEIGNORE","paramId":94,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"INPUT ENVELOPE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"}},
         ] },
         { "name": "Filter", "rows": [
           { "section": "parameters", "controls": [
@@ -32324,6 +33342,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PLEX_BYPASS","paramId":78,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PLEX_SCENEIGNORE","paramId":94,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"TONE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"817,29"}},
+          {"label":"MASTER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"INPUT DIFFUSION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"817,209"}},
         ] },
         { "name": "Time", "rows": [
           { "section": "parameters", "controls": [
@@ -32438,6 +33460,10 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"PLEX_BYPASS","paramId":78,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"PLEX_SCENEIGNORE","paramId":94,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"MODULATION","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,29"}},
+          {"label":"INPUT ENVELOPE","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"305,209"}},
+          {"label":"DUCKER","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"}},
         ] },
         { "name": "Filter", "rows": [
           { "section": "parameters", "controls": [
@@ -32512,6 +33538,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Balance","paramName":"RESONATOR_PAN","paramId":35,"widget":"knob","rawWidget":"knob"},
           ] }
+        ], "pageControls": [
+          {"label":"RESONATOR 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"326,29"}},
+          {"label":"RESONATOR 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"541,29"}},
+          {"label":"RESONATOR 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"756,29"}},
+          {"label":"RESONATOR 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"971,29"}},
         ] },
         { "name": "Master/Mix", "rows": [
           { "section": "parameters", "controls": [
@@ -32567,6 +33598,11 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
           { "section": "mixer", "controls": [
             {"label":"Balance","paramName":"RESONATOR_PAN","paramId":35,"widget":"knob","rawWidget":"knob"},
           ] }
+        ], "pageControls": [
+          {"label":"RESONATOR 1","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"326,29"}},
+          {"label":"RESONATOR 2","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"541,29"}},
+          {"label":"RESONATOR 3","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"756,29"}},
+          {"label":"RESONATOR 4","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"971,29"}},
         ] },
         { "name": "Master/Mix", "rows": [
           { "section": "parameters", "controls": [
@@ -33358,6 +34394,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":60,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LOW MID","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"392,209"}},
+          {"label":"HIGH MID","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"}},
         ] },
         { "name": "EQ", "pageNum": 2, "fw": {"gtet":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -33641,6 +34680,9 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"REVERB_BYPASS","paramId":22,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"REVERB_SCENEIGNORE","paramId":60,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"LOW MID","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"392,209"}},
+          {"label":"HIGH MID","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"647,209"}},
         ] },
         { "name": "EQ", "pageNum": 2, "fw": {"gtet":"16,01"}, "rows": [
           { "section": "parameters", "controls": [
@@ -33926,6 +34968,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"SYNTH_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"SYNTH_SCENEIGNORE","paramId":40,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Tracking\nMode","paramName":"SYNTH_PD_RANGE","paramId":41,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,230"},"fw":{"gtet":"29,02"}},
         ] },
         { "name": "Voice 2", "rows": [
           { "section": "parameters", "controls": [
@@ -33959,6 +35003,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"SYNTH_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"SYNTH_SCENEIGNORE","paramId":40,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Tracking\nMode","paramName":"SYNTH_PD_RANGE","paramId":41,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,230"},"fw":{"gtet":"29,02"}},
         ] },
         { "name": "Voice 3", "rows": [
           { "section": "parameters", "controls": [
@@ -33992,6 +35038,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Bypass","paramName":"SYNTH_BYPASS","paramId":28,"widget":"button","rawWidget":"btnBypass"},
             {"label":"Scene\nIgnore","paramName":"SYNTH_SCENEIGNORE","paramId":40,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
           ] }
+        ], "pageControls": [
+          {"label":"Tracking\nMode","paramName":"SYNTH_PD_RANGE","paramId":41,"widget":"dropdown","rawWidget":"dropdown1Tight","placement":{"positionExact":"196,230"},"fw":{"gtet":"29,02"}},
         ] }
       ] }
     ]
@@ -34033,6 +35081,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"TENTAP_SCENEIGNORE","paramId":47,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"TENTAP_BYPASS","paramId":45,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"PAN FX","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"390,209"}},
         ] },
         { "name": "Taps", "rows": [
           { "section": "parameters", "controls": [
@@ -34090,6 +35140,8 @@ export const AXE3_LAYOUTS: DeviceEditorLayouts = {
             {"label":"Scene\nIgnore","paramName":"TENTAP_SCENEIGNORE","paramId":47,"widget":"button","rawWidget":"btnIgnoreScene","fw":{"gtet":"19,05"}},
             {"label":"Bypass","paramName":"TENTAP_BYPASS","paramId":45,"widget":"button","rawWidget":"btnBypass"},
           ] }
+        ], "pageControls": [
+          {"label":"PAN FX","paramName":null,"paramId":null,"widget":"label","rawWidget":"sectionLabel","placement":{"positionExact":"390,209"}},
         ] },
         { "name": "Taps", "rows": [
           { "section": "parameters", "controls": [

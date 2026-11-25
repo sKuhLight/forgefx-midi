@@ -10,6 +10,8 @@
  * raw-patch unpack + Huffman + CRC (`decodeRawPatch`), the structured body
  * decode (`decodeGen3Body`, `decodeGen3PresetDump`), and the FM3-verified
  * generic per-block param extraction (`readBlockParams`, blockParams.ts).
+ * `blockStateParams` (blockState.ts) resolves a block family's Scene Ignore /
+ * Bypass Mode params per model, with their firmware gates.
  */
 export * from './device.js';
 
@@ -80,6 +82,18 @@ export type {
   DecodedBlockParam,
 } from './blockParams.js';
 export {
+  blockStateParams,
+  hasBlockStateParams,
+  firmwareAtLeast,
+  formatBlockStateFirmware,
+  BLOCK_STATE_MODELS,
+  MUTING_BYPASS_MODES,
+  isMutingBypassMode,
+  mutingBypassOrdinals,
+} from './blockState.js';
+export type { BlockStateParam, BlockStateParams, BlockStateFirmware } from './blockState.js';
+
+export {
   findBlockHeader,
   paramByteOffset,
   writeBlockParam,
@@ -135,6 +149,25 @@ export type {
 export { validateGen3Preset } from './presetValidate.js';
 export type { Gen3ValidationResult } from './presetValidate.js';
 
+// Block visuals (read-only graph displays) resolved against each device's own catalog.
+export { blockVisuals, gen3VisualModel, hasBlockVisuals } from './visuals.js';
+export {
+  graphSlotKey,
+  stampGraphKeys,
+  layoutParamIds,
+  resolveBlockVisuals,
+  DYNAMICS_CURVE_ROLES,
+} from '../../visuals.js';
+export type {
+  BlockVisual,
+  ResolveVisualsOptions,
+  VisualKind,
+  VisualKey,
+  VisualMode,
+  VisualRole,
+  GraphSlotKey,
+  GraphSlotContext,
+} from '../../visuals.js';
 // Per-block visual data descriptors (curves, markers, meters) for the modern
 // family; every frame is delegated to the existing gen-3 builders. See
 // `visualData.ts`.

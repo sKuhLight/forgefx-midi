@@ -32,11 +32,11 @@ RE/codec · **GAP** = wire shape unknown, needs a capture.
 | Preset change (name/num) | ✅ | ✅ | ✅ | ✅ | **DONE** | — |
 | Input level | ✅ | ✅ | ✅ | ⛔ | **DONE** via `liveMonitors` | — |
 | **Per‑block VU / level / gain‑reduction** | ✅ | ✅ | ✅ | ⛔ | **DONE** (2026‑07‑04, all gen‑3) | — |
-| Looper transport state (rec/play/…) | ✅ | 🟢 | ✅ | ⛔ | **DORMANT** | wire the existing parser |
+| Looper transport state (rec/play/…) | ⛔ | ⛔ | ⛔ | ⛔ | **NOT READABLE** | write-only controls; latch locally |
 | Status dump (bypass/channel) | ✅ | 🟢 | 🟢 | 🟡 | PARTIAL | — |
 | Looper waveform + playhead + level | ✅ | ✅ | 🟢 | ⛔ | **DONE** (2026-07-04, all gen-3) | — |
-| RTA spectrum bands | 🟡 | 🟡fw | 🟡 | ⛔ | **ABSENT/GAP** | capture RTA page |
-| Graph curves (PEQ/EQ/comp/LFO/ADSR) | ✅w | ✅w | ✅w | — | **ABSENT/GAP** | capture `AskGraphN` |
+| RTA spectrum bands | 🟡 | 🟡fw | ✅ | ⛔ | **DECODED** (gen-3) | `sub 0x23` float array, 32/64/128 bands |
+| Graph curves (PEQ/EQ/comp/LFO/ADSR) | ✅ | ✅ | ✅ | — | **DECODED** (gen-3) | device-fed `sub 0x23 (eid, graphIndex)` |
 | All AM4 live telemetry | — | — | — | 🟡 | **CAPTURED, UNMAPPED** | correlate `action=0x0010` |
 
 `*` III pushes CPU/meters as its own messages (`AxeCpu`, `Axe3In/OutMeters`) but over USB the
@@ -166,35 +166,51 @@ SUB 0x10** → (Looper eid, control pid) with a 5-septet-LE float **1.0 (on) / 0
 (`buildLooperControl`; Record on = `…01 10 00 <eid> 08 00 00 00 00 7c 03`). ForgeFX `gen3.looperControl(eid,
 action, on)` maps `action` (record/play/stop/overdub/undo/once/reverse/half) → the block's control pid via
 the catalog (model-agnostic) behind `POST /preset/looper/control`; Axis renders REC/▶/■/DUB/↺/REV/½ buttons.
-Record (pid 8) + Play (pid 9) are capture-confirmed; the rest are inferred from the same param family (same
-sub-0x10 float mechanism). **Reading** the device-side transport state (rec/play/overdub indicators) is
-still un-decoded — Axis latches button state locally for now.
+Record (pid 8) + Play (pid 9) are capture-confirmed; the rest use the same param family (same
+sub-0x10 float mechanism). **There is no transport readback** (confirmed 2026-11-25): the
+transport pids `{3,7,8,9,10,11,12,20}` are never polled in any capture, the layout declares
+those controls `MESSAGE_EXECUTE`/`MESSAGE_TOGGLE` (write-only commands, not the default set),
+and `func 0x0F` ("looper status" in the community III map) is never built by the
+reference editors. The editors latch the pressed state locally and flip their own
+on/off/glow art, so a rebuild should do the same — and cannot reflect front-panel
+presses.
 
-## ABSENT / GAP — need a capture or new codec
+## Formerly absent — now decoded
 
-1. **RTA spectrum bands** (III/FM9; FM3 firmware has `RTA_BAND` pid 4 / `RTA_FREQ` pid 5 but
-   FM3‑Edit renders no graph). Only **config** params exist in the codec (`RTA_SOURCE/NUMBANDS/
-   DECAY/WINDOW`). Live band magnitudes are unmapped — either indexed polls of `RTA_BAND`/`RTA_FREQ`
-   on eid 174, or editor‑side FFT of USB audio. **Capture:** open the RTA page with signal, watch
-   for `0x76`/`0x01` polls of eid 174 — present ⇒ wire path (recover encoding); silent ⇒ editor‑side FFT.
+1. **RTA spectrum bands** — ~~unknown~~ **DECODED (gen-3)**: `fn 0x01 sub 0x23` with
+   `(eid 174+n, graphIndex 0)`; reply is a float32 array of `(1<<RTA_NUMBANDS)<<5` =
+   **32/64/128** bands. Display transform: `clamp(10*log10f(x), -110, +10) / 120`.
+   `RTA_BAND`/`RTA_FREQ` are **never polled** (zero code references) — the older
+   "indexed pid 4 read" hypothesis is dead. FM3 firmware lacks the RTA block.
 2. **Looper waveform** — ~~unknown~~ **DECODED** (FM3 capture 2026-07-04): a dedicated fn 0x01 `sub 0x23`
    read on the Looper eid, ~595 raw 7-bit magnitudes — NOT the generic graph channel. See §3 above.
-   (The `AxeAskGraphN`/`Axe3Graph` graph channel is still unknown, but the looper doesn't use it.)
-3. **Graph curves** (PEQ/EQ/amp/comp‑transfer/LFO‑scope/ADSR/modifier) — same `AskGraphN` channel;
-   mostly computable editor‑side from params, but the device can return computed graph data. Opcode/
-   payload **unknown**.
-4. **III CPU / in‑out meter push opcodes** — `AxeCpu`, `Axe3InMeters`, `Axe3OutMeters` are confirmed
+3. **Graph curves** (PEQ/EQ/amp/comp-transfer/LFO-scope/ADSR/modifier) — ~~local~~ **DECODED
+   (gen-3)**: device-fed via `fn 0x01 sub 0x23 (effectId, graphIndex)`; reply is a
+   float32 array (length in the frame, ≤512 B = 128 floats) written into the graph's
+   curve slot. `graphIndex` is the wire curve slot, valued per widget (`graph_cab` uses
+   0..3). Fetched on state change (page open, parameter echo, type/zoom), not as a
+   periodic poll. `AxeAskGraphN`/`pollBlockGraphs` remain FracPad-only names, but the
+   official editors do have this opcode. Live markers (`COMP_XMARK`, `MOD_XMARK`,
+   `ADSR*_XMARK`) still ride the `sub 0x19` page poll. The Cab Align page's
+   `CABINET_AUTO_ALIGN` is a plain param write — the alignment runs on the unit and the
+   editor re-fetches the curves.
+
+## Still absent / gaps — need a capture or new codec
+
+1. **III CPU / in‑out meter push opcodes** — `AxeCpu`, `Axe3InMeters`, `Axe3OutMeters` are confirmed
    message *names*; the frame bytes are not in the 3rd‑party spec (which
    documents only tempo+tuner push). We already poll CPU/output meters the FM3/`0x19`/`0x2e` way, so
    this only matters if we want the III's native push.
-5. **All AM4 live telemetry** — fresh AM4 analysis (2026-07-06); see
+2. **All AM4 live telemetry** — fresh AM4 analysis (2026-07-06); see
    [`AM4-LIVE-POLLS.md`](./AM4-LIVE-POLLS.md). No standalone gen-3-style AM4
    telemetry or push channel appeared. AM4-Edit uses ordinary `fn 0x01 PARAM_RW` polls instead:
    `action=0x0010` for live/value-like reads and `action=0x0026` for status/zero polls. The codec now
    labels these shapes diagnostically, but it does **not** parse them into tuner/meter/CPU events yet.
    `GET_METER` remains wire-confirmed dead (100-sample probe, zero variance).
-6. **VP4 (`0x14`)** — **no wire observations at all**. Gen‑3 mechanisms *probably*
+3. **VP4 (`0x14`)** — **no wire observations at all**. Gen‑3 mechanisms *probably*
    transfer, but nothing is confirmed; no meter table, no telemetry flags.
+4. **Looper transport state (read side)** — the `0x58`/`0x5A` replies and the `0x39` page
+   values are captured; the bit→button map of the reply is still open.
 
 ---
 
@@ -222,7 +238,9 @@ still un-decoded — Axis latches button state locally for now.
 2. **Looper transport state** (DORMANT #2) — parser already exists; add event + poll.
 3. **`LOOPER_LEVEL` for FM3** — one‑line table add after a pid check.
 4. **RTA bands** — needs the one capture to decide wire vs. editor‑FFT; then codec.
-5. **Looper waveform / graph channel** — capture `AskGraphN`/`Axe3Graph`, then codec.
+5. **Looper waveform** — ~~unknown~~ **DECODED** (FM3 capture 2026-07-04): a dedicated fn 0x01 `sub 0x23`
+   read on the Looper eid, ~595 raw 7-bit magnitudes — NOT the generic graph channel. The
+   `AxeAskGraphN`/`Axe3Graph` channel is a FracPad III feature, not used by the official editors.
 6. **AM4 telemetry / VP4** — fresh RE passes; low priority (AM4 metering wire‑confirmed absent).
 
 ---

@@ -178,6 +178,91 @@ export function parseLooperWaveform(frame: readonly number[]): number[] {
   return out;
 }
 
+// ── block graph curves (EQ/PEQ/filter/comp transfer/LFO/ADSR/modifier/cab/RTA) ──
+// Every `graph_*` widget on a block page gets its curve FROM THE DEVICE: fn 0x01 sub 0x23
+// with the block's effectId and a curve-slot index (`graphIndex`, 0..3 — the CAB page uses
+// 0..3 for its four cab traces). The reply payload is a little-endian float32 array of
+// magnitude values (editor-side cap 512 bytes = 128 values), preceded by the echoed eid +
+// slot. It is fetched on state change (page open, parameter echo, type/zoom), NOT polled.
+//
+// This is the same opcode the Looper page uses for its waveform — that is slot 0 of the same
+// channel, except the Looper's payload is raw 7-bit envelope bytes rather than float32, so the
+// two are separated by the caller's request (see `parseLooperWaveform`).
+//
+// Widgets that also name a live marker (`COMP_XMARK`, `MOD_XMARK`, `ADSR*_XMARK`) still need
+// the ordinary `sub 0x19` monitor poll for the marker position; the curve comes from here.
+export const SUB_GRAPH_CURVE = 0x23;
+/** Largest graph payload the editors accept (512 B = 128 float32 values). */
+export const GRAPH_CURVE_MAX_BYTES = 0x200;
+/** Largest wire length of a graph reply (128 values × 5 septets + 12 header + 2 footer). */
+export const GRAPH_CURVE_MAX_WIRE_LEN = 128 * 5 + 14;
+/** Curve-slot indices a single block page can expose. */
+export const GRAPH_CURVE_SLOTS = 4;
+/** Build the `fn 0x01 sub 0x23 (effectId, graphIndex)` curve fetch. */
+export function buildGraphCurvePoll(effectId: number, graphIndex: number, modelByte: number): number[] {
+  const e14 = [effectId & 0x7f, (effectId >> 7) & 0x7f];
+  const g32 = [graphIndex & 0x7f, (graphIndex >> 7) & 0x7f, 0, 0];
+  return envelope(FN_PARAMETER, [SUB_GRAPH_CURVE, 0x00, ...e14, ...g32, 0, 0, 0, 0, 0, 0, 0], modelByte);
+}
+/** True for a `sub 0x23` reply carrying the curve for `effectId` slot `graphIndex`. */
+export function isGraphCurveResponse(frame: readonly number[], effectId: number, graphIndex: number): boolean {
+  return frame[5] === FN_PARAMETER && frame[6] === SUB_GRAPH_CURVE
+    && (((frame[8] ?? 0) | ((frame[9] ?? 0) << 7)) === effectId)
+    && (((frame[10] ?? 0) | ((frame[11] ?? 0) << 7)) === graphIndex)
+    && frame.length >= 14 && frame.length <= GRAPH_CURVE_MAX_WIRE_LEN;
+}
+/** Decode a graph-curve reply → the magnitude array.
+ *  Fractal floats on the wire are 5 septets per value (same as a single-value read), so a
+ *  128-value curve is 640 payload bytes; an 8-bit-aligned float32 array is accepted too
+ *  because the payload length disambiguates (a 5-septet payload is always a multiple of 5
+ *  and never contains a byte above 0x7f). */
+export function parseGraphCurve(frame: readonly number[]): number[] {
+  const start = 12;
+  const end = Math.max(start, frame.length - 2);
+  const width = end - start;
+  const out: number[] = [];
+  if (width > 0 && width % 5 === 0) {
+    let septetSafe = true;
+    for (let i = start; i < end; i++) {
+      if ((frame[i] ?? 0) > 0x7f) { septetSafe = false; break; }
+    }
+    if (septetSafe) {
+      for (let i = start; i + 4 < end; i += 5) {
+        out.push(decode5SeptetFloat32(frame[i] ?? 0, frame[i + 1] ?? 0, frame[i + 2] ?? 0, frame[i + 3] ?? 0, frame[i + 4] ?? 0));
+      }
+      return out;
+    }
+  }
+  for (let i = start; i + 3 < end; i += 4) {
+    out.push(decodeFloat32LE(frame[i] ?? 0, frame[i + 1] ?? 0, frame[i + 2] ?? 0, frame[i + 3] ?? 0));
+  }
+  return out;
+}
+
+/** Little-endian float32 from four wire bytes. */
+function decodeFloat32LE(b0: number, b1: number, b2: number, b3: number): number {
+  const u = ((b0 & 0xff) | ((b1 & 0xff) << 8) | ((b2 & 0xff) << 16) | ((b3 & 0xff) << 24)) >>> 0;
+  const sign = u >>> 31 ? -1 : 1;
+  const exp = (u >>> 23) & 0xff;
+  const mant = u & 0x7fffff;
+  if (exp === 0xff) return mant ? Number.NaN : sign * Number.POSITIVE_INFINITY;
+  if (exp === 0) return sign * mant * Math.pow(2, -149);
+  return sign * (1 + mant / 0x800000) * Math.pow(2, exp - 127);
+}
+/** RTA band count from the `RTA_NUMBANDS` selector: `(1 << v) << 5` → 32 / 64 / 128. */
+export function rtaBandCount(numBandsSelector: number): number {
+  return (1 << (numBandsSelector & 0x1f)) << 5;
+}
+/** Convert raw RTA linear magnitudes → 0..1 display heights over the editor's 120 dB span
+ *  (`clamp(10·log10(v), −110, +10)`, scaled by 1/120). Cab/EQ curves need no conversion. */
+export function parseRtaBands(frame: readonly number[], numBandsSelector: number): number[] {
+  const bands = parseGraphCurve(frame).slice(0, rtaBandCount(numBandsSelector));
+  return bands.map((v) => {
+    const db = 10 * Math.log10(v > 0 ? v : 1e-12);
+    return Math.max(0, Math.min(1, (Math.max(-110, Math.min(10, db)) + 110) / 120));
+  });
+}
+
 // ── looper transport control (Record / Play / Stop / Overdub / Undo / Once / Reverse / Half) ──
 // FM3 capture 2026-07-04: FM3-Edit toggles these via fn 0x01 SUB 0x10 → the Looper (effectId, controlPid)
 // with a 5-septet‑LE float value 1.0 (on/press) or 0.0 (off). e.g. Record on = `…01 10 00 <eid> 08 00

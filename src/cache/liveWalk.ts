@@ -218,6 +218,7 @@
  * everything"; the suites also replay the opposite (silent addresses).
  */
 import { fractalChecksum } from '../shared/checksum.js';
+import { decodeSeptetStream } from '../shared/septetStream.js';
 import { buildSetParameterContinuous } from '../gen3/axe-fx-iii/setParam.js';
 import { AXE_FX_III_BLOCKS } from '../gen3/axe-fx-iii/blockTypes.js';
 import { FM3_EFFECT_ID_TABLE } from '../gen3/fm3/effectIds.js';
@@ -286,30 +287,7 @@ export function buildEnumQuery(model: number, block: number, param: number, sub:
 // Pure codec — septet stream
 // ---------------------------------------------------------------------------
 
-/**
- * Decode a CONTINUOUS MSB-first septet stream into exactly `nbytes` raw bytes.
- *
- * The wire is a bit stream: each 7-bit septet contributes its 7 low bits (MSB
- * first) to an accumulator from which 8-bit bytes are pulled off the top. `n`
- * raw bytes occupy ceil(8n/7) septets; the final septet's low padding bits are
- * discarded once `nbytes` bytes have been emitted. Returns fewer than `nbytes`
- * bytes only when the wire is too short (caller must check `.length`).
- */
-export function decodeSeptetStream(wire: Uint8Array, nbytes: number, start = 0): Uint8Array {
-  const out = new Uint8Array(nbytes);
-  let acc = 0;
-  let nbits = 0;
-  let o = 0;
-  for (let i = start; i < wire.length && o < nbytes; i++) {
-    acc = (acc << 7) | (wire[i]! & 0x7f);
-    nbits += 7;
-    while (nbits >= 8 && o < nbytes) {
-      nbits -= 8;
-      out[o++] = (acc >>> nbits) & 0xff;
-    }
-  }
-  return o < nbytes ? out.subarray(0, o) : out;
-}
+export { decodeSeptetStream };
 
 /** Wire septet count for `nbytes` raw payload bytes. */
 function septetLen(nbytes: number): number {

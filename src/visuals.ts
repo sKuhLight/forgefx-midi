@@ -55,7 +55,7 @@
 import type { EditorLayoutPage } from './editorLayouts.js';
 
 /** Visual families the client knows how to draw. */
-export type VisualKind = 'dynamics' | 'lfo' | 'response' | 'decay' | 'echo' | 'adsr' | 'cabAlign';
+export type VisualKind = 'dynamics' | 'lfo' | 'response' | 'decay' | 'echo' | 'adsr' | 'cabAlign' | 'eq';
 
 /** Stable visual keys (unique per block). The client prefixes them, e.g. `graph:dynamics`. */
 export type VisualKey =
@@ -68,7 +68,11 @@ export type VisualKey =
   | 'echo'
   | 'adsr1'
   | 'adsr2'
-  | 'cabAlign';
+  | 'cabAlign'
+  | 'inputEq'
+  | 'outputEq'
+  | 'reverbEq'
+  | 'sidechainEq';
 
 /**
  * Normalised key of a layout graph slot: a {@link VisualKey}, or `'eq'` for the parametric-EQ
@@ -77,7 +81,7 @@ export type VisualKey =
 export type GraphSlotKey = VisualKey | 'eq';
 
 /** Sub-variant of a kind that changes the display law. */
-export type VisualMode = 'compressor' | 'gate' | 'mod' | 'tremolo' | 'panner' | 'filter' | 'wah';
+export type VisualMode = 'compressor' | 'gate' | 'mod' | 'tremolo' | 'panner' | 'filter' | 'wah' | 'parametric' | 'graphic';
 
 /** Every role name a visual may carry (see the module header for per-kind semantics). */
 export type VisualRole =
@@ -107,6 +111,7 @@ export type VisualRole =
   | 'center'
   // response
   | 'freq'
+  | 'filterType'
   | 'q'
   | 'gain'
   | 'order'
@@ -141,6 +146,18 @@ export type VisualRole =
   | 'delay2';
 
 /** A resolved visual for one block on one device (the wire shape a server serves). */
+export interface VisualEqBand {
+  key: string;
+  /** The selected layout's band caption, including non-frequency positions such as "Low Mid". */
+  label?: string;
+  gain?: number;
+  freq?: number;
+  q?: number;
+  type?: number;
+  centerHz?: number;
+  shape?: 'bell' | 'lowshelf' | 'highshelf' | 'lowcut' | 'highcut';
+}
+
 export interface BlockVisual {
   key: VisualKey;
   kind: VisualKind;
@@ -150,6 +167,7 @@ export interface BlockVisual {
   mode?: VisualMode;
   /** role → wire paramId in THIS device's id space. Only resolved (and present) roles appear. */
   roles: Partial<Record<VisualRole, number>>;
+  bands?: VisualEqBand[];
 }
 
 /** Title/mode override applied when its condition holds (first matching rule wins). */
@@ -181,9 +199,9 @@ export interface VisualDef {
 /** The two roles a compressor/gate transfer curve needs; without both only gain reduction is shown. */
 export const DYNAMICS_CURVE_ROLES: readonly VisualRole[] = ['threshold', 'ratio'];
 
-export const VISUAL_KINDS: readonly VisualKind[] = ['dynamics', 'lfo', 'response', 'decay', 'echo', 'adsr', 'cabAlign'];
+export const VISUAL_KINDS: readonly VisualKind[] = ['dynamics', 'lfo', 'response', 'decay', 'echo', 'adsr', 'cabAlign', 'eq'];
 export const VISUAL_KEYS: readonly VisualKey[] = [
-  'dynamics', 'lfo', 'lfo1', 'lfo2', 'response', 'decay', 'echo', 'adsr1', 'adsr2', 'cabAlign',
+  'dynamics', 'lfo', 'lfo1', 'lfo2', 'response', 'decay', 'echo', 'adsr1', 'adsr2', 'cabAlign', 'inputEq', 'outputEq', 'reverbEq', 'sidechainEq',
 ];
 
 /** A CONTROLLERS LFO (n = 1 | 2). */
@@ -426,6 +444,46 @@ export const BLOCK_VISUAL_DEFS: Readonly<Record<string, readonly VisualDef[]>> =
   ],
 };
 
+/** These slots describe a static filter selected by a parameter, separate from the block's own type. */
+const PAGE_FILTERS: Readonly<Record<string, { token: string; visual: VisualDef }>> = {
+  COMP: {
+    token: 'graph_eq',
+    visual: {
+      key: 'sidechainEq', kind: 'response', mode: 'filter', title: 'Sidechain EQ',
+      roles: { filterType: 'COMP_EQTYPE', freq: 'COMP_FREQ', q: 'COMP_Q', gain: 'COMP_GAIN', lowCut: 'COMP_LOWCUT', highCut: 'COMP_HIGHCUT' },
+      requires: [['filterType', 'freq']]
+    }
+  },
+  MULTITAP: {
+    token: 'graph3',
+    visual: {
+      key: 'response', kind: 'response', mode: 'filter', title: 'Multitap EQ',
+      roles: { filterType: 'MULTITAP_FILTER_TYPE', freq: 'MULTITAP_FREQ', q: 'MULTITAP_Q', gain: 'MULTITAP_GAIN', lowCut: 'MULTITAP_LOWCUT', highCut: 'MULTITAP_HIGHCUT' },
+      requires: [['filterType', 'freq']]
+    }
+  },
+  PLEX: {
+    token: 'graph4',
+    visual: {
+      key: 'response', kind: 'response', mode: 'filter', title: 'Plex filter',
+      roles: { filterType: 'PLEX_FILTERTYPE', freq: 'PLEX_FILTERFREQ', q: 'PLEX_FILTERQ', gain: 'PLEX_FILTERGAIN' },
+      requires: [['filterType', 'freq']]
+    }
+  },
+  DYNDIST: {
+    token: 'graph_filter',
+    visual: {
+      key: 'response', kind: 'response', mode: 'filter', title: 'Filter response',
+      roles: { filterType: 'DYNDIST_BQTYPE', freq: 'DYNDIST_FREQ', q: 'DYNDIST_Q', gain: 'DYNDIST_GAIN' },
+      requires: [['filterType', 'freq']]
+    }
+  }
+};
+
+function controlsOn(page: EditorLayoutPage): readonly EditorLayoutPage['rows'][number]['controls'][number][] {
+  return [...page.rows.flatMap((r) => r.controls), ...(page.pageControls ?? [])];
+}
+
 /** The minimal catalog row shape the resolver needs. */
 export interface VisualCatalogParam {
   readonly paramId: number;
@@ -453,6 +511,8 @@ export interface ResolveVisualsOptions {
    * to a default one passes the union of both.
    */
   layoutParamIds?: Iterable<number> | null;
+  /** Selected pages provide fixed EQ frequencies and variant-specific bands. */
+  pages?: readonly EditorLayoutPage[];
 }
 
 /**
@@ -470,8 +530,10 @@ export function resolveBlockVisuals(
   presentParamIds?: Iterable<number> | null,
   opts: ResolveVisualsOptions = {},
 ): BlockVisual[] {
-  const defs = BLOCK_VISUAL_DEFS[family];
-  if (!defs || !params || params.length === 0) return [];
+  const pageFilter = PAGE_FILTERS[family];
+  const defs = [...(BLOCK_VISUAL_DEFS[family] ?? [])];
+  if (pageFilter && opts.pages?.some((p) => controlsOn(p).some((c) => c.graphKey === pageFilter.visual.key))) defs.push(pageFilter.visual);
+  if (!params || params.length === 0) return [];
   const byName = new Map<string, number>();
   for (const p of params) if (!byName.has(p.name)) byName.set(p.name, p.paramId);
   const present = toSet(presentParamIds);
@@ -503,6 +565,24 @@ export function resolveBlockVisuals(
       mode = rule.mode ?? mode;
     }
     out.push({ key: def.key, kind: def.kind, title, ...(mode ? { mode } : {}), roles });
+  }
+  if (family === 'DISTORT') out.push(...ampEqVisuals(byName, present, inLayout, opts.pages));
+  if (family === 'REVERB' && opts.pages?.some((p) => controlsOn(p).some((c) => c.graphKey === 'reverbEq'))) {
+    const id = (symbol: string) => {
+      const resolved = byName.get(symbol);
+      return resolved != null && (!present || present.has(resolved)) && (!inLayout || inLayout.has(resolved)) ? resolved : undefined;
+    };
+    const bands: VisualEqBand[] = [];
+    for (const n of [1, 2]) {
+      const freq = id(`REVERB_FREQ${n}`);
+      const gain = id(`REVERB_GAIN${n}`);
+      if (freq != null && gain != null) bands.push({ key: `peak${n}`, shape: 'bell', freq, gain, q: id(`REVERB_Q${n}`) });
+    }
+    const low = id('REVERB_LOWCUT');
+    const high = id('REVERB_HICUT');
+    if (low != null) bands.push({ key: 'lowCut', shape: 'lowcut', freq: low, q: id('REVERB_LOWQ') });
+    if (high != null) bands.push({ key: 'highCut', shape: 'highcut', freq: high, q: id('REVERB_HIGHQ') });
+    if (bands.length) out.push({ key: 'reverbEq', kind: 'eq', title: 'Reverb EQ', mode: 'parametric', roles: {}, bands });
   }
   return out;
 }
@@ -561,6 +641,10 @@ export function graphSlotKey(
   const tok = (rawWidget ?? '').trim().toLowerCase();
   if (!tok.startsWith('graph')) return null;
   if (tok === 'graph_peq') return 'eq';
+  const pageFilter = PAGE_FILTERS[family];
+  if (pageFilter?.token === tok) return pageFilter.visual.key;
+  if (family === 'REVERB' && (tok === 'graph_eq' || tok === 'graph_reverb')) return 'reverbEq';
+  if (family === 'DISTORT' && tok === 'graph4' && ctx.rowParamNames?.some((n) => n?.startsWith('DISTORT_INEQ'))) return 'inputEq';
   let key: VisualKey | null = null;
   if (tok === 'graph_comp_studio') key = 'dynamics';
   else if (tok === 'graph_lfo' || tok === 'graph_phaser' || tok === 'graph_trem') {
@@ -582,25 +666,54 @@ export function graphSlotKey(
  * without a key are left as they are. Several slots may carry the same key (e.g. a block whose
  * pages each show the LFO); a client anchors the visual at the first one in page order.
  */
+/** Fixed-frequency band labels of an Amp Output EQ page ("62", "1K", "6.6k Hz", "1600"). */
+const isAmpOutputEqPage = (page: EditorLayoutPage): boolean => /^\s*output\s*eq\s*$/i.test(page.name);
+
 export function stampGraphKeys(family: string, pages: readonly EditorLayoutPage[]): EditorLayoutPage[] {
-  return pages.map((page) => {
-    let pageTouched = false;
-    const rows = page.rows.map((row) => {
-      let rowTouched = false;
-      const rowParamNames = row.controls.map((c) => c.paramName);
-      const controls = row.controls.map((c) => {
+  const stamped = pages.map((page) => {
+    const stamp = (controls: EditorLayoutPage['rows'][number]['controls']) => {
+      const rowParamNames = controls.map((c) => c.paramName);
+      return controls.map((c) => {
         if (c.widget !== 'graph') return c;
         const key = graphSlotKey(family, c.rawWidget, { page: page.name, rowParamNames });
-        if (!key || c.graphKey === key) return c;
-        rowTouched = true;
-        return { ...c, graphKey: key };
+        return key && c.graphKey !== key ? { ...c, graphKey: key } : c;
       });
-      if (!rowTouched) return row;
-      pageTouched = true;
-      return { ...row, controls };
+    };
+    const rows = page.rows.map((row) => {
+      const controls = stamp(row.controls);
+      return controls.some((c, i) => c !== row.controls[i]) ? { ...row, controls } : row;
     });
-    return pageTouched ? { ...page, rows } : page;
+    let pageControls = page.pageControls ? stamp(page.pageControls) : undefined;
+    // The Amp's Output EQ page has faders but no graph slot. A fader bank also works on choices
+    // that carry band names instead of frequencies.
+    const hasBands = rows.some((r) => r.controls.some((c) => /^DISTORT_EQ\d+$/.test(c.paramName ?? '') && !c.crossBlock));
+    if (family === 'DISTORT' && isAmpOutputEqPage(page) && hasBands &&
+        ![...rows.flatMap((r) => r.controls), ...(pageControls ?? [])].some((c) => c.graphKey === 'outputEq')) {
+      pageControls = [...(pageControls ?? []), { label: 'Output EQ', paramName: null, paramId: null, widget: 'graph', rawWidget: 'graph_eq', graphKey: 'outputEq' }];
+    }
+    const changed = rows.some((r, i) => r !== page.rows[i]) || pageControls?.some((c, i) => c !== page.pageControls?.[i]);
+    return changed ? { ...page, rows, ...(pageControls ? { pageControls } : {}) } : page;
   });
+  // Some models/variants do not have an explicit visual slot. Offer these displays on the page
+  // with their inputs, without assuming page names or adding a second copy beside a real slot.
+  const visual = family === 'CHORUS' || family === 'COMP' ? BLOCK_VISUAL_DEFS[family]?.[0] : undefined;
+  if (!visual) return stamped;
+  if (stamped.some((page) => controlsOn(page).some((c) => c.graphKey === visual.key))) return stamped;
+  const index = stamped.findIndex((page) => {
+    const names = new Set(controlsOn(page).filter((c) => c.paramId != null && !c.crossBlock).map((c) => c.paramName));
+    return visual.requires.some((group) => group.every((role) => names.has(visual.roles[role] ?? null)));
+  });
+  if (index < 0) return stamped;
+  const page = stamped[index]!;
+  stamped[index] = {
+    ...page,
+    pageControls: [...(page.pageControls ?? []), {
+      label: visual.title, paramName: null, paramId: null, widget: 'graph',
+      rawWidget: family === 'CHORUS' ? 'graph_lfo' : 'graph_comp_studio',
+      graphKey: visual.key
+    }]
+  };
+  return stamped;
 }
 
 /**
@@ -610,9 +723,43 @@ export function stampGraphKeys(family: string, pages: readonly EditorLayoutPage[
 export function layoutParamIds(pages: readonly EditorLayoutPage[]): Set<number> {
   const out = new Set<number>();
   for (const page of pages) {
-    for (const row of page.rows) {
-      for (const c of row.controls) if (c.paramId != null && !c.crossBlock) out.add(c.paramId);
-    }
+    for (const c of controlsOn(page))
+      if (c.paramId != null && !c.crossBlock) out.add(c.paramId);
   }
+  return out;
+}
+
+
+/** Amp EQ bindings are resolved from symbols; fixed frequencies come from the selected layout. */
+function ampEqVisuals(byName: ReadonlyMap<string, number>, present: ReadonlySet<number> | null, inLayout: ReadonlySet<number> | null, pages?: readonly EditorLayoutPage[]): BlockVisual[] {
+  const id = (name: string): number | undefined => {
+    const n = byName.get(name);
+    return n != null && (!present || present.has(n)) && (!inLayout || inLayout.has(n)) ? n : undefined;
+  };
+  const out: BlockVisual[] = [];
+  const freq = id('DISTORT_INEQFREQ'), gain = id('DISTORT_INEQGAIN');
+  if (freq != null && gain != null) {
+    const bands: VisualEqBand[] = [{ key: 'peak', freq, gain, q: id('DISTORT_INEQQ'), type: id('DISTORT_INEQTYPE') }];
+    const low = id('DISTORT_HPFREQ'), high = id('DISTORT_HICUT');
+    if (low != null) bands.push({ key: 'lowCut', freq: low, shape: 'lowcut' });
+    if (high != null) bands.push({ key: 'highCut', freq: high, shape: 'highcut' });
+    out.push({ key: 'inputEq', kind: 'eq', title: 'Input EQ', mode: 'parametric', roles: {}, bands });
+  }
+  let best: VisualEqBand[] = [];
+  for (const page of pages ?? []) {
+    if (!isAmpOutputEqPage(page)) continue;
+    const bands: VisualEqBand[] = [];
+    for (const row of page.rows) for (const ctl of row.controls) {
+      if (!/^DISTORT_EQ\d+$/.test(ctl.paramName ?? '') || ctl.crossBlock) continue;
+      const gain = id(ctl.paramName!);
+      const match = /^\s*(\d+(?:\.\d+)?)\s*(k)?(?:hz)?\s*$/i.exec(ctl.label);
+      const centerHz = match ? Number(match[1]) * (match[2] ? 1000 : 1) : undefined;
+      if (gain != null && !bands.some((b) => b.gain === gain)) {
+        bands.push({ key: ctl.paramName!, gain, label: ctl.label.trim(), ...(centerHz ? { centerHz, shape: 'bell' } : {}) });
+      }
+    }
+    if (bands.length > best.length) best = bands;
+  }
+  if (best.length) out.push({ key: 'outputEq', kind: 'eq', title: 'Output EQ', mode: 'graphic', roles: {}, bands: best });
   return out;
 }

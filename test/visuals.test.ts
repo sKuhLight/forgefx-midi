@@ -31,7 +31,7 @@ import { FM9_PARAMS_BY_FAMILY, FM9_LAYOUTS } from '../src/gen3/fm9/index.js';
 import { PARAMS_BY_FAMILY as AXE3_PARAMS_BY_FAMILY, AXE3_LAYOUTS } from '../src/gen3/axe-fx-iii/index.js';
 import type { DeviceEditorLayouts, EditorLayoutPage } from '../src/editorLayouts.js';
 
-export const VISUALS_CASE_COUNT = 14;
+export const VISUALS_CASE_COUNT = 15;
 
 type Catalog = Readonly<Record<string, readonly VisualCatalogParam[]>>;
 const DEVICES: ReadonlyArray<{ model: Gen3VisualModel; byte: number; catalog: Catalog; layouts: DeviceEditorLayouts }> = [
@@ -280,9 +280,9 @@ function otherFamilies(): void {
 function slotTokens(): void {
   const cases: Array<[string, string, string | undefined, GraphSlotKey | null, string[]?]> = [
     ['COMP', 'graph_comp_studio', 'Basic', 'dynamics'],
-    ['COMP', 'graph_eq', 'Sidechain', null],
-    ['REVERB', 'graph_eq', 'EQ', null],
-    ['REVERB', 'graph_reverb', 'EQ', null], // an EQ-page slot: decay is library-only
+    ['COMP', 'graph_eq', 'Sidechain', 'sidechainEq'],
+    ['REVERB', 'graph_eq', 'EQ', 'reverbEq'],
+    ['REVERB', 'graph_reverb', 'EQ', 'reverbEq'],
     ['FLANGER', 'graph_lfo', 'Basic', 'lfo'],
     ['FLANGER', 'graph_lfo', 'Expert 1', 'lfo'],
     ['PHASER', 'graph_lfo', 'Basic', 'lfo'],
@@ -292,11 +292,11 @@ function slotTokens(): void {
     ['FILTER', 'graph_filter', 'Filter', 'response'],
     ['FILTER', 'graph_filter', 'LFO', 'lfo'],
     ['FILTER', 'graph_filter', 'Modulation', 'lfo'],
-    ['DYNDIST', 'graph_filter', 'Config', null],
+    ['DYNDIST', 'graph_filter', 'Config', 'response'],
     ['DISTORT', 'graph4', 'Input EQ', null],
     ['DISTORT', 'graph4', 'Speaker', null],
-    ['PLEX', 'graph4', 'Filter', null],
-    ['MULTITAP', 'graph3', 'EQ', null],
+    ['PLEX', 'graph4', 'Filter', 'response'],
+    ['MULTITAP', 'graph3', 'EQ', 'response'],
     ['PEQ', 'graph_peq', 'PEQ', 'eq'],
     ['GLOBAL', 'graph_peq', 'Out 1 EQ', 'eq'],
     ['MEGATAP', 'graph_megatap', 'Tap Control', null],
@@ -334,12 +334,16 @@ function stampAllLayouts(): void {
         out.forEach((page, i) => {
           const src = v.pages[i]!;
           let graphs = 0;
-          for (const r of page.rows) for (const c of r.controls) {
+          const controls = [...page.rows.flatMap((r) => r.controls), ...(page.pageControls ?? [])];
+          for (const c of controls) {
             if (c.widget === 'graph') graphs++;
             if (c.graphKey == null) continue;
             if (c.widget !== 'graph') fail(`${d.model} ${family}: a non-graph control got a graphKey`);
             if (!validKeys.has(c.graphKey)) fail(`${d.model} ${family}: bad key ${c.graphKey}`);
-            if (c.graphKey !== 'eq' && !(BLOCK_VISUAL_DEFS[family] ?? []).some((x) => x.key === c.graphKey)) {
+            const defs = (BLOCK_VISUAL_DEFS[family] ?? []).some((x) => x.key === c.graphKey);
+            const ampEq = family === 'DISTORT' && (c.graphKey === 'inputEq' || c.graphKey === 'outputEq');
+            const pageVisual = c.graphKey === graphSlotKey(family, c.rawWidget, { page: page.name });
+            if (c.graphKey !== 'eq' && !defs && !ampEq && !pageVisual) {
               fail(`${d.model} ${family}: key ${c.graphKey} has no definition in the family`);
             }
             stamped++;
@@ -355,10 +359,20 @@ function stampAllLayouts(): void {
     eq(keysOn(/^LFO/), 'lfo1,lfo2', `${d.model} CONTROLLERS LFO page keys`);
     eq(keysOn(/^ADSR 1$/), 'adsr1', `${d.model} CONTROLLERS ADSR 1 page keys`);
     eq(keysOn(/^ADSR 2$/), 'adsr2', `${d.model} CONTROLLERS ADSR 2 page keys`);
-    // COMP Studio FF: the Basic slot is the dynamics anchor, the Sidechain EQ slot stays unkeyed
+    // COMP Studio FF: dynamics on Basic and its filter response on Sidechain.
     const comp = stampGraphKeys('COMP', variantPages(d.layouts, 'COMP', 'Studio FF'));
     const compKeys = comp.flatMap((p) => p.rows.flatMap((r) => r.controls.filter((c) => c.widget === 'graph').map((c) => `${p.name}:${c.graphKey ?? '-'}`)));
-    eq(compKeys.join(','), 'Basic:dynamics,Sidechain:-', `${d.model} COMP Studio FF slots`);
+    eq(compKeys.join(','), 'Basic:dynamics,Sidechain:sidechainEq', `${d.model} COMP Studio FF slots`);
+    const compVisuals = resolveBlockVisuals(d.catalog.COMP, 'COMP', null, { layoutParamIds: layoutParamIds(comp), pages: comp });
+    eq(byKey(compVisuals, 'sidechainEq')?.roles.filterType, idOf(d.catalog, 'COMP', 'COMP_EQTYPE'),
+      `${d.model} Sidechain EQ binds its own filter selector`);
+    const triChorus = d.layouts.CHORUS?.variants.find((v) => v.value === '15');
+    if (!triChorus) fail(`${d.model}: missing Stereo Tri-Chorus layout`);
+    const chorus = stampGraphKeys('CHORUS', triChorus.pages);
+    const anchored = chorus.filter((p) => p.pageControls?.some((c) => c.graphKey === 'lfo'));
+    eq(anchored.length, 1, `${d.model} Chorus LFO has one fallback slot`);
+    eq(anchored[0]!.rows.some((r) => r.controls.some((c) => c.paramName === 'CHORUS_RATE')), true,
+      `${d.model} Chorus LFO next to its rate control`);
   }
 }
 
@@ -380,9 +394,10 @@ function presentIds(): void {
           ],
         },
       ],
+      pageControls: [{ label: 'Depth', paramName: 'X_DEPTH', paramId: 5, widget: 'knob', rawWidget: 'knob' }],
     },
   ];
-  eq([...layoutParamIds(pages)].join(','), '3', 'only the block\'s own param ids');
+  eq([...layoutParamIds(pages)].join(','), '3,5', 'own row and page-level param ids');
 }
 
 // ── 13. device gating ─────────────────────────────────────────────────────
@@ -397,6 +412,73 @@ function deviceGating(): void {
   eq(hasBlockVisuals('fm9'), true, 'hasBlockVisuals fm9');
   eq(blockVisuals('vp4', 'COMP').length, 0, 'VP4 → none');
   eq(blockVisuals(0x15, 'COMP').length, 0, 'AM4 → none');
+}
+
+// ── 14. AMP Input / Output EQ (served bands, never fixed ids) ──────────
+function ampEq(): void {
+  for (const d of DEVICES) {
+    const block = d.layouts.DISTORT;
+    if (!block) fail(`${d.model}: no DISTORT layout`);
+    let input: BlockVisual | undefined;
+    let output: BlockVisual | undefined;
+    for (const v of block.variants) {
+      const pages = stampGraphKeys('DISTORT', v.pages);
+      const served = resolveBlockVisuals(d.catalog.DISTORT, 'DISTORT', null, { pages });
+      if (!input) {
+        input = byKey(served, 'inputEq');
+        if (input) {
+          const page = pages.find((p) => /^input\s*eq$/i.test(p.name));
+          if (!page) fail(`${d.model}: no Input EQ page`);
+          const keys = [...page.rows.flatMap((r) => r.controls), ...(page.pageControls ?? [])]
+            .map((c) => c.graphKey).filter(Boolean);
+          eq(keys.join(','), 'inputEq', `${d.model}: Input EQ page slot`);
+        }
+      }
+      if (!output) {
+        output = byKey(served, 'outputEq');
+        if (output) {
+          for (const p of pages) {
+            const on = [...p.rows.flatMap((r) => r.controls), ...(p.pageControls ?? [])].some((c) => c.graphKey === 'outputEq');
+            if (on && !/^\s*output\s*eq\s*$/i.test(p.name)) fail(`${d.model} ${v.name}/${p.name}: outputEq slot on a page that is not the Output EQ`);
+          }
+        }
+      }
+    }
+    if (!input) fail(`${d.model}: no Amp Input EQ visual`);
+    if (!output) fail(`${d.model}: no Amp Output EQ visual`);
+    eq(input.kind, 'eq', `${d.model} inputEq kind`);
+    eq(input.mode, 'parametric', `${d.model} inputEq mode`);
+    const ib = input.bands ?? [];
+    eq(ib.map((b) => b.key).join(','), 'peak,lowCut,highCut', `${d.model} inputEq bands`);
+    eq(ib[0]!.freq, idOf(d.catalog, 'DISTORT', 'DISTORT_INEQFREQ'), `${d.model} inputEq peak freq`);
+    eq(ib[0]!.gain, idOf(d.catalog, 'DISTORT', 'DISTORT_INEQGAIN'), `${d.model} inputEq peak gain`);
+    eq(ib[0]!.q, idOf(d.catalog, 'DISTORT', 'DISTORT_INEQQ'), `${d.model} inputEq peak q`);
+    eq(ib[0]!.type, idOf(d.catalog, 'DISTORT', 'DISTORT_INEQTYPE'), `${d.model} inputEq peak type`);
+    eq(ib[1]!.shape, 'lowcut', `${d.model} inputEq low cut`);
+    eq(ib[1]!.freq, idOf(d.catalog, 'DISTORT', 'DISTORT_HPFREQ'), `${d.model} inputEq low-cut freq`);
+    eq(ib[2]!.shape, 'highcut', `${d.model} inputEq high cut`);
+    eq(ib[2]!.freq, idOf(d.catalog, 'DISTORT', 'DISTORT_HICUT'), `${d.model} inputEq high-cut freq`);
+
+    eq(output.kind, 'eq', `${d.model} outputEq kind`);
+    eq(output.mode, 'graphic', `${d.model} outputEq mode`);
+    const ob = output.bands ?? [];
+    eq(ob.length, 8, `${d.model}: the Output EQ draws its 8-band page`);
+    eq(ob.map((b) => b.centerHz).join(','), '62,125,250,500,1000,2000,4000,8000', `${d.model} outputEq centers`);
+    for (const b of ob) {
+      if (b.shape !== 'bell') fail(`${d.model}: outputEq band ${b.key} is not a bell`);
+      if (idOf(d.catalog, 'DISTORT', b.key) !== b.gain) fail(`${d.model}: outputEq band ${b.key} uses another id`);
+    }
+    const namedPage = block.variants.flatMap((v) => v.pages).find((p) =>
+      /^output\s*eq$/i.test(p.name) && p.rows.some((r) => r.controls.some((c) => c.label === 'Low Mid' && /^DISTORT_EQ\d+$/.test(c.paramName ?? '')))
+    );
+    if (namedPage) {
+      const pages = stampGraphKeys('DISTORT', [namedPage]);
+      const named = byKey(resolveBlockVisuals(d.catalog.DISTORT, 'DISTORT', null, { pages }), 'outputEq');
+      eq(named?.bands?.find((b) => b.label === 'Low Mid')?.centerHz, undefined, `${d.model} no fabricated frequency`);
+      eq(named?.bands?.some((b) => b.label === 'Low Mid' && b.gain != null), true, `${d.model} named gain fader`);
+      eq(pages[0]!.pageControls?.some((c) => c.graphKey === 'outputEq'), true, `${d.model} named Output EQ slot`);
+    }
+  }
 }
 
 export function runVisualsTests(): void {
@@ -414,4 +496,5 @@ export function runVisualsTests(): void {
   stampAllLayouts();
   presentIds();
   deviceGating();
+  ampEq();
 }

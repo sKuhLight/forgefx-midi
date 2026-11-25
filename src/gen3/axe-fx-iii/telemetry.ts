@@ -29,6 +29,7 @@
  * (frames silently ignored by the device) kept re-emerging.
  */
 import { fractalChecksum } from '../../shared/checksum.js';
+import { decodeSeptetStream } from '../../shared/septetStream.js';
 import { decode5SeptetFloat32, encode5SeptetFloat32 } from './setParam.js';
 
 const SYSEX_START = 0xf0;
@@ -152,30 +153,46 @@ export function parseBlockMonitorNorm(frame: readonly number[]): number {
   return Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0;
 }
 
-// ── looper waveform (Looper block; FM3 capture 2026-07-04) ───────────────
-// The looper page's live waveform is streamed via fn 0x01 sub 0x23 addressed at the Looper effectId
-// (FM3: eid 166). The reply is a ~609-byte frame whose payload (bytes 12..len-2) is ~595 RAW 7-bit
-// envelope magnitudes (0..127), one per display column — NOT a float. The playhead position and the
-// looper level ride the ordinary block-monitor poll (sub 0x19): position at pid 14, level at pid 22
-// (both via `buildBlockMonitorPoll`/`parseBlockMonitorNorm`). Model-generic across gen-3 loopers
-// (FM3 renders the waveform too, contrary to older notes; FM9/III share the block).
+// ── looper waveform ────────────────────────────────────────────────────
+// Trace 0 carries the loop envelope. The playhead and level use the ordinary block-monitor poll.
 export const SUB_LOOPER_WAVEFORM = 0x23;
+const GRAPH_PAYLOAD_OFFSET = 21;
+const GRAPH_HEADER_END = GRAPH_PAYLOAD_OFFSET + 2;
+const read14 = (frame: readonly number[], offset: number) => (frame[offset] ?? 0) | ((frame[offset + 1] ?? 0) << 7);
+
 export function buildLooperWaveformPoll(effectId: number, modelByte: number): number[] {
   const e14 = [effectId & 0x7f, (effectId >> 7) & 0x7f];
-  return envelope(FN_PARAMETER, [SUB_LOOPER_WAVEFORM, 0x00, ...e14, 0, 0, 0, 0, 0, 0, 0, 0, 0], modelByte);
+  const trace = [0, 0];
+  const revisionStatusAndLength = Array<number>(9).fill(0);
+  return envelope(FN_PARAMETER, [SUB_LOOPER_WAVEFORM, 0, ...e14, ...trace, ...revisionStatusAndLength], modelByte);
 }
-/** True for a looper-waveform reply (the long fn 0x01 sub 0x23 frame at `effectId`). */
+
+function loopTraceByteCount(frame: readonly number[]): number {
+  const nbytes = read14(frame, 19);
+  if (nbytes <= 0 || nbytes % 4 !== 0) return 0;
+  if (frame.length !== GRAPH_HEADER_END + Math.ceil(nbytes * 8 / 7)) return 0;
+  if (frame[0] !== SYSEX_START || frame.at(-1) !== SYSEX_END ||
+      !FRACTAL_MFR_PREFIX.every((byte, i) => frame[i + 1] === byte)) return 0;
+  if (frame[5] !== FN_PARAMETER || read14(frame, 6) !== SUB_LOOPER_WAVEFORM ||
+      read14(frame, 10) !== 0 || read14(frame, 17) !== 0) return 0;
+  return fractalChecksum(frame.slice(0, -2)) === frame.at(-2) ? nbytes : 0;
+}
+
+/** True for a valid looper envelope at `effectId`. */
 export function isLooperWaveformResponse(frame: readonly number[], effectId: number): boolean {
-  return frame[5] === FN_PARAMETER && frame[6] === SUB_LOOPER_WAVEFORM
-    && (((frame[8] ?? 0) | ((frame[9] ?? 0) << 7)) === effectId)
-    && frame.length > 100;
+  return read14(frame, 8) === effectId && loopTraceByteCount(frame) > 0;
 }
-/** Decode the looper waveform envelope → normalized 0..1 magnitudes (one per display column).
- *  Payload = raw 7-bit samples between the 12-byte header and the checksum+F7. */
+
+/** Decode the little-endian float samples carried in the graph reply's septet stream. */
 export function parseLooperWaveform(frame: readonly number[]): number[] {
-  const out: number[] = [];
-  for (let i = 12; i < frame.length - 2; i++) out.push((frame[i] ?? 0) / 127);
-  return out;
+  const nbytes = loopTraceByteCount(frame);
+  if (nbytes === 0) return [];
+  const raw = decodeSeptetStream(frame, nbytes, GRAPH_PAYLOAD_OFFSET);
+  const samples = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+  return Array.from({ length: nbytes / 4 }, (_, i) => {
+    const value = samples.getFloat32(i * 4, true);
+    return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : 0;
+  });
 }
 
 // ── looper transport control (Record / Play / Stop / Overdub / Undo / Once / Reverse / Half) ──

@@ -19,6 +19,9 @@ import {
   parseTunerFreqHz,
   GEN3_OUTPUT_METERS,
   buildOutputMeterPoll,
+  buildLooperWaveformPoll,
+  isLooperWaveformResponse,
+  parseLooperWaveform,
   isOutputMeterResponse,
   parseOutputMeterRms,
   meterRmsToDb,
@@ -138,6 +141,15 @@ export function runFm3TelemetryTests(): void {
   // and the query builders carry the requested model byte
   if (buildGetTempo(FM3)[4] !== FM3) throw new Error('[fm3/telemetry] buildGetTempo model byte');
   if (buildGetScene(FM3)[4] !== FM3) throw new Error('[fm3/telemetry] buildGetScene model byte');
+
+  // Synthetic trace: packed little-endian floats [0, 0.25, 0.75, 1.125, -0.5].
+  const looper = 166;
+  const wave = parseHex('f0000174110123002601000007000000000000140000000000000001001f000004017c0000480f600000027e3ef7');
+  assertEq(buildLooperWaveformPoll(looper, FM3).length, 23, 'full looper trace request');
+  assertEq(isLooperWaveformResponse(wave, looper), true, 'looper trace response');
+  assertEq(isLooperWaveformResponse(wave, looper + 1), false, 'looper response for another block');
+  assertEq(parseLooperWaveform(wave), [0, 0.25, 0.75, 1, 0], 'decode packed waveform magnitudes');
+  assertEq(parseLooperWaveform(wave.slice(0, -2)), [], 'reject truncated waveform');
 
   // ── model-byte discipline: frames carry the byte they were built with ──
   for (const mb of [0x10, 0x11, 0x12]) {

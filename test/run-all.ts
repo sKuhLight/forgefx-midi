@@ -133,6 +133,12 @@ import { runSharedSeptetStreamTests, SHARED_SEPTETSTREAM_CASE_COUNT } from './sh
 import { runSharedPollTimingTests, SHARED_POLLTIMING_CASE_COUNT } from './shared/polltiming.test.js';
 import { runGen3VisualDataTests, GEN3_VISUALDATA_CASE_COUNT } from './gen3/visualdata.test.js';
 import { runAm4VisualDataTests, AM4_VISUALDATA_CASE_COUNT } from './am4/visualdata.test.js';
+import { runZipTests, ZIP_CASE_COUNT } from './shared/zip.test.js';
+import { runXmlTests, XML_CASE_COUNT } from './shared/xml.test.js';
+import { runFasBundleTests, FAS_BUNDLE_CASE_COUNT } from './gen3/fas-bundle.test.js';
+import { runFasSetlistTests, FAS_SETLIST_CASE_COUNT } from './gen3/fas-setlists.test.js';
+import { runSystemDumpTests, SYSTEM_DUMP_CASE_COUNT } from './gen3/system-dump.test.js';
+import { runFullResIrTests, FULLRES_IR_CASE_COUNT } from './gen3/fullres-ir.test.js';
 
 const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   {
@@ -274,6 +280,12 @@ const tests: Array<{ name: string; run: () => void | Promise<void> }> = [
   { name: `shared/pollTiming (${SHARED_POLLTIMING_CASE_COUNT} cases)`, run: runSharedPollTimingTests },
   { name: `gen3/visualData (${GEN3_VISUALDATA_CASE_COUNT} cases)`, run: runGen3VisualDataTests },
   { name: `am4/visualData (${AM4_VISUALDATA_CASE_COUNT} cases)`, run: runAm4VisualDataTests },
+  { name: `shared/zip (${ZIP_CASE_COUNT} cases)`, run: runZipTests },
+  { name: `shared/xml (${XML_CASE_COUNT} cases)`, run: runXmlTests },
+  { name: `gen3/fasBundle (${FAS_BUNDLE_CASE_COUNT} cases)`, run: runFasBundleTests },
+  { name: `gen3/fasSetlists (${FAS_SETLIST_CASE_COUNT} cases)`, run: runFasSetlistTests },
+  { name: `gen3/systemDump (${SYSTEM_DUMP_CASE_COUNT} cases)`, run: runSystemDumpTests },
+  { name: `gen3/fullResIr (${FULLRES_IR_CASE_COUNT} cases)`, run: runFullResIrTests },
 ];
 
 let failures = 0;

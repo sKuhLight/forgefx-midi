@@ -154,3 +154,120 @@ export {
   type Gen3VisualParamDef,
   type Gen3BlockVisual,
 } from './visualData.js';
+// ── File / transfer layer (offline formats) ─────────────────────────
+// SysEx frame envelope for the transfer groups.
+export {
+  SYSEX_START,
+  SYSEX_END,
+  FRACTAL_MANUFACTURER_ID,
+  buildFractalFrame,
+  readFractalFrame,
+  splitFractalFrames,
+} from './frame.js';
+export type { FractalFrame } from './frame.js';
+
+// System + Global Blocks + Foot Controller dump (0x43 request, 0x51/0x52/0x53).
+export {
+  SYSTEM_DUMP_FUNCS,
+  SYSTEM_DUMP_HEADER_PAYLOAD_LEN,
+  SYSTEM_DUMP_CHUNK_PAYLOAD_LEN,
+  SYSTEM_DUMP_FOOTER_PAYLOAD_LEN,
+  SYSTEM_DUMP_CHUNK_WORDS,
+  SYSTEM_DUMP_CANONICAL_WORDS,
+  SYSTEM_DUMP_CANONICAL_FRAMES,
+  SYSTEM_DUMP_MAX_WORDS,
+  buildSystemDumpRequest,
+  systemDumpFrameCount,
+  parseSystemDump,
+  parseSystemDumpFrames,
+} from './systemDump.js';
+export type { ParsedSystemDump } from './systemDump.js';
+
+// FullRes cab IR (0x67/0x68/0x69) — receive-only, injected XTEA key.
+export {
+  FULLRES_IR_FUNCS,
+  FULLRES_IR_HEADER_PAYLOAD_LEN,
+  FULLRES_IR_CHUNK_PAYLOAD_LEN,
+  FULLRES_IR_FOOTER_PAYLOAD_LEN,
+  FULLRES_IR_CHUNK_WORDS,
+  FULLRES_IR_CHUNKS,
+  FULLRES_IR_TOTAL_WORDS,
+  FULLRES_IR_TOTAL_BYTES,
+  FULLRES_IR_FRAMES,
+  FULLRES_IR_PAIR_COUNT,
+  fullResIrFrameCount,
+  parseFullResIr,
+  parseFullResIrFrames,
+  decryptFullResIr,
+} from './fullResIr.js';
+export type { ParsedFullResIr } from './fullResIr.js';
+export type { XteaRecordKey, XteaDecryptOptions } from '../../shared/xtea.js';
+
+// Generic large-record cab group (0x5A/0x5B/0x5C), write framing only.
+export {
+  CAB_GROUP_FUNCS,
+  CAB_GROUP_HEADER_PAYLOAD_LEN,
+  CAB_GROUP_CHUNK_WORDS,
+  CAB_GROUP_CHUNK_PAYLOAD_LEN,
+  CAB_GROUP_FOOTER_PAYLOAD_LEN,
+  CAB_GROUP_USER_CAB_DEST,
+  CAB_GROUP_SCRATCHPAD,
+  cabGroupSlot,
+  cabGroupFrameCount,
+  buildCabGroupHeader,
+  buildCabGroupChunk,
+  buildCabGroupFooter,
+  xor32Words,
+} from './cabGroup.js';
+export type { CabGroupHeader, CabGroupSlot } from './cabGroup.js';
+
+// Preset + cab bundle (.fasBundle): ZIP + XML manifest.
+export {
+  FAS_BUNDLE_MANIFEST_ENTRY,
+  FAS_BUNDLE_VERSION,
+  FAS_BUNDLE_CHUNK_PAYLOAD_LEN,
+  FAS_BUNDLE_CAB_RECORD_LEN,
+  FAS_BUNDLE_PRESET_CHUNKS,
+  FAS_BUNDLE_EMPTY_CAB_IDS,
+  FAS_BUNDLE_RESTORE_PREAMBLE_FUNC,
+  readFasBundle,
+  writeFasBundle,
+  buildBundleRestorePreamble,
+  bundlePresetFooterPayload,
+  encodeBundleRestoreFile,
+} from './fasBundle.js';
+export type {
+  FasBundle,
+  FasBundleDevice,
+  FasBundlePreset,
+  FasBundleCab,
+  FasBundleLimits,
+  BundleRestoreOptions,
+} from './fasBundle.js';
+
+// Setlist (.fas-setlist) / songs (.fas-songs) XML + song parameter-table map.
+export {
+  FAS_SETLIST_ROOT,
+  FAS_SONGS_ROOT,
+  FAS_SETLIST_VERSION,
+  SONG_SECTION_COUNT,
+  SONG_SECTION_NAME_SLOTS,
+  SONG_NAME_SLOTS,
+  SONG_PARAM_TYPES,
+  parseFasSetlists,
+  parseFasSongs,
+  serializeFasSetlists,
+  serializeFasSongs,
+  songSectionPresetPid,
+  songSectionScenePid,
+  songSectionNamePid,
+  songNamePid,
+} from './fasSetlists.js';
+export type {
+  FasDeviceHeader,
+  FasSetlist,
+  FasSetlistsFile,
+  FasSong,
+  FasSongsFile,
+  FasSetlistLimits,
+} from './fasSetlists.js';
